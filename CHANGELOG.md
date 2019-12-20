@@ -7,6 +7,7 @@ Changelog
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
 * Fixed RSASigner.verifySignature to return false when signature is bad.
 * Add HKDF support (IETF RFC 5869)
+* Add optional `normalize` boolean on `generateSignature` and `normalize` function on `ECSignature` to convert an ecdsa signature to lower-s form
 
 #### Version 1.0.2 (2019-11-15)
 
