@@ -69,6 +69,9 @@ In this release, the following algorithms are implemented:
   * PBKDF2
   * scrypt
 
+**HMAC based key derivators:**
+  * HKDF
+
 **Asymmetric key generators:**
   * ECDSA
   * RSA

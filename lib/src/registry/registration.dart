@@ -69,6 +69,7 @@ import 'package:pointycastle/ecc/curves/secp256k1.dart';
 import 'package:pointycastle/ecc/curves/secp256r1.dart';
 import 'package:pointycastle/ecc/curves/secp384r1.dart';
 import 'package:pointycastle/ecc/curves/secp521r1.dart';
+import 'package:pointycastle/key_derivators/hkdf.dart';
 import 'package:pointycastle/key_derivators/pbkdf2.dart';
 import 'package:pointycastle/key_derivators/scrypt.dart';
 import 'package:pointycastle/key_generators/ec_key_generator.dart';
@@ -190,6 +191,7 @@ void _registerECCurves(FactoryRegistry registry) {
 void _registerKeyDerivators(FactoryRegistry registry) {
   registry.register(PBKDF2KeyDerivator.FACTORY_CONFIG);
   registry.register(Scrypt.FACTORY_CONFIG);
+  registry.register(HKDFKeyDerivator.FACTORY_CONFIG);
 }
 
 void _registerKeyGenerators(FactoryRegistry registry) {
