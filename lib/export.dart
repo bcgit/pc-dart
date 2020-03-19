@@ -55,6 +55,7 @@ export "package:pointycastle/ecc/ecc_base.dart";
 
 // key_derivators
 export "package:pointycastle/key_derivators/api.dart";
+export "package:pointycastle/key_derivators/hkdf.dart";
 export "package:pointycastle/key_derivators/pbkdf2.dart";
 export "package:pointycastle/key_derivators/scrypt.dart";
 
