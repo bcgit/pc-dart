@@ -1,5 +1,3 @@
-// Copyright (c) 2013-present, the authors of the Pointy Castle project
-// This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
 
 /**
@@ -57,6 +55,7 @@ export "package:pointycastle/ecc/ecc_base.dart";
 
 // key_derivators
 export "package:pointycastle/key_derivators/api.dart";
+export "package:pointycastle/key_derivators/hkdf.dart";
 export "package:pointycastle/key_derivators/pbkdf2.dart";
 export "package:pointycastle/key_derivators/scrypt.dart";
 
