@@ -107,6 +107,7 @@ void main() {
       testStreamCipher("Salsa20");
       testStreamCipher("AES/SIC");
       testStreamCipher("AES/CTR");
+      testStreamCipher('ChaCha20/20');
     });
   });
 }

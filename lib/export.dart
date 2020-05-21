@@ -87,6 +87,7 @@ export "package:pointycastle/signers/rsa_signer.dart";
 // stream
 export "package:pointycastle/stream/ctr.dart";
 export "package:pointycastle/stream/salsa20.dart";
+export "package:pointycastle/stream/chacha20.dart";
 export "package:pointycastle/stream/sic.dart";
 
 // ecc curves

@@ -69,6 +69,7 @@ import 'package:pointycastle/ecc/curves/secp256k1.dart';
 import 'package:pointycastle/ecc/curves/secp256r1.dart';
 import 'package:pointycastle/ecc/curves/secp384r1.dart';
 import 'package:pointycastle/ecc/curves/secp521r1.dart';
+import 'package:pointycastle/export.dart';
 import 'package:pointycastle/key_derivators/hkdf.dart';
 import 'package:pointycastle/key_derivators/pbkdf2.dart';
 import 'package:pointycastle/key_derivators/scrypt.dart';
@@ -230,5 +231,6 @@ void _registerSigners(FactoryRegistry registry) {
 void _registerStreamCiphers(FactoryRegistry registry) {
   registry.register(CTRStreamCipher.FACTORY_CONFIG);
   registry.register(Salsa20Engine.FACTORY_CONFIG);
+  registry.register(ChaCha20Engine.FACTORY_CONFIG);
   registry.register(SICStreamCipher.FACTORY_CONFIG);
 }
