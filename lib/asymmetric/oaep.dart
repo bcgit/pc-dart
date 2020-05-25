@@ -99,7 +99,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     _forEncryption = forEncryption;
 
     // Check type of key provided is suitable
-    // Note: the _engine can't do this check, becuase the engine could be used
+    // Note: the _engine can't do this check, because the engine could be used
     // for both encryption/decryption and signature/verification (which reverses
     // the keys), so its `init` method accepts both types of keys. For example,
     // [RSAEngine.init].
