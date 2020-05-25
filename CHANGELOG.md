@@ -7,6 +7,7 @@ Changelog
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
 * Fixed RSASigner.verifySignature to return false when signature is bad.
 * Add HKDF support (IETF RFC 5869)
+* Fixed randomly occuring bug with OAEP decoding.
 
 #### Version 1.0.2 (2019-11-15)
 

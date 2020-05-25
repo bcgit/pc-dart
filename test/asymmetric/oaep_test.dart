@@ -6,11 +6,8 @@ import 'dart:typed_data';
 
 import "package:test/test.dart";
 
-import "package:pointycastle/pointycastle.dart";
+import "package:pointycastle/export.dart";
 import "package:pointycastle/src/registry/registry.dart";
-import 'package:pointycastle/asymmetric/api.dart';
-import 'package:pointycastle/asymmetric/oaep.dart';
-import 'package:pointycastle/asymmetric/rsa.dart';
 import 'package:pointycastle/src/utils.dart';
 
 import "../test/src/fixed_secure_random.dart";
@@ -343,6 +340,156 @@ void rsaOaepStandardTests() {
       } on ArgumentError catch (e) {
         expect(e.message, equals('decoding error'));
       }
+    }
+  });
+
+  test('EME-OAEP encoding operation', () {
+    // This test is actually redundant.
+    //
+    // If the following "encryption" test passes, then the encoding operation
+    // would have also worked. But since we can make replace the [RSAEngine]
+    // with the [NullAsymmetricBlockCipher] that does nothing, we can use it to
+    // examine the EME-OAEP encoded message (called "EM" in RFC 2437), before it
+    // normally gets encrypted.
+    //
+    // If there is a bug in the underlying asymmetric encryption (i.e. in the
+    // [RSAEngine], this test will succeed when the encryption test will fail.
+    // If there is a bug in the EME-OAEP encoding operation, then this test and
+    // the following encryption test will both fail. It is impossible for this
+    // test to fail and the encryption test to pass.
+
+    // Can't instantiate using AsymmetricBlockCipher('Null/OAEP'), because the
+    // default [NullAsymmetricBlockCipher] has block lengths of 70 instead of
+    // 127 (which is necessary for this to work properly). So must use its
+    // constructor and pass in 127 for the two block lengths.
+
+    final encryptor = OAEPEncoding(NullAsymmetricBlockCipher(127, 127));
+
+    encryptor.init(
+        true,
+        ParametersWithRandom(PublicKeyParameter<RSAPublicKey>(publicKey),
+            FixedSecureRandom()..seed(KeyParameter(seed))));
+
+    // Pretend to encrypt the test [message] value
+
+    final output = Uint8List(encryptor.outputBlockSize);
+
+    final size = encryptor.processBlock(message, 0, message.length, output, 0);
+    expect(size, equals(encryptor.outputBlockSize));
+
+    // The output should be the unencrypted EM (since Null cipher does nothing)
+
+    expect(output, equals(em));
+  });
+
+  //----------------------------------------------------------------
+  /// Test decryption when EME-OAEP encoded message has leading 0x00 bytes.
+  ///
+  /// This is a regression test, since Pointy Castle v1.0.2 had a bug which
+  /// caused decryption to fail in these situation. The leading null byte is not
+  /// needed to represent the same integer value. But a correct implementation
+  /// of the I2OSP (integer to octet string primitive) will produce the
+  /// correct number of null bytes.
+
+  test('I2OSP when EM starts with 0x00 bytes', () {
+    // This test could be done with any key pair, but since we already have a
+    // key pair from the above tests, use it.
+
+    final keySizeInBytes = publicKey.modulus.bitLength ~/ 8;
+
+    final numNulls = List<int>.filled(keySizeInBytes, 0); // tracks test cases
+
+    // The EME-OAEP encoded message (EM) is determined by:
+    //
+    //   - length of the block (determined by public key used)
+    //   - the message
+    //   - random bytes used as the seed
+    //   - other factors that are constant in OAEPEncoding (i.e. hash algorithm,
+    //     parameters and mask generating function)
+    //
+    // Below are a carefully chosen test message and seeds for a
+    // FixedSecureRandom known to produce _EM_ that start with 1, 2 and 3 0x00
+    // bytes.
+
+    final testMsg = Uint8List.fromList('Hello world!'.codeUnits);
+
+    for (final x in [822, 197378, 522502]) {
+      // Change above to the following, to use the code to find test cases
+      // const numCasesToTry = 1000;
+      // for (var x = 0; x < numCasesToTry; x++) {
+
+      // Create a testSeed from x
+
+      final numbers = <int>[];
+      var n = x;
+      while (0 < n) {
+        numbers.add(n & 0xFF);
+        n = n >> 8;
+      }
+      final testFixedRndSeed = Uint8List.fromList(numbers.reversed.toList());
+      // print('FixedSecureRandom seed: $testFixedRndSeed (from x = $x)');
+
+      final processTestCaseWith = (AsymmetricBlockCipher blockCipher) {
+        final rnd = FixedSecureRandom()..seed(KeyParameter(testFixedRndSeed));
+
+        final enc = OAEPEncoding(blockCipher);
+
+        enc.init(
+            true,
+            ParametersWithRandom(
+                PublicKeyParameter<RSAPublicKey>(publicKey), rnd));
+
+        final _buf = Uint8List(enc.outputBlockSize);
+        final _len = enc.processBlock(testMsg, 0, testMsg.length, _buf, 0);
+        return _buf.sublist(0, _len);
+      };
+
+      // Use null block cipher to obtain the EM (encryption does nothing)
+
+      final testEM = processTestCaseWith(
+          NullAsymmetricBlockCipher(keySizeInBytes - 1, keySizeInBytes));
+
+      // Determine how many 0x00 are at the start of the EM
+
+      var numNullBytesAtStart = 0;
+      while (testEM[numNullBytesAtStart] == 0x00) {
+        numNullBytesAtStart++;
+      }
+
+      numNulls[numNullBytesAtStart]++; // record it for later test case checking
+
+      // if (0 < numNullBytesAtStart) {
+      //  print('x=$x produced ${numNullBytesAtStart} null bytes');
+      // }
+
+      // Use RSA block cipher to obtain the ciphertext (i.e. encrypted EM).
+      // Exactly the same as when finding the EM, except the underlying cipher
+      // is now RSA instead of a null cipher.
+
+      final cipher = processTestCaseWith(RSAEngine());
+
+      // Decrypt the cipher (if the I2OSP does not correctly reproduce the
+      // 0x00 byte, the decryption operation will fail).
+
+      final dec = OAEPEncoding(RSAEngine());
+
+      dec.init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
+
+      final _decBuf = Uint8List(dec.outputBlockSize);
+      final _decSize = dec.processBlock(cipher, 0, cipher.length, _decBuf, 0);
+      final decrypted = _decBuf.sublist(0, _decSize);
+
+      expect(decrypted, equals(testMsg));
+    }
+
+    // Check above has included test cases with the desired number of 0x00 bytes
+
+    const maxNumNullsTested = 3; // looking for cases with 1, 2 and 3 0x00 bytes
+
+    for (var n = 1; n <= maxNumNullsTested; n++) {
+      // print('Number of test cases starting with $n 0x00: ${numNulls[n]}');
+      expect(numNulls[n], greaterThan(0),
+          reason: 'no test case with EM starting with $n 0x00');
     }
   });
 }
