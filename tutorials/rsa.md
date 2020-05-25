@@ -205,7 +205,7 @@ Pointy Castle implements PKCS #1 version 2.0 signature and
 verification. Specifically, it implements the _RSASSA-PKCS1-v1_5_
 signature scheme with appendix from section 8.1 of [RFC
 2437](https://tools.ietf.org/html/rfc2437#section-8.1): which defines
-how the digest algorithm identifier and digest value is encoded, and
+how the digest algorithm identifier and digest value are both encoded, and
 how that encoding is then signed using RSA.
 
 ### Implementation
@@ -463,6 +463,8 @@ p.init(false, PrivateKeyParameter<RSAPrivateKey>(myPrivate));
 
 ### Providing the data
 
+#### Using processBlock
+
 The data being encrypted/decrypted must be processed in blocks. Each
 input block is processed into an output block.
 
@@ -486,6 +488,18 @@ The `processBlock` method has five arguments:
 It returns the number of bytes written. Which is especially important
 when the last block is smaller than the maximum size. Always use the
 returned output size to know how much of the output is valid.
+
+#### Using process
+
+The `process` method can also be used instead of `processBlock`. It is
+simpler, because it creates and returns the output block. However, it
+requires the input to be no larger than _inputBlockSize_. And the
+_inputBlockSize_ depends on the bit-length of the key.
+
+If `process` is used, the program needs to ensure the size of the data
+and the bit-length of the key are both suitable.
+
+#### Decryption errors
 
 If the ciphertext cannot be decrypted, an `ArgumentError` is thrown.
 The message associated with the `ArgumentError` can be ignored, since
