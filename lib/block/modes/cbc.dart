@@ -74,7 +74,8 @@ class CBCBlockCipher extends BaseBlockCipher {
     int length = _underlyingCipher.processBlock(_cbcV, 0, out, outOff);
 
     // copy ciphertext to cbcV
-    _cbcV.setRange(0, blockSize, out.sublist(outOff));
+    _cbcV.setRange(0, blockSize,
+        Uint8List.view(out.buffer, out.offsetInBytes + outOff, blockSize));
 
     return length;
   }
@@ -84,7 +85,8 @@ class CBCBlockCipher extends BaseBlockCipher {
       throw new ArgumentError("Input buffer too short");
     }
 
-    _cbcNextV.setRange(0, blockSize, inp.sublist(inpOff));
+    _cbcNextV.setRange(0, blockSize,
+        Uint8List.view(inp.buffer, inp.offsetInBytes + inpOff, blockSize));
 
     int length = _underlyingCipher.processBlock(inp, inpOff, out, outOff);
 
