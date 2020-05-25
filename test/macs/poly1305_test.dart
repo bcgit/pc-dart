@@ -10,7 +10,7 @@ import "../test/mac_tests.dart";
 import "../test/src/helpers.dart";
 
 void main() {
-  var mac = Poly1305.aes(AESFastEngine());
+  var mac = Poly1305.withCipher(AESFastEngine());
 
   // Test vectors from BouncyCastle Poly1305 class
   final key = createUint8ListFromHexString("0000000000000000000000000000000000000000000000000000000000000000");
@@ -29,7 +29,7 @@ void main() {
     PlainTextDigestPair(input1, output1)
   ]);
 
-  mac = Poly1305.aes(AESFastEngine());
+  mac = Poly1305.withCipher(AESFastEngine());
   final key2 = createUint8ListFromHexString("f795bd0a50e29e0710d3130a20e98d0c" + "f795bd4a52e29ed713d313fa20e98dbc");
   final iv2 =  createUint8ListFromHexString("917cf69ebd68b2ec9b9fe9a3eadda692");
   final params2 = ParametersWithIV<KeyParameter>(KeyParameter(key2), iv2);
@@ -44,7 +44,7 @@ void main() {
     PlainTextDigestPair(input2, output2)
   ]);
 
-  mac = Poly1305.aes(AESFastEngine());
+  mac = Poly1305.withCipher(AESFastEngine());
   final key3 = createUint8ListFromHexString("3ef49901c8e11c000430d90ad45e7603" + "e69dae0aab9f91c03a325dcc9436fa90");
   final iv3 =  createUint8ListFromHexString("166450152e2394835606a9d1dd2cdc8b");
   final params3 = ParametersWithIV<KeyParameter>(KeyParameter(key3), iv3);
@@ -58,4 +58,24 @@ void main() {
     // same input again:
     PlainTextDigestPair(input3, output3)
   ]);
+
+  mac = Poly1305();
+  final key4 = createUint8ListFromHexString("ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff");
+  final params4 = KeyParameter(key4);
+
+  var input4 = createUint8ListFromHexString("ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff"
+      + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff"
+      + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff"
+      + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffffff" + "ffffffffffffffffffffffffffffff");
+  var output4 = "c80cb43844f387946e5aa6085bdf67da";
+  mac.init(params4);
+
+  runMacTests(mac, [
+    PlainTextDigestPair(input4, output4),
+    // same input again:
+    PlainTextDigestPair(input4, output4)
+  ]);
+
+
 }
+

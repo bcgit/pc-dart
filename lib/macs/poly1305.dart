@@ -16,7 +16,7 @@ class Poly1305 extends BaseMac {
     cipher = null;
   }
 
-  Poly1305.aes(final this.cipher) {
+  Poly1305.withCipher(final this.cipher) {
     if (cipher.blockSize != BLOCK_SIZE) {
       throw ArgumentError('Poly1305 requires a 128 bit block cipher.');
     }
@@ -28,7 +28,7 @@ class Poly1305 extends BaseMac {
       '/Poly1305',
       (_, final Match match) => () {
             var cipher = BlockCipher(match.group(1));
-            return Poly1305.aes(cipher);
+            return Poly1305.withCipher(cipher);
           });
 
   static void clamp(Uint8List key) {

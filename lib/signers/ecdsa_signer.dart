@@ -2,17 +2,19 @@
 
 library pointycastle.impl.signer.ecdsa_signer;
 
-import "dart:typed_data";
 import "dart:math";
+import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
 import "package:pointycastle/ecc/api.dart";
-import "package:pointycastle/src/utils.dart" as utils;
 import "package:pointycastle/src/registry/registry.dart";
+import "package:pointycastle/src/utils.dart" as utils;
 
 bool _testBit(BigInt i, int n) {
   return (i & (BigInt.one << n)) != BigInt.zero;
 }
+
+
 
 class ECDSASigner implements Signer {
   /// Intended for internal use.
@@ -235,6 +237,47 @@ class ECDSASigner implements Signer {
     return R;
   }
 }
+
+class NormalizedECDSASigner implements Signer {
+  final ECDSASigner signer;
+  final bool enforceNormalized;
+
+  /// Wraps ECDSASigner and enforces normalisation on verify if
+  /// [enforceNormalized] is true.
+  ///
+  /// Always generates normalized signatures.
+  NormalizedECDSASigner(this.signer, {this.enforceNormalized = false});
+
+  @override
+  String get algorithmName => this.signer.algorithmName;
+
+  @override
+  Signature generateSignature(Uint8List message) {
+    return (signer.generateSignature(message) as ECSignature)
+        .normalize(signer._pvkey.parameters);
+  }
+
+  @override
+  void init(bool forSigning, CipherParameters params) {
+    signer.init(forSigning, params);
+  }
+
+  @override
+  void reset() {
+    signer.reset();
+  }
+
+  @override
+  bool verifySignature(Uint8List message, Signature signature) {
+    var isNormalized =
+    (signature as ECSignature).isNormalized(signer._pbkey.parameters);
+    var isVerified = signer.verifySignature(message, signature);
+
+    // Constant time.
+    return (isNormalized | !enforceNormalized) & isVerified;
+  }
+}
+
 
 class _RFC6979KCalculator {
   Mac _mac;

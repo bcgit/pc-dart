@@ -7,6 +7,9 @@ Changelog
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
 * Fixed RSASigner.verifySignature to return false when signature is bad.
 * Add HKDF support (IETF RFC 5869)
+* Add Poly1305, ChaCha20
+* Fixed randomly occuring bug with OAEP decoding.
+* Added NormalizedECDSASigner that wraps ECDSASigner to guarantee an ecdsa signature in lower-s form. (Enforcement on verification supported).
 
 #### Version 1.0.2 (2019-11-15)
 
