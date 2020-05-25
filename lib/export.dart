@@ -67,6 +67,7 @@ export "package:pointycastle/key_generators/rsa_key_generator.dart";
 // macs
 export "package:pointycastle/macs/hmac.dart";
 export "package:pointycastle/macs/cmac.dart";
+export "package:pointycastle/macs/poly1305.dart";
 export "package:pointycastle/macs/cbc_block_cipher_mac.dart";
 
 // paddings
@@ -86,6 +87,7 @@ export "package:pointycastle/signers/rsa_signer.dart";
 // stream
 export "package:pointycastle/stream/ctr.dart";
 export "package:pointycastle/stream/salsa20.dart";
+export "package:pointycastle/stream/chacha20.dart";
 export "package:pointycastle/stream/sic.dart";
 
 // ecc curves

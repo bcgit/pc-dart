@@ -56,6 +56,7 @@ void main() {
       testMac("SHA-1/HMAC");
       testMac("SHA-256/HMAC");
       testMac("RIPEMD-160/HMAC");
+      testMac('AES/Poly1305');
       testMac("AES/CMAC");
       testMac("AES/CBC_CMAC");
       testMac("AES/CBC_CMAC/PKCS7");
@@ -106,6 +107,7 @@ void main() {
       testStreamCipher("Salsa20");
       testStreamCipher("AES/SIC");
       testStreamCipher("AES/CTR");
+      testStreamCipher('ChaCha20/20');
     });
   });
 }

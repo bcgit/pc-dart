@@ -12,6 +12,7 @@ library pointycastle.api;
 import "dart:typed_data";
 
 import "src/registry/registry.dart";
+import 'src/utils.dart';
 
 part "src/api/algorithm.dart";
 part "src/api/asymmetric_block_cipher.dart";

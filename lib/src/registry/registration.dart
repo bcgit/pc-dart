@@ -69,6 +69,7 @@ import 'package:pointycastle/ecc/curves/secp256k1.dart';
 import 'package:pointycastle/ecc/curves/secp256r1.dart';
 import 'package:pointycastle/ecc/curves/secp384r1.dart';
 import 'package:pointycastle/ecc/curves/secp521r1.dart';
+import 'package:pointycastle/export.dart';
 import 'package:pointycastle/key_derivators/hkdf.dart';
 import 'package:pointycastle/key_derivators/pbkdf2.dart';
 import 'package:pointycastle/key_derivators/scrypt.dart';
@@ -76,6 +77,7 @@ import 'package:pointycastle/key_generators/ec_key_generator.dart';
 import 'package:pointycastle/key_generators/rsa_key_generator.dart';
 import 'package:pointycastle/macs/hmac.dart';
 import 'package:pointycastle/macs/cmac.dart';
+import 'package:pointycastle/macs/poly1305.dart';
 import 'package:pointycastle/macs/cbc_block_cipher_mac.dart';
 import 'package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart';
 import 'package:pointycastle/paddings/pkcs7.dart';
@@ -203,6 +205,7 @@ void _registerMacs(FactoryRegistry registry) {
   registry.register(HMac.FACTORY_CONFIG);
   registry.register(CMac.FACTORY_CONFIG);
   registry.register(CBCBlockCipherMac.FACTORY_CONFIG);
+  registry.register(Poly1305.FACTORY_CONFIG);
 }
 
 void _registerPaddedBlockCiphers(FactoryRegistry registry) {
@@ -228,5 +231,6 @@ void _registerSigners(FactoryRegistry registry) {
 void _registerStreamCiphers(FactoryRegistry registry) {
   registry.register(CTRStreamCipher.FACTORY_CONFIG);
   registry.register(Salsa20Engine.FACTORY_CONFIG);
+  registry.register(ChaCha20Engine.FACTORY_CONFIG);
   registry.register(SICStreamCipher.FACTORY_CONFIG);
 }

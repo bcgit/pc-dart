@@ -45,7 +45,9 @@ import "signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
 import "signers/rsa_signer_test.dart" as rsa_signer_test;
 import "src/ufixnum_test.dart" as ufixnum_test;
 import "stream/salsa20_test.dart" as salsa20_test;
+import "stream/chacha20_test.dart" as chacha20_test;
 import "impl_test.dart" as impl_test;
+import 'macs/poly1305_test.dart' as poly1305_test;
 
 void main() {
   stream_cipher_as_block_cipher_test.main();
@@ -76,6 +78,7 @@ void main() {
   rsa_key_generator_test.main();
   hmac_test.main();
   cmac_test.main();
+  poly1305_test.main();
   cbc_block_cipher_mac_test.main();
   cbc_test.main();
   cfb_test.main();
@@ -93,5 +96,6 @@ void main() {
   rsa_signer_test.main();
   ufixnum_test.main();
   salsa20_test.main();
+  chacha20_test.main();
   impl_test.main();
 }
