@@ -87,7 +87,7 @@ class ECDSASigner implements Signer {
     }
   }
 
-  Signature generateSignature(Uint8List message) {
+  Signature generateSignature(Uint8List message, {bool normalize = false}) {
     message = _hashMessageIfNeeded(message);
 
     var n = _pvkey.parameters.n;
@@ -124,7 +124,9 @@ class ECDSASigner implements Signer {
       s = (k.modInverse(n) * (e + (d * r))) % n;
     } while (s == BigInt.zero);
 
-    return new ECSignature(r, s);
+    var signature = new ECSignature(r, s);
+    if (normalize) signature.normalize(_pvkey.parameters);
+    return signature;
   }
 
   bool verifySignature(Uint8List message, covariant ECSignature signature) {

@@ -8,6 +8,7 @@ Changelog
 * Fixed RSASigner.verifySignature to return false when signature is bad.
 * Add HKDF support (IETF RFC 5869)
 * Fixed randomly occuring bug with OAEP decoding.
+* Add optional `normalize` boolean on `generateSignature` and `normalize` function on `ECSignature` to convert an ecdsa signature to lower-s form
 
 #### Version 1.0.2 (2019-11-15)
 
