@@ -3,9 +3,12 @@
 library pointycastle.test.paddings.ecdsa_signer_test;
 
 import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/signers/ecdsa_signer.dart';
 
 import "../test/signer_tests.dart";
 import "../test/src/null_secure_random.dart";
+
+
 
 void main() {
   var eccDomain = new ECDomainParameters("prime192v1");
@@ -42,14 +45,22 @@ void main() {
         "4593990646726045634082084213208629584972116888758459298644"),
   ]);
 
-  runSignerTests(new Signer("SHA-1/DET-ECDSA"), signParams, verifyParams, [
+  runSignerTests(new NormalizedECDSASigner(new Signer("SHA-1/DET-ECDSA")),
+      signParams, verifyParams, [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
     _newSignature("6052012072724008730564193612572794050491696411960275629627",
         "2161019278549597185578307509265728228343111084484752661213"),
     "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
     _newSignature("4087581495017442027693712553398765118791696551913571321320",
         "1683111088660635129753705209967429428795077884424382985437"),
-  ], normalize: true);
+  ]);
+
+  runSignerTestsFail(new NormalizedECDSASigner(new Signer("SHA-1/DET-ECDSA"),enforceNormalized: true),
+      signParams, verifyParams, [
+    "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
+    _newSignature("4087581495017442027693712553398765118791696551913571321320",
+        "4593990646726045634082084213208629584972116888758459298644"),
+  ]);
 }
 
 ECSignature _newSignature(String r, String s) =>

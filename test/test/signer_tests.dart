@@ -8,7 +8,7 @@ import "package:pointycastle/pointycastle.dart";
 import "./src/helpers.dart";
 
 void runSignerTests(Signer signer, CipherParameters signParams(),
-    CipherParameters verifyParams(), List messageSignaturePairs, {bool normalize = false}) {
+    CipherParameters verifyParams(), List messageSignaturePairs) {
   group("${signer.algorithmName}:", () {
     group("generateSignature:", () {
       for (var i = 0; i < messageSignaturePairs.length; i += 2) {
@@ -18,7 +18,7 @@ void runSignerTests(Signer signer, CipherParameters signParams(),
         test(
             "${formatAsTruncated(message)}",
             () => _runGenerateSignatureTest(
-                signer, signParams, message, signature, normalize: normalize));
+                signer, signParams, message, signature));
       }
     });
 
@@ -37,11 +37,11 @@ void runSignerTests(Signer signer, CipherParameters signParams(),
 }
 
 void _runGenerateSignatureTest(Signer signer, CipherParameters params(),
-    String message, Signature expectedSignature, {bool normalize = false}) {
+    String message, Signature expectedSignature) {
   signer.reset();
   signer.init(true, params());
 
-  var signature = signer.generateSignature(createUint8ListFromString(message), normalize: normalize);
+  var signature = signer.generateSignature(createUint8ListFromString(message));
 
   expect(signature, expectedSignature);
 }
@@ -55,4 +55,59 @@ void _runVerifySignatureTest(Signer signer, CipherParameters params(),
       signer.verifySignature(createUint8ListFromString(message), signature);
 
   expect(ok, true);
+}
+
+
+
+
+// -----
+
+void runSignerTestsFail(Signer signer, CipherParameters signParams(),
+    CipherParameters verifyParams(), List messageSignaturePairs) {
+  group("${signer.algorithmName}:", () {
+    group("generateSignature:", () {
+      for (var i = 0; i < messageSignaturePairs.length; i += 2) {
+        var message = messageSignaturePairs[i];
+        var signature = messageSignaturePairs[i + 1];
+
+        test(
+            "${formatAsTruncated(message)}",
+                () => _runGenerateSignatureTestFail(
+                signer, signParams, message, signature));
+      }
+    });
+
+    group("verifySignature:", () {
+      for (var i = 0; i < messageSignaturePairs.length; i += 2) {
+        var message = messageSignaturePairs[i];
+        var signature = messageSignaturePairs[i + 1];
+
+        test(
+            "${formatAsTruncated(message)}",
+                () => _runVerifySignatureTestFail(
+                signer, verifyParams, message, signature));
+      }
+    });
+  });
+}
+
+void _runGenerateSignatureTestFail(Signer signer, CipherParameters params(),
+    String message, Signature expectedSignature) {
+  signer.reset();
+  signer.init(true, params());
+
+  var signature = signer.generateSignature(createUint8ListFromString(message));
+
+  expect(signature, isNot(equals(expectedSignature)));
+}
+
+void _runVerifySignatureTestFail(Signer signer, CipherParameters params(),
+    String message, Signature signature) {
+  signer.reset();
+  signer.init(false, params());
+
+  var ok =
+  signer.verifySignature(createUint8ListFromString(message), signature);
+
+  expect(ok, false);
 }

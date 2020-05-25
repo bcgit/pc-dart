@@ -155,23 +155,27 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
 /// A [Signature] created with ECC.
 class ECSignature implements Signature {
   final BigInt r;
-  BigInt s;
+  final BigInt s;
 
   ECSignature(this.r, this.s);
 
-  /**
-   * 'normalize' this signature by converting its s to lower-s form if necessary
-   * This is required to validate this signature with some libraries such as libsecp256k1
-   * which enforce lower-s form for all signatures to combat ecdsa signature malleability
-   *
-   * Returns false if the signature was already normalized, or true if it changed
-   */
-  bool normalize(ECDomainParameters curveParams) {
-    if (s.compareTo(curveParams.n >> 1) > 0) {
-      s = curveParams.n - s;
-      return true;
+  /// Returns true if s is in lower-s form, false otherwise.
+  bool isNormalized(ECDomainParameters curveParams) {
+    return !(s.compareTo(curveParams.n >> 1) > 0);
+  }
+
+  ///
+  /// 'normalize' this signature by converting its s to lower-s form if necessary
+  /// This is required to validate this signature with some libraries such as libsecp256k1
+  /// which enforce lower-s form for all signatures to combat ecdsa signature malleability
+  ///
+  /// Returns this if the signature was already normalized, or a new copy if it is changed.
+  ///
+  ECSignature normalize(ECDomainParameters curveParams) {
+    if (isNormalized(curveParams)) {
+      return this;
     }
-    return false;
+    return new ECSignature(r, curveParams.n - s);
   }
 
   String toString() => "(${r.toString()},${s.toString()})";

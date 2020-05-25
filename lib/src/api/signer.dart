@@ -20,7 +20,7 @@ abstract class Signer extends Algorithm {
   void init(bool forSigning, CipherParameters params);
 
   /// Sign the passed in [message] (usually the output of a hash function)
-  Signature generateSignature(Uint8List message, {bool normalize = false});
+  Signature generateSignature(Uint8List message);
 
   /// Verify the [message] against the [signature].
   bool verifySignature(Uint8List message, Signature signature);
