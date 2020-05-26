@@ -2,6 +2,8 @@
 Pointy Castle
 =============
 
+[![Build Status](https://travis-ci.org/bcgit/pc-dart.svg?branch=master)](https://travis-ci.org/bcgit/pc-dart)
+
 A Dart library for encryption and decryption. In this release, most of the classes are ports of Bouncy Castle from Java to Dart. The porting is almost always
 direct except for some classes that had been added to ease the use of low level
 data.
