@@ -10,71 +10,78 @@ To make sure nothing fails, tests and benchmarks for every algorithm are
 provided. The expected results are taken from the Bouncy Castle Java version
 and also from standards, and matched against the results got from Pointy Castle.
 
-This library was adopted from the original project at https://github.com/PointyCastle/pointycastle at the request of the authors to help support ongoing development.
+This library was adopted from the original project at https://github.com/PointyCastle/pointycastle at the request of the
+ authors to help support ongoing development. A list of major contributors is provided at contributors.md
 
 ## Algorithms
 
-In this release, the following algorithms are implemented:
+In this release, the following algorithms are implemented. Most of the below can be used directly with the registry:
+
+**AEAD ciphers:**
+  * 'ChaCha20-Poly1305'
 
 **Block ciphers:**
-  * AES
+  * 'AES'
+  
+**Block cipher modes of operation:**
+  * 'CBC' (Cipher Block Chaining mode)
+  * 'CFB' (Cipher Feedback mode)
+  * 'ECB' (Electronic Code Book mode)
+  * 'GCTR' (GOST 28147 OFB counter mode)
+  * 'OFB' (Output FeedBack mode)
+  * 'CTR'/'SIC' (Counter mode)
+  
+**Paddings:**
+  * 'PKCS7'
+  * 'ISO7816-4'
 
 **Asymmetric block ciphers:**
-  * RSA
+  * 'RSA'
 
 **Asymmetric block cipher encodings:**
-  * PKCS1
-  * OAEP
+  * 'PKCS1'
+  * 'OAEP'
 
 **Stream ciphers:**
-  * Salsa20
-
-**Block cipher modes of operation:**
-  * CBC (Cipher Block Chaining mode)
-  * CFB (Cipher Feedback mode)
-  * ECB (Electronic Code Book mode)
-  * GCTR (GOST 28147 OFB counter mode)
-  * OFB (Output FeedBack mode)
-  * CTR (Counter mode)
-  * SIC
-
-**Paddings:**
-  * PKCS7
-  * ISO7816-4
+  * 'Salsa20'
+  * 'ChaCha20/(# of rounds)' (original implementation)
+  * 'ChaCha7539/(# of rounds)' (RFC-7539 implementation)
+  * If you don't know how many ChaCha rounds to use, use 20.
 
 **Digests:**
-  * Blake2b
-  * MD2
-  * MD4
-  * MD5
-  * RIPEMD-128|160|256|320
-  * SHA-1
-  * SHA-224|256|384|512
-  * SHA-512/t (t=8 to 376 and 392 to 504 in multiples of 8)
-  * Keccak-224|256|384|512*
-  * Tiger
-  * Whirlpool
+  * 'Blake2b'
+  * 'MD2'
+  * 'MD4'
+  * 'MD5'
+  * 'RIPEMD-128|160|256|320'
+  * 'SHA-1'
+  * 'SHA-224|256|384|512'
+  * 'SHA-512/t' (t=8 to 376 and 392 to 504 in multiples of 8)
+  * 'Keccak/224|256|384|512'
+  * 'SHA-3/224|256|384|512'
+  * 'Tiger'
+  * 'Whirlpool'
 
-*_Keccak is currently implemented as SHA3Digest._
+*_Keccak is currently implemented as a named constructor of SHA3Digest. Both can be used normally through the registry._
 
 **MACs:**
-  * HMAC
-  * CMAC
+  * 'HMAC'
+  * 'CMAC'
 
 **Signatures:**
-  * (DET-)ECDSA
-  * RSA
+  * '(DET-)ECDSA'
+  * 'RSA'
 
 **Password based key derivators:**
-  * PBKDF2
-  * scrypt
+  * 'PBKDF2'
+  * 'scrypt'
 
 **HMAC based key derivators:**
-  * HKDF
+  * 'HKDF'
 
 **Asymmetric key generators:**
-  * ECDSA
-  * RSA
+  * 'ECDSA'
+  * 'RSA'
 
 **Secure PRNGs:**
   * Based on block cipher in CTR mode
@@ -97,7 +104,7 @@ factories.
 This is especially convenient when an algorithm involves multiple
 algorithm implementation classes to implement. All the necessary
 classes can all be instantiated with a single name
-(e.g. "HMAC/SHA-256" or "SHA-1/HMAC/PBKDF2"), and they are
+(e.g. "HMAC/SHA-256" or "SHA-1/HMAC/PBKDF2" or "AES/CBC/PKCS7"), and they are
 automatically combined together with the correct values.
 
 For example,
@@ -248,11 +255,11 @@ final p = Padding("PKCS7");
 Some articles on how to use some of Pointy Castle's features can be
 found under the _tutorials_ directory in the sources.
 
-- [Calculating a digest](https://github.com/PointyCastle/pointycastle/blob/master/tutorials/digest.md) - calculating a hash or digest (e.g. SHA-256, SHA-1, MD5)
-- [Calculating a HMAC](https://github.com/PointyCastle/pointycastle/blob/master/tutorials/hmac.md) - calculating a hash-based message authentication code (e.g. HMAC-SHA256, HMAC-SHA1)
-- [Using AES-CBC](https://github.com/PointyCastle/pointycastle/blob/master/tutorials/aes-cbc.md) - block encryption and decryption with AES-CBC
-- [Using RSA](https://github.com/PointyCastle/pointycastle/blob/master/tutorials/rsa.md) - key generation, signing/verifying, and encryption/decryption
-- Some [tips](https://github.com/PointyCastle/pointycastle/blob/master/tutorials/tips.md) on using Pointy Castle
+- [Calculating a digest](https://github.com/bcgit/pc-dart/blob/master/tutorials/digest.md) - calculating a hash or digest (e.g. SHA-256, SHA-1, MD5)
+- [Calculating a HMAC](https://github.com/bcgit/pc-dart/blob/master/tutorials/hmac.md) - calculating a hash-based message authentication code (e.g. HMAC-SHA256, HMAC-SHA1)
+- [Using AES-CBC](https://github.com/bcgit/pc-dart/blob/master/tutorials/aes-cbc.md) - block encryption and decryption with AES-CBC
+- [Using RSA](https://github.com/bcgit/pc-dart/blob/master/tutorials/rsa.md) - key generation, signing/verifying, and encryption/decryption
+- Some [tips](https://github.com/bcgit/pc-dart/blob/master/tutorials/tips.md) on using Pointy Castle
 
 _Note: the above links are to the most recent versions on the master
 branch on GitHub. They may be different from the version here._

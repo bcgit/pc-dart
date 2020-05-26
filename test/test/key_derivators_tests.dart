@@ -2,22 +2,22 @@
 
 library pointycastle.test.test.key_derivators_tests;
 
-import "package:test/test.dart";
-import "package:pointycastle/pointycastle.dart";
+import 'package:test/test.dart';
+import 'package:pointycastle/pointycastle.dart';
 
-import "./src/helpers.dart";
+import './src/helpers.dart';
 
 void runKeyDerivatorTests(
     KeyDerivator keyDerivator, List<dynamic> paramsPasswordKeyTuples) {
-  group("${keyDerivator.algorithmName}:", () {
-    group("deriveKey:", () {
+  group('${keyDerivator.algorithmName}:', () {
+    group('deriveKey:', () {
       for (var i = 0; i < paramsPasswordKeyTuples.length; i += 3) {
         var params = paramsPasswordKeyTuples[i];
         var password = paramsPasswordKeyTuples[i + 1];
         var key = paramsPasswordKeyTuples[i + 2];
 
-        test("${formatAsTruncated(password)}",
-            () => _runKeyDerivatorTest(keyDerivator, params, password, key));
+        test('${formatAsTruncated(password as String)}',
+            () => _runKeyDerivatorTest(keyDerivator, params as CipherParameters, password as String, key as String));
       }
     });
   });

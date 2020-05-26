@@ -1,9 +1,8 @@
-library pointycastle.impl.stream_cipher.chacha20;
+library pointycastle.impl.stream_cipher.chacha7539;
 
 import 'dart:typed_data';
 
-import 'package:pointycastle/export.dart';
-
+import '../export.dart';
 import '../api.dart';
 import '../src/impl/base_stream_cipher.dart';
 import '../src/registry/registry.dart';
@@ -14,20 +13,25 @@ import '../src/ufixnum.dart';
 // ignore_for_file: prefer_typing_uninitialized_variables, camel_case_types
 // ignore_for_file: annotate_overrides
 
-/// Implementation of Daniel J. Bernstein's ChaCha20 stream cipher, Snuffle 2005.
-class ChaCha20Engine extends BaseStreamCipher {
+/// RFC version of Daniel J. Bernstein's ChaCha20. This uses a 12 byte IV, among
+/// other changes.
+class ChaCha7539Engine extends BaseStreamCipher {
   // ignore: non_constant_identifier_names
   static final FactoryConfig FACTORY_CONFIG = DynamicFactoryConfig.prefix(
       StreamCipher,
-      'ChaCha20/',
+      'ChaCha7539/',
           (_, final Match match) => () {
         var rounds = int.parse(match.group(1));
-        return ChaCha20Engine.fromRounds(rounds);
+        return ChaCha7539Engine.fromRounds(rounds);
       });
 
-  static const STATE_SIZE = 16;
+  ChaCha7539Engine () {rounds = 20;}
+
+  ChaCha7539Engine.fromRounds(this.rounds);
 
   int rounds = 20;
+
+  static const STATE_SIZE = 16;
 
   static final _sigma = Uint8List.fromList([
     101,
@@ -78,30 +82,23 @@ class ChaCha20Engine extends BaseStreamCipher {
   var _initialised = false;
 
   @override
-  String get algorithmName => 'ChaCha20/${rounds}';
-
-  ChaCha20Engine() {
-    this.rounds = 20;
-  }
-
-  ChaCha20Engine.fromRounds(int rounds) {
-    this.rounds = rounds;
-  }
+  String get algorithmName => 'ChaCha7539/$rounds';
 
   @override
   void reset() {
+    _state[12] = 0;
     if (_workingKey != null) {
       _setKey(_workingKey, _workingIV);
     }
   }
 
   @override
-  void init(bool forEncryption,
-      covariant ParametersWithIV<KeyParameter> params) {
+  void init(
+      bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 8) {
-      throw ArgumentError('ChaCha20 requires exactly 8 bytes of IV');
+    if (iv == null || iv.length != 12) {
+      throw ArgumentError('ChaCha20-7539 requires exactly 12 bytes of IV');
     }
 
     _workingIV = iv;
@@ -127,8 +124,8 @@ class ChaCha20Engine extends BaseStreamCipher {
   }
 
   @override
-  void processBytes(Uint8List inp, int inpOff, int len, Uint8List out,
-      int outOff) {
+  void processBytes(
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (!_initialised) {
       throw StateError('ChaCha20 not initialized: please call init() first');
     }
@@ -147,9 +144,7 @@ class ChaCha20Engine extends BaseStreamCipher {
       if (_keyStreamOffset == 0) {
         generateKeyStream(_keyStream);
 
-        if (++_state[12] == 0) {
-          ++_state[13];
-        }
+        if (++_state[12] == 0) throw StateError('Illegal increase of counter');
       }
 
       out[i + outOff] = clip8(_keyStream[_keyStreamOffset] ^ inp[i + inpOff]);
@@ -162,41 +157,43 @@ class ChaCha20Engine extends BaseStreamCipher {
     _workingIV = ivBytes;
 
     _keyStreamOffset = 0;
-    var offset = 0;
     Uint8List constants;
-
-    // Key
-    _state[4] = unpack32(_workingKey, 0, Endian.little);
-    _state[5] = unpack32(_workingKey, 4, Endian.little);
-    _state[6] = unpack32(_workingKey, 8, Endian.little);
-    _state[7] = unpack32(_workingKey, 12, Endian.little);
 
     if (_workingKey.length == 32) {
       constants = _sigma;
-      offset = 16;
     } else {
       constants = _tau;
     }
 
-    _state[8] = unpack32(_workingKey, offset, Endian.little);
-    _state[9] = unpack32(_workingKey, offset + 4, Endian.little);
-    _state[10] = unpack32(_workingKey, offset + 8, Endian.little);
-    _state[11] = unpack32(_workingKey, offset + 12, Endian.little);
+    //Key
+    _state[4] = unpack32(_workingKey, 0, Endian.little);
+    _state[5] = unpack32(_workingKey, 4, Endian.little);
+    _state[6] = unpack32(_workingKey, 8, Endian.little);
+    _state[7] = unpack32(_workingKey, 12, Endian.little);
+    _state[8] = unpack32(_workingKey, 16, Endian.little);
+    _state[9] = unpack32(_workingKey, 20, Endian.little);
+    _state[10] = unpack32(_workingKey, 24, Endian.little);
+    _state[11] = unpack32(_workingKey, 28, Endian.little);
+
     _state[0] = unpack32(constants, 0, Endian.little);
     _state[1] = unpack32(constants, 4, Endian.little);
     _state[2] = unpack32(constants, 8, Endian.little);
     _state[3] = unpack32(constants, 12, Endian.little);
 
+    _state[12] = 0;
+
     // IV
-    _state[14] = unpack32(_workingIV, 0, Endian.little);
-    _state[15] = unpack32(_workingIV, 4, Endian.little);
-    _state[12] = _state[13] = 0;
+    var off = 0;
+    for (var i = 0; i < 3; ++i) {
+      _state[13 + i] = unpack32(_workingIV, off, Endian.little);
+      off += 4;
+    }
 
     _initialised = true;
   }
 
   void generateKeyStream(Uint8List output) {
-    _core(this.rounds, _state, _buffer);
+    _core(rounds, _state, _buffer);
     var outOff = 0;
     for (var x in _buffer) {
       pack32(x, output, outOff, Endian.little);

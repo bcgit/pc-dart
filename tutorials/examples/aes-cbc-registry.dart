@@ -114,10 +114,10 @@ String bin2hex(Uint8List bytes, {String separator, int wrap}) {
 
 Uint8List hex2bin(String hexStr) {
   if (hexStr.length % 2 != 0) {
-    throw FormatException('not an even number of hexadecimal characters');
+    throw const FormatException('not an even number of hexadecimal characters');
   }
   final result = Uint8List(hexStr.length ~/ 2);
-  for (int i = 0; i < result.length; i++) {
+  for (var i = 0; i < result.length; i++) {
     result[i] = int.parse(hexStr.substring(2 * i, 2 * (i + 1)), radix: 16);
   }
   return result;
@@ -164,9 +164,9 @@ Uint8List passphraseToKey(String passPhrase,
   final numBytes = bitLength ~/ 8;
 
   final kd = KeyDerivator('SHA-256/HMAC/PBKDF2')
-    ..init(Pbkdf2Parameters(utf8.encode(salt), iterations, numBytes));
+    ..init(Pbkdf2Parameters(utf8.encode(salt) as Uint8List, iterations, numBytes));
 
-  return kd.process(utf8.encode(passPhrase));
+  return kd.process(utf8.encode(passPhrase) as Uint8List);
 }
 
 //----------------------------------------------------------------
@@ -180,7 +180,7 @@ Uint8List generateRandomBytes(int numBytes) {
 
     final seedSource = Random.secure();
     final seeds = <int>[];
-    for (int i = 0; i < 32; i++) {
+    for (var i = 0; i < 32; i++) {
       seeds.add(seedSource.nextInt(255));
     }
     _secureRandom.seed(KeyParameter(Uint8List.fromList(seeds)));
@@ -328,7 +328,7 @@ in culpa qui officia deserunt mollit anim id est laborum.
   final cipherText = aesCbcEncrypt(
       passphraseToKey(passphrase, salt: randomSalt, bitLength: aesSize),
       iv,
-      pad(utf8.encode(textToEncrypt), 128));
+      pad(utf8.encode(textToEncrypt) as Uint8List, 128));
 
   // If the encrypted data was to be stored or transmitted to the receiver,
   // it will have to store the cipher-text, Initialization Vector (IV) and

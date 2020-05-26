@@ -31,6 +31,7 @@ void main() {
       testDigest("SHA-224");
       testDigest("SHA-256");
       testDigest("SHA-3/512");
+      testDigest("Keccak/512");
       testDigest("SHA-384");
       testDigest("SHA-512");
       testDigest("SHA-512/448");
@@ -108,6 +109,8 @@ void main() {
       testStreamCipher("AES/SIC");
       testStreamCipher("AES/CTR");
       testStreamCipher('ChaCha20/20');
+      testStreamCipher('ChaCha7539/20');
+      testAEADCipher('ChaCha20-Poly1305');
     });
   });
 }
