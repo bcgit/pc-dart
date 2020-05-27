@@ -5,11 +5,11 @@ library pointycastle.test.asymmetric.oaep_test;
 import 'dart:typed_data';
 
 import "package:pointycastle/export.dart";
+import 'package:pointycastle/src/impl/secure_random_base.dart';
 import "package:pointycastle/src/registry/registry.dart";
 import 'package:pointycastle/src/utils.dart';
 import "package:test/test.dart";
 
-import "../test/src/fixed_secure_random.dart";
 import '../test/src/helpers.dart';
 import "../test/src/null_asymmetric_block_cipher.dart";
 
@@ -244,7 +244,7 @@ void rsaOaepStandardTests() {
     encryptor.init(
         true,
         ParametersWithRandom(PublicKeyParameter<RSAPublicKey>(publicKey),
-            FixedSecureRandom()..seed(KeyParameter(seed))));
+            _OAEPTestEntropySource()..seed(KeyParameter(seed))));
 
     // Pretend to encrypt the test [message] value
 
@@ -267,14 +267,16 @@ void rsaOaepStandardTests() {
     // expected value. DO NOT DO THIS IN PRODUCTION. This is insecure and is
     // done only for testing purposes.
 
-    registry.register(FixedSecureRandom.FACTORY_CONFIG); // register "Fixed"
+    registry
+        .register(_OAEPTestEntropySource.FACTORY_CONFIG); // register "Fixed"
 
     final encryptor = AsymmetricBlockCipher('RSA/OAEP'); // using registry
 
     encryptor.init(
         true, // true = for encryption
         ParametersWithRandom(PublicKeyParameter<RSAPublicKey>(publicKey),
-            SecureRandom('Fixed')..seed(KeyParameter(seed))));
+            SecureRandom("_oaep_rand")
+              ..seed(KeyParameter(seed))));
 
     // Encrypt the test [message] value
 
@@ -367,7 +369,8 @@ void rsaOaepStandardTests() {
     encryptor.init(
         true,
         ParametersWithRandom(PublicKeyParameter<RSAPublicKey>(publicKey),
-            FixedSecureRandom()..seed(KeyParameter(seed))));
+            _OAEPTestEntropySource()
+              ..seed(KeyParameter(seed))));
 
     // Pretend to encrypt the test [message] value
 
@@ -429,7 +432,8 @@ void rsaOaepStandardTests() {
       // print('FixedSecureRandom seed: $testFixedRndSeed (from x = $x)');
 
       final processTestCaseWith = (AsymmetricBlockCipher blockCipher) {
-        final rnd = FixedSecureRandom()..seed(KeyParameter(testFixedRndSeed));
+        final rnd = _OAEPTestEntropySource()
+          ..seed(KeyParameter(testFixedRndSeed));
 
         final enc = OAEPEncoding(blockCipher);
 
@@ -670,7 +674,7 @@ void rsaesOaepFromBC() {
 
   test("RSAESOAEP encryption vectors from BC", () {
     vectors.forEach((Vector v) {
-      var rng = new FixedSecureRandom();
+      var rng = new _OAEPTestEntropySource();
       rng.seed(new KeyParameter(v.seed));
 
       var rsaesOaep = OAEPEncoding(RSAEngine());
@@ -683,6 +687,46 @@ void rsaesOaepFromBC() {
       expect(output, equals(v.ct, size));
     });
   });
+}
+
+// ----
+
+///
+/// For testing only.
+/// Reads through the seed and then resets to the beginning of
+/// the seed when exhausted.
+///
+class _OAEPTestEntropySource extends SecureRandomBase {
+  var _next = 0;
+  var _values;
+
+  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig(
+      SecureRandom, "_oaep_rand", () => _OAEPTestEntropySource());
+
+  String get algorithmName => "_oaep_rand";
+
+  @override
+  BigInt nextBigInteger(int bitLength) {
+    throw UnimplementedError();
+  }
+
+  @override
+  int nextUint8() {
+    if (_values != null && _values.isNotEmpty) {
+      if (_next >= _values.length) {
+        _next = 0;
+      }
+      return _values[_next++];
+    } else {
+      return 0;
+    }
+  }
+
+  @override
+  void seed(covariant KeyParameter params) {
+    _values = (params as KeyParameter).key;
+    _next = 0;
+  }
 }
 
 //================================================================
