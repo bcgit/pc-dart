@@ -27,27 +27,32 @@ import "package:pointycastle/src/registry/registry.dart";
 ///     assert (a == s[0] && b = s[1] && c == s[2]);
 
 class FixedSecureRandom extends SecureRandomBase {
+  // ignore: non_constant_identifier_names
   static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(SecureRandom, "Fixed", () => FixedSecureRandom());
+      StaticFactoryConfig(SecureRandom, 'Fixed', () => FixedSecureRandom());
 
   var _next = 0;
+  // ignore: prefer_typing_uninitialized_variables
   var _values;
 
-  String get algorithmName => "Fixed";
+  @override
+  String get algorithmName => 'Fixed';
 
   /// Set the fixed values to use and reset to the beginning of it.
 
+  @override
   void seed(covariant KeyParameter params) {
     _values = params.key; // set the values to use (could be null or empty)
     _next = 0; // reset to the beginning of the values
   }
 
+  @override
   int nextUint8() {
-    if (_values != null && _values.isNotEmpty) {
-      if (_next >= _values.length) {
+    if (_values != null && _values.isNotEmpty as bool) {
+      if (_next >= (_values.length as int)) {
         _next = 0; // reset to beginning of the array
       }
-      return _values[_next++];
+      return _values[_next++] as int;
     } else {
       return 0; // value when not set with any values
     }

@@ -12,6 +12,7 @@ import "package:pointycastle/src/ufixnum.dart";
 /// Implementation of SHA-3 digest.
 class SHA3Digest extends BaseDigest implements Digest {
   static final RegExp _NAME_REGEX = new RegExp(r"^SHA-3\/([0-9]+)$");
+  static final RegExp _Keccak_REGEX = new RegExp(r"^Keccak\/([0-9]+)$");
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig(
@@ -21,6 +22,15 @@ class SHA3Digest extends BaseDigest implements Digest {
             int bitLength = int.parse(match.group(1));
             return new SHA3Digest(bitLength);
           });
+
+  /// Intended for internal use.
+  static final FactoryConfig KECCAK_CONFIG = new DynamicFactoryConfig(
+      Digest,
+      _Keccak_REGEX,
+          (_, final Match match) => () {
+        int bitLength = int.parse(match.group(1));
+        return new SHA3Digest.keccak(bitLength);
+      });
 
   static final _keccakRoundConstants = new Register64List.from([
     [0x00000000, 0x00000001],
@@ -88,11 +98,17 @@ class SHA3Digest extends BaseDigest implements Digest {
   bool _keccak;
   int _bitsAvailableForSqueezing;
 
-  SHA3Digest([int bitLength = 0, this._keccak = true]) {
+  SHA3Digest([int bitLength = 0]) {
     _init(bitLength);
+    _keccak = false;
   }
 
-  String get algorithmName => "SHA-3/${_fixedOutputLength}";
+  SHA3Digest.keccak([int bitLength = 0]) {
+    _init(bitLength);
+    _keccak = true;
+  }
+
+  String get algorithmName => _keccak ? "Keccak/${_fixedOutputLength}" : "SHA-3/${_fixedOutputLength}";
 
   int get digestSize => (_fixedOutputLength ~/ 8);
 

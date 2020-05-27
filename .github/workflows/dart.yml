@@ -1,0 +1,26 @@
+name: PointyCaslte CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image:  google/dart:latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: pub get
+    - name: Upgrade dependencies
+      run: pub upgrade
+    - name: Get Pana
+      run: pub global activate pana  
+    - name: Run Pana
+      run: pana --no-warning --source path /
+    #- name: Publish
+      #run: pub publish
+    
