@@ -8,11 +8,10 @@ import "package:pointycastle/src/registry/registry.dart";
 
 /// An implementation of [SecureRandom] that return fixed values.
 ///
-/// The source of the fixed values is set using the [seed] method. If it is not
-/// set, or was set with no data, zero is always returned as the random values.
+/// The source of the fixed values is set using the [seed] method.
 ///
-/// If the end of the source is reached, it wraps around to the beginning of the
-/// source.
+/// Will throw StateError when end of entropy source is reached or if
+/// no values are set.
 ///
 /// For example,
 ///
@@ -48,13 +47,13 @@ class FixedSecureRandom extends SecureRandomBase {
 
   @override
   int nextUint8() {
-    if (_values != null && _values.isNotEmpty as bool) {
-      if (_next >= (_values.length as int)) {
-        _next = 0; // reset to beginning of the array
+    if (_values != null && _values.isNotEmpty) {
+      if (_next >= _values.length) {
+        throw StateError("fixed secure random unexpectedly exhausted");
       }
-      return _values[_next++] as int;
+      return _values[_next++];
     } else {
-      return 0; // value when not set with any values
+      throw StateError("fixed secure random has no values");
     }
   }
 }
