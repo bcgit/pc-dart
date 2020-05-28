@@ -88,8 +88,10 @@ import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:pointycastle/signers/ecdsa_signer.dart';
 import 'package:pointycastle/signers/rsa_signer.dart';
 import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/stream/chacha20poly1305.dart';
 import 'package:pointycastle/stream/ctr.dart';
 import 'package:pointycastle/stream/salsa20.dart';
+import 'package:pointycastle/stream/chacha7539.dart';
 import 'package:pointycastle/stream/sic.dart';
 
 void registerFactories(FactoryRegistry registry) {
@@ -137,6 +139,7 @@ void _registerDigests(FactoryRegistry registry) {
   registry.register(RIPEMD320Digest.FACTORY_CONFIG);
   registry.register(SHA1Digest.FACTORY_CONFIG);
   registry.register(SHA3Digest.FACTORY_CONFIG);
+  registry.register(KeccakDigest.KECCAK_CONFIG);
   registry.register(SHA224Digest.FACTORY_CONFIG);
   registry.register(SHA256Digest.FACTORY_CONFIG);
   registry.register(SHA384Digest.FACTORY_CONFIG);
@@ -232,5 +235,7 @@ void _registerStreamCiphers(FactoryRegistry registry) {
   registry.register(CTRStreamCipher.FACTORY_CONFIG);
   registry.register(Salsa20Engine.FACTORY_CONFIG);
   registry.register(ChaCha20Engine.FACTORY_CONFIG);
+  registry.register(ChaCha7539Engine.FACTORY_CONFIG);
+  registry.register(ChaCha20Poly1305.FACTORY_CONFIG);
   registry.register(SICStreamCipher.FACTORY_CONFIG);
 }

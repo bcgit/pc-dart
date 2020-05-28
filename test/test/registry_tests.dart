@@ -88,3 +88,9 @@ void testStreamCipher(String algorithmName) {
   expect(cipher, new isInstanceOf<StreamCipher>());
   expect(cipher.algorithmName, algorithmName);
 }
+
+void testAEADCipher(String algorithmName) {
+  var cipher = AEADCipher(algorithmName);
+  expect(cipher, new isInstanceOf<AEADCipher>());
+  expect(cipher.algorithmName, algorithmName);
+}

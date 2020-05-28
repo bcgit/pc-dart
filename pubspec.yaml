@@ -1,7 +1,7 @@
 name: pointycastle
-version: 1.0.2
-author: The Pointy Castle team
-description: A Dart library implementing cryptographic algorithms
+version: 1.1.1
+author: The Bouncy Castle Team
+description: A Dart library implementing cryptographic algorithms and primitives, modeled on the BouncyCastle library.
 homepage: https://github.com/PointyCastle/pointycastle
 environment:
   sdk: ">=0.8.10+6 <3.0.0"

@@ -32,3 +32,13 @@ abstract class Digest extends Algorithm {
    */
   int doFinal(Uint8List out, int outOff);
 }
+
+mixin ExtendedDigest implements Digest {
+  ///
+  /// Return the size of the internal buffer the digest applies it's compression
+  /// function to.
+  ///
+  /// Returns the length of the internal buffer in bytes.
+  ///
+  int getByteLength();
+}

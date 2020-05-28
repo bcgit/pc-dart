@@ -13,7 +13,7 @@ import "digests/ripemd160_test.dart" as ripemd160_test;
 import "digests/ripemd256_test.dart" as ripemd256_test;
 import "digests/ripemd320_test.dart" as ripemd320_test;
 import "digests/sha1_test.dart" as sha1_test;
-import "digests/sha3_test.dart" as sha3_test;
+import "digests/keccak_test.dart" as sha3_test;
 import "digests/sha224_test.dart" as sha224_test;
 import "digests/sha256_test.dart" as sha256_test;
 import "digests/sha384_test.dart" as sha384_test;
@@ -46,6 +46,7 @@ import "signers/rsa_signer_test.dart" as rsa_signer_test;
 import "src/ufixnum_test.dart" as ufixnum_test;
 import "stream/salsa20_test.dart" as salsa20_test;
 import "stream/chacha20_test.dart" as chacha20_test;
+import "stream/chacha20poly1305_test.dart" as chacha20poly1305_test;
 import "impl_test.dart" as impl_test;
 import 'macs/poly1305_test.dart' as poly1305_test;
 
@@ -97,5 +98,6 @@ void main() {
   ufixnum_test.main();
   salsa20_test.main();
   chacha20_test.main();
+  chacha20poly1305_test.main();
   impl_test.main();
 }
