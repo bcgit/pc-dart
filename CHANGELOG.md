@@ -10,6 +10,8 @@ Changelog
 * Add Poly1305, ChaCha20
 * Fixed randomly occuring bug with OAEP decoding.
 * Added NormalizedECDSASigner that wraps ECDSASigner to guarantee an ecdsa signature in lower-s form. (Enforcement on verification supported).
+* Reduce copies in CBC mode.
+
 
 #### Version 1.0.2 (2019-11-15)
 

@@ -1,0 +1,6 @@
+language: dart
+dart:
+  - stable
+script:
+  - pub global activate pana
+  - pana --source path .
