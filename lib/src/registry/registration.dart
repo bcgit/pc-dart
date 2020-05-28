@@ -139,7 +139,7 @@ void _registerDigests(FactoryRegistry registry) {
   registry.register(RIPEMD320Digest.FACTORY_CONFIG);
   registry.register(SHA1Digest.FACTORY_CONFIG);
   registry.register(SHA3Digest.FACTORY_CONFIG);
-  registry.register(SHA3Digest.KECCAK_CONFIG);
+  registry.register(KeccakDigest.KECCAK_CONFIG);
   registry.register(SHA224Digest.FACTORY_CONFIG);
   registry.register(SHA256Digest.FACTORY_CONFIG);
   registry.register(SHA384Digest.FACTORY_CONFIG);

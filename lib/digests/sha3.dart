@@ -9,28 +9,18 @@ import "package:pointycastle/src/impl/base_digest.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ufixnum.dart";
 
-/// Implementation of SHA-3 digest.
-class SHA3Digest extends BaseDigest implements Digest {
-  static final RegExp _NAME_REGEX = new RegExp(r"^SHA-3\/([0-9]+)$");
+/// Implementation of Keccak digest.
+class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   static final RegExp _Keccak_REGEX = new RegExp(r"^Keccak\/([0-9]+)$");
-
-  /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig(
-      Digest,
-      _NAME_REGEX,
-      (_, final Match match) => () {
-            int bitLength = int.parse(match.group(1));
-            return new SHA3Digest(bitLength);
-          });
 
   /// Intended for internal use.
   static final FactoryConfig KECCAK_CONFIG = new DynamicFactoryConfig(
       Digest,
       _Keccak_REGEX,
-          (_, final Match match) => () {
-        int bitLength = int.parse(match.group(1));
-        return new SHA3Digest.keccak(bitLength);
-      });
+      (_, final Match match) => () {
+            int bitLength = int.parse(match.group(1));
+            return new KeccakDigest(bitLength);
+          });
 
   static final _keccakRoundConstants = new Register64List.from([
     [0x00000000, 0x00000001],
@@ -95,20 +85,28 @@ class SHA3Digest extends BaseDigest implements Digest {
 
   int _bitsInQueue;
   bool _squeezing;
-  bool _keccak;
+
+  //bool _keccak;
   int _bitsAvailableForSqueezing;
 
-  SHA3Digest([int bitLength = 0]) {
-    _init(bitLength);
-    _keccak = false;
+  KeccakDigest([int bitLength = 288]) {
+    //  _keccak = true;
+    switch (bitLength) {
+      case 128:
+      case 224:
+      case 256:
+      case 288:
+      case 384:
+      case 512:
+        _init(bitLength);
+        break;
+      default:
+        throw StateError(
+            'invalid bitLength ($bitLength) for Keccak must only be 128,224,256,288,384,512');
+    }
   }
 
-  SHA3Digest.keccak([int bitLength = 0]) {
-    _init(bitLength);
-    _keccak = true;
-  }
-
-  String get algorithmName => _keccak ? "Keccak/${_fixedOutputLength}" : "SHA-3/${_fixedOutputLength}";
+  String get algorithmName => "Keccak/${_fixedOutputLength}";
 
   int get digestSize => (_fixedOutputLength ~/ 8);
 
@@ -125,15 +123,8 @@ class SHA3Digest extends BaseDigest implements Digest {
   }
 
   int doFinal(Uint8List out, int outOff) {
-    if (!_keccak) {
-      // FIPS 202 SHA3 https://github.com/PointyCastle/pointycastle/issues/128
-      absorbBits(0x02, 2);
-    }
-
     _squeeze(out, outOff, _fixedOutputLength);
-
     reset();
-
     return digestSize;
   }
 
@@ -150,34 +141,6 @@ class SHA3Digest extends BaseDigest implements Digest {
     int mask = (1 << bits) - 1;
     _dataQueue[_bitsInQueue >> 3] = data & mask;
     _bitsInQueue += bits;
-  }
-
-  void _init(int bitLength) {
-    switch (bitLength) {
-      case 288:
-        _initSponge(1024, 576);
-        break;
-
-      case 224:
-        _initSponge(1152, 448);
-        break;
-
-      case 256:
-        _initSponge(1088, 512);
-        break;
-
-      case 384:
-        _initSponge(832, 768);
-        break;
-
-      case 512:
-        _initSponge(576, 1024);
-        break;
-
-      default:
-        throw new ArgumentError(
-            "bitLength (${bitLength}) must be one of 224, 256, 384, or 512");
-    }
   }
 
   void _clearDataQueueSection(int off, int len) {
@@ -197,6 +160,34 @@ class SHA3Digest extends BaseDigest implements Digest {
     }
   }
 
+  void _init(int bitlen) {
+    _initSponge(1600 - (bitlen << 1));
+  }
+
+  void _initSponge(int rate) {
+    if ((rate <= 0) || (rate >= 1600) || ((rate % 64) != 0)) {
+      throw new StateError("invalid rate value");
+    }
+
+//    if ((rate + capacity) != 1600) {
+//      throw new StateError(
+//          "Value of (rate + capacity) is not 1600: ${rate + capacity}");
+//    }
+//    if ((rate <= 0) || (rate >= 1600) || ((rate % 64) != 0)) {
+//      throw new StateError("Invalid rate value: ${rate}");
+//    }
+
+    _rate = rate;
+    _fixedOutputLength = (1600 - rate) ~/ 2;
+    _state.fillRange(0, _state.length, 0);
+    _dataQueue.fillRange(0, _dataQueue.length, 0);
+
+    _bitsInQueue = 0;
+    _squeezing = false;
+    _bitsAvailableForSqueezing = 0;
+  }
+
+  /*
   void _initSponge(int rate, int capacity) {
     if ((rate + capacity) != 1600) {
       throw new StateError(
@@ -215,7 +206,7 @@ class SHA3Digest extends BaseDigest implements Digest {
     _squeezing = false;
     _bitsAvailableForSqueezing = 0;
   }
-
+*/
   void _absorbQueue() {
     _keccakAbsorb(_state, _dataQueue, _rate ~/ 8);
 
@@ -488,5 +479,49 @@ class SHA3Digest extends BaseDigest implements Digest {
 
   void _keccakExtract(Uint8List byteState, Uint8List data, int laneCount) {
     data.setRange(0, laneCount * 8, byteState);
+  }
+
+  @override
+  int getByteLength() => _rate ~/ 8;
+}
+
+int _sha3SizeCheck(int bitLen) {
+  switch (bitLen) {
+    case 224:
+    case 256:
+    case 384:
+    case 512:
+      return bitLen;
+    default:
+      throw StateError(
+          'invalid bitLength ($bitLen) for SHA3 must only be 224,256,384,512');
+  }
+}
+
+/// Implementation of SHA3Digest
+class SHA3Digest extends KeccakDigest {
+  static final RegExp _NAME_REGEX = new RegExp(r"^SHA-3\/([0-9]+)$");
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig(
+      Digest,
+      _NAME_REGEX,
+          (_, final Match match) =>
+          () {
+        int bitLength = int.parse(match.group(1));
+        return new SHA3Digest(bitLength);
+      });
+
+  String get algorithmName => "SHA-3/${_fixedOutputLength}";
+
+  SHA3Digest([int bitLength = 256]) : super(_sha3SizeCheck(bitLength));
+
+  @override
+  int doFinal(Uint8List out, int outOff) {
+    // FIPS 202 SHA3 https://github.com/PointyCastle/pointycastle/issues/128
+    absorbBits(0x02, 2);
+    _squeeze(out, outOff, _fixedOutputLength);
+    reset();
+    return digestSize;
   }
 }

@@ -5,8 +5,8 @@ library pointycastle.impl.mac.hmac;
 import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/impl/base_mac.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /**
  * HMAC implementation based on RFC2104
@@ -15,16 +15,10 @@ import "package:pointycastle/src/impl/base_mac.dart";
  */
 class HMac extends BaseMac {
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix(Mac, "/HMAC", (_, Match match) {
-    final String digestName = match.group(1);
-    final int blockLength = _DIGEST_BLOCK_LENGTH[digestName];
-    if (blockLength == null) {
-      throw new RegistryFactoryException("Digest $digestName unknown for "
-          "HMAC construction.");
-    }
+      DynamicFactoryConfig.suffix(Mac, '/HMAC', (_, Match match) {
+    final digestName = match.group(1);
     return () {
-      Digest digest = new Digest(digestName);
-      return new HMac(digest, blockLength);
+      return HMac.withDigest(Digest(digestName));
     };
   });
 
@@ -58,6 +52,29 @@ class HMac extends BaseMac {
   Uint8List _outputBuf;
 
   HMac(this._digest, this._blockLength) {
+    _digestSize = _digest.digestSize;
+    _inputPad = new Uint8List(_blockLength);
+    _outputBuf = new Uint8List(_blockLength + _digestSize);
+  }
+
+  HMac.withDigest(this._digest) {
+    //
+    // TODO Digests should report length of internal buffer .. read on.
+    // Anything that consumes a digest that needs this information should
+    // be able to obtain it from the digest instance.
+    //
+
+    if (_digest is ExtendedDigest) {
+      _blockLength = (_digest as ExtendedDigest).getByteLength();
+    } else {
+      _blockLength = _DIGEST_BLOCK_LENGTH[_digest.algorithmName];
+      if (_blockLength == null) {
+        throw ArgumentError(
+            'Digest, ${_digest
+                .algorithmName} does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
+      }
+    }
+
     _digestSize = _digest.digestSize;
     _inputPad = new Uint8List(_blockLength);
     _outputBuf = new Uint8List(_blockLength + _digestSize);
