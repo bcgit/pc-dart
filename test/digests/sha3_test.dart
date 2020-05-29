@@ -124,7 +124,7 @@ void testSHA3AgainstVectors() {
         'cf9a30ac1f1f6ac0916f9fef1919c595debe2ee80c85421210fdf05f1c6af73aa9cac881d0f91db6d034a2bbadc1cf7fbcb2ecfa9d191d3a5016fb3fad8709c9')
   ];
 
-  group("SHA3", () {
+  group("SHA-3", () {
     for (var vector in vectors) {
       test(vector.algo, () {
         var partialBits = vector.bits % 8;
@@ -164,8 +164,8 @@ void testSHA3AgainstVectors() {
 }
 
 void testSHA3SizeEnforcement() {
-  group('SHA 3 Tests', () {
-    test('enforcement of valid SHA3 sizes', () {
+  group('SHA-3 Tests', () {
+    test('enforcement of valid SHA-3 sizes', () {
       SHA3Digest(224);
       SHA3Digest(256);
       SHA3Digest(384);
@@ -176,7 +176,7 @@ void testSHA3SizeEnforcement() {
         new SHA3Digest(bitLen);
       } on StateError catch (se) {
         expect(se.message,
-            'invalid bitLength ($bitLen) for SHA3 must only be 224,256,384,512');
+            'invalid bitLength ($bitLen) for SHA-3 must only be 224,256,384,512');
       }
     });
   });

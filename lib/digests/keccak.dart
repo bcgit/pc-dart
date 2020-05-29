@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.sha3;
+library pointycastle.impl.digest.keccak;
 
 import "dart:typed_data";
 
@@ -9,18 +9,17 @@ import "package:pointycastle/src/impl/base_digest.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ufixnum.dart";
 
-/// Implementation of SHA3 digest.
-/// https://csrc.nist.gov/publications/detail/fips/202/final
-class SHA3Digest extends BaseDigest implements Digest, ExtendedDigest {
-  static final RegExp _Sha3_REGEX = new RegExp(r"^SHA3-([0-9]+)$");
+/// Implementation of Keccak digest.
+class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
+  static final RegExp _Keccak_REGEX = new RegExp(r"^Keccak\/([0-9]+)$");
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig(
       Digest,
-      _Sha3_REGEX,
+      _Keccak_REGEX,
       (_, final Match match) => () {
             int bitLength = int.parse(match.group(1));
-            return new SHA3Digest(bitLength);
+            return new KeccakDigest(bitLength);
           });
 
   static final _keccakRoundConstants = new Register64List.from([
@@ -87,23 +86,27 @@ class SHA3Digest extends BaseDigest implements Digest, ExtendedDigest {
   int _bitsInQueue;
   bool _squeezing;
 
+  //bool _keccak;
   int _bitsAvailableForSqueezing;
 
-  SHA3Digest([int bitLength = 288]) {
+  KeccakDigest([int bitLength = 288]) {
+    //  _keccak = true;
     switch (bitLength) {
+      case 128:
       case 224:
       case 256:
+      case 288:
       case 384:
       case 512:
         _init(bitLength);
         break;
       default:
         throw StateError(
-            'invalid bitLength ($bitLength) for SHA-3 must only be 224,256,384,512');
+            'invalid bitLength ($bitLength) for Keccak must only be 128,224,256,288,384,512');
     }
   }
 
-  String get algorithmName => "SHA3-${_fixedOutputLength}";
+  String get algorithmName => "Keccak/${_fixedOutputLength}";
 
   int get digestSize => (_fixedOutputLength ~/ 8);
 
@@ -120,8 +123,6 @@ class SHA3Digest extends BaseDigest implements Digest, ExtendedDigest {
   }
 
   int doFinal(Uint8List out, int outOff) {
-    // FIPS 202 SHA3 https://github.com/PointyCastle/pointycastle/issues/128
-    absorbBits(0x02, 2);
     _squeeze(out, outOff, _fixedOutputLength);
     reset();
     return digestSize;
@@ -168,6 +169,14 @@ class SHA3Digest extends BaseDigest implements Digest, ExtendedDigest {
       throw new StateError("invalid rate value");
     }
 
+//    if ((rate + capacity) != 1600) {
+//      throw new StateError(
+//          "Value of (rate + capacity) is not 1600: ${rate + capacity}");
+//    }
+//    if ((rate <= 0) || (rate >= 1600) || ((rate % 64) != 0)) {
+//      throw new StateError("Invalid rate value: ${rate}");
+//    }
+
     _rate = rate;
     _fixedOutputLength = (1600 - rate) ~/ 2;
     _state.fillRange(0, _state.length, 0);
@@ -178,6 +187,26 @@ class SHA3Digest extends BaseDigest implements Digest, ExtendedDigest {
     _bitsAvailableForSqueezing = 0;
   }
 
+  /*
+  void _initSponge(int rate, int capacity) {
+    if ((rate + capacity) != 1600) {
+      throw new StateError(
+          "Value of (rate + capacity) is not 1600: ${rate + capacity}");
+    }
+    if ((rate <= 0) || (rate >= 1600) || ((rate % 64) != 0)) {
+      throw new StateError("Invalid rate value: ${rate}");
+    }
+
+    _rate = rate;
+    _fixedOutputLength = capacity ~/ 2;
+    _state.fillRange(0, _state.length, 0);
+    _dataQueue.fillRange(0, _dataQueue.length, 0);
+
+    _bitsInQueue = 0;
+    _squeezing = false;
+    _bitsAvailableForSqueezing = 0;
+  }
+*/
   void _absorbQueue() {
     _keccakAbsorb(_state, _dataQueue, _rate ~/ 8);
 
@@ -454,4 +483,17 @@ class SHA3Digest extends BaseDigest implements Digest, ExtendedDigest {
 
   @override
   int getByteLength() => _rate ~/ 8;
+}
+
+int _sha3SizeCheck(int bitLen) {
+  switch (bitLen) {
+    case 224:
+    case 256:
+    case 384:
+    case 512:
+      return bitLen;
+    default:
+      throw StateError(
+          'invalid bitLength ($bitLen) for SHA3 must only be 224,256,384,512');
+  }
 }
