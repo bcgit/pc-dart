@@ -32,6 +32,8 @@ In this release, the following algorithms are implemented. Most of the below can
   * 'GCTR' (GOST 28147 OFB counter mode)
   * 'OFB' (Output FeedBack mode)
   * 'CTR'/'SIC' (Counter mode)
+  * **Authenticated modes of operation**
+     - 'GCM' (Galois-Counter mode)
   
 **Paddings:**
   * 'PKCS7'
