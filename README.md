@@ -64,8 +64,6 @@ In this release, the following algorithms are implemented. Most of the below can
   * 'Tiger'
   * 'Whirlpool'
 
-*_Keccak is currently implemented as a named constructor of SHA3Digest. Both can be used normally through the registry._
-
 **MACs:**
   * 'HMAC'
   * 'CMAC'
