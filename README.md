@@ -17,42 +17,46 @@ This library was adopted from the original project at https://github.com/PointyC
 
 ## Algorithms
 
-In this release, the following algorithms are implemented. Most of the below can be used directly with the registry:
+In this release, the following algorithms are implemented. (Most of the below can be used directly with the registry, which is an easy way to instantiate classes in PointyCastle. See "Using the Registry" for more).
 
-**AEAD ciphers:**
+**AEAD ciphers** To use with the registry, instantiate like this: `AEADCipher('___')`.
   * 'ChaCha20-Poly1305'
 
-**Block ciphers:**
+**Block ciphers** To use with the registry, instantiate like this: `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` or like this: `StreamCipher('AES/SomeStreamModeHere')`.
   * 'AES'
+  * *Note that block ciphers can be used in stream cipher modes of operation*
   
-**Block cipher modes of operation:**
+**Block modes of operation**
   * 'CBC' (Cipher Block Chaining mode)
   * 'CFB' (Cipher Feedback mode)
   * 'ECB' (Electronic Code Book mode)
-  * 'GCTR' (GOST 28147 OFB counter mode)
-  * 'OFB' (Output FeedBack mode)
-  * 'CTR'/'SIC' (Counter mode)
-  * **Authenticated modes of operation**
+  * 'GCTR' (GOST 28147 OFB counter mode, using blocks)
+  * 'OFB-64' (Output FeedBack mode, using blocks)
+  * 'CTR'/'SIC' (Counter mode, using blocks)
+  * **Authenticated block modes of operation**
      - 'GCM' (Galois-Counter mode)
-  
-**Paddings:**
+     
+**Stream modes of operation**
+  * 'CTR'/'SIC' (Counter mode, as a traditional stream)
+
+**Paddings**
   * 'PKCS7'
   * 'ISO7816-4'
 
-**Asymmetric block ciphers:**
+**Asymmetric block ciphers** Instantiate using the registry: `AsymmetricBlockCipher('RSA/SomeEncodingHere')`
   * 'RSA'
 
 **Asymmetric block cipher encodings:**
   * 'PKCS1'
   * 'OAEP'
 
-**Stream ciphers:**
+**Stream ciphers** Instantiation using registry: `StreamCipher('ChaCha20/20')`
   * 'Salsa20'
   * 'ChaCha20/(# of rounds)' (original implementation)
   * 'ChaCha7539/(# of rounds)' (RFC-7539 implementation)
   * If you don't know how many ChaCha rounds to use, use 20.
 
-**Digests:**
+**Digests** Instantiation using registry: `Digest('Keccak/384')`
   * 'Blake2b'
   * 'MD2'
   * 'MD4'
@@ -66,19 +70,20 @@ In this release, the following algorithms are implemented. Most of the below can
   * 'Tiger'
   * 'Whirlpool'
 
-**MACs:**
+**MACs** Instantiation: `Mac('SomeBlockCipher/CMAC')` or `Mac('SomeDigest/HMAC)` or `Mac(SomeBlockCipher/Poly1305)`
   * 'HMAC'
   * 'CMAC'
+  * 'Poly1305'
 
-**Signatures:**
+**Signatures** Instantiation: `Signer('SomeDigestHere/(DET-)ECDSA')` or `Signer('SomeDigestHere/RSA')`
   * '(DET-)ECDSA'
   * 'RSA'
 
-**Password based key derivators:**
+**Password based key derivators** Instantiation: `KeyDerivator('SomeDigestHere/HMAC/PBKDF2')` or `KeyDerivator('scrypt')`
   * 'PBKDF2'
   * 'scrypt'
 
-**HMAC based key derivators:**
+**HMAC based key derivators:** Instantiation: `KeyDerivator('SomeDigestHere/HKDF')`
   * 'HKDF'
 
 **Asymmetric key generators:**
