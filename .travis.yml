@@ -4,3 +4,4 @@ dart:
 script:
   - pub global activate pana
   - pana --source path .
+  - pub run test
