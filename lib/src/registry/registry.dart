@@ -2,7 +2,7 @@
 
 library pointycastle.src.registry;
 
-import "package:pointycastle/api.dart";
+import 'package:pointycastle/api.dart';
 import 'package:pointycastle/src/registry/registration.dart';
 
 final FactoryRegistry registry = _RegistryImpl();
@@ -13,8 +13,8 @@ abstract class FactoryRegistry {
   void register<T>(FactoryConfig config);
 }
 
-typedef /*Registrable*/ RegistrableConstructor();
-typedef RegistrableConstructor DynamicConstructorFactory(
+typedef /*Registrable*/ RegistrableConstructor = Function();
+typedef DynamicConstructorFactory = RegistrableConstructor Function(
     String registrableName, Match match);
 
 abstract class FactoryConfig {
@@ -33,9 +33,9 @@ class StaticFactoryConfig extends FactoryConfig {
 
 // From the PatternCharacter rule here:
 // http://ecma-international.org/ecma-262/5.1/#sec-15.10
-final _specialRegExpChars = new RegExp(r'([\\\^\$\.\|\+\[\]\(\)\{\}])');
+final _specialRegExpChars = RegExp(r'([\\\^\$\.\|\+\[\]\(\)\{\}])');
 
-/// Escapes special regular exppression characters in [str] so that it can be
+/// Escapes special regular expression characters in [str] so that it can be
 /// used as a literal match inside of a [RegExp].
 ///
 /// The special characters are: \ ^ $ . | + [ ] ( ) { }
@@ -51,19 +51,19 @@ class DynamicFactoryConfig extends FactoryConfig {
 
   DynamicFactoryConfig.regex(
       Type type, String regexString, DynamicConstructorFactory factory)
-      : this(type, new RegExp(regexString), factory);
+      : this(type, RegExp(regexString), factory);
 
   /// A dynamic registry that matches by prefix.
   /// The part after the prefix will be in `match.group(1)`.
   DynamicFactoryConfig.prefix(
       Type type, String prefix, DynamicConstructorFactory factory)
-      : this.regex(type, "^${_escapeRegExp(prefix)}(.+)\$", factory);
+      : this.regex(type, '^${_escapeRegExp(prefix)}(.+)\$', factory);
 
   /// A dynamic registry that matches by suffix.
   /// The part before the suffix will be in `match.group(1)`.
   DynamicFactoryConfig.suffix(
       Type type, String suffix, DynamicConstructorFactory factory)
-      : this.regex(type, "^(.+)${_escapeRegExp(suffix)}\$", factory);
+      : this.regex(type, '^(.+)${_escapeRegExp(suffix)}\$', factory);
 
   /// Invokes the factory when it matches. Else returns null.
   RegistrableConstructor tryFactory(String algorithmName) {
@@ -82,32 +82,32 @@ class _RegistryImpl implements FactoryRegistry {
   final Map<Type, Set<DynamicFactoryConfig>> _dynamicFactories;
 
   final Map<String, RegistrableConstructor> _constructorCache =
-      Map<String, RegistrableConstructor>();
+      <String, RegistrableConstructor>{};
 
   bool _initialized = false;
 
   _RegistryImpl()
-      : _staticFactories = Map<Type, Map<String, RegistrableConstructor>>(),
-        _dynamicFactories = Map<Type, Set<DynamicFactoryConfig>>();
+      : _staticFactories = <Type, Map<String, RegistrableConstructor>>{},
+        _dynamicFactories = <Type, Set<DynamicFactoryConfig>>{};
 
   @override
   T create<T>(String registrableName) {
-    Type type = T;
-    RegistrableConstructor constructor = getConstructor(type, registrableName);
-    T result = constructor();
+    var type = T;
+    var constructor = getConstructor(type, registrableName);
+    var result = constructor() as T;
     return result;
   }
 
   RegistrableConstructor getConstructor(Type type, String registrableName) {
-    RegistrableConstructor constructor =
-        _constructorCache["${type}.${registrableName}"];
+    var constructor =
+        _constructorCache['$type.$registrableName'];
 
     if (constructor == null) {
       constructor = _createConstructor(type, registrableName);
       if (_constructorCache.length > _CONSTRUCTOR_CACHE_SIZE) {
         _constructorCache.clear();
       }
-      _constructorCache["${type}.${registrableName}"] = constructor;
+      _constructorCache['$type.$registrableName'] = constructor;
     }
     return constructor;
   }
@@ -122,8 +122,8 @@ class _RegistryImpl implements FactoryRegistry {
     }
 
     if (_dynamicFactories.containsKey(type)) {
-      for (DynamicFactoryConfig factory in _dynamicFactories[type]) {
-        RegistrableConstructor constructor =
+      for (var factory in _dynamicFactories[type]) {
+        var constructor =
             factory.tryFactory(registrableName);
         if (constructor != null) {
           return constructor;
@@ -132,7 +132,7 @@ class _RegistryImpl implements FactoryRegistry {
     }
 
     // No factory found
-    throw new RegistryFactoryException.unknown(registrableName, type);
+    throw RegistryFactoryException.unknown(registrableName, type);
   }
 
   void _checkInit() {
@@ -143,7 +143,6 @@ class _RegistryImpl implements FactoryRegistry {
 
   @override
   void register<T>(FactoryConfig config) {
-    Type t = T;
     if (config is StaticFactoryConfig) {
       _addStaticFactoryConfig(config);
     } else if (config is DynamicFactoryConfig) {
@@ -153,13 +152,13 @@ class _RegistryImpl implements FactoryRegistry {
 
   void _addStaticFactoryConfig(StaticFactoryConfig config) {
     Map factories = _staticFactories.putIfAbsent(
-        config.type, () => Map<String, RegistrableConstructor>());
+        config.type, () => <String, RegistrableConstructor>{});
     factories[config.algorithmName] = config.factory;
   }
 
   void _addDynamicFactoryConfig(DynamicFactoryConfig config) {
     Set factories = _dynamicFactories.putIfAbsent(
-        config.type, () => Set<DynamicFactoryConfig>());
+        config.type, () => <DynamicFactoryConfig>{});
     factories.add(config);
   }
 

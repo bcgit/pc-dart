@@ -11,6 +11,7 @@ const _MASK_8 = 0xFF;
 const _MASK_16 = 0xFFFF;
 const _MASK_32 = 0xFFFFFFFF;
 
+// ignore: non_constant_identifier_names
 final _MASK32_HI_BITS = [
   0xFFFFFFFF,
   0x7FFFFFFF,
@@ -111,10 +112,8 @@ int rotr8(int x, int n) {
 //
 int clip16(int x) => (x & _MASK_16);
 
-/**
- * Packs a 16 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
- * [ByteData] if you will run it several times against the same buffer and want faster execution.
- */
+/// Packs a 16 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
+/// [ByteData] if you will run it several times against the same buffer and want faster execution.
 void pack16(int x, dynamic out, int offset, Endian endian) {
   assert((x >= 0) && (x <= _MASK_16));
   if (out is! ByteData) {
@@ -123,13 +122,11 @@ void pack16(int x, dynamic out, int offset, Endian endian) {
   (out as ByteData).setUint16(offset, x, endian);
 }
 
-/**
- * Unpacks a 16 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
- * [ByteData] if you will run it several times against the same buffer and want faster execution.
- */
+/// Unpacks a 16 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
+/// [ByteData] if you will run it several times against the same buffer and want faster execution.
 int unpack16(dynamic inp, int offset, Endian endian) {
   if (inp is! ByteData) {
-    inp = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
+    inp = ByteData.view(inp.buffer as ByteBuffer, inp.offsetInBytes as int, inp.length as int);
   }
   return (inp as ByteData).getUint16(offset, endian);
 }
@@ -196,22 +193,18 @@ int rotr32(int x, int n) {
   return (x >> n) | shiftl32(x, (32 - n));
 }
 
-/**
- * Packs a 32 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
- * [ByteData] if you will run it several times against the same buffer and want faster execution.
- */
+/// Packs a 32 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
+/// [ByteData] if you will run it several times against the same buffer and want faster execution.
 void pack32(int x, dynamic out, int offset, Endian endian) {
   assert((x >= 0) && (x <= _MASK_32));
   if (out is! ByteData) {
-    out = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
+    out = ByteData.view(out.buffer as ByteBuffer, out.offsetInBytes, out.length);
   }
   (out as ByteData).setUint32(offset, x, endian);
 }
 
-/**
- * Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
- * [ByteData] if you will run it several times against the same buffer and want faster execution.
- */
+/// Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
+/// [ByteData] if you will run it several times against the same buffer and want faster execution.
 int unpack32(dynamic inp, int offset, Endian endian) {
   if (inp is! ByteData) {
     inp = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);

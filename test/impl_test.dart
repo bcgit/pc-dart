@@ -7,21 +7,21 @@ import "package:test/test.dart";
 import './test/registry_tests.dart';
 
 void main() {
-  group("impl:", () {
-    test("AsymmetricBlockCipher returns valid implementations", () {
-      testAsymmetricBlockCipher("RSA");
-      testAsymmetricBlockCipher("RSA/PKCS1");
-      testAsymmetricBlockCipher("RSA/OAEP");
+  group('impl:', () {
+    test('AsymmetricBlockCipher returns valid implementations', () {
+      testAsymmetricBlockCipher('RSA');
+      testAsymmetricBlockCipher('RSA/PKCS1');
+      testAsymmetricBlockCipher('RSA/OAEP');
     });
 
-    test("BlockCipher returns valid implementations", () {
-      testBlockCipher("AES");
+    test('BlockCipher returns valid implementations', () {
+      testBlockCipher('AES');
     });
 
-    test("Digest returns valid implementations", () {
-      testDigest("Blake2b");
-      testDigest("MD2");
-      testDigest("MD4");
+    test('Digest returns valid implementations', () {
+      testDigest('Blake2b');
+      testDigest('MD2');
+      testDigest('MD4');
       testDigest("MD5");
       testDigest("RIPEMD-128");
       testDigest("RIPEMD-160");
@@ -80,6 +80,7 @@ void main() {
       testBlockCipher("AES/OFB-64/GCTR");
       testBlockCipher("AES/OFB-64");
       testBlockCipher("AES/SIC");
+      testBlockCipher("AES/GCM");
     });
 
     test("PaddedBlockCipher returns valid implementations", () {

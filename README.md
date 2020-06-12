@@ -32,6 +32,8 @@ In this release, the following algorithms are implemented. Most of the below can
   * 'GCTR' (GOST 28147 OFB counter mode)
   * 'OFB' (Output FeedBack mode)
   * 'CTR'/'SIC' (Counter mode)
+  * **Authenticated modes of operation**
+     - 'GCM' (Galois-Counter mode)
   
 **Paddings:**
   * 'PKCS7'
@@ -63,8 +65,6 @@ In this release, the following algorithms are implemented. Most of the below can
   * 'SHA-3/224|256|384|512'
   * 'Tiger'
   * 'Whirlpool'
-
-*_Keccak is currently implemented as a named constructor of SHA3Digest. Both can be used normally through the registry._
 
 **MACs:**
   * 'HMAC'

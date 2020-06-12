@@ -33,6 +33,7 @@ import "modes/cfb_test.dart" as cfb_test;
 import "modes/ecb_test.dart" as ecb_test;
 import "modes/gctr_test.dart" as gctr_test;
 import "modes/ofb_test.dart" as ofb_test;
+import "modes/gcm_test.dart" as gcm_test;
 import "modes/sic_test.dart" as sic_test;
 import "paddings/padded_block_cipher_test.dart" as padded_block_cipher_test;
 import "paddings/pkcs7_test.dart" as pkcs7_test;
@@ -100,4 +101,5 @@ void main() {
   chacha20_test.main();
   chacha20poly1305_test.main();
   impl_test.main();
+  gcm_test.main();
 }

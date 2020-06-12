@@ -1,9 +1,7 @@
 // See file LICENSE for more information.
 
-/**
- * This library exports all implementation classes from the entire PointyCastle
- * project.
- */
+/// This library exports all implementation classes from the entire PointyCastle
+/// project.
 library pointycastle.export;
 
 export "package:pointycastle/api.dart";
@@ -26,6 +24,7 @@ export "package:pointycastle/block/modes/ctr.dart";
 export "package:pointycastle/block/modes/ecb.dart";
 export "package:pointycastle/block/modes/gctr.dart";
 export "package:pointycastle/block/modes/ofb.dart";
+export "package:pointycastle/block/modes/gcm.dart";
 export "package:pointycastle/block/modes/sic.dart";
 
 // digests
