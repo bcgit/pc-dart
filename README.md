@@ -23,14 +23,14 @@ In this release, the following algorithms are implemented.
 
 (The relevant parameter type is provided for all the algorithms. To initialize an algorithm, call `algorithm.init(paramsHere)`.)
 
-**AEAD ciphers** To use with the registry, instantiate like this: `AEADCipher('ChaCha20-Poly1305')`. Ciphers use `AEADParameters` to initialize.
+**AEAD ciphers:** To use with the registry, instantiate like this `AEADCipher('ChaCha20-Poly1305')`. Ciphers use `AEADParameters` to initialize.
   * 'ChaCha20-Poly1305'
 
-**Block ciphers** To use with the registry, instantiate like this: `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` or like this: `StreamCipher('AES/SomeStreamModeHere')`.
+**Block ciphers:** To use with the registry, instantiate like this `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` or like this `StreamCipher('AES/SomeStreamModeHere')`.
   * 'AES'
   * *Note that block ciphers can be used in stream cipher modes of operation*
   
-**Block modes of operation** Most modes use `ParametersWithIV` to initialize. ECB uses `KeyParameter` and GCM uses `AEADParameters`.
+**Block modes of operation:** Most modes use `ParametersWithIV` to initialize. ECB uses `KeyParameter` and GCM uses `AEADParameters`.
   * 'CBC' (Cipher Block Chaining mode)
   * 'ECB' (Electronic Code Book mode)
   * 'CFB-64' (Cipher Feedback mode, using blocks)
@@ -40,27 +40,27 @@ In this release, the following algorithms are implemented.
   * **Authenticated block modes of operation**
      - 'GCM' (Galois-Counter mode)
      
-**Stream modes of operation** All modes use `ParametersWithIV` to initialize.
+**Stream modes of operation:** All modes use `ParametersWithIV` to initialize.
   * 'CTR'/'SIC' (Counter mode, as a traditional stream)
 
-**Paddings**
+**Paddings:**
   * 'PKCS7'
   * 'ISO7816-4'
 
-**Asymmetric block ciphers** Instantiate using the registry: `AsymmetricBlockCipher('RSA/SomeEncodingHere')`. Initialization requires a `RSAPrivateKey` or `RSAPublicKey`.
+**Asymmetric block ciphers:** Instantiate using the registry like this `AsymmetricBlockCipher('RSA/SomeEncodingHere')`. Initialization requires a `RSAPrivateKey` or `RSAPublicKey`.
   * 'RSA'
 
 **Asymmetric block cipher encodings:**
   * 'PKCS1'
   * 'OAEP'
 
-**Stream ciphers** Instantiation using registry: `StreamCipher('ChaCha20/20')`. Initialization requires a `ParametersWithIV`.
+**Stream ciphers:** Instantiation using registry is like this `StreamCipher('ChaCha20/20')`. Initialization requires a `ParametersWithIV`.
   * 'Salsa20'
   * 'ChaCha20/(# of rounds)' (original implementation)
   * 'ChaCha7539/(# of rounds)' (RFC-7539 implementation)
   * If you don't know how many ChaCha rounds to use, use 20.
 
-**Digests** Instantiation using registry: `Digest('Keccak/384')`. No initialization is necessary.
+**Digests:** Instantiate using registry like this `Digest('Keccak/384')`. No initialization is necessary.
   * 'Blake2b'
   * 'MD2'
   * 'MD4'
@@ -74,23 +74,23 @@ In this release, the following algorithms are implemented.
   * 'Tiger'
   * 'Whirlpool'
 
-**MACs** Instantiation: `Mac('SomeBlockCipher/CMAC')` or `Mac('SomeDigest/HMAC)` or `Mac(SomeBlockCipher/Poly1305)`. CMAC and HMAC require a `KeyParameter` and Poly1305 requires a `ParametersWithIV`.
+**MACs:** Instantiate using registry like this `Mac('SomeBlockCipher/CMAC')` or `Mac('SomeDigest/HMAC)` or `Mac(SomeBlockCipher/Poly1305)`. CMAC and HMAC require a `KeyParameter` and Poly1305 requires a `ParametersWithIV`.
   * 'HMAC'
   * 'CMAC'
   * 'Poly1305'
 
-**Signatures** Instantiation: `Signer('SomeDigestHere/(DET-)ECDSA')` or `Signer('SomeDigestHere/RSA')`
+**Signatures:** Instantiate using registry like this `Signer('SomeDigestHere/(DET-)ECDSA')` or `Signer('SomeDigestHere/RSA')`
   * '(DET-)ECDSA'
   * 'RSA'
 
-**Password based key derivators** Instantiation: `KeyDerivator('SomeDigestHere/HMAC/PBKDF2')` or `KeyDerivator('scrypt')`. To initialize, you'll need a `Pbkdf2Parameters` or `ScryptParameters`.
+**Password based key derivators:** Instantiation using registry like this `KeyDerivator('SomeDigestHere/HMAC/PBKDF2')` or `KeyDerivator('scrypt')`. To initialize, you'll need a `Pbkdf2Parameters` or `ScryptParameters`.
   * 'PBKDF2'
   * 'scrypt'
 
-**HMAC based key derivators** Instantiation: `KeyDerivator('SomeDigestHere/HKDF')`. To initialize, use an `HkdfParameters`.
+**HMAC based key derivators:** Instantiate using registry like this `KeyDerivator('SomeDigestHere/HKDF')`. To initialize, use an `HkdfParameters`.
   * 'HKDF'
 
-**Asymmetric key generators** Instantiation: `KeyDerivator('RSA')`. To initialize, use `ECKeyGeneratorParameters` or `RSAKeyGeneratorParameters`.
+**Asymmetric key generators** Instantiate using registry like this `KeyDerivator('RSA')`. To initialize, use `ECKeyGeneratorParameters` or `RSAKeyGeneratorParameters`.
   * 'ECDSA'
   * 'RSA'
 
