@@ -2,6 +2,6 @@ language: dart
 dart:
   - stable
 script:
-  - pub global activate pana
-  - pana --source path .
   - pub run test
+  - pub global activate pana
+  - pana --verbosity compact --source path .
