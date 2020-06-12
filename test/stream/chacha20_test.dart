@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.stream.chacha20_test;
+library test.stream.chacha20_test;
 
 import "dart:typed_data";
 

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.benchmark.block_cipher_benchmark;
+library benchmark.benchmark.block_cipher_benchmark;
 
 import "dart:typed_data";
 

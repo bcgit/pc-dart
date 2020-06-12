@@ -1,4 +1,4 @@
-library pointycastle.src.registry.impl;
+library src.registry.impl;
 
 import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/asymmetric/pkcs1.dart';

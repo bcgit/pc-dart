@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.asymmetric.rsa_test;
+library test.asymmetric.rsa_test;
 
 import "package:pointycastle/pointycastle.dart";
 

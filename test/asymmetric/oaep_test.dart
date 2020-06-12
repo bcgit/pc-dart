@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.asymmetric.oaep_test;
+library test.asymmetric.oaep_test;
 
 import 'dart:typed_data';
 

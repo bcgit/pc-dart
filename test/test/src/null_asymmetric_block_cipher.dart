@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.asymmetric_block_cipher.test.null_asymmetric_block_cipher;
+library impl.asymmetric_block_cipher.test.null_asymmetric_block_cipher;
 
 import "dart:typed_data";
 

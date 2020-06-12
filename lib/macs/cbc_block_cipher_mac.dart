@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.mac.cbc_block_cipher_mac;
+library impl.mac.cbc_block_cipher_mac;
 
 import "dart:typed_data";
 

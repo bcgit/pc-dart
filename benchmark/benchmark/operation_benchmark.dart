@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.benchmark.rate_benchmark;
+library benchmark.benchmark.rate_benchmark;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 

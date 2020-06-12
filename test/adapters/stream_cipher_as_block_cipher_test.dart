@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.adapters.stream_cipher_as_block_cipher_test;
+library test.adapters.stream_cipher_as_block_cipher_test;
 
 import 'package:test/test.dart';
 import "package:pointycastle/adapters/stream_cipher_as_block_cipher.dart";

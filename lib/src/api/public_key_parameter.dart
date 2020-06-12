@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /// A [CipherParameters] to hold an asymmetric public key
 class PublicKeyParameter<T extends PublicKey>

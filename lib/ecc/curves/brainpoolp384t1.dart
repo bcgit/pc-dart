@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.ec_domain_parameters.brainpoolp384t1;
+library impl.ec_domain_parameters.brainpoolp384t1;
 
 import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/ecc/ecc_base.dart";

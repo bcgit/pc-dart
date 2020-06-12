@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.stream_cipher.salsa20;
+library impl.stream_cipher.salsa20;
 
 import "dart:typed_data";
 

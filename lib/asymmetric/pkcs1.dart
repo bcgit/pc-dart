@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.asymmetric_block_cipher.pkcs1;
+library impl.asymmetric_block_cipher.pkcs1;
 
 import "dart:typed_data";
 import "dart:math";

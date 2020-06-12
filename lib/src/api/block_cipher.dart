@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /// Block cipher engines are expected to conform to this interface.
 abstract class BlockCipher extends Algorithm {

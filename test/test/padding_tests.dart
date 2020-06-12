@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.test.padding_tests;
+library test.test.padding_tests;
 
 import "dart:typed_data" show Uint8List;
 

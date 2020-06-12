@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /**
  * [CipherParameters] for [PaddedBlockCipher]s consisting of two underlying [CipherParameters], one for the [BlockCipher] (of

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.keccak;
+library impl.digest.keccak;
 
 import "dart:typed_data";
 

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.api.ecc;
+library api.ecc;
 
 import "dart:typed_data";
 

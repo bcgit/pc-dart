@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.src.impl.base_key_derivator;
+library src.impl.base_key_derivator;
 
 import "dart:typed_data";
 

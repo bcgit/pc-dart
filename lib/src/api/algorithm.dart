@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /// All algorithms defined by Pointy Castle inherit from this class.
 abstract class Algorithm {

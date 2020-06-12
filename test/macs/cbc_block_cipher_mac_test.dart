@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.macs.cbc_block_cipher_mac_test;
+library test.macs.cbc_block_cipher_mac_test;
 
 import 'package:pointycastle/pointycastle.dart';
 

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /// An interface for DSAs (digital signature algorithms)
 abstract class Signer extends Algorithm {

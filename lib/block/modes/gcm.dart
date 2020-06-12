@@ -1,5 +1,5 @@
 
-library pointycastle.impl.block_cipher.modes.gcm;
+library impl.block_cipher.modes.gcm;
 
 import 'dart:math' show min;
 import 'dart:typed_data';

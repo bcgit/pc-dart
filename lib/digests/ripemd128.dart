@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.ripemd128;
+library impl.digest.ripemd128;
 
 import "dart:typed_data";
 

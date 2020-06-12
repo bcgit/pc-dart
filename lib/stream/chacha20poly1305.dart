@@ -1,4 +1,4 @@
-library pointycastle.impl.stream_cipher.chacha20poly1305;
+library impl.stream_cipher.chacha20poly1305;
 
 import 'dart:math';
 import 'dart:typed_data';

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.test.signer_tests;
+library test.test.signer_tests;
 
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';

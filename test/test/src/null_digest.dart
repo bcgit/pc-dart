@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.block_chipher.test.src.null_digest;
+library impl.block_chipher.test.src.null_digest;
 
 import "dart:typed_data";
 

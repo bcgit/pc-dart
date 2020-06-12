@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.modes.gcm_test;
+library test.modes.gcm_test;
 
 import 'dart:typed_data';
 

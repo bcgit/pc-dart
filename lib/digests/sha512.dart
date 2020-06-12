@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.sha512;
+library impl.digest.sha512;
 
 import "dart:typed_data";
 

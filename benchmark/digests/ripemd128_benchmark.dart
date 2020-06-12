@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.digests.ripemd128_benchmark;
+library benchmark.digests.ripemd128_benchmark;
 
 import "../benchmark/digest_benchmark.dart";
 

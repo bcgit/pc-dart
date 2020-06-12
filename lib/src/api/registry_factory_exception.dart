@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /// This kind of exception is thrown when a user tries to create an algorithm
 /// or domain parameters that were not correctly registered. This can be

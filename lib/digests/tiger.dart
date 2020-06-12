@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.tiger;
+library impl.digest.tiger;
 
 import "dart:typed_data";
 

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /// The interface that a message digest conforms to.
 abstract class Digest extends Algorithm {

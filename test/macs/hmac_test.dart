@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.hmacs.hmac_test;
+library test.hmacs.hmac_test;
 
 import "dart:typed_data";
 

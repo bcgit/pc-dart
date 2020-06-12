@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.key_generators.rsa_key_generator_test;
+library test.key_generators.rsa_key_generator_test;
 
 import 'package:pointycastle/pointycastle.dart';
 

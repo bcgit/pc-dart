@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.block_cipher.aes_fast;
+library impl.block_cipher.aes_fast;
 
 import "dart:typed_data";
 

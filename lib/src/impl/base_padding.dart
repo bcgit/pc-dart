@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.src.impl.base_padding;
+library src.impl.base_padding;
 
 import 'dart:typed_data';
 

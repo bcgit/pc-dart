@@ -2,7 +2,7 @@
 
 /// This library exports all implementation classes from the entire PointyCastle
 /// project.
-library pointycastle.export;
+library export;
 
 export "package:pointycastle/api.dart";
 export "package:pointycastle/impl.dart";

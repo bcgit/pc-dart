@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.test.asymmetric_block_cipher_tests;
+library test.test.asymmetric_block_cipher_tests;
 
 import "package:test/test.dart";
 import "package:pointycastle/pointycastle.dart";

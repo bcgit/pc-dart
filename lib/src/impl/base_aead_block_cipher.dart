@@ -1,4 +1,5 @@
-library pointycastle.src.impl.base_aead_block_cipher;
+library src.impl.base_aead_block_cipher;
+
 import 'dart:math' show min;
 
 import 'dart:typed_data';

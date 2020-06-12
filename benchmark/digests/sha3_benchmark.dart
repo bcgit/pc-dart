@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.digests.sha3_benchmark;
+library benchmark.digests.sha3_benchmark;
 
 import "../benchmark/digest_benchmark.dart";
 

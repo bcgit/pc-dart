@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.digests.md4_test;
+library test.digests.md4_test;
 
 import "package:pointycastle/pointycastle.dart";
 

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.src.ufixnum;
+library src.ufixnum;
 
 import "dart:typed_data";
 

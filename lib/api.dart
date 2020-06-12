@@ -5,7 +5,7 @@
 /// It declares all abstract types used by the Pointy Castle library.
 /// In addition, it implements the factories mechanism that allows
 /// users to instantiate algorithms by their standard name.
-library pointycastle.api;
+library api;
 
 import 'dart:typed_data';
 

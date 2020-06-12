@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.key_generator.rsa_key_generator;
+library impl.key_generator.rsa_key_generator;
 
 import "package:pointycastle/api.dart";
 import "package:pointycastle/asymmetric/api.dart";

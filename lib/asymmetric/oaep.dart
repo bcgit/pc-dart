@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.asymmetric_block_cipher.oeap;
+library impl.asymmetric_block_cipher.oeap;
 
 import "dart:typed_data";
 import "dart:math";

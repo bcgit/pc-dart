@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.block_cipher.modes.ecb;
+library impl.block_cipher.modes.ecb;
 
 import "dart:typed_data";
 

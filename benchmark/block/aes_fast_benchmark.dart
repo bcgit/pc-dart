@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.block.aes_fast_benchmark;
+library benchmark.block.aes_fast_benchmark;
 
 import "dart:typed_data";
 

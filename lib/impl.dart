@@ -2,7 +2,7 @@
 
 /// This library contains all out-of-the-box implementations of the interfaces provided in the API
 /// which are compatible with client and server sides.
-library pointycastle.impl;
+library impl;
 
 // cipher implementations
 

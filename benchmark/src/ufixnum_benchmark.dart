@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.api.ufixnum_benchmark;
+library benchmark.api.ufixnum_benchmark;
 
 import "dart:typed_data";
 

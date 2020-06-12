@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.impl_test;
+library test.impl_test;
 
 import "package:test/test.dart";
 

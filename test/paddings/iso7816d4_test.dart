@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.paddings.iso7816d4_test;
+library test.paddings.iso7816d4_test;
 
 import "package:pointycastle/pointycastle.dart";
 

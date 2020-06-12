@@ -1,4 +1,4 @@
-library pointycastle.test.random.fixed_rng_test.dart;
+library test.random.fixed_rng_test.dart;
 
 import 'dart:typed_data';
 

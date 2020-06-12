@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.benchmark.signer_benchmark;
+library benchmark.benchmark.signer_benchmark;
 
 import "dart:typed_data";
 

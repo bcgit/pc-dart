@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.key_derivator.hkdf;
+library impl.key_derivator.hkdf;
 
 import "dart:math";
 import "dart:typed_data";

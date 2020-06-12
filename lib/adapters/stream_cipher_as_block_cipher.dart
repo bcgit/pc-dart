@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.adapters.stream_cipher_as_block_cipher;
+library impl.adapters.stream_cipher_as_block_cipher;
 
 import "dart:typed_data";
 

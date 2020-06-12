@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.test.digest_tests;
+library test.test.digest_tests;
 
 import 'dart:typed_data';
 
