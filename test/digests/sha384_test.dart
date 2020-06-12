@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.digests.sha384_test;
+library test.digests.sha384_test;
 
 import "package:pointycastle/pointycastle.dart";
 

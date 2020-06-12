@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.key_derivator.scrypt;
+library impl.key_derivator.scrypt;
 
 import "dart:typed_data";
 

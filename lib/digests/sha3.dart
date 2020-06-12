@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.sha3;
+library impl.digest.sha3;
 
 import "dart:typed_data";
 

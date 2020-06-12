@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.macs.poly1305_test;
+library test.macs.poly1305_test;
 
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/macs/poly1305.dart';

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.padded_block_cipher_test;
+library test.padded_block_cipher_test;
 
 import "package:pointycastle/pointycastle.dart";
 import 'package:pointycastle/src/registry/registry.dart';

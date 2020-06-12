@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.src.impl.random.secure_random_base;
+library src.impl.random.secure_random_base;
 
 import "dart:typed_data";
 

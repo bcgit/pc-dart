@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.paddings.ecdsa_signer_test;
+library test.paddings.ecdsa_signer_test;
 
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/signers/ecdsa_signer.dart';

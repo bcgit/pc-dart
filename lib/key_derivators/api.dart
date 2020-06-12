@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.api.key_derivators;
+library api.key_derivators;
 
 import "dart:typed_data";
 

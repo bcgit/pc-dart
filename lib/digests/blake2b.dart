@@ -1,5 +1,5 @@
 
-library pointycastle.impl.digest.blake2b;
+library impl.digest.blake2b;
 
 import "dart:typed_data";
 

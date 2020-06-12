@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.whirlpool;
+library impl.digest.whirlpool;
 
 import "dart:typed_data";
 

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.ec_domain_parameters.gostr3410_2001_cryptopro_c;
+library impl.ec_domain_parameters.gostr3410_2001_cryptopro_c;
 
 import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/ecc/ecc_base.dart";

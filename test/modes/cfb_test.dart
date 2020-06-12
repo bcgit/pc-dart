@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.modes.cfb_test;
+library test.modes.cfb_test;
 
 import "dart:typed_data";
 

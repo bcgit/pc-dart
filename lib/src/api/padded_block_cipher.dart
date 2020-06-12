@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of pointycastle.api;
+part of api;
 
 /**
  * All padded block ciphers conform to this interface.

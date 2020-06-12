@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.digests.blake2b_test;
+library test.digests.blake2b_test;
 
 import "package:pointycastle/pointycastle.dart";
 

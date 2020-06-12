@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.random.auto_seed_block_ctr_random_test;
+library test.random.auto_seed_block_ctr_random_test;
 
 import "dart:typed_data";
 

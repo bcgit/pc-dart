@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.padded_block_cipher.padded_block_cipher_impl;
+library impl.padded_block_cipher.padded_block_cipher_impl;
 
 import "dart:typed_data";
 

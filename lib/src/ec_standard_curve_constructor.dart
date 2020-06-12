@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.src.registry.ec_standard_curve_constructor;
+library src.registry.ec_standard_curve_constructor;
 
 import "package:pointycastle/ecc/ecc_base.dart";
 import "package:pointycastle/ecc/ecc_fp.dart" as fp;

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.digest.md4;
+library impl.digest.md4;
 
 import "dart:typed_data";
 

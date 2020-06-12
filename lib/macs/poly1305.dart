@@ -1,4 +1,4 @@
-library pointycastle.impl.mac.poly1305;
+library impl.mac.poly1305;
 
 import 'dart:typed_data';
 

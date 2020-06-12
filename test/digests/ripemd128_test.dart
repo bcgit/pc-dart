@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.digests.ripemd128_test;
+library test.digests.ripemd128_test;
 
 import "package:pointycastle/pointycastle.dart";
 

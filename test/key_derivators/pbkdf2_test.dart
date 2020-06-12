@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.key_derivators.pbkdf2_test;
+library test.key_derivators.pbkdf2_test;
 
 import 'package:pointycastle/pointycastle.dart';
 

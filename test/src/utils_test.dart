@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.src.utils_test;
+library src.utils_test;
 
 import "dart:math";
 import "dart:typed_data";

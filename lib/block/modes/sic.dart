@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.block_cipher.modes.sic;
+library impl.block_cipher.modes.sic;
 
 import "package:pointycastle/api.dart";
 import "package:pointycastle/adapters/stream_cipher_as_block_cipher.dart";

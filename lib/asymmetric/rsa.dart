@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.asymmetric_block_cipher.rsa;
+library impl.asymmetric_block_cipher.rsa;
 
 import "dart:typed_data";
 

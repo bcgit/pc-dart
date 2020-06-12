@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.test.registry_tests;
+library test.test.registry_tests;
 
 import "package:pointycastle/pointycastle.dart";
 

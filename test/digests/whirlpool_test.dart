@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.digests.whirlpool_test;
+library test.digests.whirlpool_test;
 
 import "package:pointycastle/pointycastle.dart";
 

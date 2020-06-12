@@ -1,4 +1,4 @@
-library pointycastle.test.stream.chacha20poly1305_test;
+library test.stream.chacha20poly1305_test;
 
 import 'dart:typed_data';
 

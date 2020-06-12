@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.signer.rsa_signer;
+library impl.signer.rsa_signer;
 
 import "dart:typed_data";
 

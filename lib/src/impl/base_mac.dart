@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.src.impl.base_mac;
+library src.impl.base_mac;
 
 import "dart:typed_data";
 

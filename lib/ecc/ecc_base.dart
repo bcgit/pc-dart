@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.ecc.ecc_base;
+library impl.ecc.ecc_base;
 //TODO I think this stuff might be moved to src/impl
 
 import "dart:typed_data";

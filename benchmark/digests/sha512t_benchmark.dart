@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.digests.sha512t_benchmark;
+library benchmark.digests.sha512t_benchmark;
 
 import "../benchmark/digest_benchmark.dart";
 

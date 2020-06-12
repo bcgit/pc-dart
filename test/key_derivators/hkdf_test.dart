@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.key_derivators.hkdf_test;
+library test.key_derivators.hkdf_test;
 
 import 'dart:typed_data';
 

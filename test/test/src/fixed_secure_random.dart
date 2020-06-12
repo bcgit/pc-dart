@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.secure_random.test.src.fixed_secure_random;
+library impl.secure_random.test.src.fixed_secure_random;
 
 import "package:pointycastle/api.dart";
 import "package:pointycastle/src/impl/secure_random_base.dart";

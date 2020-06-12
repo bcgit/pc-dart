@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.asymmetric.pkcs1_test;
+library test.asymmetric.pkcs1_test;
 
 import "package:pointycastle/pointycastle.dart";
 import 'package:pointycastle/src/registry/registry.dart';

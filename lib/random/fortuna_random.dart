@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.secure_random.fortuna_random;
+library impl.secure_random.fortuna_random;
 
 import "dart:typed_data";
 

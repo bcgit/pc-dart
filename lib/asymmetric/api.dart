@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.api.asymmetric;
+library api.asymmetric;
 
 import "dart:typed_data";
 

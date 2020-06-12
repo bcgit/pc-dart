@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.test.key_generators_tests;
+library test.test.key_generators_tests;
 
 import "package:test/test.dart";
 import "package:pointycastle/pointycastle.dart";

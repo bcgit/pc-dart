@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.impl.block_cipher.modes.gctr;
+library impl.block_cipher.modes.gctr;
 
 import "dart:typed_data";
 

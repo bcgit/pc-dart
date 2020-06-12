@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.test.paddings.rsa_signer_test;
+library test.paddings.rsa_signer_test;
 
 import "package:pointycastle/pointycastle.dart";
 

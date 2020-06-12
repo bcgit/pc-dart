@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.stream.salsa20_benchmark;
+library benchmark.stream.salsa20_benchmark;
 
 import "dart:typed_data";
 
