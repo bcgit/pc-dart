@@ -55,6 +55,7 @@ import 'random/fixed_rng_test.dart' as fixed_rng_test;
 import 'signers/ecdsa_signer_test.dart' as ecdsa_signer_test;
 import 'signers/pss_signer_test.dart' as pss_signer_test;
 import 'signers/rsa_signer_test.dart' as rsa_signer_test;
+import "srp/srp_test.dart" as srp_test;
 import 'src/ufixnum_test.dart' as ufixnum_test;
 import 'src/utils_test.dart' as utils_test;
 import 'stream/chacha20_test.dart' as chacha20_test;
@@ -115,6 +116,7 @@ void main() {
   pss_signer_test.main();
   ufixnum_test.main();
   utils_test.main();
+  srp_test.main();
   salsa20_test.main();
   chacha20_test.main();
   chacha20poly1305_test.main();
