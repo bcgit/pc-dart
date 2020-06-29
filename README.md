@@ -17,46 +17,50 @@ This library was adopted from the original project at https://github.com/PointyC
 
 ## Algorithms
 
-In this release, the following algorithms are implemented. (Most of the below can be used directly with the registry, which is an easy way to instantiate classes in PointyCastle. See "Using the Registry" for more).
+In this release, the following algorithms are implemented. 
 
-**AEAD ciphers** To use with the registry, instantiate like this: `AEADCipher('___')`.
+(Most of the below can be used directly with the registry, which is an easy way to instantiate classes in PointyCastle. See "Using the Registry" for more).
+
+(The relevant parameter type is provided for all the algorithms. To initialize an algorithm, call `algorithm.init(paramsHere)`.)
+
+**AEAD ciphers:** To use with the registry, instantiate like this `AEADCipher('ChaCha20-Poly1305')`. Ciphers use `AEADParameters` to initialize.
   * 'ChaCha20-Poly1305'
 
-**Block ciphers** To use with the registry, instantiate like this: `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` or like this: `StreamCipher('AES/SomeStreamModeHere')`.
+**Block ciphers:** To use with the registry, instantiate like this `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` or like this `StreamCipher('AES/SomeStreamModeHere')`.
   * 'AES'
   * *Note that block ciphers can be used in stream cipher modes of operation*
   
-**Block modes of operation**
+**Block modes of operation:** Most modes use `ParametersWithIV` to initialize. ECB uses `KeyParameter` and GCM uses `AEADParameters`.
   * 'CBC' (Cipher Block Chaining mode)
-  * 'CFB' (Cipher Feedback mode)
   * 'ECB' (Electronic Code Book mode)
+  * 'CFB-64' (Cipher Feedback mode, using blocks)
   * 'GCTR' (GOST 28147 OFB counter mode, using blocks)
   * 'OFB-64' (Output FeedBack mode, using blocks)
   * 'CTR'/'SIC' (Counter mode, using blocks)
   * **Authenticated block modes of operation**
      - 'GCM' (Galois-Counter mode)
      
-**Stream modes of operation**
+**Stream modes of operation:** All modes use `ParametersWithIV` to initialize.
   * 'CTR'/'SIC' (Counter mode, as a traditional stream)
 
-**Paddings**
+**Paddings:**
   * 'PKCS7'
   * 'ISO7816-4'
 
-**Asymmetric block ciphers** Instantiate using the registry: `AsymmetricBlockCipher('RSA/SomeEncodingHere')`
+**Asymmetric block ciphers:** Instantiate using the registry like this `AsymmetricBlockCipher('RSA/SomeEncodingHere')`. Initialization requires a `RSAPrivateKey` or `RSAPublicKey`.
   * 'RSA'
 
 **Asymmetric block cipher encodings:**
   * 'PKCS1'
   * 'OAEP'
 
-**Stream ciphers** Instantiation using registry: `StreamCipher('ChaCha20/20')`
+**Stream ciphers:** Instantiation using registry is like this `StreamCipher('ChaCha20/20')`. Initialization requires a `ParametersWithIV`.
   * 'Salsa20'
   * 'ChaCha20/(# of rounds)' (original implementation)
   * 'ChaCha7539/(# of rounds)' (RFC-7539 implementation)
   * If you don't know how many ChaCha rounds to use, use 20.
 
-**Digests** Instantiation using registry: `Digest('Keccak/384')`
+**Digests:** Instantiate using registry like this `Digest('Keccak/384')`. No initialization is necessary.
   * 'Blake2b'
   * 'MD2'
   * 'MD4'
@@ -70,23 +74,23 @@ In this release, the following algorithms are implemented. (Most of the below ca
   * 'Tiger'
   * 'Whirlpool'
 
-**MACs** Instantiation: `Mac('SomeBlockCipher/CMAC')` or `Mac('SomeDigest/HMAC)` or `Mac(SomeBlockCipher/Poly1305)`
+**MACs:** Instantiate using registry like this `Mac('SomeBlockCipher/CMAC')` or `Mac('SomeDigest/HMAC)` or `Mac(SomeBlockCipher/Poly1305)`. CMAC and HMAC require a `KeyParameter` and Poly1305 requires a `ParametersWithIV`.
   * 'HMAC'
   * 'CMAC'
   * 'Poly1305'
 
-**Signatures** Instantiation: `Signer('SomeDigestHere/(DET-)ECDSA')` or `Signer('SomeDigestHere/RSA')`
+**Signatures:** Instantiate using registry like this `Signer('SomeDigestHere/(DET-)ECDSA')` or `Signer('SomeDigestHere/RSA')`
   * '(DET-)ECDSA'
   * 'RSA'
 
-**Password based key derivators** Instantiation: `KeyDerivator('SomeDigestHere/HMAC/PBKDF2')` or `KeyDerivator('scrypt')`
+**Password based key derivators:** Instantiation using registry like this `KeyDerivator('SomeDigestHere/HMAC/PBKDF2')` or `KeyDerivator('scrypt')`. To initialize, you'll need a `Pbkdf2Parameters` or `ScryptParameters`.
   * 'PBKDF2'
   * 'scrypt'
 
-**HMAC based key derivators:** Instantiation: `KeyDerivator('SomeDigestHere/HKDF')`
+**HMAC based key derivators:** Instantiate using registry like this `KeyDerivator('SomeDigestHere/HKDF')`. To initialize, use an `HkdfParameters`.
   * 'HKDF'
 
-**Asymmetric key generators:**
+**Asymmetric key generators** Instantiate using registry like this `KeyDerivator('RSA')`. To initialize, use `ECKeyGeneratorParameters` or `RSAKeyGeneratorParameters`.
   * 'ECDSA'
   * 'RSA'
 
@@ -111,7 +115,7 @@ factories.
 This is especially convenient when an algorithm involves multiple
 algorithm implementation classes to implement. All the necessary
 classes can all be instantiated with a single name
-(e.g. "HMAC/SHA-256" or "SHA-1/HMAC/PBKDF2" or "AES/CBC/PKCS7"), and they are
+(e.g. "SHA-256/HMAC" or "SHA-1/HMAC/PBKDF2" or "AES/CBC/PKCS7"), and they are
 automatically combined together with the correct values.
 
 For example,
@@ -268,5 +272,4 @@ found under the _tutorials_ directory in the sources.
 - [Using RSA](https://github.com/bcgit/pc-dart/blob/master/tutorials/rsa.md) - key generation, signing/verifying, and encryption/decryption
 - Some [tips](https://github.com/bcgit/pc-dart/blob/master/tutorials/tips.md) on using Pointy Castle
 
-_Note: the above links are to the most recent versions on the master
-branch on GitHub. They may be different from the version here._
+_Note: the above links are to the most recent versions on the master branch on GitHub. They may be different from the version on pub.dev._
