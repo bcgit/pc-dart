@@ -17,7 +17,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import "package:pointycastle/export.dart";
+import 'package:pointycastle/export.dart';
 
 Uint8List sha256Digest(Uint8List dataToDigest) {
   final d = SHA256Digest();
@@ -35,7 +35,7 @@ void main(List<String> args) {
 
   for (final data in valuesToDigest) {
     print('Data: "$data"');
-    final hash = sha256Digest(utf8.encode(data));
+    final hash = sha256Digest(Uint8List.fromList(utf8.encode(data)));
     print('SHA-256: $hash');
     print('SHA-256: ${bin2hex(hash)}'); // output in hexadecimal
   }

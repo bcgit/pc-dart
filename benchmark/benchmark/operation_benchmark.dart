@@ -4,7 +4,7 @@ library benchmark.benchmark.rate_benchmark;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 
-typedef void Operation();
+typedef Operation = void Function();
 
 class OperationBenchmark extends BenchmarkBase {
   static const _RUN_LENGTH_MILLIS = 6000;
@@ -16,20 +16,23 @@ class OperationBenchmark extends BenchmarkBase {
 
   OperationBenchmark(String name, this._operation,
       [this._runLengthMillis = _RUN_LENGTH_MILLIS])
-      : super(name, emitter: new OperationEmitter()) {
+      : super(name, emitter: OperationEmitter()) {
     emitter.benchmark = this;
   }
 
-  OperationEmitter get emitter => super.emitter;
+  @override
+  OperationEmitter get emitter => super.emitter as OperationEmitter;
 
+  @override
   void run() {
     _operation();
   }
 
+  @override
   void exercise() {
     _iterations = 0;
 
-    var watch = new Stopwatch()..start();
+    var watch = Stopwatch()..start();
     while (watch.elapsedMilliseconds < _runLengthMillis) {
       run();
       _iterations++;
@@ -42,24 +45,25 @@ class OperationEmitter implements ScoreEmitter {
 
   int get iterations => benchmark._iterations;
 
+  @override
   void emit(String testName, double value) {
     var ms = value / 1000;
     var s = ms / 1000;
-    print("| ${testName} | "
-        "${_formatOperations(iterations / s)}/s | "
-        "${iterations} iterations | "
-        "${ms.toInt()} ms |");
+    print('| $testName | '
+        '${_formatOperations(iterations / s)}/s | '
+        '$iterations iterations | '
+        '${ms.toInt()} ms |');
   }
 
   String _formatOperations(num opsPerSec) {
     if (opsPerSec < 1000) {
-      return "${opsPerSec.toStringAsFixed(2)} Ops";
+      return '${opsPerSec.toStringAsFixed(2)} Ops';
     } else if (opsPerSec < (1000 * 1000)) {
-      return "${(opsPerSec / 1000).toStringAsFixed(2)} KOps";
+      return '${(opsPerSec / 1000).toStringAsFixed(2)} KOps';
     } else if (opsPerSec < (1000 * 1000 * 1000)) {
-      return "${(opsPerSec / (1000 * 1000)).toStringAsFixed(2)} MOps";
+      return '${(opsPerSec / (1000 * 1000)).toStringAsFixed(2)} MOps';
     } else {
-      return "${(opsPerSec / (1000 * 1000 * 1000)).toStringAsFixed(2)} GOPs";
+      return '${(opsPerSec / (1000 * 1000 * 1000)).toStringAsFixed(2)} GOPs';
     }
   }
 }
