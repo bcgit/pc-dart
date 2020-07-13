@@ -2,9 +2,11 @@
 
 library impl.secure_random.test.src.fixed_secure_random;
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/secure_random_base.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'dart:typed_data';
+
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/secure_random_base.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 /// An implementation of [SecureRandom] that return fixed values.
 ///
@@ -24,7 +26,6 @@ import "package:pointycastle/src/registry/registry.dart";
 ///     final b = sr.nextUint8();
 ///     final c = sr.nextUint8();
 ///     assert (a == s[0] && b = s[1] && c == s[2]);
-
 class FixedSecureRandom extends SecureRandomBase {
   // ignore: non_constant_identifier_names
   static final FactoryConfig FACTORY_CONFIG =
@@ -32,7 +33,7 @@ class FixedSecureRandom extends SecureRandomBase {
 
   var _next = 0;
   // ignore: prefer_typing_uninitialized_variables
-  var _values;
+  Uint8List _values;
 
   @override
   String get algorithmName => 'Fixed';
@@ -49,11 +50,11 @@ class FixedSecureRandom extends SecureRandomBase {
   int nextUint8() {
     if (_values != null && _values.isNotEmpty) {
       if (_next >= _values.length) {
-        throw StateError("fixed secure random unexpectedly exhausted");
+        throw StateError('fixed secure random unexpectedly exhausted');
       }
       return _values[_next++];
     } else {
-      throw StateError("fixed secure random has no values");
+      throw StateError('fixed secure random has no values');
     }
   }
 }

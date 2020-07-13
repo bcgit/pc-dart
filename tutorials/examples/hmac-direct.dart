@@ -11,17 +11,17 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import "package:pointycastle/export.dart";
+import 'package:pointycastle/export.dart';
 
 Uint8List hmacSha1(Uint8List hmacKey, Uint8List data) {
-  final hmac = HMac(SHA256Digest(), 64) // HMAC SHA-256 must use block length of 64
-    ..init(KeyParameter(hmacKey));
+  final hmac =
+      HMac(SHA256Digest(), 64) // HMAC SHA-256 must use block length of 64
+        ..init(KeyParameter(hmacKey));
 
   return hmac.process(data);
 }
 
-void hmacWithOtherDigestAlgorithms(Uint8List hmacKey, Uint8List data)
-{
+void hmacWithOtherDigestAlgorithms(Uint8List hmacKey, Uint8List data) {
   final hmacSha256 = HMac(SHA256Digest(), 64);
   final hmacSha512 = HMac(SHA512Digest(), 128);
   final hmacMd2 = HMac(MD2Digest(), 16);
@@ -45,11 +45,12 @@ void main(List<String> args) {
   final data = utf8.encode(args[1]); // second argument is the data
 
   print('Data: "${args[1]}"');
-  final hmacValue = hmacSha1(key, data);
+  final hmacValue = hmacSha1(Uint8List.fromList(key), Uint8List.fromList(data));
   //print('HMAC SHA-1: $hmacValue');
   print('HMAC SHA-1: ${bin2hex(hmacValue)}');
 
-  hmacWithOtherDigestAlgorithms(key, data);
+  hmacWithOtherDigestAlgorithms(
+      Uint8List.fromList(key), Uint8List.fromList(data));
 }
 
 //----------------------------------------------------------------
