@@ -2,25 +2,29 @@
 
 library impl.digest.ripemd128;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/md4_family_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/md4_family_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of RIPEMD-128 digest
 class RIPEMD128Digest extends MD4FamilyDigest implements Digest {
   static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "RIPEMD-128", () => RIPEMD128Digest());
+      StaticFactoryConfig(Digest, 'RIPEMD-128', () => RIPEMD128Digest());
 
   static const _DIGEST_LENGTH = 16;
 
   RIPEMD128Digest() : super(Endian.little, 4, 16);
 
-  final algorithmName = "RIPEMD-128";
+  @override
+  final algorithmName = 'RIPEMD-128';
+
+  @override
   final digestSize = _DIGEST_LENGTH;
 
+  @override
   void resetState() {
     state[0] = 0x67452301;
     state[1] = 0xefcdab89;
@@ -28,11 +32,12 @@ class RIPEMD128Digest extends MD4FamilyDigest implements Digest {
     state[3] = 0x10325476;
   }
 
+  @override
   void processBlock() {
-    var a, aa;
-    var b, bb;
-    var c, cc;
-    var d, dd;
+    int a, aa;
+    int b, bb;
+    int c, cc;
+    int d, dd;
 
     a = aa = state[0];
     b = bb = state[1];
