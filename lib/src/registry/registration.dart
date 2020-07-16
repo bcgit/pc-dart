@@ -208,10 +208,10 @@ void _registerKeyGenerators(FactoryRegistry registry) {
 }
 
 void _registerMacs(FactoryRegistry registry) {
-  registry.register(HMac.FACTORY_CONFIG);
-  registry.register(CMac.FACTORY_CONFIG);
-  registry.register(CBCBlockCipherMac.FACTORY_CONFIG);
-  registry.register(Poly1305.FACTORY_CONFIG);
+  registry.register(HMac.factoryConfig);
+  registry.register(CMac.factoryConfig);
+  registry.register(CBCBlockCipherMac.factoryConfig);
+  registry.register(Poly1305.factoryConfig);
 }
 
 void _registerPaddedBlockCiphers(FactoryRegistry registry) {
