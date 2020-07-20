@@ -4,7 +4,7 @@ author: The Bouncy Castle Team
 description: A Dart library implementing cryptographic algorithms and primitives, modeled on the BouncyCastle library.
 homepage: https://github.com/PointyCastle/pointycastle
 environment:
-  sdk: ">=0.8.10+6 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 #documentation: http://pointycastle.github.io/docs/
 
 dev_dependencies:

@@ -23,13 +23,14 @@ class Poly1305 extends BaseMac {
   }
 
   // ignore: non_constant_identifier_names
-  static final FactoryConfig FACTORY_CONFIG = DynamicFactoryConfig.suffix(
-      Mac,
-      '/Poly1305',
-      (_, final Match match) => () {
-            var cipher = BlockCipher(match.group(1));
-            return Poly1305.withCipher(cipher);
-          });
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.suffix(
+    Mac,
+    '/Poly1305',
+    (_, final Match match) => () {
+      var cipher = BlockCipher(match.group(1));
+      return Poly1305.withCipher(cipher);
+    },
+  );
 
   static void clamp(Uint8List key) {
     key[3] &= R_MASK_HIGH_4;

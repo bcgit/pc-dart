@@ -14,8 +14,6 @@ bool _testBit(BigInt i, int n) {
   return (i & (BigInt.one << n)) != BigInt.zero;
 }
 
-
-
 class ECDSASigner implements Signer {
   /// Intended for internal use.
   // ignore: non_constant_identifier_names
@@ -203,7 +201,8 @@ class ECDSASigner implements Signer {
     }
 
     // Point multiplication for Koblitz curves (using WTNAF) beats Shamir's trick
-    /* TODO: uncomment this when F2m available
+    // TODO: uncomment this when F2m available
+    /*
     if( c is ECCurve.F2m ) {
       ECCurve.F2m f2mCurve = (ECCurve.F2m)c;
       if( f2mCurve.isKoblitz() ) {
@@ -273,14 +272,13 @@ class NormalizedECDSASigner implements Signer {
   @override
   bool verifySignature(Uint8List message, Signature signature) {
     var isNormalized =
-    (signature as ECSignature).isNormalized(signer._pbkey.parameters);
-    var isVerified = signer.verifySignature(message, signature);
+        (signature as ECSignature).isNormalized(signer._pbkey.parameters);
+    var isVerified = signer.verifySignature(message, signature as ECSignature);
 
     // Constant time.
     return (isNormalized | !enforceNormalized) & isVerified;
   }
 }
-
 
 class _RFC6979KCalculator {
   final Mac _mac;
