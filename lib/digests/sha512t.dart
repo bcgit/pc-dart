@@ -61,14 +61,14 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
   void reset() {
     super.reset();
 
-    H1.set(_h1t);
-    H2.set(_h2t);
-    H3.set(_h3t);
-    H4.set(_h4t);
-    H5.set(_h5t);
-    H6.set(_h6t);
-    H7.set(_h7t);
-    H8.set(_h8t);
+    h1.set(_h1t);
+    h2.set(_h2t);
+    h3.set(_h3t);
+    h4.set(_h4t);
+    h5.set(_h5t);
+    h6.set(_h6t);
+    h7.set(_h7t);
+    h8.set(_h8t);
   }
 
   @override
@@ -78,14 +78,14 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
     var tmp = Uint8List(64);
 
     var view = ByteData.view(tmp.buffer, tmp.offsetInBytes, tmp.length);
-    H1.pack(view, 0, Endian.big);
-    H2.pack(view, 8, Endian.big);
-    H3.pack(view, 16, Endian.big);
-    H4.pack(view, 24, Endian.big);
-    H5.pack(view, 32, Endian.big);
-    H6.pack(view, 40, Endian.big);
-    H7.pack(view, 48, Endian.big);
-    H8.pack(view, 56, Endian.big);
+    h1.pack(view, 0, Endian.big);
+    h2.pack(view, 8, Endian.big);
+    h3.pack(view, 16, Endian.big);
+    h4.pack(view, 24, Endian.big);
+    h5.pack(view, 32, Endian.big);
+    h6.pack(view, 40, Endian.big);
+    h7.pack(view, 48, Endian.big);
+    h8.pack(view, 56, Endian.big);
 
     out.setRange(outOff, outOff + digestSize, tmp);
 
@@ -95,28 +95,28 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
   }
 
   void _generateIVs(int bitLength) {
-    H1
+    h1
       ..set(0x6a09e667, 0xf3bcc908)
       ..xor(_hMask);
-    H2
+    h2
       ..set(0xbb67ae85, 0x84caa73b)
       ..xor(_hMask);
-    H3
+    h3
       ..set(0x3c6ef372, 0xfe94f82b)
       ..xor(_hMask);
-    H4
+    h4
       ..set(0xa54ff53a, 0x5f1d36f1)
       ..xor(_hMask);
-    H5
+    h5
       ..set(0x510e527f, 0xade682d1)
       ..xor(_hMask);
-    H6
+    h6
       ..set(0x9b05688c, 0x2b3e6c1f)
       ..xor(_hMask);
-    H7
+    h7
       ..set(0x1f83d9ab, 0xfb41bd6b)
       ..xor(_hMask);
-    H8
+    h8
       ..set(0x5be0cd19, 0x137e2179)
       ..xor(_hMask);
 
@@ -145,13 +145,13 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
 
     finish();
 
-    _h1t.set(H1);
-    _h2t.set(H2);
-    _h3t.set(H3);
-    _h4t.set(H4);
-    _h5t.set(H5);
-    _h6t.set(H6);
-    _h7t.set(H7);
-    _h8t.set(H8);
+    _h1t.set(h1);
+    _h2t.set(h2);
+    _h3t.set(h3);
+    _h4t.set(h4);
+    _h5t.set(h5);
+    _h6t.set(h6);
+    _h7t.set(h7);
+    _h8t.set(h8);
   }
 }
