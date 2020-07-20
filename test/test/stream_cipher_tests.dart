@@ -2,41 +2,41 @@
 
 library test.test.stream_cipher_tests;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:test/test.dart";
-import "package:pointycastle/pointycastle.dart";
+import 'package:test/test.dart';
+import 'package:pointycastle/pointycastle.dart';
 
-import "./src/helpers.dart";
+import './src/helpers.dart';
 
 void runStreamCipherTests(StreamCipher cipher, CipherParameters params,
     List<String> plainCipherTextPairs) {
-  group("${cipher.algorithmName}:", () {
-    group("cipher  :", () {
+  group('${cipher.algorithmName}:', () {
+    group('cipher  :', () {
       for (var i = 0; i < plainCipherTextPairs.length; i += 2) {
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i + 1];
 
-        test("${formatAsTruncated(plainText)}",
+        test('${formatAsTruncated(plainText)}',
             () => _runStreamCipherTest(cipher, params, plainText, cipherText));
       }
     });
 
-    group("decipher:", () {
+    group('decipher:', () {
       for (var i = 0; i < plainCipherTextPairs.length; i += 2) {
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i + 1];
 
         test(
-            "${formatAsTruncated(plainText)}",
+            '${formatAsTruncated(plainText)}',
             () =>
                 _runStreamDecipherTest(cipher, params, cipherText, plainText));
       }
     });
 
-    group("ciph&dec:", () {
+    group('ciph&dec:', () {
       var plainText = createUint8ListFromSequentialNumbers(1021);
-      test("~1KB of sequential bytes",
+      test('~1KB of sequential bytes',
           () => _runStreamCipherDecipherTest(cipher, params, plainText));
     });
   });
@@ -67,7 +67,7 @@ void _runStreamDecipherTest(StreamCipher cipher, CipherParameters params,
   var cipherText = createUint8ListFromHexString(hexCipherText);
   var plainText = cipher.process(cipherText);
 
-  expect(new String.fromCharCodes(plainText), equals(expectedPlainText));
+  expect(String.fromCharCodes(plainText), equals(expectedPlainText));
 }
 
 void _runStreamCipherDecipherTest(

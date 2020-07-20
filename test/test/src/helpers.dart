@@ -2,9 +2,9 @@
 
 library test.test.src.helpers;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Format //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,23 +12,23 @@ import "package:test/test.dart";
 
 String formatAsTruncated(String str) {
   if (str.length > 26) {
-    return str.substring(0, 26) + "[...]";
-  } else if (str.length == 0) {
-    return "(empty string)";
+    return str.substring(0, 26) + '[...]';
+  } else if (str.isEmpty) {
+    return '(empty string)';
   } else {
     return str;
   }
 }
 
 String formatAsHumanSize(num size) {
-  if (size < 1024) return "$size B";
-  if (size < 1024 * 1024) return "${_format(size / 1024)} KB";
-  if (size < 1024 * 1024 * 1024) return "${_format(size / (1024 * 1024))} MB";
-  return "${_format(size / (1024 * 1024 * 1024))} GB";
+  if (size < 1024) return '$size B';
+  if (size < 1024 * 1024) return '${_format(size / 1024)} KB';
+  if (size < 1024 * 1024 * 1024) return '${_format(size / (1024 * 1024))} MB';
+  return '${_format(size / (1024 * 1024 * 1024))} GB';
 }
 
 String formatBytesAsHexString(Uint8List bytes) {
-  var result = new StringBuffer();
+  var result = StringBuffer();
   for (var i = 0; i < bytes.lengthInBytes; i++) {
     var part = bytes[i];
     result.write('${part < 16 ? '0' : ''}${part.toRadixString(16)}');
@@ -38,12 +38,12 @@ String formatBytesAsHexString(Uint8List bytes) {
 
 String _format(double val) {
   if (val.isInfinite) {
-    return "INF";
+    return 'INF';
   } else if (val.isNaN) {
-    return "NaN";
+    return 'NaN';
   } else {
     return val.floor().toString() +
-        "." +
+        '.' +
         (100 * (val - val.toInt())).toInt().toString();
   }
 }
@@ -53,7 +53,7 @@ String _format(double val) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Uint8List createUint8ListFromString(String s) {
-  var ret = new Uint8List(s.length);
+  var ret = Uint8List(s.length);
   for (var i = 0; i < s.length; i++) {
     ret[i] = s.codeUnitAt(i);
   }
@@ -63,7 +63,7 @@ Uint8List createUint8ListFromString(String s) {
 Uint8List createUint8ListFromHexString(String hex) {
   hex = hex.replaceAll(RegExp(r'\s'), ''); // remove all whitespace, if any
 
-  var result = new Uint8List(hex.length ~/ 2);
+  var result = Uint8List(hex.length ~/ 2);
   for (var i = 0; i < hex.length; i += 2) {
     var num = hex.substring(i, i + 2);
     var byte = int.parse(num, radix: 16);
@@ -73,7 +73,7 @@ Uint8List createUint8ListFromHexString(String hex) {
 }
 
 Uint8List createUint8ListFromSequentialNumbers(int len) {
-  var ret = new Uint8List(len);
+  var ret = Uint8List(len);
   for (var i = 0; i < len; i++) {
     ret[i] = i;
   }
@@ -83,11 +83,12 @@ Uint8List createUint8ListFromSequentialNumbers(int len) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Matchers ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const isAllZeros = const _IsAllZeros();
+const isAllZeros = _IsAllZeros();
 
 class _IsAllZeros extends Matcher {
   const _IsAllZeros();
 
+  @override
   bool matches(covariant Iterable<int> item, Map matchState) {
     for (var i in item) {
       if (i != 0) return false;
@@ -95,10 +96,12 @@ class _IsAllZeros extends Matcher {
     return true;
   }
 
+  @override
   Description describe(Description description) =>
       description.add('is all zeros');
 
+  @override
   Description describeMismatch(item, Description mismatchDescription,
           Map matchState, bool verbose) =>
-      mismatchDescription.add("is not all zeros");
+      mismatchDescription.add('is not all zeros');
 }
