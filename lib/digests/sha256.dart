@@ -2,25 +2,28 @@
 
 library impl.digest.sha256;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/md4_family_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/md4_family_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of SHA-256 digest.
 class SHA256Digest extends MD4FamilyDigest implements Digest {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "SHA-256", () => SHA256Digest());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(Digest, 'SHA-256', () => SHA256Digest());
 
   static const _DIGEST_LENGTH = 32;
 
   SHA256Digest() : super(Endian.big, 8, 64);
 
-  final algorithmName = "SHA-256";
+  @override
+  final algorithmName = 'SHA-256';
+  @override
   final digestSize = _DIGEST_LENGTH;
 
+  @override
   void resetState() {
     state[0] = 0x6a09e667;
     state[1] = 0xbb67ae85;
@@ -32,12 +35,13 @@ class SHA256Digest extends MD4FamilyDigest implements Digest {
     state[7] = 0x5be0cd19;
   }
 
+  @override
   void processBlock() {
     // expand 16 word block into 64 word blocks.
     for (var t = 16; t < 64; t++) {
-      buffer[t] = clip32(_Theta1(buffer[t - 2]) +
+      buffer[t] = clip32(_theta1(buffer[t - 2]) +
           buffer[t - 7] +
-          _Theta0(buffer[t - 15]) +
+          _theta0(buffer[t - 15]) +
           buffer[t - 16]);
     }
 
@@ -55,51 +59,51 @@ class SHA256Digest extends MD4FamilyDigest implements Digest {
 
     for (var i = 0; i < 8; i++) {
       // t = 8 * i
-      h = clip32(h + _Sum1(e) + _Ch(e, f, g) + _K[t] + buffer[t]);
+      h = clip32(h + _sum1(e) + _ch(e, f, g) + _k[t] + buffer[t]);
       d = clip32(d + h);
-      h = clip32(h + _Sum0(a) + _Maj(a, b, c));
+      h = clip32(h + _sum0(a) + _maj(a, b, c));
       ++t;
 
       // t = 8 * i + 1
-      g = clip32(g + _Sum1(d) + _Ch(d, e, f) + _K[t] + buffer[t]);
+      g = clip32(g + _sum1(d) + _ch(d, e, f) + _k[t] + buffer[t]);
       c = clip32(c + g);
-      g = clip32(g + _Sum0(h) + _Maj(h, a, b));
+      g = clip32(g + _sum0(h) + _maj(h, a, b));
       ++t;
 
       // t = 8 * i + 2
-      f = clip32(f + _Sum1(c) + _Ch(c, d, e) + _K[t] + buffer[t]);
+      f = clip32(f + _sum1(c) + _ch(c, d, e) + _k[t] + buffer[t]);
       b = clip32(b + f);
-      f = clip32(f + _Sum0(g) + _Maj(g, h, a));
+      f = clip32(f + _sum0(g) + _maj(g, h, a));
       ++t;
 
       // t = 8 * i + 3
-      e = clip32(e + _Sum1(b) + _Ch(b, c, d) + _K[t] + buffer[t]);
+      e = clip32(e + _sum1(b) + _ch(b, c, d) + _k[t] + buffer[t]);
       a = clip32(a + e);
-      e = clip32(e + _Sum0(f) + _Maj(f, g, h));
+      e = clip32(e + _sum0(f) + _maj(f, g, h));
       ++t;
 
       // t = 8 * i + 4
-      d = clip32(d + _Sum1(a) + _Ch(a, b, c) + _K[t] + buffer[t]);
+      d = clip32(d + _sum1(a) + _ch(a, b, c) + _k[t] + buffer[t]);
       h = clip32(h + d);
-      d = clip32(d + _Sum0(e) + _Maj(e, f, g));
+      d = clip32(d + _sum0(e) + _maj(e, f, g));
       ++t;
 
       // t = 8 * i + 5
-      c = clip32(c + _Sum1(h) + _Ch(h, a, b) + _K[t] + buffer[t]);
+      c = clip32(c + _sum1(h) + _ch(h, a, b) + _k[t] + buffer[t]);
       g = clip32(g + c);
-      c = clip32(c + _Sum0(d) + _Maj(d, e, f));
+      c = clip32(c + _sum0(d) + _maj(d, e, f));
       ++t;
 
       // t = 8 * i + 6
-      b = clip32(b + _Sum1(g) + _Ch(g, h, a) + _K[t] + buffer[t]);
+      b = clip32(b + _sum1(g) + _ch(g, h, a) + _k[t] + buffer[t]);
       f = clip32(f + b);
-      b = clip32(b + _Sum0(c) + _Maj(c, d, e));
+      b = clip32(b + _sum0(c) + _maj(c, d, e));
       ++t;
 
       // t = 8 * i + 7
-      a = clip32(a + _Sum1(f) + _Ch(f, g, h) + _K[t] + buffer[t]);
+      a = clip32(a + _sum1(f) + _ch(f, g, h) + _k[t] + buffer[t]);
       e = clip32(e + a);
-      a = clip32(a + _Sum0(b) + _Maj(b, c, d));
+      a = clip32(a + _sum0(b) + _maj(b, c, d));
       ++t;
     }
 
@@ -113,23 +117,21 @@ class SHA256Digest extends MD4FamilyDigest implements Digest {
     state[7] = clip32(state[7] + h);
   }
 
-  int _Ch(int x, int y, int z) => (x & y) ^ ((~x) & z);
+  int _ch(int x, int y, int z) => (x & y) ^ ((~x) & z);
 
-  int _Maj(int x, int y, int z) => (x & y) ^ (x & z) ^ (y & z);
+  int _maj(int x, int y, int z) => (x & y) ^ (x & z) ^ (y & z);
 
-  int _Sum0(int x) => rotr32(x, 2) ^ rotr32(x, 13) ^ rotr32(x, 22);
+  int _sum0(int x) => rotr32(x, 2) ^ rotr32(x, 13) ^ rotr32(x, 22);
 
-  int _Sum1(int x) => rotr32(x, 6) ^ rotr32(x, 11) ^ rotr32(x, 25);
+  int _sum1(int x) => rotr32(x, 6) ^ rotr32(x, 11) ^ rotr32(x, 25);
 
-  int _Theta0(int x) => rotr32(x, 7) ^ rotr32(x, 18) ^ shiftr32(x, 3);
+  int _theta0(int x) => rotr32(x, 7) ^ rotr32(x, 18) ^ shiftr32(x, 3);
 
-  int _Theta1(int x) => rotr32(x, 17) ^ rotr32(x, 19) ^ shiftr32(x, 10);
+  int _theta1(int x) => rotr32(x, 17) ^ rotr32(x, 19) ^ shiftr32(x, 10);
 
-  /**
-   * SHA-256 Constants (represent the first 32 bits of the fractional parts of the cube roots of the
-   * first sixty-four prime numbers)
-   */
-  static final _K = [
+  /// SHA-256 Constants (represent the first 32 bits of the fractional parts of the cube roots of the
+  /// first sixty-four prime numbers)
+  static final _k = [
     0x428a2f98,
     0x71374491,
     0xb5c0fbcf,

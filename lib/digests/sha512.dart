@@ -2,16 +2,16 @@
 
 library impl.digest.sha512;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/long_sha2_family_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/long_sha2_family_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 /// Implementation of SHA-512 digest.
 class SHA512Digest extends LongSHA2FamilyDigest implements Digest {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "SHA-512", () => SHA512Digest());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(Digest, 'SHA-512', () => SHA512Digest());
 
   static const _DIGEST_LENGTH = 64;
 
@@ -19,9 +19,12 @@ class SHA512Digest extends LongSHA2FamilyDigest implements Digest {
     reset();
   }
 
-  final algorithmName = "SHA-512";
+  @override
+  final algorithmName = 'SHA-512';
+  @override
   final digestSize = _DIGEST_LENGTH;
 
+  @override
   void reset() {
     super.reset();
 
@@ -35,10 +38,11 @@ class SHA512Digest extends LongSHA2FamilyDigest implements Digest {
     H8.set(0x5be0cd19, 0x137e2179);
   }
 
+  @override
   int doFinal(Uint8List out, int outOff) {
     finish();
 
-    var view = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
+    var view = ByteData.view(out.buffer, out.offsetInBytes, out.length);
     H1.pack(view, outOff, Endian.big);
     H2.pack(view, outOff + 8, Endian.big);
     H3.pack(view, outOff + 16, Endian.big);

@@ -11,7 +11,7 @@ import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of RIPEMD-160 digest.
 class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
-  static final FactoryConfig FACTORY_CONFIG =
+  static final FactoryConfig factoryConfig =
       StaticFactoryConfig(Digest, 'RIPEMD-160', () => RIPEMD160Digest());
 
   static const _DIGEST_LENGTH = 20;

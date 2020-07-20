@@ -2,16 +2,16 @@
 
 library impl.digest.sha384;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/long_sha2_family_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/long_sha2_family_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 /// Implementation of SHA-384 digest.
 class SHA384Digest extends LongSHA2FamilyDigest implements Digest {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "SHA-384", () => SHA384Digest());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(Digest, 'SHA-384', () => SHA384Digest());
 
   static const _DIGEST_LENGTH = 48;
 
@@ -19,9 +19,12 @@ class SHA384Digest extends LongSHA2FamilyDigest implements Digest {
     reset();
   }
 
-  final algorithmName = "SHA-384";
+  @override
+  final algorithmName = 'SHA-384';
+  @override
   final digestSize = _DIGEST_LENGTH;
 
+  @override
   void reset() {
     super.reset();
 
@@ -35,10 +38,11 @@ class SHA384Digest extends LongSHA2FamilyDigest implements Digest {
     H8.set(0x47b5481d, 0xbefa4fa4);
   }
 
+  @override
   int doFinal(Uint8List out, int outOff) {
     finish();
 
-    var view = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
+    var view = ByteData.view(out.buffer, out.offsetInBytes, out.length);
     H1.pack(view, outOff, Endian.big);
     H2.pack(view, outOff + 8, Endian.big);
     H3.pack(view, outOff + 16, Endian.big);
