@@ -6,32 +6,10 @@ import 'package:convert/convert.dart';
 import 'package:pointycastle/pointycastle.dart';
 
 import '../test/signer_tests.dart';
+import '../test/src/fixed_secure_random.dart';
 import '../test/src/helpers.dart';
-import '../test/src/null_secure_random.dart';
 
 void main() {
-  var pubParams = () => new ParametersWithRandom(
-      new PublicKeyParameter<RSAPublicKey>(pubk), new NullSecureRandom());
-  var privParams = () => new ParametersWithRandom(
-      new PrivateKeyParameter<RSAPrivateKey>(privk), new NullSecureRandom());
-
-  runSignerTests(new Signer('SHA-1/RSA-PSS'), privParams, pubParams, [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-    _newSignature(
-        '18683e8e227a62049c4f249fcebb5a41dbdd03a926cbf5928be2cf81f870c5fab7865a9caec7b50291a8e3be0089ad86692b3e319060da928934a3'
-        '1ee23b04867a4b5237f2bd66e2a42e1098db797303693cb435a0a6155f20ecc0bf8a6522a72a20ccbb6ae9f2e227a340cce213299f438cda9518fc'
-        'fbfd63ed3b6d302f3248ee046bca9cc29fdeb64547b6639d24d4ea45361c98454ed413f0d0b96cdca62b74a193fcdf4ba7d9d6010bc01bd39f5c82'
-        '37d62b9025458aa71729331ce41d996643adfb1631c9561d8959e423aefb3024bf987589930e2c5ae780517199bab1e13efa2d1642648ad405b489'
-        '73e9ae0b4dea3943d91d7ab849b3935100e70dcd'),
-    'En un lugar de La Mancha, de cuyo nombre no quiero acordarme...',
-    _newSignature(
-        '17716fff28fac619fefa4345042beb21217e34589b7bd3689b27acfad08ccd6ad4476f1e79cbcb3a239269c2de0e070b3e8179244db5cb2a5840da'
-        'e372b174595992db96e6a007e5f2ffebaef9c7b7b0013f8ef6f4656986299b8e8459560185cfde06f77bcf82ec32d83694dd1a4e0b91f2e5e5a34a'
-        '653e1d89e7e8b80b2935ea9a422670e567332d24bb1ed3ca0daf367c833b8113105204ad677be45aa3507e26f54e39e36edf6175c64302d05261a0'
-        'bade75cdd93f4383ed224fe1b61b2f74d7c0bcbffe9908cfb58d48d848b062702541af610f7d21f318297d126757492fc48fb3a1c91c36ddf0b5dd'
-        '971de9a857e390badb0766779eea5672097b695d'),
-  ]);
-
   // Example 1: A 1024-bit RSA keypair
   var pub1 = RSAPublicKey(
     BigInt.parse(
@@ -39,7 +17,7 @@ void main() {
         radix: 16),
     BigInt.parse('010001', radix: 16),
   );
-  var prv2 = RSAPrivateKey(
+  var prv1 = RSAPrivateKey(
     BigInt.parse(
         'a56e4a0e701017589a5187dc7ea841d156f2ec0e36ad52a44dfeb1e61f7ad991d8c51056ffedb162b4c0f283a12a88a394dff526ab7291cbb307ceabfce0b1dfd5cd9508096d5b2b8b6df5d671ef6377c0921cb23c270a70e2598e6ff89d19f105acc2d3f0cb35f29280e1386b6f64c4ef22e1e1f20d0ce8cffb2249bd9a2137',
         radix: 16),
@@ -209,6 +187,32 @@ void main() {
   var slt9b = hex.decode('b307c43b4850a8dac2f15f32e37839ef8c5c0e91');
   var sig9b = hex.decode(
       '80b6d643255209f0a456763897ac9ed259d459b49c2887e5882ecb4434cfd66dd7e1699375381e51cd7f554f2c271704b399d42b4be2540a0eca61951f55267f7c2878c122842dadb28b01bd5f8c025f7e228418a673c03d6bc0c736d0a29546bd67f786d9d692ccea778d71d98c2063b7a71092187a4d35af108111d83e83eae46c46aa34277e06044589903788f1d5e7cee25fb485e92949118814d6f2c3ee361489016f327fb5bc517eb50470bffa1afa5f4ce9aa0ce5b8ee19bf5501b958');*/
+
+  var pubParams = (RSAPublicKey pubk) => () => ParametersWithRandom(
+        PublicKeyParameter<RSAPublicKey>(pubk),
+        FixedSecureRandom(),
+      );
+  var privParams = (RSAPrivateKey privk) => () => ParametersWithRandom(
+        PrivateKeyParameter<RSAPrivateKey>(privk),
+        FixedSecureRandom(),
+      );
+
+  runSignerTests(Signer('SHA-1/RSA-PSS'), privParams(prv1), pubParams(pub1), [
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+    _newSignature(
+        '18683e8e227a62049c4f249fcebb5a41dbdd03a926cbf5928be2cf81f870c5fab7865a9caec7b50291a8e3be0089ad86692b3e319060da928934a3'
+        '1ee23b04867a4b5237f2bd66e2a42e1098db797303693cb435a0a6155f20ecc0bf8a6522a72a20ccbb6ae9f2e227a340cce213299f438cda9518fc'
+        'fbfd63ed3b6d302f3248ee046bca9cc29fdeb64547b6639d24d4ea45361c98454ed413f0d0b96cdca62b74a193fcdf4ba7d9d6010bc01bd39f5c82'
+        '37d62b9025458aa71729331ce41d996643adfb1631c9561d8959e423aefb3024bf987589930e2c5ae780517199bab1e13efa2d1642648ad405b489'
+        '73e9ae0b4dea3943d91d7ab849b3935100e70dcd'),
+    'En un lugar de La Mancha, de cuyo nombre no quiero acordarme...',
+    _newSignature(
+        '17716fff28fac619fefa4345042beb21217e34589b7bd3689b27acfad08ccd6ad4476f1e79cbcb3a239269c2de0e070b3e8179244db5cb2a5840da'
+        'e372b174595992db96e6a007e5f2ffebaef9c7b7b0013f8ef6f4656986299b8e8459560185cfde06f77bcf82ec32d83694dd1a4e0b91f2e5e5a34a'
+        '653e1d89e7e8b80b2935ea9a422670e567332d24bb1ed3ca0daf367c833b8113105204ad677be45aa3507e26f54e39e36edf6175c64302d05261a0'
+        'bade75cdd93f4383ed224fe1b61b2f74d7c0bcbffe9908cfb58d48d848b062702541af610f7d21f318297d126757492fc48fb3a1c91c36ddf0b5dd'
+        '971de9a857e390badb0766779eea5672097b695d'),
+  ]);
 }
 
 RSASignature _newSignature(String value) =>
