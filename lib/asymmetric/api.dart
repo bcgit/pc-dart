@@ -81,3 +81,29 @@ class RSASignature implements Signature {
 
   int get hashCode => bytes.hashCode;
 }
+
+/// A [Signature] created with PSS.
+class PSSSignature implements Signature {
+  final Uint8List bytes;
+
+  PSSSignature(this.bytes);
+
+  @override
+  String toString() => bytes.toString();
+
+  @override
+  bool operator ==(other) {
+    if (other is! PSSSignature) return false;
+    if (other.bytes.length != bytes.length) return false;
+
+    for (var i = 0; i < bytes.length; i++) {
+      if (bytes[i] != other.bytes[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => bytes.hashCode;
+}

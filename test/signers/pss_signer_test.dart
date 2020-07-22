@@ -3,11 +3,15 @@
 library test.paddings.rsa_signer_test;
 
 import 'package:convert/convert.dart';
+import 'package:pointycastle/asymmetric/pkcs1.dart';
+import 'package:pointycastle/asymmetric/rsa.dart';
 import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/signers/pss_signer.dart';
 
 import '../test/signer_tests.dart';
 import '../test/src/fixed_secure_random.dart';
 import '../test/src/helpers.dart';
+import 'package:test/test.dart';
 
 void main() {
   // Example 1: A 1024-bit RSA keypair
@@ -29,20 +33,6 @@ void main() {
         'e7e8942720a877517273a356053ea2a1bc0c94aa72d55c6e86296b2dfc967948c0a72cbccca7eacb35706e09a1df55a1535bd9b3cc34160b3b6dcd3eda8e6443',
         radix: 16),
   );
-
-  // PSS Example 1.1
-  var msg1a = hex.decode(
-      'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0');
-  var slt1a = hex.decode('dee959c7e06411361420ff80185ed57f3e6776af');
-  var sig1a = hex.decode(
-      '9074308fb598e9701b2294388e52f971faac2b60a5145af185df5287b5ed2887e57ce7fd44dc8634e407c8e0e4360bc226f3ec227f9d9e54638e8d31f5051215df6ebb9c2f9579aa77598a38f914b5b9c1bd83c4e2f9f382a0d0aa3542ffee65984a601bc69eb28deb27dca12c82c2d4c3f66cd500f1ff2b994d8a4e30cbb33c');
-
-  // PSS Example 1.2
-  var msg1b = hex.decode(
-      '851384cdfe819c22ed6c4ccb30daeb5cf059bc8e1166b7e3530c4c233e2b5f8f71a1cca582d43ecc72b1bca16dfc7013226b9e');
-  var slt1b = hex.decode('ef2869fa40c346cb183dab3d7bffc98fd56df42d');
-  var sig1b = hex.decode(
-      '3ef7f46e831bf92b32274142a585ffcefbdca7b32ae90d10fb0f0c729984f04ef29a9df0780775ce43739b97838390db0a5505e63de927028d9d29b219ca2c4517832558a55d694a6d25b9dab66003c4cccd907802193be5170d26147d37b93590241be51c25055f47ef62752cfbe21418fafe98c22c4d4d47724fdb5669e843');
 
   /*// Example 2: A 1025-bit RSA keypair
   var pub2 = RsaPublicKey(
@@ -197,23 +187,43 @@ void main() {
         FixedSecureRandom(),
       );
 
-  runSignerTests(Signer('SHA-1/RSA-PSS'), privParams(prv1), pubParams(pub1), [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+  final signer = PSSSigner.withSalt(
+    RSAEngine(),
+    Digest('SHA-1'),
+    Digest('SHA-1'),
+    salt: createUint8ListFromHexString(
+        'ef2869fa40c346cb183dab3d7bffc98fd56df42d'),
+  );
+
+  final message = createUint8ListFromHexString(
+      '851384cdfe819c22ed6c4ccb30daeb5cf059bc8e1166b7e3530c4c233e2b5f8f71a1cca582d43ecc72b1bca16dfc7013226b9e');
+
+  final expectedSignature = PSSSignature(createUint8ListFromHexString(
+      '3ef7f46e831bf92b32274142a585ffcefbdca7b32ae90d10fb0f0c729984f04ef29a9df0780775ce43739b97838390db0a5505e63de927028d9d29'
+      'b219ca2c4517832558a55d694a6d25b9dab66003c4cccd907802193be5170d26147d37b93590241be51c25055f47ef62752cfbe21418fafe98c22c'
+      '4d4d47724fdb5669e843'));
+
+  //signer.init(false, pubParams(pub1)());
+  //expect(signer.verifySignature(message, expectedSignature), isTrue);
+
+  signer.init(true, privParams(prv1)());
+  final signature = signer.generateSignature(message);
+  expect(signature, equals(expectedSignature));
+  /*runSignerTests(Signer('SHA-1/RSA-PSS'), privParams(prv1), pubParams(pub1), [
+    'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0',
+    'dee959c7e06411361420ff80185ed57f3e6776af',
     _newSignature(
-        '18683e8e227a62049c4f249fcebb5a41dbdd03a926cbf5928be2cf81f870c5fab7865a9caec7b50291a8e3be0089ad86692b3e319060da928934a3'
-        '1ee23b04867a4b5237f2bd66e2a42e1098db797303693cb435a0a6155f20ecc0bf8a6522a72a20ccbb6ae9f2e227a340cce213299f438cda9518fc'
-        'fbfd63ed3b6d302f3248ee046bca9cc29fdeb64547b6639d24d4ea45361c98454ed413f0d0b96cdca62b74a193fcdf4ba7d9d6010bc01bd39f5c82'
-        '37d62b9025458aa71729331ce41d996643adfb1631c9561d8959e423aefb3024bf987589930e2c5ae780517199bab1e13efa2d1642648ad405b489'
-        '73e9ae0b4dea3943d91d7ab849b3935100e70dcd'),
-    'En un lugar de La Mancha, de cuyo nombre no quiero acordarme...',
+        '9074308fb598e9701b2294388e52f971faac2b60a5145af185df5287b5ed2887e57ce7fd44dc8634e407c8e0e4360bc226f3ec227f9d9e54638e8d'
+        '31f5051215df6ebb9c2f9579aa77598a38f914b5b9c1bd83c4e2f9f382a0d0aa3542ffee65984a601bc69eb28deb27dca12c82c2d4c3f66cd500f1'
+        'ff2b994d8a4e30cbb33c'),
+    '851384cdfe819c22ed6c4ccb30daeb5cf059bc8e1166b7e3530c4c233e2b5f8f71a1cca582d43ecc72b1bca16dfc7013226b9e',
+    'ef2869fa40c346cb183dab3d7bffc98fd56df42d',
     _newSignature(
-        '17716fff28fac619fefa4345042beb21217e34589b7bd3689b27acfad08ccd6ad4476f1e79cbcb3a239269c2de0e070b3e8179244db5cb2a5840da'
-        'e372b174595992db96e6a007e5f2ffebaef9c7b7b0013f8ef6f4656986299b8e8459560185cfde06f77bcf82ec32d83694dd1a4e0b91f2e5e5a34a'
-        '653e1d89e7e8b80b2935ea9a422670e567332d24bb1ed3ca0daf367c833b8113105204ad677be45aa3507e26f54e39e36edf6175c64302d05261a0'
-        'bade75cdd93f4383ed224fe1b61b2f74d7c0bcbffe9908cfb58d48d848b062702541af610f7d21f318297d126757492fc48fb3a1c91c36ddf0b5dd'
-        '971de9a857e390badb0766779eea5672097b695d'),
-  ]);
+        '3ef7f46e831bf92b32274142a585ffcefbdca7b32ae90d10fb0f0c729984f04ef29a9df0780775ce43739b97838390db0a5505e63de927028d9d29'
+        'b219ca2c4517832558a55d694a6d25b9dab66003c4cccd907802193be5170d26147d37b93590241be51c25055f47ef62752cfbe21418fafe98c22c'
+        '4d4d47724fdb5669e843'),
+  ]);*/
 }
 
-RSASignature _newSignature(String value) =>
-    new RSASignature(createUint8ListFromHexString(value));
+PSSSignature _newSignature(String value) =>
+    PSSSignature(createUint8ListFromHexString(value));

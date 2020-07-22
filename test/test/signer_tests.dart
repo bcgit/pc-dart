@@ -8,7 +8,8 @@ import 'package:pointycastle/pointycastle.dart';
 import './src/helpers.dart';
 
 void runSignerTests(Signer signer, CipherParameters Function() signParams,
-    CipherParameters Function() verifyParams, List messageSignaturePairs) {
+    CipherParameters Function() verifyParams, List messageSignaturePairs,
+    {withSalt = false}) {
   group('${signer.algorithmName}:', () {
     group('generateSignature:', () {
       for (var i = 0; i < messageSignaturePairs.length; i += 2) {
@@ -29,15 +30,18 @@ void runSignerTests(Signer signer, CipherParameters Function() signParams,
 
         test(
             '${formatAsTruncated(message as String)}',
-            () => _runVerifySignatureTest(
-                signer, verifyParams, message as String, signature as Signature));
+            () => _runVerifySignatureTest(signer, verifyParams,
+                message as String, signature as Signature));
       }
     });
   });
 }
 
-void _runGenerateSignatureTest(Signer signer, CipherParameters Function() params,
-    String message, Signature expectedSignature) {
+void _runGenerateSignatureTest(
+    Signer signer,
+    CipherParameters Function() params,
+    String message,
+    Signature expectedSignature) {
   signer.reset();
   signer.init(true, params());
 
@@ -57,9 +61,6 @@ void _runVerifySignatureTest(Signer signer, CipherParameters Function() params,
   expect(ok, true);
 }
 
-
-
-
 // -----
 
 void runSignerTestsFail(Signer signer, CipherParameters Function() signParams,
@@ -72,7 +73,7 @@ void runSignerTestsFail(Signer signer, CipherParameters Function() signParams,
 
         test(
             '${formatAsTruncated(message as String)}',
-                () => _runGenerateSignatureTestFail(
+            () => _runGenerateSignatureTestFail(
                 signer, signParams, message as String, signature as Signature));
       }
     });
@@ -84,15 +85,18 @@ void runSignerTestsFail(Signer signer, CipherParameters Function() signParams,
 
         test(
             '${formatAsTruncated(message as String)}',
-                () => _runVerifySignatureTestFail(
-                signer, verifyParams, message as String, signature as Signature));
+            () => _runVerifySignatureTestFail(signer, verifyParams,
+                message as String, signature as Signature));
       }
     });
   });
 }
 
-void _runGenerateSignatureTestFail(Signer signer, CipherParameters Function() params,
-    String message, Signature expectedSignature) {
+void _runGenerateSignatureTestFail(
+    Signer signer,
+    CipherParameters Function() params,
+    String message,
+    Signature expectedSignature) {
   signer.reset();
   signer.init(true, params());
 
@@ -107,7 +111,7 @@ void _runVerifySignatureTestFail(Signer signer, CipherParameters params(),
   signer.init(false, params());
 
   var ok =
-  signer.verifySignature(createUint8ListFromString(message), signature);
+      signer.verifySignature(createUint8ListFromString(message), signature);
 
   expect(ok, false);
 }

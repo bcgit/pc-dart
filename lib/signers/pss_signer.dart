@@ -1,8 +1,7 @@
 // See file LICENSE for more information.
 
-library impl.signer.rsa_signer;
+library impl.signer.pss_signer;
 
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
@@ -25,6 +24,8 @@ class PSSSigner implements Signer {
         );
   });
 
+  static const int TRAILER_IMPLICIT = 0xBC;
+
   final Digest _contentDigest;
   final Digest _mgfDigest;
   final AsymmetricBlockCipher _cipher;
@@ -35,16 +36,17 @@ class PSSSigner implements Signer {
   final int _mgfhLen;
   final bool _sSet;
   final int _sLen;
+  final Uint8List _mDash;
+  final int _trailer;
+
   int _emBits;
   Uint8List _salt;
-  final Uint8List _mDash;
   Uint8List _block;
-  final Uint8 _trailer;
 
   bool _forSigning;
 
   PSSSigner(this._cipher, this._contentDigest, this._mgfDigest,
-      {int saltLength, Uint8 trailer})
+      {int saltLength, int trailer = TRAILER_IMPLICIT})
       : _hLen = _contentDigest.digestSize,
         _mgfhLen = _mgfDigest.digestSize,
         _sSet = false,
@@ -54,7 +56,7 @@ class PSSSigner implements Signer {
         _trailer = trailer;
 
   PSSSigner.withSalt(this._cipher, this._contentDigest, this._mgfDigest,
-      {Uint8List salt, Uint8 trailer})
+      {Uint8List salt, int trailer = TRAILER_IMPLICIT})
       : _hLen = _contentDigest.digestSize,
         _mgfhLen = _mgfDigest.digestSize,
         _sSet = true,
@@ -64,7 +66,7 @@ class PSSSigner implements Signer {
         _trailer = trailer;
 
   @override
-  String get algorithmName => '${_mgfDigest.algorithmName}/RSA-PSS';
+  String get algorithmName => '${_mgfDigest.algorithmName}/PSS';
 
   @override
   void init(bool forSigning, CipherParameters params) {
@@ -72,10 +74,10 @@ class PSSSigner implements Signer {
 
     AsymmetricKeyParameter akparams;
     if (params is ParametersWithRandom) {
-      akparams = params.parameters as AsymmetricKeyParameter;
+      akparams = params.parameters;
       _random = params.random;
     } else {
-      akparams = params as AsymmetricKeyParameter;
+      akparams = params;
       _random = SecureRandom();
     }
 
@@ -92,17 +94,19 @@ class PSSSigner implements Signer {
     _emBits = k.modulus.bitLength - 1;
 
     if (_emBits < (8 * _hLen + 8 * _sLen + 9)) {
-      throw ArgumentError('Key too small for specified hash and salt lenghts');
+      throw ArgumentError('Key too small for specified hash and salt lengths');
     }
 
-    _block = Uint8List(((_emBits + 7) / 8) as int);
+    _cipher.init(forSigning, akparams);
+
+    _block = Uint8List((_emBits + 7) ~/ 8);
 
     reset();
   }
 
   /// Clear possibly sensitive data.
   void _clearBlock(Uint8List block) {
-    for (int i = 0; i != block.length; i++) {
+    for (var i = 0; i != block.length; i++) {
       block[i] = 0;
     }
   }
@@ -112,7 +116,8 @@ class PSSSigner implements Signer {
     _contentDigest.reset();
   }
 
-  RSASignature generateSignature(Uint8List message, {bool normalize = false}) {
+  @override
+  PSSSignature generateSignature(Uint8List message, {bool normalize = false}) {
     if (!_forSigning) {
       throw StateError('Signer was not initialised for signature generation');
     }
@@ -126,7 +131,7 @@ class PSSSigner implements Signer {
         _salt = _random.nextBytes(_sLen);
       }
 
-      arrayCopy(_salt, 0, _mDash, _mDash.length - _sLen, _salt.length);
+      arrayCopy(_salt, 0, _mDash, _mDash.length - _sLen, _sLen);
     }
 
     var h = Uint8List(_hLen);
@@ -136,8 +141,7 @@ class PSSSigner implements Signer {
     _contentDigest.doFinal(h, 0);
 
     _block[_block.length - _sLen - 1 - _hLen - 1] = 0x01;
-    arrayCopy(
-        _salt, 0, _block, _block.length - _sLen - _hLen - 1, _salt.length);
+    arrayCopy(_salt, 0, _block, _block.length - _sLen - _hLen - 1, _sLen);
 
     var dbMask =
         _maskGeneratorFunction1(h, 0, h.length, _block.length - _hLen - 1);
@@ -150,16 +154,17 @@ class PSSSigner implements Signer {
     var firstByteMask = 0xff >> ((_block.length * 8) - _emBits);
 
     _block[0] &= firstByteMask;
-    _block[_block.length - 1] = _trailer as int;
+    _block[_block.length - 1] = _trailer;
 
     var b = _cipher.process(_block);
 
     _clearBlock(_block);
 
-    //return b;
+    return PSSSignature(b);
   }
 
-  bool verifySignature(Uint8List message, covariant RSASignature signature) {
+  @override
+  bool verifySignature(Uint8List message, covariant PSSSignature signature) {
     if (_forSigning) {
       throw StateError('Signer was not initialised for signature verification');
     }
@@ -169,7 +174,8 @@ class PSSSigner implements Signer {
     _contentDigest.doFinal(_mDash, _mDash.length - _hLen - _sLen);
 
     var b = _cipher.process(signature.bytes);
-    // array fill
+    _block.fillRange(0, _block.length - b.length, 0);
+    arrayCopy(b, 0, _block, _block.length - b.length, b.length);
 
     var firstByteMask = 0xFF >> ((_block.length * 8) - _emBits);
 
@@ -225,7 +231,7 @@ class PSSSigner implements Signer {
     return true;
   }
 
-  // Convert int to octet string.
+  /// Convert int to octet string.
   void _intToOSP(int i, Uint8List sp) {
     sp[0] = i >> 24;
     sp[1] = i >> 16;
@@ -242,15 +248,15 @@ class PSSSigner implements Signer {
 
     _mgfDigest.reset();
 
-    while (counter < (length / _mgfhLen)) {
+    while (counter < (length ~/ _mgfhLen)) {
       _intToOSP(counter, C);
 
       _mgfDigest.update(Z, zOff, zLen);
       _mgfDigest.update(C, 0, C.length);
       _mgfDigest.doFinal(hashBuf, 0);
 
-      arrayCopy(hashBuf, 0, mask, counter * _mgfhLen, hashBuf.length);
-      ++counter;
+      arrayCopy(hashBuf, 0, mask, counter * _mgfhLen, _mgfhLen);
+      counter++;
     }
 
     if ((counter * _mgfhLen) < length) {
