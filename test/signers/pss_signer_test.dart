@@ -25,12 +25,14 @@ void main() {
     BigInt.parse(
         'a56e4a0e701017589a5187dc7ea841d156f2ec0e36ad52a44dfeb1e61f7ad991d8c51056ffedb162b4c0f283a12a88a394dff526ab7291cbb307ceabfce0b1dfd5cd9508096d5b2b8b6df5d671ef6377c0921cb23c270a70e2598e6ff89d19f105acc2d3f0cb35f29280e1386b6f64c4ef22e1e1f20d0ce8cffb2249bd9a2137',
         radix: 16),
-    BigInt.parse('010001', radix: 16),
     BigInt.parse(
         '33a5042a90b27d4f5451ca9bbbd0b44771a101af884340aef9885f2a4bbe92e894a724ac3c568c8f97853ad07c0266c8c6a3ca0929f1e8f11231884429fc4d9ae55fee896a10ce707c3ed7e734e44727a39574501a532683109c2abacaba283c31b4bd2f53c3ee37e352cee34f9e503bd80c0622ad79c6dcee883547c6a3b325',
         radix: 16),
     BigInt.parse(
         'e7e8942720a877517273a356053ea2a1bc0c94aa72d55c6e86296b2dfc967948c0a72cbccca7eacb35706e09a1df55a1535bd9b3cc34160b3b6dcd3eda8e6443',
+        radix: 16),
+    BigInt.parse(
+        'b69dca1cf7d4d7ec81e75b90fcca874abcde123fd2700180aa90479b6e48de8d67ed24f9f19d85ba275874f542cd20dc723e6963364a1f9425452b269a6799fd',
         radix: 16),
   );
 
@@ -187,28 +189,63 @@ void main() {
         FixedSecureRandom(),
       );
 
-  final signer = PSSSigner.withSalt(
+  final signer1 = PSSSigner.withSalt(
     RSAEngine(),
     Digest('SHA-1'),
     Digest('SHA-1'),
     salt: createUint8ListFromHexString(
-        'ef2869fa40c346cb183dab3d7bffc98fd56df42d'),
+        'dee959c7e06411361420ff80185ed57f3e6776af'),
   );
 
-  final message = createUint8ListFromHexString(
-      '851384cdfe819c22ed6c4ccb30daeb5cf059bc8e1166b7e3530c4c233e2b5f8f71a1cca582d43ecc72b1bca16dfc7013226b9e');
+  /*signer1.init(false, pubParams(pub1)());
+  expect(
+      signer1.verifySignature(
+        createUint8ListFromHexString(
+            'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0'),
+        PSSSignature(
+          createUint8ListFromHexString(
+              '9074308fb598e9701b2294388e52f971faac2b60a5145af185df5287b5ed2887e57ce7fd44dc8634e407c8e0e4360bc226f3ec227f9d9e54638e8d31f5051215df6ebb9c2f9579aa77598a38f914b5b9c1bd83c4e2f9f382a0d0aa3542ffee65984a601bc69eb28deb27dca12c82c2d4c3f66cd500f1ff2b994d8a4e30cbb33c'),
+        ),
+      ),
+      isTrue);*/
 
-  final expectedSignature = PSSSignature(createUint8ListFromHexString(
-      '3ef7f46e831bf92b32274142a585ffcefbdca7b32ae90d10fb0f0c729984f04ef29a9df0780775ce43739b97838390db0a5505e63de927028d9d29'
-      'b219ca2c4517832558a55d694a6d25b9dab66003c4cccd907802193be5170d26147d37b93590241be51c25055f47ef62752cfbe21418fafe98c22c'
-      '4d4d47724fdb5669e843'));
+  test('pss', () {
+    signer1.init(true, privParams(prv1)());
+    final signature1 = signer1.generateSignature(createUint8ListFromHexString(
+        'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0'));
+    expect(
+        signature1,
+        equals(PSSSignature(
+          createUint8ListFromHexString(
+              '9074308fb598e9701b2294388e52f971faac2b60a5145af185df5287b5ed2887e57ce7fd44dc8634e407c8e0e4360bc226f3ec227f9d9e54638e8d'
+              '31f5051215df6ebb9c2f9579aa77598a38f914b5b9c1bd83c4e2f9f382a0d0aa3542ffee65984a601bc69eb28deb27dca12c82c2d4c3f66cd500f1'
+              'ff2b994d8a4e30cbb33c'),
+        )));
+    print(hex.encode(signature1.bytes));
 
-  //signer.init(false, pubParams(pub1)());
-  //expect(signer.verifySignature(message, expectedSignature), isTrue);
+    final signer = PSSSigner.withSalt(
+      RSAEngine(),
+      Digest('SHA-1'),
+      Digest('SHA-1'),
+      salt: createUint8ListFromHexString(
+          'ef2869fa40c346cb183dab3d7bffc98fd56df42d'),
+    );
 
-  signer.init(true, privParams(prv1)());
-  final signature = signer.generateSignature(message);
-  expect(signature, equals(expectedSignature));
+    final message = createUint8ListFromHexString(
+        '851384cdfe819c22ed6c4ccb30daeb5cf059bc8e1166b7e3530c4c233e2b5f8f71a1cca582d43ecc72b1bca16dfc7013226b9e');
+
+    final expectedSignature = PSSSignature(createUint8ListFromHexString(
+        '3ef7f46e831bf92b32274142a585ffcefbdca7b32ae90d10fb0f0c729984f04ef29a9df0780775ce43739b97838390db0a5505e63de927028d9d29'
+        'b219ca2c4517832558a55d694a6d25b9dab66003c4cccd907802193be5170d26147d37b93590241be51c25055f47ef62752cfbe21418fafe98c22c'
+        '4d4d47724fdb5669e843'));
+
+    //signer.init(false, pubParams(pub1)());
+    //expect(signer.verifySignature(message, expectedSignature), isTrue);
+
+    signer.init(true, privParams(prv1)());
+    final signature = signer.generateSignature(message);
+    expect(signature, equals(expectedSignature));
+  });
   /*runSignerTests(Signer('SHA-1/RSA-PSS'), privParams(prv1), pubParams(pub1), [
     'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0',
     'dee959c7e06411361420ff80185ed57f3e6776af',

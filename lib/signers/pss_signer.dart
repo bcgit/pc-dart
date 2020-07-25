@@ -149,7 +149,7 @@ class PSSSigner implements Signer {
       _block[i] ^= dbMask[i];
     }
 
-    arrayCopy(h, 0, _block, _block.length - _hLen - 1, h.length);
+    arrayCopy(h, 0, _block, _block.length - _hLen - 1, _hLen);
 
     var firstByteMask = 0xff >> ((_block.length * 8) - _emBits);
 
