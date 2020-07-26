@@ -2,16 +2,12 @@
 
 library test.paddings.rsa_signer_test;
 
-import 'package:convert/convert.dart';
-import 'package:pointycastle/asymmetric/pkcs1.dart';
-import 'package:pointycastle/asymmetric/rsa.dart';
+import 'dart:typed_data';
+
 import 'package:pointycastle/pointycastle.dart';
-import 'package:pointycastle/signers/pss_signer.dart';
 
 import '../test/signer_tests.dart';
-import '../test/src/fixed_secure_random.dart';
 import '../test/src/helpers.dart';
-import 'package:test/test.dart';
 
 void main() {
   // Example 1: A 1024-bit RSA keypair
@@ -180,86 +176,24 @@ void main() {
   var sig9b = hex.decode(
       '80b6d643255209f0a456763897ac9ed259d459b49c2887e5882ecb4434cfd66dd7e1699375381e51cd7f554f2c271704b399d42b4be2540a0eca61951f55267f7c2878c122842dadb28b01bd5f8c025f7e228418a673c03d6bc0c736d0a29546bd67f786d9d692ccea778d71d98c2063b7a71092187a4d35af108111d83e83eae46c46aa34277e06044589903788f1d5e7cee25fb485e92949118814d6f2c3ee361489016f327fb5bc517eb50470bffa1afa5f4ce9aa0ce5b8ee19bf5501b958');*/
 
-  var pubParams = (RSAPublicKey pubk) => () => ParametersWithRandom(
-        PublicKeyParameter<RSAPublicKey>(pubk),
-        FixedSecureRandom(),
-      );
-  var privParams = (RSAPrivateKey privk) => () => ParametersWithRandom(
-        PrivateKeyParameter<RSAPrivateKey>(privk),
-        FixedSecureRandom(),
-      );
+  var pubParams =
+      (RSAPublicKey pubk, Uint8List salt) => () => ParametersWithSalt(
+            PublicKeyParameter<RSAPublicKey>(pubk),
+            salt,
+          );
+  var privParams = (RSAPrivateKey privk, Uint8List salt) =>
+      () => ParametersWithSalt(PrivateKeyParameter<RSAPrivateKey>(privk), salt);
 
-  final signer1 = PSSSigner.withSalt(
-    RSAEngine(),
-    Digest('SHA-1'),
-    Digest('SHA-1'),
-    salt: createUint8ListFromHexString(
-        'dee959c7e06411361420ff80185ed57f3e6776af'),
-  );
-
-  /*signer1.init(false, pubParams(pub1)());
-  expect(
-      signer1.verifySignature(
-        createUint8ListFromHexString(
-            'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0'),
-        PSSSignature(
-          createUint8ListFromHexString(
-              '9074308fb598e9701b2294388e52f971faac2b60a5145af185df5287b5ed2887e57ce7fd44dc8634e407c8e0e4360bc226f3ec227f9d9e54638e8d31f5051215df6ebb9c2f9579aa77598a38f914b5b9c1bd83c4e2f9f382a0d0aa3542ffee65984a601bc69eb28deb27dca12c82c2d4c3f66cd500f1ff2b994d8a4e30cbb33c'),
-        ),
-      ),
-      isTrue);*/
-
-  test('pss', () {
-    signer1.init(true, privParams(prv1)());
-    final signature1 = signer1.generateSignature(createUint8ListFromHexString(
-        'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0'));
-    expect(
-        signature1,
-        equals(PSSSignature(
-          createUint8ListFromHexString(
-              '9074308fb598e9701b2294388e52f971faac2b60a5145af185df5287b5ed2887e57ce7fd44dc8634e407c8e0e4360bc226f3ec227f9d9e54638e8d'
-              '31f5051215df6ebb9c2f9579aa77598a38f914b5b9c1bd83c4e2f9f382a0d0aa3542ffee65984a601bc69eb28deb27dca12c82c2d4c3f66cd500f1'
-              'ff2b994d8a4e30cbb33c'),
-        )));
-    print(hex.encode(signature1.bytes));
-
-    final signer = PSSSigner.withSalt(
-      RSAEngine(),
-      Digest('SHA-1'),
-      Digest('SHA-1'),
-      salt: createUint8ListFromHexString(
-          'ef2869fa40c346cb183dab3d7bffc98fd56df42d'),
-    );
-
-    final message = createUint8ListFromHexString(
-        '851384cdfe819c22ed6c4ccb30daeb5cf059bc8e1166b7e3530c4c233e2b5f8f71a1cca582d43ecc72b1bca16dfc7013226b9e');
-
-    final expectedSignature = PSSSignature(createUint8ListFromHexString(
-        '3ef7f46e831bf92b32274142a585ffcefbdca7b32ae90d10fb0f0c729984f04ef29a9df0780775ce43739b97838390db0a5505e63de927028d9d29'
-        'b219ca2c4517832558a55d694a6d25b9dab66003c4cccd907802193be5170d26147d37b93590241be51c25055f47ef62752cfbe21418fafe98c22c'
-        '4d4d47724fdb5669e843'));
-
-    //signer.init(false, pubParams(pub1)());
-    //expect(signer.verifySignature(message, expectedSignature), isTrue);
-
-    signer.init(true, privParams(prv1)());
-    final signature = signer.generateSignature(message);
-    expect(signature, equals(expectedSignature));
-  });
-  /*runSignerTests(Signer('SHA-1/RSA-PSS'), privParams(prv1), pubParams(pub1), [
+  var slt1A =
+      createUint8ListFromHexString('dee959c7e06411361420ff80185ed57f3e6776af');
+  runSignerTests(
+      Signer('SHA-1/PSS'), privParams(prv1, slt1A), pubParams(pub1, slt1A), [
     'cdc87da223d786df3b45e0bbbc721326d1ee2af806cc315475cc6f0d9c66e1b62371d45ce2392e1ac92844c310102f156a0d8d52c1f4c40ba3aa65095786cb769757a6563ba958fed0bcc984e8b517a3d5f515b23b8a41e74aa867693f90dfb061a6e86dfaaee64472c00e5f20945729cbebe77f06ce78e08f4098fba41f9d6193c0317e8b60d4b6084acb42d29e3808a3bc372d85e331170fcbf7cc72d0b71c296648b3a4d10f416295d0807aa625cab2744fd9ea8fd223c42537029828bd16be02546f130fd2e33b936d2676e08aed1b73318b750a0167d0',
-    'dee959c7e06411361420ff80185ed57f3e6776af',
     _newSignature(
         '9074308fb598e9701b2294388e52f971faac2b60a5145af185df5287b5ed2887e57ce7fd44dc8634e407c8e0e4360bc226f3ec227f9d9e54638e8d'
         '31f5051215df6ebb9c2f9579aa77598a38f914b5b9c1bd83c4e2f9f382a0d0aa3542ffee65984a601bc69eb28deb27dca12c82c2d4c3f66cd500f1'
         'ff2b994d8a4e30cbb33c'),
-    '851384cdfe819c22ed6c4ccb30daeb5cf059bc8e1166b7e3530c4c233e2b5f8f71a1cca582d43ecc72b1bca16dfc7013226b9e',
-    'ef2869fa40c346cb183dab3d7bffc98fd56df42d',
-    _newSignature(
-        '3ef7f46e831bf92b32274142a585ffcefbdca7b32ae90d10fb0f0c729984f04ef29a9df0780775ce43739b97838390db0a5505e63de927028d9d29'
-        'b219ca2c4517832558a55d694a6d25b9dab66003c4cccd907802193be5170d26147d37b93590241be51c25055f47ef62752cfbe21418fafe98c22c'
-        '4d4d47724fdb5669e843'),
-  ]);*/
+  ]);
 }
 
 PSSSignature _newSignature(String value) =>

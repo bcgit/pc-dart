@@ -8,8 +8,7 @@ import 'package:pointycastle/pointycastle.dart';
 import './src/helpers.dart';
 
 void runSignerTests(Signer signer, CipherParameters Function() signParams,
-    CipherParameters Function() verifyParams, List messageSignaturePairs,
-    {withSalt = false}) {
+    CipherParameters Function() verifyParams, List messageSignaturePairs) {
   group('${signer.algorithmName}:', () {
     group('generateSignature:', () {
       for (var i = 0; i < messageSignaturePairs.length; i += 2) {
