@@ -33,6 +33,7 @@ part "src/api/padding.dart";
 part "src/api/parameters_with_iv.dart";
 part "src/api/parameters_with_random.dart";
 part 'src/api/parameters_with_salt.dart';
+part 'src/api/parameters_with_salt_configuration.dart';
 part "src/api/private_key.dart";
 part "src/api/private_key_parameter.dart";
 part "src/api/public_key.dart";
