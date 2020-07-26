@@ -57,17 +57,20 @@ class PSSSigner implements Signer {
     _forSigning = forSigning;
 
     AsymmetricKeyParameter akparams;
-    if (params is ParametersWithRandom) {
+    if (params is ParametersWithSaltConfiguration) {
       akparams = params.parameters;
       _random = params.random;
+      _sSet = false;
+      _sLen = params.saltLength;
+      _salt = Uint8List(_sLen);
     } else if (params is ParametersWithSalt) {
       akparams = params.parameters;
       _sSet = true;
       _salt = params.salt;
       _sLen = _salt.length;
     } else {
-      akparams = params;
-      _random = SecureRandom();
+      throw ArgumentError(
+          'Unsupported parameters type ${params.runtimeType}: should be ParametersWithSaltConfiguration or ParametersWithSalt');
     }
 
     var k = akparams.key as RSAAsymmetricKey;
@@ -78,6 +81,11 @@ class PSSSigner implements Signer {
 
     if (!forSigning && (k is! RSAPublicKey)) {
       throw ArgumentError('Verification requires public key');
+    }
+
+    // TODO: Should also support empty/0 length salt.
+    if (!forSigning && !_sSet) {
+      throw ArgumentError('Verification requires salt');
     }
 
     _emBits = k.modulus.bitLength - 1;
