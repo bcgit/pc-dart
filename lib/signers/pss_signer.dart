@@ -6,7 +6,6 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/asymmetric/api.dart';
-import 'package:pointycastle/asymmetric/pkcs1.dart';
 import 'package:pointycastle/asymmetric/rsa.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 
@@ -15,10 +14,10 @@ import '../src/utils.dart';
 class PSSSigner implements Signer {
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      DynamicFactoryConfig.suffix(Signer, '/RSA-PSS', (_, Match match) {
+      DynamicFactoryConfig.suffix(Signer, '/PSS', (_, Match match) {
     final digestName = match.group(1);
     return () => PSSSigner(
-          PKCS1Encoding(RSAEngine()),
+          RSAEngine(),
           Digest(digestName),
           Digest(digestName),
         );
@@ -29,40 +28,25 @@ class PSSSigner implements Signer {
   final Digest _contentDigest;
   final Digest _mgfDigest;
   final AsymmetricBlockCipher _cipher;
-
-  SecureRandom _random;
-
   final int _hLen;
   final int _mgfhLen;
-  final bool _sSet;
-  final int _sLen;
-  final Uint8List _mDash;
   final int _trailer;
 
-  int _emBits;
+  bool _sSet;
+  int _sLen;
   Uint8List _salt;
+  SecureRandom _random;
+
+  int _emBits;
   Uint8List _block;
+  Uint8List _mDash;
 
   bool _forSigning;
 
   PSSSigner(this._cipher, this._contentDigest, this._mgfDigest,
-      {int saltLength, int trailer = TRAILER_IMPLICIT})
+      {int trailer = TRAILER_IMPLICIT})
       : _hLen = _contentDigest.digestSize,
         _mgfhLen = _mgfDigest.digestSize,
-        _sSet = false,
-        _sLen = saltLength,
-        _salt = Uint8List(saltLength),
-        _mDash = Uint8List(8 + saltLength + _contentDigest.digestSize),
-        _trailer = trailer;
-
-  PSSSigner.withSalt(this._cipher, this._contentDigest, this._mgfDigest,
-      {Uint8List salt, int trailer = TRAILER_IMPLICIT})
-      : _hLen = _contentDigest.digestSize,
-        _mgfhLen = _mgfDigest.digestSize,
-        _sSet = true,
-        _sLen = salt.length,
-        _salt = salt,
-        _mDash = Uint8List(8 + salt.length + _contentDigest.digestSize),
         _trailer = trailer;
 
   @override
@@ -76,6 +60,11 @@ class PSSSigner implements Signer {
     if (params is ParametersWithRandom) {
       akparams = params.parameters;
       _random = params.random;
+    } else if (params is ParametersWithSalt) {
+      akparams = params.parameters;
+      _sSet = true;
+      _salt = params.salt;
+      _sLen = _salt.length;
     } else {
       akparams = params;
       _random = SecureRandom();
@@ -96,6 +85,8 @@ class PSSSigner implements Signer {
     if (_emBits < (8 * _hLen + 8 * _sLen + 9)) {
       throw ArgumentError('Key too small for specified hash and salt lengths');
     }
+
+    _mDash = Uint8List(8 + _sLen + _contentDigest.digestSize);
 
     _cipher.init(forSigning, akparams);
 

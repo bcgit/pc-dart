@@ -231,6 +231,7 @@ void _registerRandoms(FactoryRegistry registry) {
 
 void _registerSigners(FactoryRegistry registry) {
   registry.register(ECDSASigner.FACTORY_CONFIG);
+  registry.register(PSSSigner.FACTORY_CONFIG);
   registry.register(RSASigner.FACTORY_CONFIG);
 }
 
