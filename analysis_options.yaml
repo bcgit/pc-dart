@@ -1,10 +1,10 @@
 include: package:pedantic/analysis_options.yaml
 analyzer:
   strong-mode:
-    implicit-casts: false
+    implicit-casts: true
   errors:
-    unused_import: error
-    unused_local_variable: error
+    unused_import: warning
+    unused_local_variable: warning
     dead_code: error
 linter:
   rules:
