@@ -13,7 +13,7 @@ test: depends
 	@echo "RUNNING TESTS"
 	@echo "********************************************************************************"
 
-	dart ../test/all_tests.dart
+	dart ../test/all_tests_web.dart
 
 doc: depends
 	@echo "********************************************************************************"
