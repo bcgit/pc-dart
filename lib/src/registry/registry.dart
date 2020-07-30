@@ -158,7 +158,9 @@ class _RegistryImpl implements FactoryRegistry {
 
   void _addDynamicFactoryConfig(DynamicFactoryConfig config) {
     Set factories = _dynamicFactories.putIfAbsent(
-        config.type, () => <DynamicFactoryConfig>{});
+        config.type,
+        () => Set<DynamicFactoryConfig>.of(
+            [])); // ignore: prefer_collection_literals
     factories.add(config);
   }
 
