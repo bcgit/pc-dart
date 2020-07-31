@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library test.paddings.rsa_signer_test;
+library test.paddings.pss_signer_test;
 
 import 'dart:typed_data';
 
@@ -226,16 +226,14 @@ void _testSign(
     RSAPublicKey publicKey,
     Uint8List message,
     Uint8List salt,
-    Uint8List expectedSignature) {
+    Uint8List expectedSignatureBytes) {
   test(testName, () {
     signer.init(true, privParams(privateKey, salt)());
-
     var signature = signer.generateSignature(message);
-
-    var expectedSign = PSSSignature(expectedSignature);
-    expect(signature, equals(expectedSign));
+    var expectedSignature = PSSSignature(expectedSignatureBytes);
+    expect(signature, equals(expectedSignature));
 
     signer.init(false, pubParams(publicKey, salt)());
-    expect(signer.verifySignature(message, expectedSign), isTrue);
+    expect(signer.verifySignature(message, expectedSignature), isTrue);
   });
 }

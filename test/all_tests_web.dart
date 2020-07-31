@@ -44,6 +44,7 @@ import "random/block_ctr_random_test.dart" as block_ctr_random_test;
 import "random/fortuna_random_test.dart" as fortuna_random_test;
 import "signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
 import "signers/rsa_signer_test.dart" as rsa_signer_test;
+import "signers/pss_signer_test.dart" as pss_signer_test;
 import "src/ufixnum_test.dart" as ufixnum_test;
 import "stream/salsa20_test.dart" as salsa20_test;
 import "stream/chacha20_test.dart" as chacha20_test;
@@ -96,6 +97,7 @@ void main() {
   fortuna_random_test.main();
   ecdsa_signer_test.main();
   rsa_signer_test.main();
+  pss_signer_test.main();
   ufixnum_test.main();
   salsa20_test.main();
   chacha20_test.main();
