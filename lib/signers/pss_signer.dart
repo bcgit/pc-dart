@@ -67,7 +67,7 @@ class PSSSigner implements Signer {
       akparams = params.parameters;
       _sSet = true;
       _salt = params.salt;
-      _sLen = _salt.length;
+      _sLen = _salt?.length ?? 0;
     } else {
       throw ArgumentError(
           'Unsupported parameters type ${params.runtimeType}: should be ParametersWithSaltConfiguration or ParametersWithSalt');
@@ -83,7 +83,6 @@ class PSSSigner implements Signer {
       throw ArgumentError('Verification requires public key');
     }
 
-    // TODO: Should also support empty/0 length salt.
     if (!forSigning && !_sSet) {
       throw ArgumentError('Verification requires salt');
     }
