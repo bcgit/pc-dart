@@ -82,7 +82,6 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
           "Not enough data for RSA cipher (length=$len, available=$inpLen)");
     }
 
-    // Hack. Looks like the check here before was overrestrictive.
     if (inputBlockSize + 1 < len) {
       throw new ArgumentError.value(len, "len",
           "Too large for maximum RSA cipher input block size ($inputBlockSize)");
