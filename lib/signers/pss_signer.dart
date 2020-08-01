@@ -115,7 +115,7 @@ class PSSSigner implements Signer {
   }
 
   @override
-  PSSSignature generateSignature(Uint8List message, {bool normalize = false}) {
+  PSSSignature generateSignature(Uint8List message) {
     if (!_forSigning) {
       throw StateError('Signer was not initialised for signature generation');
     }
