@@ -68,6 +68,7 @@ class ChaCha20Engine extends BaseStreamCipher {
 
   Uint8List _workingKey;
   Uint8List _workingIV;
+  int _initialCounter = 0;
 
   final _state = List<int>(STATE_SIZE);
   final _buffer = List<int>(STATE_SIZE);
@@ -91,7 +92,7 @@ class ChaCha20Engine extends BaseStreamCipher {
   @override
   void reset() {
     if (_workingKey != null) {
-      _setKey(_workingKey, _workingIV);
+      _setKey(_workingKey, _workingIV, _initialCounter);
     }
   }
 
@@ -106,8 +107,12 @@ class ChaCha20Engine extends BaseStreamCipher {
 
     _workingIV = iv;
     _workingKey = uparams.key;
+    if (params is ParametersWithIVAndInitialCounter) {
+      _initialCounter =
+          (params as ParametersWithIVAndInitialCounter).initialCounter;
+    }
 
-    _setKey(_workingKey, _workingIV);
+    _setKey(_workingKey, _workingIV, _initialCounter);
   }
 
   @override
@@ -157,9 +162,10 @@ class ChaCha20Engine extends BaseStreamCipher {
     }
   }
 
-  void _setKey(Uint8List keyBytes, Uint8List ivBytes) {
+  void _setKey(Uint8List keyBytes, Uint8List ivBytes, int initialCounter) {
     _workingKey = keyBytes;
     _workingIV = ivBytes;
+    _initialCounter = initialCounter;
 
     _keyStreamOffset = 0;
     var offset = 0;
@@ -188,12 +194,12 @@ class ChaCha20Engine extends BaseStreamCipher {
     _state[3] = unpack32(constants, 12, Endian.little);
 
     // IV
+    _state[12] = initialCounter;
     if (_workingIV.length == 8) {
-      _state[12] = _state[13] = 0;
+      _state[13] = 0;
       _state[14] = unpack32(_workingIV, 0, Endian.little);
       _state[15] = unpack32(_workingIV, 4, Endian.little);
     } else {
-      _state[12] = 0;
       _state[13] = unpack32(_workingIV, 0, Endian.little);
       _state[14] = unpack32(_workingIV, 4, Endian.little);
       _state[15] = unpack32(_workingIV, 8, Endian.little);

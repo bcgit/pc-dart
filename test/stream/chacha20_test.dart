@@ -124,7 +124,8 @@ f9 1b 65 c5 52 47 33 ab 8f 59 3d ab cd 62 b3 57
         '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f');
     final inp = utf8.encode(source) as Uint8List;
     final chacha20 = ChaCha20Engine()
-      ..init(true, ParametersWithIV(KeyParameter(key), nonce));
+      ..init(
+          true, ParametersWithIVAndInitialCounter(KeyParameter(key), nonce, 1));
     final result = chacha20.process(inp);
     expect(formatBytesAsHexString(result), expected);
   });

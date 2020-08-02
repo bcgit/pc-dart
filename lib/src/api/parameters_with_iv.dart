@@ -14,3 +14,14 @@ class ParametersWithIV<UnderlyingParameters extends CipherParameters>
 
   ParametersWithIV(this.parameters, this.iv);
 }
+
+/// Adds an additional initial counter for [ChaCha20Engine].
+class ParametersWithIVAndInitialCounter<
+        UnderlyingParameters extends CipherParameters>
+    extends ParametersWithIV<UnderlyingParameters> {
+  final int initialCounter;
+
+  ParametersWithIVAndInitialCounter(
+      UnderlyingParameters parameters, Uint8List iv, this.initialCounter)
+      : super(parameters, iv);
+}
