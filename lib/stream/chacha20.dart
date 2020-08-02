@@ -100,8 +100,8 @@ class ChaCha20Engine extends BaseStreamCipher {
       covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 8) {
-      throw ArgumentError('ChaCha20 requires exactly 8 bytes of IV');
+    if (iv == null || (iv.length != 8 && iv.length != 12)) {
+      throw ArgumentError('ChaCha20 requires exactly 8 or 12 bytes of IV');
     }
 
     _workingIV = iv;
@@ -188,9 +188,16 @@ class ChaCha20Engine extends BaseStreamCipher {
     _state[3] = unpack32(constants, 12, Endian.little);
 
     // IV
-    _state[14] = unpack32(_workingIV, 0, Endian.little);
-    _state[15] = unpack32(_workingIV, 4, Endian.little);
-    _state[12] = _state[13] = 0;
+    if (_workingIV.length == 8) {
+      _state[12] = _state[13] = 0;
+      _state[14] = unpack32(_workingIV, 0, Endian.little);
+      _state[15] = unpack32(_workingIV, 4, Endian.little);
+    } else {
+      _state[12] = 0;
+      _state[13] = unpack32(_workingIV, 0, Endian.little);
+      _state[14] = unpack32(_workingIV, 4, Endian.little);
+      _state[15] = unpack32(_workingIV, 8, Endian.little);
+    }
 
     _initialised = true;
   }
