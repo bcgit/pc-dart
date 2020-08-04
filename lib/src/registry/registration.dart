@@ -132,24 +132,24 @@ void _registerBlockCiphers(FactoryRegistry registry) {
 }
 
 void _registerDigests(FactoryRegistry registry) {
-  registry.register(Blake2bDigest.FACTORY_CONFIG);
-  registry.register(MD2Digest.FACTORY_CONFIG);
-  registry.register(MD4Digest.FACTORY_CONFIG);
-  registry.register(MD5Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD128Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD160Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD256Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD320Digest.FACTORY_CONFIG);
-  registry.register(SHA1Digest.FACTORY_CONFIG);
-  registry.register(SHA3Digest.FACTORY_CONFIG);
-  registry.register(KeccakDigest.FACTORY_CONFIG);
-  registry.register(SHA224Digest.FACTORY_CONFIG);
-  registry.register(SHA256Digest.FACTORY_CONFIG);
-  registry.register(SHA384Digest.FACTORY_CONFIG);
-  registry.register(SHA512Digest.FACTORY_CONFIG);
-  registry.register(SHA512tDigest.FACTORY_CONFIG);
-  registry.register(TigerDigest.FACTORY_CONFIG);
-  registry.register(WhirlpoolDigest.FACTORY_CONFIG);
+  registry.register(Blake2bDigest.factoryConfig);
+  registry.register(MD2Digest.factoryConfig);
+  registry.register(MD4Digest.factoryConfig);
+  registry.register(MD5Digest.factoryConfig);
+  registry.register(RIPEMD128Digest.factoryConfig);
+  registry.register(RIPEMD160Digest.factoryConfig);
+  registry.register(RIPEMD256Digest.factoryConfig);
+  registry.register(RIPEMD320Digest.factoryConfig);
+  registry.register(SHA1Digest.factoryConfig);
+  registry.register(SHA3Digest.factoryConfig);
+  registry.register(KeccakDigest.factoryConfig);
+  registry.register(SHA224Digest.factoryConfig);
+  registry.register(SHA256Digest.factoryConfig);
+  registry.register(SHA384Digest.factoryConfig);
+  registry.register(SHA512Digest.factoryConfig);
+  registry.register(SHA512tDigest.factoryConfig);
+  registry.register(TigerDigest.factoryConfig);
+  registry.register(WhirlpoolDigest.factoryConfig);
 }
 
 void _registerECCurves(FactoryRegistry registry) {

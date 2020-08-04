@@ -2,27 +2,27 @@
 
 library src.utils_test;
 
-import "dart:math";
-import "dart:typed_data";
+import 'dart:math';
+import 'dart:typed_data';
 
-import "package:test/test.dart";
-import "package:pointycastle/src/utils.dart";
+import 'package:test/test.dart';
+import 'package:pointycastle/src/utils.dart';
 
-Random random = new Random();
+Random random = Random();
 
 Uint8List randomBytes(int length) {
-  return new Uint8List.fromList(new List<int>.generate(length, (_) {
+  return Uint8List.fromList(List<int>.generate(length, (_) {
     return random.nextInt(0xff + 1);
   }, growable: false));
 }
 
-main() {
-  test("decode encode roundtrip", () {
-    for (int size = 1; size < 100; size++) {
-      Uint8List bytes = randomBytes(size);
+void main() {
+  test('decode encode roundtrip', () {
+    for (var size = 1; size < 100; size++) {
+      var bytes = randomBytes(size);
 
       // Remove leading zeroes.
-      while (!bytes.isEmpty && bytes[0] == 0x0) {
+      while (bytes.isNotEmpty && bytes[0] == 0x0) {
         bytes = bytes.sublist(1, bytes.length);
       }
 
@@ -30,8 +30,8 @@ main() {
         continue;
       }
 
-      BigInt decoded = decodeBigInt(bytes);
-      Uint8List encoded = encodeBigInt(decoded);
+      var decoded = decodeBigInt(bytes);
+      var encoded = encodeBigInt(decoded);
       expect(encoded, equals(bytes));
     }
   });

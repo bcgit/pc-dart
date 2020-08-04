@@ -2,39 +2,39 @@
 
 library test.test.block_cipher_tests;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:test/test.dart";
-import "package:pointycastle/pointycastle.dart";
+import 'package:test/test.dart';
+import 'package:pointycastle/pointycastle.dart';
 
-import "./src/helpers.dart";
+import './src/helpers.dart';
 
 void runBlockCipherTests(BlockCipher cipher, CipherParameters params,
     List<String> plainCipherTextPairs) {
-  group("${cipher.algorithmName}:", () {
-    group("cipher  :", () {
+  group('${cipher.algorithmName}:', () {
+    group('cipher  :', () {
       for (var i = 0; i < plainCipherTextPairs.length; i += 2) {
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i + 1];
 
-        test("${formatAsTruncated(plainText)}",
+        test('${formatAsTruncated(plainText)}',
             () => _runBlockCipherTest(cipher, params, plainText, cipherText));
       }
     });
 
-    group("decipher:", () {
+    group('decipher:', () {
       for (var i = 0; i < plainCipherTextPairs.length; i += 2) {
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i + 1];
 
-        test("${formatAsTruncated(plainText)}",
+        test('${formatAsTruncated(plainText)}',
             () => _runBlockDecipherTest(cipher, params, cipherText, plainText));
       }
     });
 
-    group("ciph&dec:", () {
+    group('ciph&dec:', () {
       var plainText = createUint8ListFromSequentialNumbers(1024);
-      test("1KB of sequential bytes",
+      test('1KB of sequential bytes',
           () => _runBlockCipherDecipherTest(cipher, params, plainText));
     });
   });
@@ -65,7 +65,7 @@ void _runBlockDecipherTest(BlockCipher cipher, CipherParameters params,
   _resetCipher(cipher, false, params);
   var plainText = _processBlocks(cipher, cipherText);
 
-  expect(new String.fromCharCodes(plainText), equals(expectedPlainText));
+  expect(String.fromCharCodes(plainText), equals(expectedPlainText));
 }
 
 void _runBlockCipherDecipherTest(
@@ -80,7 +80,7 @@ void _runBlockCipherDecipherTest(
 }
 
 Uint8List _processBlocks(BlockCipher cipher, Uint8List inp) {
-  var out = new Uint8List(inp.lengthInBytes);
+  var out = Uint8List(inp.lengthInBytes);
   for (var offset = 0; offset < inp.lengthInBytes;) {
     var len = cipher.processBlock(inp, offset, out, offset);
     offset += len;
