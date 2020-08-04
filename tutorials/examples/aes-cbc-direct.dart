@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import "package:pointycastle/export.dart";
+import 'package:pointycastle/export.dart';
 
 // Code convention: variable names starting with underscores are examples only,
 // and should be implementated according to the needs of the program.
@@ -151,7 +151,7 @@ Uint8List unpad(Uint8List padded) =>
 //----------------------------------------------------------------
 /// Derive a key from a passphrase.
 ///
-/// The [passphrase] is an arbitrary length secret string.
+/// The [passPhrase] is an arbitrary length secret string.
 ///
 /// The [bitLength] is the length of key produced. It determines whether
 /// AES-128, AES-192, or AES-256 will be used. It must be one of those values.
@@ -164,7 +164,8 @@ Uint8List passphraseToKey(String passPhrase,
   final numBytes = bitLength ~/ 8;
 
   final kd = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64)) // 64 for SHA-256
-    ..init(Pbkdf2Parameters(utf8.encode(salt) as Uint8List, iterations, numBytes));
+    ..init(
+        Pbkdf2Parameters(utf8.encode(salt) as Uint8List, iterations, numBytes));
 
   return kd.process(utf8.encode(passPhrase) as Uint8List);
 }

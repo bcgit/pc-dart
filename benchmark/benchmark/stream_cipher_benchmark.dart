@@ -2,13 +2,13 @@
 
 library benchmark.benchmark.stream_cipher_benchmark;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/pointycastle.dart';
 
-import "../benchmark/rate_benchmark.dart";
+import '../benchmark/rate_benchmark.dart';
 
-typedef CipherParameters CipherParametersFactory();
+typedef CipherParametersFactory = CipherParameters Function();
 
 class StreamCipherBenchmark extends RateBenchmark {
   final String _streamCipherName;
@@ -23,16 +23,18 @@ class StreamCipherBenchmark extends RateBenchmark {
       [int dataLength = 1024 * 1024])
       : _streamCipherName = streamCipherName,
         _forEncryption = forEncryption,
-        _data = new Uint8List(dataLength),
+        _data = Uint8List(dataLength),
         super(
-            "StreamCipher | $streamCipherName ${_formatVariant(streamCipherVariant)}- "
-            "${forEncryption ? 'encrypt' : 'decrypt'}");
+            'StreamCipher | $streamCipherName ${_formatVariant(streamCipherVariant)}- '
+            '${forEncryption ? 'encrypt' : 'decrypt'}');
 
+  @override
   void setup() {
-    _streamCipher = new StreamCipher(_streamCipherName);
+    _streamCipher = StreamCipher(_streamCipherName);
     _streamCipher.init(_forEncryption, _cipherParametersFactory());
   }
 
+  @override
   void run() {
     _streamCipher.process(_data);
     addSample(_data.length);
@@ -41,8 +43,8 @@ class StreamCipherBenchmark extends RateBenchmark {
 
 String _formatVariant(String streamCipherVariant) {
   if (streamCipherVariant == null) {
-    return "";
+    return '';
   } else {
-    return "- $streamCipherVariant ";
+    return '- $streamCipherVariant ';
   }
 }

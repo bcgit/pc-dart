@@ -2,8 +2,8 @@
 
 library benchmark.digests.md2_benchmark;
 
-import "../benchmark/digest_benchmark.dart";
+import '../benchmark/digest_benchmark.dart';
 
-main() {
-  new DigestBenchmark("MD2", 256 * 1024).report();
+void main() {
+  DigestBenchmark('MD2', 256 * 1024).report();
 }

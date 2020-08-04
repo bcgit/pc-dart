@@ -2,14 +2,14 @@
 
 library benchmark.stream.salsa20_benchmark;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/pointycastle.dart';
 
-import "../benchmark/stream_cipher_benchmark.dart";
+import '../benchmark/stream_cipher_benchmark.dart';
 
 void main() {
-  final keyBytes = new Uint8List.fromList([
+  final keyBytes = Uint8List.fromList([
     0x00,
     0x11,
     0x22,
@@ -27,11 +27,11 @@ void main() {
     0xEE,
     0xFF
   ]);
-  final key = new KeyParameter(keyBytes);
+  final key = KeyParameter(keyBytes);
   final iv =
-      new Uint8List.fromList([0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77]);
-  final params = new ParametersWithIV(key, iv);
+      Uint8List.fromList([0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77]);
+  final params = ParametersWithIV(key, iv);
 
-  new StreamCipherBenchmark("Salsa20", null, true, () => params).report();
-  new StreamCipherBenchmark("Salsa20", null, false, () => params).report();
+  StreamCipherBenchmark('Salsa20', null, true, () => params).report();
+  StreamCipherBenchmark('Salsa20', null, false, () => params).report();
 }

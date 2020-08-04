@@ -2,8 +2,8 @@
 
 library benchmark.digests.sha512t_benchmark;
 
-import "../benchmark/digest_benchmark.dart";
+import '../benchmark/digest_benchmark.dart';
 
-main() {
-  new DigestBenchmark("SHA-512/504").report();
+void main() {
+  DigestBenchmark('SHA-512/504').report();
 }
