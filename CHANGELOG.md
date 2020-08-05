@@ -1,13 +1,13 @@
 Changelog
 =========
 
-#### Version 2.0.0-rc1 (2020-07-29) (Dart SDK version 2.1.1)
+#### Version 2.0.0-rc1 (2020-08-05) (Dart SDK version 2.1.1)
 
 * Fixed OAEPEncoding and PKCS1Encoding to use provided output offset value.
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
 * Fixed RSASigner.verifySignature to return false when signature is bad.
 * Add HKDF support (IETF RFC 5869)
-* Add Poly1305, ChaCha20, AES-GCM, SHA3, Keccak  
+* Add Poly1305, ChaCha20, AES-GCM, SHA3, Keccak, RSA/PSS
 * Fixed randomly occurring bug with OAEP decoding.
 * Added NormalizedECDSASigner that wraps ECDSASigner to guarantee an ecdsa signature in lower-s form. (Enforcement on verification supported).
 * Reduce copies in CBC mode.
