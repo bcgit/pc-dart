@@ -5,9 +5,9 @@ library test.paddings.pss_signer_test;
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
+import 'package:test/test.dart';
 
 import '../test/src/helpers.dart';
-import 'package:test/test.dart';
 
 void main() {
   // Example 1: A 1024-bit RSA keypair
@@ -185,30 +185,32 @@ void main() {
   var sig9b = createUint8ListFromHexString(
       '80b6d643255209f0a456763897ac9ed259d459b49c2887e5882ecb4434cfd66dd7e1699375381e51cd7f554f2c271704b399d42b4be2540a0eca61951f55267f7c2878c122842dadb28b01bd5f8c025f7e228418a673c03d6bc0c736d0a29546bd67f786d9d692ccea778d71d98c2063b7a71092187a4d35af108111d83e83eae46c46aa34277e06044589903788f1d5e7cee25fb485e92949118814d6f2c3ee361489016f327fb5bc517eb50470bffa1afa5f4ce9aa0ce5b8ee19bf5501b958');
 
-  // TODO: Unify signer test infrastructure.
-  group('example 1', () {
-    _testSign('a', Signer('SHA-1/PSS'), prv1, pub1, msg1a, slt1a, sig1a);
-    _testSign('b', Signer('SHA-1/PSS'), prv1, pub1, msg1b, slt1b, sig1b);
-  });
+  group('RSA/PSS', () {
+    // TODO: Unify signer test infrastructure.
+    group('example 1', () {
+      _testSign('a', Signer('SHA-1/PSS'), prv1, pub1, msg1a, slt1a, sig1a);
+      _testSign('b', Signer('SHA-1/PSS'), prv1, pub1, msg1b, slt1b, sig1b);
+    });
 
-  group('example 2', () {
-    _testSign('a', Signer('SHA-1/PSS'), prv2, pub2, msg2a, slt2a, sig2a);
-    _testSign('b', Signer('SHA-1/PSS'), prv2, pub2, msg2b, slt2b, sig2b);
-  });
+    group('example 2', () {
+      _testSign('a', Signer('SHA-1/PSS'), prv2, pub2, msg2a, slt2a, sig2a);
+      _testSign('b', Signer('SHA-1/PSS'), prv2, pub2, msg2b, slt2b, sig2b);
+    });
 
-  group('example 4', () {
-    _testSign('a', Signer('SHA-1/PSS'), prv4, pub4, msg4a, slt4a, sig4a);
-    _testSign('b', Signer('SHA-1/PSS'), prv4, pub4, msg4b, slt4b, sig4b);
-  });
+    group('example 4', () {
+      _testSign('a', Signer('SHA-1/PSS'), prv4, pub4, msg4a, slt4a, sig4a);
+      _testSign('b', Signer('SHA-1/PSS'), prv4, pub4, msg4b, slt4b, sig4b);
+    });
 
-  group('example 8', () {
-    _testSign('a', Signer('SHA-1/PSS'), prv8, pub8, msg8a, slt8a, sig8a);
-    _testSign('b', Signer('SHA-1/PSS'), prv8, pub8, msg8b, slt8b, sig8b);
-  });
+    group('example 8', () {
+      _testSign('a', Signer('SHA-1/PSS'), prv8, pub8, msg8a, slt8a, sig8a);
+      _testSign('b', Signer('SHA-1/PSS'), prv8, pub8, msg8b, slt8b, sig8b);
+    });
 
-  group('example 9', () {
-    _testSign('a', Signer('SHA-1/PSS'), prv9, pub9, msg9a, slt9a, sig9a);
-    _testSign('b', Signer('SHA-1/PSS'), prv9, pub9, msg9b, slt9b, sig9b);
+    group('example 9', () {
+      _testSign('a', Signer('SHA-1/PSS'), prv9, pub9, msg9a, slt9a, sig9a);
+      _testSign('b', Signer('SHA-1/PSS'), prv9, pub9, msg9b, slt9b, sig9b);
+    });
   });
 }
 
