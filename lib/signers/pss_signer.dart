@@ -197,11 +197,11 @@ class PSSSigner implements Signer {
         _clearBlock(_block);
         return false;
       }
+    }
 
-      if (_block[_block.length - _hLen - _sLen - 2] != 0x01) {
-        _clearBlock(_block);
-        return false;
-      }
+    if (_block[_block.length - _hLen - _sLen - 2] != 0x01) {
+      _clearBlock(_block);
+      return false;
     }
 
     if (_sSet) {
