@@ -67,6 +67,16 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
     }
   }
 
+  @override
+  Uint8List process(Uint8List data) {
+    // Expand the output block size by an extra byte to handle cases where
+    // the output is larger than expected.
+    var out = Uint8List(outputBlockSize + 1);
+    var len = processBlock(data, 0, data.length, out, 0);
+    return out.sublist(0, len);
+  }
+
+  @override
   int processBlock(
       Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     var input = _convertInput(inp, inpOff, len);
@@ -82,7 +92,7 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
           "Not enough data for RSA cipher (length=$len, available=$inpLen)");
     }
 
-    if (inputBlockSize < len) {
+    if (inputBlockSize + 1 < len) {
       throw new ArgumentError.value(len, "len",
           "Too large for maximum RSA cipher input block size ($inputBlockSize)");
     }
