@@ -104,8 +104,8 @@ void _runGenerateSignatureTestFail(
   expect(signature, isNot(equals(expectedSignature)));
 }
 
-void _runVerifySignatureTestFail(Signer signer, CipherParameters params(),
-    String message, Signature signature) {
+void _runVerifySignatureTestFail(Signer signer,
+    CipherParameters Function() params, String message, Signature signature) {
   signer.reset();
   signer.init(false, params());
 

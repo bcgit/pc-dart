@@ -2,8 +2,8 @@
 
 library benchmark.digests.tiger_benchmark;
 
-import "../benchmark/digest_benchmark.dart";
+import '../benchmark/digest_benchmark.dart';
 
-main() {
-  new DigestBenchmark("Tiger").report();
+void main() {
+  DigestBenchmark('Tiger').report();
 }

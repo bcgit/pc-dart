@@ -2,12 +2,12 @@
 
 library test.test.mac_tests;
 
-import "dart:typed_data" show Uint8List;
+import 'dart:typed_data' show Uint8List;
 
-import "package:test/test.dart";
-import "package:pointycastle/pointycastle.dart";
+import 'package:test/test.dart';
+import 'package:pointycastle/pointycastle.dart';
 
-import "./src/helpers.dart";
+import './src/helpers.dart';
 
 class PlainTextDigestPair {
   PlainTextDigestPair(this.plainText, this.hexDigestText);
@@ -17,13 +17,13 @@ class PlainTextDigestPair {
 }
 
 void runMacTests(Mac mac, List<PlainTextDigestPair> plainDigestTextPairs) {
-  group("${mac.algorithmName}:", () {
-    group("digest:", () {
+  group('${mac.algorithmName}:', () {
+    group('digest:', () {
       for (var i = 0; i < plainDigestTextPairs.length; i++) {
         var plainText = plainDigestTextPairs[i].plainText;
         var digestText = plainDigestTextPairs[i].hexDigestText;
 
-        test("${formatAsTruncated(plainText.toString())}",
+        test('${formatAsTruncated(plainText.toString())}',
             () => _runMacTest(mac, plainText, digestText));
       }
     });
@@ -46,7 +46,7 @@ void _runMacTest(Mac mac, Uint8List plainText, String expectedHexDigestText) {
 class Rfc4231TestVector {
   Rfc4231TestVector(this.name, this.keyHex, this.dataHex, this.hmacSha224,
       this.hmacSha256, this.hmacSha384, this.hmacSha512,
-      {this.truncate128: false});
+      {this.truncate128 = false});
 
   final String name;
   final String keyHex;
@@ -63,10 +63,10 @@ class Rfc4231TestVector {
 
     group(name, () {
       // For the blockLengths to use, see _DIGEST_BLOCK_LENGTH in the HMAC class
-      _hmacTest("SHA-224/HMAC", key, data, hmacSha224, truncate128);
-      _hmacTest("SHA-256/HMAC", key, data, hmacSha256, truncate128);
-      _hmacTest("SHA-384/HMAC", key, data, hmacSha384, truncate128);
-      _hmacTest("SHA-512/HMAC", key, data, hmacSha512, truncate128);
+      _hmacTest('SHA-224/HMAC', key, data, hmacSha224, truncate128);
+      _hmacTest('SHA-256/HMAC', key, data, hmacSha256, truncate128);
+      _hmacTest('SHA-384/HMAC', key, data, hmacSha384, truncate128);
+      _hmacTest('SHA-512/HMAC', key, data, hmacSha512, truncate128);
     });
   }
 
@@ -85,7 +85,7 @@ class Rfc4231TestVector {
   }
 
   static void runAll(Iterable<Rfc4231TestVector> testCases) {
-    group("Tests from RFC 4231", () {
+    group('Tests from RFC 4231', () {
       for (final t in testCases) {
         t.run();
       }

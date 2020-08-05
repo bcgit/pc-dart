@@ -2,14 +2,14 @@
 
 library benchmark.block.aes_fast_benchmark;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/pointycastle.dart';
 
-import "../benchmark/block_cipher_benchmark.dart";
+import '../benchmark/block_cipher_benchmark.dart';
 
 void main() {
-  final key = new Uint8List.fromList([
+  final key = Uint8List.fromList([
     0x00,
     0x11,
     0x22,
@@ -27,14 +27,14 @@ void main() {
     0xEE,
     0xFF
   ]);
-  final params = new KeyParameter(key);
+  final params = KeyParameter(key);
 
-  new BlockCipherBenchmark("AES", "128", true, () => params).report();
-  new BlockCipherBenchmark("AES", "128", false, () => params).report();
+  BlockCipherBenchmark('AES', '128', true, () => params).report();
+  BlockCipherBenchmark('AES', '128', false, () => params).report();
 
-  new BlockCipherBenchmark("AES", "192", true, () => params).report();
-  new BlockCipherBenchmark("AES", "192", false, () => params).report();
+  BlockCipherBenchmark('AES', '192', true, () => params).report();
+  BlockCipherBenchmark('AES', '192', false, () => params).report();
 
-  new BlockCipherBenchmark("AES", "256", true, () => params).report();
-  new BlockCipherBenchmark("AES", "256", false, () => params).report();
+  BlockCipherBenchmark('AES', '256', true, () => params).report();
+  BlockCipherBenchmark('AES', '256', false, () => params).report();
 }

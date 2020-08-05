@@ -2,8 +2,8 @@
 
 library benchmark.digests.ripemd320_benchmark;
 
-import "../benchmark/digest_benchmark.dart";
+import '../benchmark/digest_benchmark.dart';
 
-main() {
-  new DigestBenchmark("RIPEMD-320").report();
+void main() {
+  DigestBenchmark('RIPEMD-320').report();
 }

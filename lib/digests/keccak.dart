@@ -2,27 +2,27 @@
 
 library impl.digest.keccak;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/base_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/base_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of Keccak digest.
 class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
-  static final RegExp _Keccak_REGEX = new RegExp(r"^Keccak\/([0-9]+)$");
+  static final RegExp _keccakREGEX = RegExp(r'^Keccak\/([0-9]+)$');
 
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig(
       Digest,
-      _Keccak_REGEX,
+      _keccakREGEX,
       (_, final Match match) => () {
-            int bitLength = int.parse(match.group(1));
-            return new KeccakDigest(bitLength);
+            var bitLength = int.parse(match.group(1));
+            return KeccakDigest(bitLength);
           });
 
-  static final _keccakRoundConstants = new Register64List.from([
+  static final _keccakRoundConstants = Register64List.from([
     [0x00000000, 0x00000001],
     [0x00000000, 0x00008082],
     [0x80000000, 0x0000808a],
@@ -80,8 +80,8 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   int _rate;
   int _fixedOutputLength;
 
-  final _state = new Uint8List(200);
-  final _dataQueue = new Uint8List(192);
+  final _state = Uint8List(200);
+  final _dataQueue = Uint8List(192);
 
   int _bitsInQueue;
   bool _squeezing;
@@ -106,22 +106,28 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
     }
   }
 
-  String get algorithmName => "Keccak/${_fixedOutputLength}";
+  @override
+  String get algorithmName => 'Keccak/$_fixedOutputLength';
 
+  @override
   int get digestSize => (_fixedOutputLength ~/ 8);
 
+  @override
   void reset() {
     _init(_fixedOutputLength);
   }
 
+  @override
   void updateByte(int inp) {
-    _doUpdate(new Uint8List.fromList([inp]), 0, 8);
+    _doUpdate(Uint8List.fromList([inp]), 0, 8);
   }
 
+  @override
   void update(Uint8List inp, int inpOff, int len) {
     _doUpdate(inp, inpOff, len * 8);
   }
 
+  @override
   int doFinal(Uint8List out, int outOff) {
     _squeeze(out, outOff, _fixedOutputLength);
     reset();
@@ -130,15 +136,15 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
 
   void absorbBits(int data, int bits) {
     if (bits < 1 || bits > 7) {
-      throw new StateError("'bits' must be in the range 1 to 7");
+      throw StateError('"bits" must be in the range 1 to 7');
     }
     if ((_bitsInQueue % 8) != 0) {
-      throw new StateError("attempt to absorb with odd length queue");
+      throw StateError('attempt to absorb with odd length queue');
     }
     if (_squeezing) {
-      throw new StateError("attempt to absorb while squeezing");
+      throw StateError('attempt to absorb while squeezing');
     }
-    int mask = (1 << bits) - 1;
+    var mask = (1 << bits) - 1;
     _dataQueue[_bitsInQueue >> 3] = data & mask;
     _bitsInQueue += bits;
   }
@@ -153,7 +159,7 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
     } else {
       _absorb(data, off, databitlen - (databitlen % 8));
 
-      var lastByte = new Uint8List(1);
+      var lastByte = Uint8List(1);
 
       lastByte[0] = data[off + (databitlen ~/ 8)] >> (8 - (databitlen % 8));
       _absorb(lastByte, off, databitlen % 8);
@@ -166,15 +172,15 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
 
   void _initSponge(int rate) {
     if ((rate <= 0) || (rate >= 1600) || ((rate % 64) != 0)) {
-      throw new StateError("invalid rate value");
+      throw StateError('invalid rate value');
     }
 
 //    if ((rate + capacity) != 1600) {
-//      throw new StateError(
-//          "Value of (rate + capacity) is not 1600: ${rate + capacity}");
+//      throw StateError(
+//          'Value of (rate + capacity) is not 1600: ${rate + capacity}');
 //    }
 //    if ((rate <= 0) || (rate >= 1600) || ((rate % 64) != 0)) {
-//      throw new StateError("Invalid rate value: ${rate}");
+//      throw StateError('Invalid rate value: ${rate}');
 //    }
 
     _rate = rate;
@@ -190,11 +196,11 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   /*
   void _initSponge(int rate, int capacity) {
     if ((rate + capacity) != 1600) {
-      throw new StateError(
-          "Value of (rate + capacity) is not 1600: ${rate + capacity}");
+      throw StateError(
+          'Value of (rate + capacity) is not 1600: ${rate + capacity}');
     }
     if ((rate <= 0) || (rate >= 1600) || ((rate % 64) != 0)) {
-      throw new StateError("Invalid rate value: ${rate}");
+      throw StateError('Invalid rate value: ${rate}');
     }
 
     _rate = rate;
@@ -217,11 +223,11 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
     int i, j, wholeBlocks;
 
     if ((_bitsInQueue % 8) != 0) {
-      throw new StateError("Attempt to absorb with odd length queue");
+      throw StateError('Attempt to absorb with odd length queue');
     }
 
     if (_squeezing) {
-      throw new StateError("Attempt to absorb while squeezing");
+      throw StateError('Attempt to absorb while squeezing');
     }
 
     i = 0;
@@ -232,7 +238,7 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
         wholeBlocks = (databitlen - i) ~/ _rate;
 
         for (j = 0; j < wholeBlocks; j++) {
-          final chunk = new Uint8List(_rate ~/ 8);
+          final chunk = Uint8List(_rate ~/ 8);
 
           final offset = (off + (i ~/ 8) + (j * chunk.length));
           chunk.setRange(0, chunk.length, data.sublist(offset));
@@ -262,7 +268,7 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
           _absorbQueue();
         }
         if (partialByte > 0) {
-          int mask = (1 << partialByte) - 1;
+          var mask = (1 << partialByte) - 1;
           _dataQueue[_bitsInQueue ~/ 8] = (data[off + (i ~/ 8)] & mask);
           _bitsInQueue += partialByte;
           i += partialByte;
@@ -303,8 +309,7 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
     }
 
     if ((outputLength % 8) != 0) {
-      throw new StateError(
-          "Output length not a multiple of 8: ${outputLength}");
+      throw StateError('Output length not a multiple of 8: $outputLength');
     }
 
     i = 0;
@@ -335,14 +340,14 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   }
 
   void _fromBytesToWords(Register64List stateAsWords, Uint8List state) {
-    final r = new Register64();
+    final r = Register64();
 
-    for (int i = 0; i < (1600 ~/ 64); i++) {
+    for (var i = 0; i < (1600 ~/ 64); i++) {
       final index = i * (64 ~/ 8);
 
       stateAsWords[i].set(0);
 
-      for (int j = 0; j < (64 ~/ 8); j++) {
+      for (var j = 0; j < (64 ~/ 8); j++) {
         r.set(state[index + j]);
         r.shiftl(8 * j);
         stateAsWords[i].or(r);
@@ -351,12 +356,12 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   }
 
   void _fromWordsToBytes(Uint8List state, Register64List stateAsWords) {
-    final r = new Register64();
+    final r = Register64();
 
-    for (int i = 0; i < (1600 ~/ 64); i++) {
+    for (var i = 0; i < (1600 ~/ 64); i++) {
       final index = i * (64 ~/ 8);
 
-      for (int j = 0; j < (64 ~/ 8); j++) {
+      for (var j = 0; j < (64 ~/ 8); j++) {
         r.set(stateAsWords[i]);
         r.shiftr(8 * j);
         state[index + j] = r.lo32;
@@ -365,7 +370,7 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   }
 
   void _keccakPermutation(Uint8List state) {
-    final longState = new Register64List(state.length ~/ 8);
+    final longState = Register64List(state.length ~/ 8);
 
     _fromBytesToWords(longState, state);
     _keccakPermutationOnWords(longState);
@@ -374,14 +379,14 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
 
   void _keccakPermutationAfterXor(
       Uint8List state, Uint8List data, int dataLengthInBytes) {
-    for (int i = 0; i < dataLengthInBytes; i++) {
+    for (var i = 0; i < dataLengthInBytes; i++) {
       state[i] ^= data[i];
     }
     _keccakPermutation(state);
   }
 
   void _keccakPermutationOnWords(Register64List state) {
-    for (int i = 0; i < 24; i++) {
+    for (var i = 0; i < 24; i++) {
       theta(state);
       rho(state);
       pi(state);
@@ -391,19 +396,19 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   }
 
   void theta(Register64List A) {
-    final C = new Register64List(5);
-    final r0 = new Register64();
-    final r1 = new Register64();
+    final C = Register64List(5);
+    final r0 = Register64();
+    final r1 = Register64();
 
-    for (int x = 0; x < 5; x++) {
+    for (var x = 0; x < 5; x++) {
       C[x].set(0);
 
-      for (int y = 0; y < 5; y++) {
+      for (var y = 0; y < 5; y++) {
         C[x].xor(A[x + 5 * y]);
       }
     }
 
-    for (int x = 0; x < 5; x++) {
+    for (var x = 0; x < 5; x++) {
       r0.set(C[(x + 1) % 5]);
       r0.shiftl(1);
 
@@ -413,17 +418,17 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
       r0.xor(r1);
       r0.xor(C[(x + 4) % 5]);
 
-      for (int y = 0; y < 5; y++) {
+      for (var y = 0; y < 5; y++) {
         A[x + 5 * y].xor(r0);
       }
     }
   }
 
   void rho(Register64List A) {
-    final r = new Register64();
+    final r = Register64();
 
-    for (int x = 0; x < 5; x++) {
-      for (int y = 0; y < 5; y++) {
+    for (var x = 0; x < 5; x++) {
+      for (var y = 0; y < 5; y++) {
         final index = x + 5 * y;
 
         if (_keccakRhoOffsets[index] != 0) {
@@ -438,28 +443,28 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
   }
 
   void pi(Register64List A) {
-    final tempA = new Register64List(25);
+    final tempA = Register64List(25);
 
     tempA.setRange(0, tempA.length, A);
 
-    for (int x = 0; x < 5; x++) {
-      for (int y = 0; y < 5; y++) {
+    for (var x = 0; x < 5; x++) {
+      for (var y = 0; y < 5; y++) {
         A[y + 5 * ((2 * x + 3 * y) % 5)].set(tempA[x + 5 * y]);
       }
     }
   }
 
   void chi(Register64List A) {
-    final chiC = new Register64List(5);
+    final chiC = Register64List(5);
 
-    for (int y = 0; y < 5; y++) {
-      for (int x = 0; x < 5; x++) {
+    for (var y = 0; y < 5; y++) {
+      for (var x = 0; x < 5; x++) {
         chiC[x].set(A[((x + 1) % 5) + (5 * y)]);
         chiC[x].not();
         chiC[x].and(A[((x + 2) % 5) + (5 * y)]);
         chiC[x].xor(A[x + 5 * y]);
       }
-      for (int x = 0; x < 5; x++) {
+      for (var x = 0; x < 5; x++) {
         A[x + 5 * y].set(chiC[x]);
       }
     }
@@ -483,17 +488,4 @@ class KeccakDigest extends BaseDigest implements Digest, ExtendedDigest {
 
   @override
   int getByteLength() => _rate ~/ 8;
-}
-
-int _sha3SizeCheck(int bitLen) {
-  switch (bitLen) {
-    case 224:
-    case 256:
-    case 384:
-    case 512:
-      return bitLen;
-    default:
-      throw StateError(
-          'invalid bitLength ($bitLen) for SHA3 must only be 224,256,384,512');
-  }
 }

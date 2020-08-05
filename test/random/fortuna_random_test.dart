@@ -2,19 +2,19 @@
 
 library test.random.fortuna_random_test;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/pointycastle.dart';
 
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
 void main() {
-  group("Fortuna:", () {
-    final rnd = new SecureRandom("Fortuna");
+  group('Fortuna:', () {
+    final rnd = SecureRandom('Fortuna');
 
-    test("${rnd.algorithmName}", () {
-      final key = new Uint8List(32);
-      final keyParam = new KeyParameter(key);
+    test('${rnd.algorithmName}', () {
+      final key = Uint8List(32);
+      final keyParam = KeyParameter(key);
 
       rnd.seed(keyParam);
 

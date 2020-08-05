@@ -8,27 +8,27 @@ import 'package:test/test.dart';
 import '../test/src/fixed_secure_random.dart';
 
 void main() {
-  group("FixedSecureRandom:", () {
-    test("No seed", () {
+  group('FixedSecureRandom:', () {
+    test('No seed', () {
       final rng = FixedSecureRandom();
       try {
         rng.nextUint8();
-        fail("expected StateError from uninitialized FixedSecureRandom");
+        fail('expected StateError from uninitialized FixedSecureRandom');
       } on StateError catch (e) {
-        expect(e.message, "fixed secure random has no values");
+        expect(e.message, 'fixed secure random has no values');
       }
     });
 
-    test("Seed Exhaustion", () {
+    test('Seed Exhaustion', () {
       final rng = FixedSecureRandom();
       rng.seed(KeyParameter(Uint8List.fromList([1, 2])));
       try {
         expect(rng.nextUint8(), 1);
         expect(rng.nextUint8(), 2);
         rng.nextUint8();
-        fail("expected StateError from running out of entropy");
+        fail('expected StateError from running out of entropy');
       } on StateError catch (e) {
-        expect(e.message, "fixed secure random unexpectedly exhausted");
+        expect(e.message, 'fixed secure random unexpectedly exhausted');
       }
     });
   });
