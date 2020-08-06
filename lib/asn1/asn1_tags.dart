@@ -29,17 +29,17 @@ class ASN1Tags {
   /// Decimal 12
   static const int UTF8_STRING = 0x0c;
 
-  /// Decimal 16
-  static const int SEQUENCE = 0x10;
+  /// Decimal 48
+  static const int SEQUENCE = 0x30;
 
-  /// Decimal 16
-  static const int SEQUENCE_OF = 0x10;
+  /// Decimal 48
+  static const int SEQUENCE_OF = 0x30;
 
-  /// Decimal 17
-  static const int SET = 0x11;
+  /// Decimal 49
+  static const int SET = 0x31;
 
-  /// Decimal 17
-  static const int SET_OF = 0x11;
+  /// Decimal 49
+  static const int SET_OF = 0x31;
 
   /// Decimal 18
   static const int NUMERIC_STRING = 0x12;
