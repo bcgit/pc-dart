@@ -57,7 +57,7 @@ void main() {
     var asn1Object = ASN1Set(elements: []);
 
     var bytes = Uint8List.fromList([
-      0x30,
+      0x31,
       0x00,
     ]);
 
@@ -67,7 +67,7 @@ void main() {
     asn1Object = ASN1Set();
 
     bytes = Uint8List.fromList([
-      0x30,
+      0x31,
       0x00,
     ]);
 
