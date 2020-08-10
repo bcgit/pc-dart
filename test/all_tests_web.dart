@@ -59,6 +59,8 @@ import 'stream/chacha20poly1305_test.dart' as chacha20poly1305_test;
 
 import 'stream/salsa20_test.dart' as salsa20_test;
 
+import 'asn1/asn1_all_test.dart' as asn1_all;
+
 void main() {
   stream_cipher_as_block_cipher_test.main();
   pkcs1_test.main();
@@ -111,4 +113,5 @@ void main() {
   chacha20poly1305_test.main();
   impl_test.main();
   gcm_test.main();
+  asn1_all.main();
 }
