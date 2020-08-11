@@ -40,6 +40,10 @@ void main() {
       testDigest('Keccak/288');
       testDigest('Keccak/384');
       testDigest('Keccak/512');
+      testDigest('SHAKE-128');
+      testDigest('SHAKE-256');
+      testDigest('CSHAKE-128');
+      testDigest('CSHAKE-256');
       testDigest('SHA-384');
       testDigest('SHA-512');
       testDigest('SHA-512/448');
@@ -64,11 +68,15 @@ void main() {
     test('Mac returns valid implementations', () {
       testMac('SHA-1/HMAC');
       testMac('SHA-256/HMAC');
+      testMac('SHA3-256/HMAC');
       testMac('RIPEMD-160/HMAC');
       testMac('AES/Poly1305');
       testMac('AES/CMAC');
       testMac('AES/CBC_CMAC');
       testMac('AES/CBC_CMAC/PKCS7');
+      testMac('SHAKE-128/HMAC');
+      testMac('CSHAKE-128/HMAC');
+      testMac('SHA3-256/HMAC');
     });
 
     test('BlockCipher returns valid implementations for modes of operation',

@@ -8,12 +8,12 @@ import 'package:pointycastle/block/modes/cbc.dart';
 import 'package:pointycastle/block/modes/cfb.dart';
 import 'package:pointycastle/block/modes/ctr.dart';
 import 'package:pointycastle/block/modes/ecb.dart';
+import 'package:pointycastle/block/modes/gcm.dart';
 import 'package:pointycastle/block/modes/gctr.dart';
 import 'package:pointycastle/block/modes/ofb.dart';
-import 'package:pointycastle/block/modes/gcm.dart';
 import 'package:pointycastle/block/modes/sic.dart';
-import 'package:pointycastle/digests/keccak.dart';
 import 'package:pointycastle/digests/blake2b.dart';
+import 'package:pointycastle/digests/keccak.dart';
 import 'package:pointycastle/digests/md2.dart';
 import 'package:pointycastle/digests/md4.dart';
 import 'package:pointycastle/digests/md5.dart';
@@ -28,6 +28,8 @@ import 'package:pointycastle/digests/sha3.dart';
 import 'package:pointycastle/digests/sha384.dart';
 import 'package:pointycastle/digests/sha512.dart';
 import 'package:pointycastle/digests/sha512t.dart';
+import 'package:pointycastle/digests/shake.dart';
+import 'package:pointycastle/digests/cshake.dart';
 import 'package:pointycastle/digests/tiger.dart';
 import 'package:pointycastle/digests/whirlpool.dart';
 import 'package:pointycastle/ecc/curves/brainpoolp160r1.dart';
@@ -150,6 +152,8 @@ void _registerDigests(FactoryRegistry registry) {
   registry.register(SHA512tDigest.factoryConfig);
   registry.register(TigerDigest.factoryConfig);
   registry.register(WhirlpoolDigest.factoryConfig);
+  registry.register(SHAKEDigest.factoryConfig);
+  registry.register(CSHAKEDigest.factoryConfig);
 }
 
 void _registerECCurves(FactoryRegistry registry) {

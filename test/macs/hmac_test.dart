@@ -188,72 +188,6 @@ void testWithRfc4231() {
   ]);
 }
 
-class BrokenDigest implements Digest {
-  @override
-  String get algorithmName => '-';
-
-  @override
-  int get digestSize => throw UnimplementedError();
-
-  @override
-  int doFinal(Uint8List out, int outOff) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Uint8List process(Uint8List outa) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void reset() {}
-
-  @override
-  void update(Uint8List out, int outOff, int len) {}
-
-  @override
-  void updateByte(int out) {}
-}
-
-/// Test handling of digest that do not extend ExtendedHmac and are not in
-/// internal block size lookup table.
-void testDigestNoBlockKLen() {
-  group('invalid digest for hmac', () {
-    registry.register(DynamicFactoryConfig(
-        Digest,
-        RegExp('^Broken'),
-        (_, final Match match) => () {
-              return BrokenDigest();
-            }));
-
-    test('direct creation', () {
-      // A non extended digest instance that is not in the _DIGEST_BLOCK_LENGTH.
-      // which cannot be used by an hmac.
-      try {
-        HMac.withDigest(BrokenDigest());
-        fail(
-            'hmac created with unknown digest that did not implement ExtendedDigest');
-      } on ArgumentError catch (e) {
-        expect(e.message,
-            'Digest, - does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
-      }
-    });
-
-    test('by name', () {
-      // A non extended digest instance that is not in the _DIGEST_BLOCK_LENGTH.
-      // which cannot be used by an hmac.
-      try {
-        Mac('Broken/HMAC');
-        fail(
-            'hmac created with unknown digest that did not implement ExtendedDigest');
-      } on ArgumentError catch (e) {
-        expect(e.message,
-            'Digest, - does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
-      }
-    });
-  });
-}
-
 void main() {
   final mac = Mac('SHA-1/HMAC');
   final key = Uint8List.fromList([
@@ -290,5 +224,4 @@ void main() {
   ]);
 
   testWithRfc4231();
-  testDigestNoBlockKLen();
 }

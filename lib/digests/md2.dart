@@ -391,4 +391,7 @@ class MD2Digest extends BaseDigest {
     131,
     20
   ];
+
+  @override
+  int get byteLength => 16;
 }

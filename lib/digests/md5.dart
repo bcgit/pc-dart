@@ -147,4 +147,7 @@ class MD5Digest extends MD4FamilyDigest implements Digest {
   int _h(int u, int v, int w) => u ^ v ^ w;
 
   int _k(int u, int v, int w) => v ^ (u | not32(w));
+
+  @override
+  int get byteLength => 64;
 }

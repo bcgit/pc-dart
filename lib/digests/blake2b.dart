@@ -270,6 +270,9 @@ class Blake2bDigest extends BaseDigest implements Digest {
       ..xor(_internalState[posC])
       ..rotr(63);
   }
+
+  @override
+  int get byteLength => 128;
 }
 
 // Produced from the square root of primes 2, 3, 5, 7, 11, 13, 17, 19.

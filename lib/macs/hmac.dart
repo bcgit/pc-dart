@@ -23,23 +23,6 @@ class HMac extends BaseMac {
     },
   );
 
-  //TODO make this more generic
-  static final Map<String, int> _digestBlockLength = {
-    'GOST3411': 32,
-    'MD2': 16,
-    'MD4': 64,
-    'MD5': 64,
-    'RIPEMD-128': 64,
-    'RIPEMD-160': 64,
-    'SHA-1': 64,
-    'SHA-224': 64,
-    'SHA-256': 64,
-    'SHA-384': 128,
-    'SHA-512': 128,
-    'Tiger': 64,
-    'Whirlpool': 64,
-  };
-
   //TODO reindent
 
   static final _ipad = 0x36;
@@ -59,19 +42,10 @@ class HMac extends BaseMac {
   }
 
   HMac.withDigest(this._digest) {
-    //
-    // TODO Digests should report length of internal buffer .. read on.
-    // Anything that consumes a digest that needs this information should
-    // be able to obtain it from the digest instance.
-    //
-    if (_digest is ExtendedDigest) {
-      _blockLength = (_digest as ExtendedDigest).getByteLength();
-    } else {
-      _blockLength = _digestBlockLength[_digest.algorithmName];
-      if (_blockLength == null) {
-        throw ArgumentError(
-            'Digest, ${_digest.algorithmName} does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
-      }
+    _blockLength = _digest.byteLength;
+    if (_blockLength == null) {
+      throw ArgumentError(
+          'Digest, ${_digest.algorithmName} does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
     }
 
     _digestSize = _digest.digestSize;

@@ -139,4 +139,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
   int _h(int u, int v, int w) => (u ^ v ^ w);
 
   int _g(int u, int v, int w) => ((u & v) | (u & w) | (v & w));
+
+  @override
+  int get byteLength => 64;
 }

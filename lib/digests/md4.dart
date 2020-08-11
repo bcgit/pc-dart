@@ -122,4 +122,7 @@ class MD4Digest extends MD4FamilyDigest implements Digest {
   int _g(int u, int v, int w) => (u & v) | (u & w) | (v & w);
 
   int _h(int u, int v, int w) => u ^ v ^ w;
+
+  @override
+  int get byteLength => 64;
 }

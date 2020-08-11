@@ -205,6 +205,9 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     }
     return rv;
   }
+
+  @override
+  int get byteLength => 64;
 }
 
 final _c0 = Register64List.from([

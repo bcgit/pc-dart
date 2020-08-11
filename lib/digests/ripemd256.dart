@@ -250,4 +250,7 @@ class RIPEMD256Digest extends MD4FamilyDigest implements Digest {
 
   int _ff4(int a, int b, int c, int d, int x, int s) =>
       crotl32(a + _function4(b, c, d) + x + 0x50a28be6, s);
+
+  @override
+  int get byteLength => 64;
 }

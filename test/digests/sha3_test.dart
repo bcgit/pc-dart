@@ -174,6 +174,7 @@ void testSHA3SizeEnforcement() {
       var bitLen = 123;
       try {
         SHA3Digest(bitLen);
+        fail('Invalid sha3 bitlen accepted');
       } on StateError catch (se) {
         expect(se.message,
             'invalid bitLength ($bitLen) for SHA-3 must only be 224,256,384,512');

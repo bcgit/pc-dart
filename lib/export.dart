@@ -39,7 +39,6 @@ export "package:pointycastle/digests/ripemd320.dart";
 export "package:pointycastle/digests/sha1.dart";
 export "package:pointycastle/digests/sha224.dart";
 export "package:pointycastle/digests/sha256.dart";
-export "package:pointycastle/digests/sha3.dart";
 export "package:pointycastle/digests/sha384.dart";
 export "package:pointycastle/digests/sha512.dart";
 export "package:pointycastle/digests/sha512t.dart";

@@ -197,4 +197,7 @@ class SHA224Digest extends MD4FamilyDigest implements Digest {
     0xbef9a3f7,
     0xc67178f2
   ];
+
+  @override
+  int get byteLength => 64;
 }

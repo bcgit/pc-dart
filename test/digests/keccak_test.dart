@@ -2,6 +2,7 @@
 
 library test.digests.keccak_test;
 
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:pointycastle/digests/keccak.dart';
@@ -28,6 +29,7 @@ void testKeccakSizeEnforcement() {
       var bitLen = 123;
       try {
         KeccakDigest(bitLen);
+        fail('Invalid keccak bitlen accepted');
       } on StateError catch (se) {
         expect(se.message,
             'invalid bitLength ($bitLen) for Keccak must only be 128,224,256,288,384,512');

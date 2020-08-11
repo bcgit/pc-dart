@@ -4,12 +4,15 @@ library src.utils;
 
 import "dart:typed_data";
 
-void arrayCopy(Uint8List sourceArr, int sourcePos, Uint8List outArr, int outPos,
-    int len) {
+void arrayCopy(
+    Uint8List sourceArr, int sourcePos, Uint8List outArr, int outPos, int len) {
   for (int i = 0; i < len; i++) {
     outArr[outPos + i] = sourceArr[sourcePos + i];
   }
 }
+
+Uint8List concatUint8List(Iterable<Uint8List> list) =>
+    Uint8List.fromList(list.expand((element) => element).toList());
 
 /// Decode a BigInt from bytes in big-endian encoding.
 BigInt decodeBigInt(List<int> bytes) {

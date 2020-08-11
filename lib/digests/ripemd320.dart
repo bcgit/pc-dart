@@ -450,4 +450,7 @@ class RIPEMD320Digest extends MD4FamilyDigest implements Digest {
   int _f4(int x, int y, int z) => (x & z) | (y & ~z);
 
   int _f5(int x, int y, int z) => x ^ (y | ~z);
+
+  @override
+  int get byteLength => 64;
 }

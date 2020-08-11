@@ -36,11 +36,21 @@ part 'src/api/parameters_with_salt.dart';
 part 'src/api/parameters_with_salt_configuration.dart';
 part "src/api/private_key.dart";
 part "src/api/private_key_parameter.dart";
+
 part "src/api/public_key.dart";
+
 part "src/api/public_key_parameter.dart";
+
 part "src/api/registry_factory_exception.dart";
+
 part "src/api/secure_random.dart";
+
 part "src/api/signature.dart";
+
 part "src/api/signer.dart";
+
 part "src/api/stream_cipher.dart";
+
 part 'src/api/aead_block_cipher.dart';
+
+part 'src/api/xof.dart';

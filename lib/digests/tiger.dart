@@ -278,6 +278,9 @@ class TigerDigest extends BaseDigest implements Digest {
       ..xor(_t1[b[7]]));
     _a.mul(mul);
   }
+
+  @override
+  int get byteLength => 64;
 }
 
 // S-Boxes
