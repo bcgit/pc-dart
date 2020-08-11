@@ -230,7 +230,7 @@ void performTest() {
 }
 
 void testCSHAKESizeEnforcement() {
-  group('SHAKE Tests', () {
+  group('CHAKE Tests', () {
     test('enforcement of valid CSHAKE sizes', () {
       CSHAKEDigest(128);
       CSHAKEDigest(256);
