@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/primitives/asn1_null.dart';
+import 'package:pointycastle/asn1/primitives/asn1_object_identifier.dart';
 import 'package:pointycastle/asn1/primitives/asn1_sequence.dart';
 import 'package:test/test.dart';
 
@@ -50,6 +52,9 @@ void main() {
     expect(asn1Object.valueByteLength, 13);
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.valueBytes, valueBytes);
+    expect(asn1Object.elements.length, 2);
+    expect(asn1Object.elements.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(asn1Object.elements.elementAt(1) is ASN1Null, true);
   });
 
   test('Test encode', () {

@@ -73,4 +73,9 @@ class ASN1Object {
     }
     return encodedBytes;
   }
+
+  ///
+  /// The total length of this object, including its value bytes, the encoded tag and length bytes.
+  ///
+  int get totalEncodedByteLength => valueStartPosition + valueByteLength;
 }

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1/asn1_object.dart';
+import 'package:pointycastle/asn1/asn1_parser.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
 
 class ASN1Sequence extends ASN1Object {
@@ -19,14 +20,33 @@ class ASN1Sequence extends ASN1Object {
   ///
   ASN1Sequence.fromBytes(Uint8List encodedBytes)
       : super.fromBytes(encodedBytes) {
-    // TODO decode value bytes to seperate asn1objects and add it to the elements list
+    elements = [];
+    var parser = ASN1Parser(valueBytes);
+    while (parser.hasNext()) {
+      elements.add(parser.nextObject());
+    }
   }
 
   @override
   Uint8List encode() {
-    // TODO This is temporary and should be changed after adding the element feature
-    valueBytes = Uint8List(0);
-    valueByteLength = 0;
+    valueByteLength = _childLength();
+    var i = valueStartPosition;
+    elements.forEach((obj) {
+      var b = obj.encode();
+      valueBytes.setRange(i, i + b.length, b);
+      i += b.length;
+    });
     return super.encode();
+  }
+
+  ///
+  /// Calculate encoded length of all children
+  ///
+  int _childLength() {
+    var l = 0;
+    elements.forEach((ASN1Object obj) {
+      l += obj.encode().length;
+    });
+    return l;
   }
 }
