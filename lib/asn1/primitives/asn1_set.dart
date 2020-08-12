@@ -28,13 +28,17 @@ class ASN1Set extends ASN1Object {
 
   @override
   Uint8List encode() {
-    valueByteLength = _childLength();
-    var i = valueStartPosition;
-    elements.forEach((obj) {
-      var b = obj.encode();
-      valueBytes.setRange(i, i + b.length, b);
-      i += b.length;
-    });
+    valueBytes = Uint8List(0);
+    valueByteLength = 0;
+    if (elements != null) {
+      valueByteLength = _childLength();
+      var i = valueStartPosition;
+      elements.forEach((obj) {
+        var b = obj.encode();
+        valueBytes.setRange(i, i + b.length, b);
+        i += b.length;
+      });
+    }
     return super.encode();
   }
 
