@@ -310,5 +310,5 @@ class ChaCha7539Engine extends BaseStreamCipher {
   }
 
   @override
-  external dynamic noSuchMethod(Invocation invocation);
+  dynamic noSuchMethod(Invocation invocation);
 }
