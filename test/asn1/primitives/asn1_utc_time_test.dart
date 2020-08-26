@@ -41,6 +41,7 @@ void main() {
 
     var asn1Object = ASN1UtcTime.fromBytes(bytes);
     expect(asn1Object.tag, 23);
+    expect(asn1Object.isConstructed, false);
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.valueByteLength, 13);
     expect(asn1Object.valueStartPosition, 2);

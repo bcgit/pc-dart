@@ -73,4 +73,27 @@ class ASN1Utils {
     }
     return e;
   }
+
+  ///
+  /// Checks if the given int [i] is constructed according to <https://www.bouncycastle.org/asn1_layman_93.txt> section 3.2.
+  ///
+  /// The Identifier octets (represented by the given [i]) is marked as constructed if bit 6 has the value **1**.
+  ///
+  /// Example with the IA5 String tag:
+  ///
+  /// 0x36 = 0 0 1 1 0 1 1 0
+  ///
+  /// 0x16 = 0 0 0 1 0 1 1 0
+  /// ```
+  /// ASN1Utils.isConstructed(0x36);  // true
+  /// ASN1Utils.isConstructed(0x16);  // false
+  /// ```
+  ///
+  ///
+  static bool isConstructed(int i) {
+    // Shift bits
+    var newNum = i >> (6 - 1);
+    // Check if bit is set to 1
+    return (newNum & 1) == 1;
+  }
 }

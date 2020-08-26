@@ -15,6 +15,15 @@ void main() {
     expect(asn1Object.valueByteLength, 0);
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.valueBytes, valueBytes);
+
+    bytes = Uint8List.fromList([0x05, 0x81, 0x00]);
+    asn1Object = ASN1Null.fromBytes(bytes);
+
+    expect(asn1Object.tag, 5);
+    expect(asn1Object.encodedBytes, bytes);
+    expect(asn1Object.valueByteLength, 0);
+    expect(asn1Object.valueStartPosition, 3);
+    expect(asn1Object.valueBytes, valueBytes);
   });
 
   test('Test encode', () {
@@ -23,5 +32,9 @@ void main() {
     var bytes = Uint8List.fromList([0x05, 0x00]);
 
     expect(asn1Null.encode(), bytes);
+
+    var asn1Object = ASN1Null.fromBytes(Uint8List.fromList([0x05, 0x81, 0x00]));
+
+    expect(asn1Object.encode(), bytes);
   });
 }

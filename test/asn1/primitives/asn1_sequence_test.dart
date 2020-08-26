@@ -48,6 +48,7 @@ void main() {
 
     var asn1Object = ASN1Sequence.fromBytes(bytes);
     expect(asn1Object.tag, 48);
+    expect(asn1Object.isConstructed, true);
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.valueByteLength, 13);
     expect(asn1Object.valueStartPosition, 2);

@@ -64,7 +64,13 @@ class ASN1Parser {
     var subBytes = Uint8List.view(bytes.buffer, offset, length);
 
     // Parse the view and the tag to an ASN1Object
-    var obj = _createPrimitive(tag, subBytes);
+    var isConstructed = ASN1Utils.isConstructed(tag);
+    ASN1Object obj;
+    if (isConstructed) {
+      obj = _createConstructed(tag, subBytes);
+    } else {
+      obj = _createPrimitive(tag, subBytes);
+    }
 
     // Update the position
     _position = _position + obj.totalEncodedByteLength;
@@ -72,12 +78,34 @@ class ASN1Parser {
   }
 
   ///
-  /// Creates an ASN1Object depending on the given [tag] and [bytes]
+  /// Creates a constructed ASN1Object depending on the given [tag] and [bytes]
   ///
-  ASN1Object _createPrimitive(int tag, Uint8List bytes) {
+  ASN1Object _createConstructed(int tag, Uint8List bytes) {
     switch (tag) {
       case ASN1Tags.SEQUENCE: // sequence
         return ASN1Sequence.fromBytes(bytes);
+      case ASN1Tags.SET:
+        return ASN1Set.fromBytes(bytes);
+      case ASN1Tags.IA5_STRING_CONSTRUCTED:
+        throw UnimplementedError();
+      case ASN1Tags.BIT_STRING_CONSTRUCTED:
+        throw UnimplementedError();
+      case ASN1Tags.OCTET_STRING_CONSTRUCTED:
+        throw UnimplementedError();
+      case ASN1Tags.PRINTABLE_STRING_CONSTRUCTED:
+        throw UnimplementedError();
+      case ASN1Tags.T61_STRING_CONSTRUCTED:
+        throw UnimplementedError();
+      default:
+        throw UnsupportedASN1TagException(tag);
+    }
+  }
+
+  ///
+  /// Creates a primitive ASN1Object depending on the given [tag] and [bytes]
+  ///
+  ASN1Object _createPrimitive(int tag, Uint8List bytes) {
+    switch (tag) {
       case ASN1Tags.OCTET_STRING:
         return ASN1OctetString.fromBytes(bytes);
       case ASN1Tags.UTF8_STRING:
@@ -87,8 +115,6 @@ class ASN1Parser {
       case ASN1Tags.INTEGER:
       case ASN1Tags.ENUMERATED:
         return ASN1Integer.fromBytes(bytes);
-      case ASN1Tags.SET:
-        return ASN1Set.fromBytes(bytes);
       case ASN1Tags.BOOLEAN:
         return ASN1Boolean.fromBytes(bytes);
       case ASN1Tags.OBJECT_IDENTIFIER:

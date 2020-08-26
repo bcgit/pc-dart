@@ -63,4 +63,29 @@ void main() {
       expect(e, e as RangeError);
     }
   });
+
+  test('Test isConstructed', () {
+    // IA5 String
+    expect(ASN1Utils.isConstructed(0x36), true);
+    expect(ASN1Utils.isConstructed(0x16), false);
+
+    // Bit String
+    expect(ASN1Utils.isConstructed(0x23), true);
+    expect(ASN1Utils.isConstructed(0x03), false);
+
+    // Octet String
+    expect(ASN1Utils.isConstructed(0x24), true);
+    expect(ASN1Utils.isConstructed(0x04), false);
+
+    // Printable String
+    expect(ASN1Utils.isConstructed(0x33), true);
+    expect(ASN1Utils.isConstructed(0x13), false);
+
+    // T61 String
+    expect(ASN1Utils.isConstructed(0x34), true);
+    expect(ASN1Utils.isConstructed(0x14), false);
+
+    // Sequence
+    expect(ASN1Utils.isConstructed(0x30), true);
+  });
 }

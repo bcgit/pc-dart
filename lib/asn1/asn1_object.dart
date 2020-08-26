@@ -35,6 +35,13 @@ class ASN1Object {
   ///
   int valueByteLength;
 
+  ///
+  /// Describes if this ASN1 Object is constructed.
+  ///
+  /// The object is marked as constructed if bit 6 of the [tag] field has value **1**
+  ///
+  bool isConstructed;
+
   ASN1Object({this.tag});
 
   ///
@@ -44,6 +51,7 @@ class ASN1Object {
   ///
   ASN1Object.fromBytes(this.encodedBytes) {
     tag = encodedBytes[0];
+    isConstructed = ASN1Utils.isConstructed(tag);
     valueByteLength = ASN1Utils.decodeLength(encodedBytes);
     valueStartPosition = ASN1Utils.calculateValueStartPosition(encodedBytes);
     valueBytes = Uint8List.view(encodedBytes.buffer,
