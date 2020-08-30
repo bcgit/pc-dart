@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_parser.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
@@ -28,12 +29,14 @@ class ASN1Sequence extends ASN1Object {
   }
 
   @override
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     valueBytes = Uint8List(0);
     valueByteLength = 0;
     if (elements != null) {
       valueByteLength = _childLength();
-      var i = valueStartPosition;
+      valueBytes = Uint8List(valueByteLength);
+      var i = 0;
       elements.forEach((obj) {
         var b = obj.encode();
         valueBytes.setRange(i, i + b.length, b);

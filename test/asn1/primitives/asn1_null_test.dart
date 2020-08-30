@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/primitives/asn1_null.dart';
 import 'package:test/test.dart';
 
@@ -26,7 +27,7 @@ void main() {
     expect(asn1Object.valueBytes, valueBytes);
   });
 
-  test('Test encode', () {
+  test('Test encode DER', () {
     var asn1Null = ASN1Null();
 
     var bytes = Uint8List.fromList([0x05, 0x00]);
@@ -36,5 +37,16 @@ void main() {
     var asn1Object = ASN1Null.fromBytes(Uint8List.fromList([0x05, 0x81, 0x00]));
 
     expect(asn1Object.encode(), bytes);
+  });
+
+  test('Test encode BER Long Form Length', () {
+    var asn1Null = ASN1Null();
+
+    var bytes = Uint8List.fromList([0x05, 0x81, 0x00]);
+
+    expect(
+        asn1Null.encode(
+            encodingRule: ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM),
+        bytes);
   });
 }

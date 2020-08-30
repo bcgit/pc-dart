@@ -51,6 +51,7 @@ class ASN1Parser {
 
     // Get the length of the value bytes for the current object
     var length = ASN1Utils.decodeLength(bytes.sublist(_position));
+
     var valueStartPosition =
         ASN1Utils.calculateValueStartPosition(bytes.sublist(_position));
     if (_position < length + valueStartPosition) {

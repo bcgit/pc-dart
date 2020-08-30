@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_utils.dart';
 
 ///
@@ -42,7 +43,11 @@ class ASN1Object {
   ///
   bool isConstructed;
 
-  ASN1Object({this.tag});
+  ASN1Object({this.tag}) {
+    if (tag != null) {
+      isConstructed = ASN1Utils.isConstructed(tag);
+    }
+  }
 
   ///
   /// Creates a new ASN1Object from the given [encodedBytes].
@@ -54,6 +59,12 @@ class ASN1Object {
     isConstructed = ASN1Utils.isConstructed(tag);
     valueByteLength = ASN1Utils.decodeLength(encodedBytes);
     valueStartPosition = ASN1Utils.calculateValueStartPosition(encodedBytes);
+    if (valueByteLength == -1) {
+      // Indefinite length, check the last to bytes
+      if (ASN1Utils.hasIndefiniteLengthEnding(encodedBytes)) {
+        valueByteLength = encodedBytes.length - 4;
+      }
+    }
     valueBytes = Uint8List.view(encodedBytes.buffer,
         valueStartPosition + encodedBytes.offsetInBytes, valueByteLength);
   }
@@ -61,14 +72,27 @@ class ASN1Object {
   ///
   /// Encode the object to their byte representation.
   ///
+  /// [longFormLength] defines if the [valueByteLength] should be encoded in normal or longForm. Default is false.
+  ///
   /// **Important note**: Subclasses need to override this method and may call this method. If this method is called by a subclass, the subclass has to set the [valueBytes] before calling super.encode().
   ///
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     if (encodedBytes == null) {
       // Encode the length
       Uint8List lengthAsBytes;
       valueByteLength ??= valueBytes.length;
-      lengthAsBytes = ASN1Utils.encodeLength(valueByteLength);
+      if (encodingRule ==
+          ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH) {
+        // Set length to 0x80
+        lengthAsBytes = Uint8List.fromList([0x80]);
+        // Add 2 to the valueByteLength to handle the 0x00, 0x00 at the end
+        valueByteLength = valueByteLength + 2;
+      } else {
+        lengthAsBytes = ASN1Utils.encodeLength(valueByteLength,
+            longform:
+                encodingRule == ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM);
+      }
       // Create the Uint8List with the calculated length
       encodedBytes = Uint8List(1 + lengthAsBytes.length + valueByteLength);
       // Set the tag

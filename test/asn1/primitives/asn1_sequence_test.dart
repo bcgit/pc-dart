@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/primitives/asn1_ia5_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_null.dart';
 import 'package:pointycastle/asn1/primitives/asn1_object_identifier.dart';
 import 'package:pointycastle/asn1/primitives/asn1_sequence.dart';
@@ -75,6 +76,40 @@ void main() {
     bytes = Uint8List.fromList([
       0x30,
       0x00,
+    ]);
+
+    expect(asn1Object.encode(), bytes);
+
+    var e1 = ASN1IA5String(stringValue: 'test1');
+
+    var e2 = ASN1IA5String(stringValue: '@');
+
+    var e3 = ASN1IA5String(stringValue: 'rsa.com');
+
+    asn1Object = ASN1Sequence(elements: [e1, e2, e3]);
+
+    bytes = Uint8List.fromList([
+      0x30,
+      0x13,
+      0x16,
+      0x05,
+      0x74,
+      0x65,
+      0x73,
+      0x74,
+      0x31,
+      0x16,
+      0x01,
+      0x40,
+      0x16,
+      0x07,
+      0x72,
+      0x73,
+      0x61,
+      0x2e,
+      0x63,
+      0x6f,
+      0x6d
     ]);
 
     expect(asn1Object.encode(), bytes);

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
 
@@ -31,7 +32,8 @@ class ASN1UTF8String extends ASN1Object {
   /// Encode the [ASN1UTF8String] to the byte representation.
   ///
   @override
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     var octets = utf8.encode(utf8StringValue);
     valueByteLength = octets.length;
     valueBytes = Uint8List.fromList(octets);

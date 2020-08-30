@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
 import 'package:pointycastle/src/utils.dart';
@@ -31,7 +32,8 @@ class ASN1Integer extends ASN1Object {
   }
 
   @override
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     valueBytes = encodeBigInt(integer);
     valueByteLength = valueBytes.length;
     return super.encode();

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
 
@@ -29,7 +30,8 @@ class ASN1BitString extends ASN1Object {
   /// Encode the [ASN1BitString] to the byte representation.
   ///
   @override
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     valueBytes = Uint8List.fromList(stringValues);
     return super.encode();
   }

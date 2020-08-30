@@ -51,9 +51,9 @@ class ASN1Utils {
   ///
   /// Encode the given [length] to byte representation.
   ///
-  static Uint8List encodeLength(int length) {
+  static Uint8List encodeLength(int length, {bool longform = false}) {
     Uint8List e;
-    if (length <= 127) {
+    if (length <= 127 && longform == false) {
       e = Uint8List(1);
       e[0] = length;
     } else {
@@ -95,5 +95,17 @@ class ASN1Utils {
     var newNum = i >> (6 - 1);
     // Check if bit is set to 1
     return (newNum & 1) == 1;
+  }
+
+  ///
+  /// Checks if the given [bytes] ends with 0x00, 0x00
+  ///
+  static bool hasIndefiniteLengthEnding(Uint8List bytes) {
+    var last = bytes.elementAt(bytes.length - 1);
+    var lastMinus1 = bytes.elementAt(bytes.length - 2);
+    if (last == 0 && lastMinus1 == 0) {
+      return true;
+    }
+    return false;
   }
 }

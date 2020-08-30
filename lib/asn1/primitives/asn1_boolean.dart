@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
 
@@ -36,7 +37,8 @@ class ASN1Boolean extends ASN1Object {
   /// Encode the [ASN1Boolean] to the byte representation.
   ///
   @override
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     valueByteLength = 1;
     valueBytes = (boolValue == true)
         ? Uint8List.fromList([BOOLEAN_TRUE_VALUE])

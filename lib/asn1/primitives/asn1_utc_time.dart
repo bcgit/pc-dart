@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
 
@@ -34,7 +35,8 @@ class ASN1UtcTime extends ASN1Object {
   }
 
   @override
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     var utc = time.toUtc();
     var year = utc.year.toString().substring(2).padLeft(2, '0');
     var month = utc.month.toString().padLeft(2, '0');

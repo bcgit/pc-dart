@@ -42,6 +42,10 @@ void main() {
     // Test with length less than 127
     expect(ASN1Utils.encodeLength(1), Uint8List.fromList([0x01]));
     expect(ASN1Utils.encodeLength(11), Uint8List.fromList([0x0B]));
+    // Test with length less than 127 and longform true
+    expect(ASN1Utils.encodeLength(13), Uint8List.fromList([0x0d]));
+    expect(ASN1Utils.encodeLength(13, longform: true),
+        Uint8List.fromList([0x81, 0x0d]));
   });
 
   test('Test calculateValueStartPosition', () {
