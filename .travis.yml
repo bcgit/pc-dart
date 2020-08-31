@@ -4,4 +4,4 @@ dart:
 script:
   - dart test/all_tests_web.dart
   - pub global activate pana
-  - pana --verbosity compact --source path .
+  - pana .
