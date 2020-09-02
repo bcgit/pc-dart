@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:pointycastle/asn1/primitives/asn1_boolean.dart';
+import 'package:pointycastle/asn1/objects/asn1_boolean.dart';
 import 'package:test/test.dart';
 
 void main() {
