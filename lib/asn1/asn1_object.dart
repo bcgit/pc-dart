@@ -72,7 +72,8 @@ class ASN1Object {
   ///
   /// Encode the object to their byte representation.
   ///
-  /// [longFormLength] defines if the [valueByteLength] should be encoded in normal or longForm. Default is false.
+  /// [encodingRule] defines if the [valueByteLength] should be encoded as indefinite length (0x80) or fixed length with short/long form.
+  /// The default is [ASN1EncodingRule.ENCODING_DER] which will automatically decode in definite length with short form.
   ///
   /// **Important note**: Subclasses need to override this method and may call this method. If this method is called by a subclass, the subclass has to set the [valueBytes] before calling super.encode().
   ///
@@ -82,12 +83,13 @@ class ASN1Object {
       // Encode the length
       Uint8List lengthAsBytes;
       valueByteLength ??= valueBytes.length;
+      // Check if we have indefinite length or fixed length (short or longform)
       if (encodingRule ==
           ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH) {
         // Set length to 0x80
         lengthAsBytes = Uint8List.fromList([0x80]);
         // Add 2 to the valueByteLength to handle the 0x00, 0x00 at the end
-        valueByteLength = valueByteLength + 2;
+        //valueByteLength = valueByteLength + 2;
       } else {
         lengthAsBytes = ASN1Utils.encodeLength(valueByteLength,
             longform:

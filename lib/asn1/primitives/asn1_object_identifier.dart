@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
+import 'package:pointycastle/asn1/unsupported_asn1_encoding_rule_exception.dart';
 
 class ASN1ObjectIdentifier extends ASN1Object {
   ///
@@ -85,7 +86,7 @@ class ASN1ObjectIdentifier extends ASN1Object {
   }
 
   ///
-  /// Creates an [ASN1ObjectIdentifier] entity from the given [componentString].
+  /// Creates an [ASN1ObjectIdentifier] entity from the given [objectIdentifierAsString].
   ///
   /// Example for [componentString]:
   /// ```
@@ -99,9 +100,22 @@ class ASN1ObjectIdentifier extends ASN1Object {
     objectIdentifier = Uint8List.fromList(list);
   }
 
+  ///
+  /// Encodes this ASN1Object depending on the given [encodingRule]
+  ///
+  /// If no [ASN1EncodingRule] is given, ENCODING_DER will be used.
+  ///
+  /// Supported encoding rules are :
+  /// * [ASN1EncodingRule.ENCODING_DER]
+  ///
+  /// Throws an [UnsupportedAsn1EncodingRuleException] if the given [encodingRule] is not supported.
+  ///
   @override
   Uint8List encode(
       {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
+    if (encodingRule != ASN1EncodingRule.ENCODING_DER) {
+      throw UnsupportedAsn1EncodingRuleException(encodingRule);
+    }
     var oi = <int>[];
     oi.add(objectIdentifier[0] * 40 + objectIdentifier[1]);
 

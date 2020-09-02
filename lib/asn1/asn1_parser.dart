@@ -88,15 +88,18 @@ class ASN1Parser {
       case ASN1Tags.SET:
         return ASN1Set.fromBytes(bytes);
       case ASN1Tags.IA5_STRING_CONSTRUCTED:
-        throw UnimplementedError();
+        return ASN1IA5String.fromBytes(bytes);
       case ASN1Tags.BIT_STRING_CONSTRUCTED:
-        throw UnimplementedError();
+        return ASN1BitString.fromBytes(bytes);
       case ASN1Tags.OCTET_STRING_CONSTRUCTED:
-        throw UnimplementedError();
+        return ASN1OctetString.fromBytes(bytes);
       case ASN1Tags.PRINTABLE_STRING_CONSTRUCTED:
-        throw UnimplementedError();
-      case ASN1Tags.T61_STRING_CONSTRUCTED:
-        throw UnimplementedError();
+        return ASN1PrintableString.fromBytes(bytes);
+      case 0xA0:
+      case 0xA1:
+      case 0xA2:
+      case 0xA3:
+        return ASN1Object.fromBytes(bytes);
       default:
         throw UnsupportedASN1TagException(tag);
     }

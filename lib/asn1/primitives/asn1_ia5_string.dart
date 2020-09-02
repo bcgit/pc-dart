@@ -18,7 +18,7 @@ class ASN1IA5String extends ASN1Object {
   String stringValue;
 
   ///
-  /// A list of elements. Only set if this ASN1IA5String is constructed.
+  /// A list of elements. Only set if this ASN1IA5String is constructed, otherwhise null.
   ///
   List<ASN1Object> elements;
 
@@ -59,6 +59,8 @@ class ASN1IA5String extends ASN1Object {
   /// * [ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM]
   /// * [ASN1EncodingRule.ENCODING_BER_CONSTRUCTED]
   /// * [ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH]
+  ///
+  /// Throws an [UnsupportedAsn1EncodingRuleException] if the given [encodingRule] is not supported.
   ///
   @override
   Uint8List encode(

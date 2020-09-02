@@ -35,6 +35,9 @@ class ASN1Tags {
   /// Decimal 12
   static const int UTF8_STRING = 0x0c;
 
+  /// Decimal 44
+  static const int UTF8_STRING_CONSTRUCTED = 0x2C;
+
   /// Decimal 48
   static const int SEQUENCE = 0x30;
 
