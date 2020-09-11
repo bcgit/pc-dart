@@ -42,6 +42,10 @@ void main() {
     // Test with length less than 127
     expect(ASN1Utils.encodeLength(1), Uint8List.fromList([0x01]));
     expect(ASN1Utils.encodeLength(11), Uint8List.fromList([0x0B]));
+    // Test with length less than 127 and longform true
+    expect(ASN1Utils.encodeLength(13), Uint8List.fromList([0x0d]));
+    expect(ASN1Utils.encodeLength(13, longform: true),
+        Uint8List.fromList([0x81, 0x0d]));
   });
 
   test('Test calculateValueStartPosition', () {
@@ -62,5 +66,30 @@ void main() {
     } catch (e) {
       expect(e, e as RangeError);
     }
+  });
+
+  test('Test isConstructed', () {
+    // IA5 String
+    expect(ASN1Utils.isConstructed(0x36), true);
+    expect(ASN1Utils.isConstructed(0x16), false);
+
+    // Bit String
+    expect(ASN1Utils.isConstructed(0x23), true);
+    expect(ASN1Utils.isConstructed(0x03), false);
+
+    // Octet String
+    expect(ASN1Utils.isConstructed(0x24), true);
+    expect(ASN1Utils.isConstructed(0x04), false);
+
+    // Printable String
+    expect(ASN1Utils.isConstructed(0x33), true);
+    expect(ASN1Utils.isConstructed(0x13), false);
+
+    // T61 String
+    expect(ASN1Utils.isConstructed(0x34), true);
+    expect(ASN1Utils.isConstructed(0x14), false);
+
+    // Sequence
+    expect(ASN1Utils.isConstructed(0x30), true);
   });
 }

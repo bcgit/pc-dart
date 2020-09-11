@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
+import 'package:pointycastle/asn1/unsupported_asn1_encoding_rule_exception.dart';
 
 ///
 /// An ASN1 Utc Time object
 ///
-/// **Note**: It is not recommended to use the UTC Time in the future because this will not work anymore after the year 2075,
+/// **Note**: It is not recommended to use the UTC Time in the far future because this will not work anymore after the year 2075,
 /// due to the fact that the UTC Time only uses 2 digits to represent the year.!
 ///
 /// Use the **GeneralizedTime** instead!
@@ -33,8 +35,22 @@ class ASN1UtcTime extends ASN1Object {
     time = DateTime.parse(formatedStringValue);
   }
 
+  ///
+  /// Encodes this ASN1Object depending on the given [encodingRule]
+  ///
+  /// If no [ASN1EncodingRule] is given, ENCODING_DER will be used.
+  ///
+  /// Supported encoding rules are :
+  /// * [ASN1EncodingRule.ENCODING_DER]
+  ///
+  /// Throws an [UnsupportedAsn1EncodingRuleException] if the given [encodingRule] is not supported.
+  ///
   @override
-  Uint8List encode() {
+  Uint8List encode(
+      {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
+    if (encodingRule != ASN1EncodingRule.ENCODING_DER) {
+      throw UnsupportedAsn1EncodingRuleException(encodingRule);
+    }
     var utc = time.toUtc();
     var year = utc.year.toString().substring(2).padLeft(2, '0');
     var month = utc.month.toString().padLeft(2, '0');
