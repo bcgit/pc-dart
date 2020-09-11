@@ -1,20 +1,33 @@
 Changelog
 =========
 
-#### Version 2.0.0-rc1 (2020-08-05) (Dart SDK version 2.1.1)
+#### Version 2.0.0-rc1 (2020-09-11) (Dart SDK version 2.1.1)
 
 * Fixed OAEPEncoding and PKCS1Encoding to use provided output offset value.
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
 * Fixed RSASigner.verifySignature to return false when signature is bad.
 * Add HKDF support (IETF RFC 5869)
-* Add Poly1305, ChaCha20, AES-GCM, SHA3, Keccak, RSA/PSS
+* Add Poly1305, ChaCha20, ChaCha7539, AES-GCM, SHA3, Keccak, RSA/PSS
+* Add CSHAKE, SHAKE
 * Fixed randomly occurring bug with OAEP decoding.
 * Added NormalizedECDSASigner that wraps ECDSASigner to guarantee an ecdsa signature in lower-s form. (Enforcement on verification supported).
 * Reduce copies in CBC mode.
 * Linter issues fixed.
 * FixedSecureRandom to use seed only once.
+* ASN1 - BOOLEAN, INTEGER, BIT_STRING, OCTET_STRING, NULL, OBJECT_IDENTIFIER, 
+  ENUMERATED, UTF8_STRING, SEQUENCE, SET, PRINTABLE_STRING, IA5_STRING & UTC_TIME
+* ASN1 Encoding - DER & BER
+* RSA Keys - Private Key carries public key exponent, added publicExponent and privateExponent where necessary
+  and deprecated single variable getters in for those values.
 
-
+##### Thanks, Steven
+ At this release the Point Castle Crypto API has been fully handed over to the 
+ Legion of the Bouncy Castle Inc. Steven Roose, it is no small thing to single headedly 
+ manage a cryptography API and your effort is rightfully respected by the Pointy Castle user 
+ base. We would like to thank you for your trust in us to carry the project forward, and we
+ wish you all the best!
+  
+  
 #### Version 1.0.2 (2019-11-15)
 
 * Add non-Keccak SHA3 support

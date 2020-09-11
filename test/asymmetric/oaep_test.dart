@@ -194,7 +194,7 @@ void rsaOaepStandardTests() {
   // Instantiate the RSA key pair objects
 
   final publicKey = RSAPublicKey(n, e);
-  final privateKey = RSAPrivateKey(n, privateExponent, p, q);
+  final privateKey = RSAPrivateKey(n, privateExponent, p, q, e);
 
   //----------------
 

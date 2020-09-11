@@ -24,21 +24,32 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
   // The secret prime factors of n
   final BigInt p;
   final BigInt q;
+  final BigInt pubExponent;
 
   /// Create an RSA private key for the given parameters.
-  RSAPrivateKey(BigInt modulus, BigInt exponent, this.p, this.q)
-      : super(modulus, exponent);
+  RSAPrivateKey(BigInt modulus, BigInt privateExponent, this.p, this.q,
+      [BigInt this.pubExponent])
+      : super(modulus, privateExponent);
 
   /// Get private exponent [d] = e^-1
+  @Deprecated('Use privateExponent.')
   BigInt get d => exponent;
 
+  /// Get the private exponent (d)
+  BigInt get privateExponent => exponent;
+
+  /// Get the public exponent (e)
+  BigInt get publicExponent => pubExponent;
+
   bool operator ==(other) {
-    if (other == null) return false;
-    if (other is! RSAPrivateKey) return false;
-    return (other.n == this.n) && (other.d == this.d);
+    if (other is RSAPrivateKey) {
+      return other.privateExponent == this.privateExponent &&
+          other.modulus == this.modulus;
+    }
+    return false;
   }
 
-  int get hashCode => modulus.hashCode + exponent.hashCode;
+  int get hashCode => modulus.hashCode + privateExponent.hashCode;
 }
 
 /// Public keys in RSA
@@ -47,15 +58,21 @@ class RSAPublicKey extends RSAAsymmetricKey implements PublicKey {
   RSAPublicKey(BigInt modulus, BigInt exponent) : super(modulus, exponent);
 
   /// Get public exponent [e]
+  @Deprecated('Use get publicExponent')
   BigInt get e => exponent;
 
+  /// Get the public exponent.
+  BigInt get publicExponent => exponent;
+
   bool operator ==(other) {
-    if (other == null) return false;
-    if (other is! RSAPublicKey) return false;
-    return (other.n == this.n) && (other.e == this.e);
+    if (other is RSAPublicKey) {
+      return (other.modulus == this.modulus) &&
+          (other.publicExponent == this.publicExponent);
+    }
+    return false;
   }
 
-  int get hashCode => modulus.hashCode + exponent.hashCode;
+  int get hashCode => modulus.hashCode + publicExponent.hashCode;
 }
 
 /// A [Signature] created with RSA.
