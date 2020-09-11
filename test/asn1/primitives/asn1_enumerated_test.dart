@@ -11,6 +11,7 @@ void main() {
 
     var asn1Object = ASN1Enumerated.fromBytes(bytes);
     expect(asn1Object.tag, 10);
+    expect(asn1Object.isConstructed, false);
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.valueByteLength, 1);
     expect(asn1Object.valueStartPosition, 2);

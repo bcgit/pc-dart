@@ -11,8 +11,14 @@ class ASN1Tags {
   /// Decimal 3
   static const int BIT_STRING = 0x03;
 
+  /// Decimal 35
+  static const int BIT_STRING_CONSTRUCTED = 0x23;
+
   /// Decimal 4
   static const int OCTET_STRING = 0x04;
+
+  /// Decimal 36
+  static const int OCTET_STRING_CONSTRUCTED = 0x24;
 
   /// Decimal 5
   static const int NULL = 0x05;
@@ -28,6 +34,9 @@ class ASN1Tags {
 
   /// Decimal 12
   static const int UTF8_STRING = 0x0c;
+
+  /// Decimal 44
+  static const int UTF8_STRING_CONSTRUCTED = 0x2C;
 
   /// Decimal 48
   static const int SEQUENCE = 0x30;
@@ -47,14 +56,23 @@ class ASN1Tags {
   /// Decimal 19
   static const int PRINTABLE_STRING = 0x13;
 
+  /// Decimal 51
+  static const int PRINTABLE_STRING_CONSTRUCTED = 0x33;
+
   /// Decimal 20
   static const int T61_STRING = 0x14;
+
+  /// Decimal 52
+  static const int T61_STRING_CONSTRUCTED = 0x34;
 
   /// Decimal 21
   static const int VIDEOTEX_STRING = 0x15;
 
   /// Decimal 22
   static const int IA5_STRING = 0x16;
+
+  /// Decimal 54
+  static const int IA5_STRING_CONSTRUCTED = 0x36;
 
   /// Decimal 23
   static const int UTC_TIME = 0x17;
