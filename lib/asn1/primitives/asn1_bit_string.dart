@@ -17,6 +17,11 @@ class ASN1BitString extends ASN1Object {
   List<int> stringValues;
 
   ///
+  /// The unused bits
+  ///
+  int unusedbits;
+
+  ///
   /// A list of elements. Only set if this ASN1IA5String is constructed, otherwhise null.
   ///
   ///
@@ -43,6 +48,7 @@ class ASN1BitString extends ASN1Object {
         elements.add(bitString);
       }
     } else {
+      unusedbits = valueBytes[0];
       stringValues = valueBytes.sublist(1);
     }
   }
@@ -68,7 +74,12 @@ class ASN1BitString extends ASN1Object {
       case ASN1EncodingRule.ENCODING_BER_PADDED:
       case ASN1EncodingRule.ENCODING_DER:
       case ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM:
-        valueBytes = Uint8List.fromList(stringValues);
+        var b = <int>[];
+        if (unusedbits != null) {
+          b.add(unusedbits);
+        }
+        b.addAll(stringValues);
+        valueBytes = Uint8List.fromList(b);
         break;
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH:
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED:
