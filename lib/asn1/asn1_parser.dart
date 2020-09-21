@@ -13,6 +13,7 @@ import 'package:pointycastle/asn1/primitives/asn1_octet_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_printable_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_sequence.dart';
 import 'package:pointycastle/asn1/primitives/asn1_set.dart';
+import 'package:pointycastle/asn1/primitives/asn1_teletext_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_utc_time.dart';
 import 'package:pointycastle/asn1/primitives/asn1_utf8_string.dart';
 import 'package:pointycastle/asn1/unsupported_asn1_tag_exception.dart';
@@ -95,6 +96,8 @@ class ASN1Parser {
         return ASN1OctetString.fromBytes(bytes);
       case ASN1Tags.PRINTABLE_STRING_CONSTRUCTED:
         return ASN1PrintableString.fromBytes(bytes);
+      case ASN1Tags.T61_STRING_CONSTRUCTED:
+        return ASN1TeletextString.fromBytes(bytes);
       case 0xA0:
       case 0xA1:
       case 0xA2:
@@ -131,6 +134,8 @@ class ASN1Parser {
         return ASN1PrintableString.fromBytes(bytes);
       case ASN1Tags.UTC_TIME:
         return ASN1UtcTime.fromBytes(bytes);
+      case ASN1Tags.T61_STRING:
+        return ASN1TeletextString.fromBytes(bytes);
       default:
         throw UnsupportedASN1TagException(tag);
     }

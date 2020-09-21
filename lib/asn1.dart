@@ -16,6 +16,7 @@ export 'asn1/primitives/asn1_octet_string.dart';
 export 'asn1/primitives/asn1_printable_string.dart';
 export 'asn1/primitives/asn1_sequence.dart';
 export 'asn1/primitives/asn1_set.dart';
+export 'asn1/primitives/asn1_teletext_string.dart';
 export 'asn1/primitives/asn1_utc_time.dart';
 export 'asn1/primitives/asn1_utf8_string.dart';
 export 'asn1/unsupported_asn1_encoding_rule_exception.dart';
