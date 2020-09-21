@@ -17,23 +17,19 @@ abstract class AsymmetricBlockCipher extends Algorithm {
   /// Reset the cipher to its original state.
   void reset();
 
-  /**
-   * Init the cipher with its initialization [params]. The type of [CipherParameters] depends on the algorithm being used (see
-   * the documentation of each implementation to find out more).
-   *
-   * Use the argument [forEncryption] to tell the cipher if you want to encrypt or decrypt data.
-   */
+  /// Init the cipher with its initialization [params]. The type of [CipherParameters] depends on the algorithm being used (see
+  /// the documentation of each implementation to find out more).
+  ///
+  /// Use the argument [forEncryption] to tell the cipher if you want to encrypt or decrypt data.
   void init(bool forEncryption, CipherParameters params);
 
-  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  /// Process a whole block of [data] at once, returning the result in a byte array.
   Uint8List process(Uint8List data);
 
-  /**
-   * Process a block of [len] bytes given by [inp] and starting at offset [inpOff] and put the resulting cipher text in [out]
-   * beginning at position [outOff].
-   *
-   * This method returns the total bytes put in the output buffer.
-   */
+  /// Process a block of [len] bytes given by [inp] and starting at offset [inpOff] and put the resulting cipher text in [out]
+  /// beginning at position [outOff].
+  ///
+  /// This method returns the total bytes put in the output buffer.
   int processBlock(
       Uint8List inp, int inpOff, int len, Uint8List out, int outOff);
 }

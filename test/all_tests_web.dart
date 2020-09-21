@@ -1,30 +1,28 @@
 import 'adapters/stream_cipher_as_block_cipher_test.dart'
     as stream_cipher_as_block_cipher_test;
+import 'asn1/asn1_all_test.dart' as asn1_all;
 import 'asymmetric/oaep_test.dart' as oaep_test;
 import 'asymmetric/pkcs1_test.dart' as pkcs1_test;
-
 import 'asymmetric/rsa_test.dart' as rsa_test;
 import 'block/aes_fast_test.dart' as aes_fast_test;
 import 'digests/blake2b_test.dart' as blake2b_test;
-import 'digests/keccak_test.dart' as keccak_test;
-import 'digests/sha3_test.dart' as sha3_test;
-import 'digests/shake_tests.dart' as shake_test;
 import 'digests/cshake_tests.dart' as cshake_test;
+import 'digests/keccak_test.dart' as keccak_test;
 import 'digests/md2_test.dart' as md2_test;
 import 'digests/md4_test.dart' as md4_test;
 import 'digests/md5_test.dart' as md5_test;
-
 import 'digests/ripemd128_test.dart' as ripemd128_test;
 import 'digests/ripemd160_test.dart' as ripemd160_test;
 import 'digests/ripemd256_test.dart' as ripemd256_test;
 import 'digests/ripemd320_test.dart' as ripemd320_test;
 import 'digests/sha1_test.dart' as sha1_test;
-
 import 'digests/sha224_test.dart' as sha224_test;
 import 'digests/sha256_test.dart' as sha256_test;
 import 'digests/sha384_test.dart' as sha384_test;
+import 'digests/sha3_test.dart' as sha3_test;
 import 'digests/sha512_test.dart' as sha512_test;
 import 'digests/sha512t_test.dart' as sha512t_test;
+import 'digests/shake_tests.dart' as shake_test;
 import 'digests/tiger_test.dart' as tiger_test;
 import 'digests/whirlpool_test.dart' as whirlpool_test;
 import 'impl_test.dart' as impl_test;
@@ -32,7 +30,6 @@ import 'key_derivators/pbkdf2_test.dart' as pbkdf2_test;
 import 'key_derivators/scrypt_test.dart' as scrypt_test;
 import 'key_generators/ec_key_generator_test.dart' as ec_key_generator_test;
 import 'key_generators/rsa_key_generator_test.dart' as rsa_key_generator_test;
-
 import 'macs/cbc_block_cipher_mac_test.dart' as cbc_block_cipher_mac_test;
 import 'macs/cmac_test.dart' as cmac_test;
 import 'macs/hmac_test.dart' as hmac_test;
@@ -43,12 +40,10 @@ import 'modes/ecb_test.dart' as ecb_test;
 import 'modes/gcm_test.dart' as gcm_test;
 import 'modes/gctr_test.dart' as gctr_test;
 import 'modes/ofb_test.dart' as ofb_test;
-
 import 'modes/sic_test.dart' as sic_test;
 import 'paddings/iso7816d4_test.dart' as iso7816d4_test;
 import 'paddings/padded_block_cipher_test.dart' as padded_block_cipher_test;
 import 'paddings/pkcs7_test.dart' as pkcs7_test;
-
 import 'random/auto_seed_block_ctr_random_test.dart'
     as auto_seed_block_ctr_random_test;
 import 'random/block_ctr_random_test.dart' as block_ctr_random_test;
@@ -59,10 +54,7 @@ import 'signers/rsa_signer_test.dart' as rsa_signer_test;
 import 'src/ufixnum_test.dart' as ufixnum_test;
 import 'stream/chacha20_test.dart' as chacha20_test;
 import 'stream/chacha20poly1305_test.dart' as chacha20poly1305_test;
-
 import 'stream/salsa20_test.dart' as salsa20_test;
-
-import 'asn1/asn1_all_test.dart' as asn1_all;
 
 void main() {
   stream_cipher_as_block_cipher_test.main();

@@ -13,10 +13,10 @@ import 'package:pointycastle/src/registry/registry.dart';
 // TODO: implement full ASN1 encoding (for now I will do a little ad-hoc implementation of just what is needed here)
 class RSASigner implements Signer {
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
+  static final FactoryConfig factoryConfig =
       DynamicFactoryConfig.suffix(Signer, '/RSA', (_, Match match) {
     final digestName = match.group(1);
-    final digestIdentifierHex = _DIGEST_IDENTIFIER_HEXES[digestName];
+    final digestIdentifierHex = _digestIdentifierHexes[digestName];
     if (digestIdentifierHex == null) {
       throw RegistryFactoryException(
           'RSA signing with digest $digestName is not supported');
@@ -24,7 +24,7 @@ class RSASigner implements Signer {
     return () => RSASigner(Digest(digestName), digestIdentifierHex);
   });
 
-  static final Map<String, String> _DIGEST_IDENTIFIER_HEXES = {
+  static final Map<String, String> _digestIdentifierHexes = {
     'MD2': '06082a864886f70d0202',
     'MD4': '06082a864886f70d0204',
     'MD5': '06082a864886f70d0205',

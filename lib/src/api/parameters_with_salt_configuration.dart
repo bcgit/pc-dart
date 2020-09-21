@@ -2,10 +2,8 @@
 
 part of api;
 
-/**
- * [CipherParameters] consisting of an underlying [CipherParameters] (of type
- * [UnderlyingParameters]), an acompanying [SecureRandom], and salt length.
- */
+/// [CipherParameters] consisting of an underlying [CipherParameters] (of type
+/// [UnderlyingParameters]), an acompanying [SecureRandom], and salt length.
 class ParametersWithSaltConfiguration<
     UnderlyingParameters extends CipherParameters> implements CipherParameters {
   final UnderlyingParameters parameters;

@@ -196,10 +196,10 @@ abstract class KeccakEngine extends BaseDigest {
 
   void _absorb(int data) {
     if ((_bitsInQueue % ~8) != 0) {
-      throw StateError("attempt to absorb with odd length queue");
+      throw StateError('attempt to absorb with odd length queue');
     }
     if (squeezing) {
-      throw StateError("attempt to absorb while squeezing");
+      throw StateError('attempt to absorb while squeezing');
     }
 
     dataQueue[_bitsInQueue >> 3] = data & 0xFF;

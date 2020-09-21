@@ -2,42 +2,42 @@
 
 library impl.secure_random.block_ctr_random;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
-import "package:pointycastle/src/impl/secure_random_base.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
+import 'package:pointycastle/src/impl/secure_random_base.dart';
 
-/**
- * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random
- * values.
- */
+/// An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random
+/// values.
 class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.regex(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.regex(
       SecureRandom,
-      r"^(.*)/CTR/PRNG$",
+      r'^(.*)/CTR/PRNG$',
       (_, final Match match) => () {
-            String blockCipherName = match.group(1);
-            BlockCipher blockCipher = new BlockCipher(blockCipherName);
-            return new BlockCtrRandom(blockCipher);
+            var blockCipherName = match.group(1);
+            var blockCipher = BlockCipher(blockCipherName);
+            return BlockCtrRandom(blockCipher);
           });
 
   final BlockCipher cipher;
 
   Uint8List _input;
   Uint8List _output;
-  var _used;
+  int _used;
 
   BlockCtrRandom(this.cipher) {
-    _input = new Uint8List(cipher.blockSize);
-    _output = new Uint8List(cipher.blockSize);
+    _input = Uint8List(cipher.blockSize);
+    _output = Uint8List(cipher.blockSize);
     _used = _output.length;
   }
 
-  String get algorithmName => "${cipher.algorithmName}/CTR/PRNG";
+  @override
+  String get algorithmName => '${cipher.algorithmName}/CTR/PRNG';
 
+  @override
   void seed(CipherParameters params) {
     _used = _output.length;
     if (params is ParametersWithIV) {
@@ -48,6 +48,7 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
     }
   }
 
+  @override
   int nextUint8() {
     if (_used == _output.length) {
       cipher.processBlock(_input, 0, _output, 0);
@@ -59,7 +60,7 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
   }
 
   void _incrementInput() {
-    int offset = _input.length;
+    var offset = _input.length;
     do {
       offset--;
       _input[offset] += 1;

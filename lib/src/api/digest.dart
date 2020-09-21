@@ -24,16 +24,11 @@ abstract class Digest extends Algorithm {
   /// Add one byte of data to the digested input.
   void updateByte(int inp);
 
-  /**
-   * Add [len] bytes of data contained in [inp], starting at position [inpOff]
-   * ti the digested input.
-   */
+  /// Add [len] bytes of data contained in [inp], starting at position [inpOff]
+  /// ti the digested input.
   void update(Uint8List inp, int inpOff, int len);
 
-  /**
-   * Store the digest of previously given data in buffer [out] starting at
-   * offset [outOff]. This method returns the size of the digest.
-   */
+  /// Store the digest of previously given data in buffer [out] starting at
+  /// offset [outOff]. This method returns the size of the digest.
   int doFinal(Uint8List out, int outOff);
 }
-

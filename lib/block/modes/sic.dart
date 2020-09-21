@@ -2,23 +2,21 @@
 
 library impl.block_cipher.modes.sic;
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/adapters/stream_cipher_as_block_cipher.dart";
-import "package:pointycastle/stream/sic.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/adapters/stream_cipher_as_block_cipher.dart';
+import 'package:pointycastle/stream/sic.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
-/**
- * See [SICStreamCipher].
- */
+/// See [SICStreamCipher].
 class SICBlockCipher extends StreamCipherAsBlockCipher {
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.suffix(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.suffix(
       BlockCipher,
-      "/SIC",
+      '/SIC',
       (_, final Match match) => () {
-            BlockCipher underlying = new BlockCipher(match.group(1));
-            return new SICBlockCipher(
-                underlying.blockSize, new SICStreamCipher(underlying));
+            var underlying = BlockCipher(match.group(1));
+            return SICBlockCipher(
+                underlying.blockSize, SICStreamCipher(underlying));
           });
 
   SICBlockCipher(int blockSize, StreamCipher underlyingCipher)

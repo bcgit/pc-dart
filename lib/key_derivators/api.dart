@@ -2,9 +2,9 @@
 
 library api.key_derivators;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
+import 'package:pointycastle/api.dart';
 
 /// [CipherParameters] used by PBKDF2.
 class Pbkdf2Parameters extends CipherParameters {
@@ -30,22 +30,26 @@ class ScryptParameters implements CipherParameters {
 class HkdfParameters extends CipherParameters {
   final Uint8List ikm; // the input keying material or seed
   final int desiredKeyLength;
-  final Uint8List salt; // the salt to use, may be null for a salt for hashLen zeros
-  final Uint8List info; // the info to use, may be null for an info field of zero bytes
+  final Uint8List
+      salt; // the salt to use, may be null for a salt for hashLen zeros
+  final Uint8List
+      info; // the info to use, may be null for an info field of zero bytes
   final bool skipExtract;
 
   HkdfParameters._(this.ikm, this.desiredKeyLength,
       [this.salt, this.info, this.skipExtract = false]);
 
-  factory HkdfParameters(ikm, desiredKeyLength, [salt, info, skipExtract = false]) {
+  factory HkdfParameters(ikm, desiredKeyLength,
+      [salt, info, skipExtract = false]) {
     if (ikm == null) {
-      throw new ArgumentError("IKM (input keying material) should not be null");
+      throw ArgumentError('IKM (input keying material) should not be null');
     }
 
     if (salt == null || salt.length == 0) {
       salt = null;
     }
 
-    return new HkdfParameters._(ikm, desiredKeyLength, salt, info ?? new Uint8List(0), skipExtract);
+    return HkdfParameters._(
+        ikm, desiredKeyLength, salt, info ?? Uint8List(0), skipExtract);
   }
 }

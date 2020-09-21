@@ -2,48 +2,51 @@
 
 library impl.stream_cipher.salsa20;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/base_stream_cipher.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/base_stream_cipher.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005.
 class Salsa20Engine extends BaseStreamCipher {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(StreamCipher, "Salsa20", () => Salsa20Engine());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(StreamCipher, 'Salsa20', () => Salsa20Engine());
 
   static const _STATE_SIZE = 16;
 
-  static final _sigma = new Uint8List.fromList("expand 32-byte k".codeUnits);
-  static final _tau = new Uint8List.fromList("expand 16-byte k".codeUnits);
+  static final _sigma = Uint8List.fromList('expand 32-byte k'.codeUnits);
+  static final _tau = Uint8List.fromList('expand 16-byte k'.codeUnits);
 
-  Uint8List _workingKey = null;
-  Uint8List _workingIV = null;
+  Uint8List _workingKey;
+  Uint8List _workingIV;
 
-  final _state = new List<int>(_STATE_SIZE);
-  final _buffer = new List<int>(_STATE_SIZE);
+  final _state = List<int>(_STATE_SIZE);
+  final _buffer = List<int>(_STATE_SIZE);
 
-  final _keyStream = new Uint8List(_STATE_SIZE * 4);
+  final _keyStream = Uint8List(_STATE_SIZE * 4);
   var _keyStreamOffset = 0;
 
   var _initialised = false;
 
-  final String algorithmName = "Salsa20";
+  @override
+  final String algorithmName = 'Salsa20';
 
+  @override
   void reset() {
     if (_workingKey != null) {
       _setKey(_workingKey, _workingIV);
     }
   }
 
+  @override
   void init(
       bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
     if (iv == null || iv.length != 8) {
-      throw new ArgumentError("Salsa20 requires exactly 8 bytes of IV");
+      throw ArgumentError('Salsa20 requires exactly 8 bytes of IV');
     }
 
     _workingIV = iv;
@@ -52,6 +55,7 @@ class Salsa20Engine extends BaseStreamCipher {
     _setKey(_workingKey, _workingIV);
   }
 
+  @override
   int returnByte(int inp) {
     if (_keyStreamOffset == 0) {
       _generateKeyStream(_keyStream);
@@ -67,20 +71,21 @@ class Salsa20Engine extends BaseStreamCipher {
     return out;
   }
 
+  @override
   void processBytes(
       Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (!_initialised) {
-      throw new StateError("Salsa20 not initialized: please call init() first");
+      throw StateError('Salsa20 not initialized: please call init() first');
     }
 
     if ((inpOff + len) > inp.length) {
-      throw new ArgumentError(
-          "Input buffer too short or requested length too long");
+      throw ArgumentError(
+          'Input buffer too short or requested length too long');
     }
 
     if ((outOff + len) > out.length) {
-      throw new ArgumentError(
-          "Output buffer too short or requested length too long");
+      throw ArgumentError(
+          'Output buffer too short or requested length too long');
     }
 
     for (var i = 0; i < len; i++) {
@@ -102,7 +107,7 @@ class Salsa20Engine extends BaseStreamCipher {
     _workingIV = ivBytes;
 
     _keyStreamOffset = 0;
-    int offset = 0;
+    var offset = 0;
     Uint8List constants;
 
     // Key
@@ -183,7 +188,7 @@ class Salsa20Engine extends BaseStreamCipher {
       x[15] ^= crotl32((x[14] + x[13]), 18);
     }
 
-    for (int i = 0; i < _STATE_SIZE; ++i) {
+    for (var i = 0; i < _STATE_SIZE; ++i) {
       x[i] = sum32(x[i], input[i]);
     }
   }

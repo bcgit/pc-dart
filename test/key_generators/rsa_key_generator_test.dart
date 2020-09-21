@@ -100,8 +100,10 @@ void publicExponentTests() {
           equals((kp.privateKey as RSAPrivateKey).publicExponent));
 
       // Check the deprecated getters still return correct values.
+      // ignore: deprecated_member_use_from_same_package
       expect((kp.publicKey as RSAPublicKey).e,
           equals((kp.publicKey as RSAPublicKey).publicExponent));
+      // ignore: deprecated_member_use_from_same_package
       expect((kp.privateKey as RSAPrivateKey).d,
           equals((kp.privateKey as RSAPrivateKey).privateExponent));
     });
