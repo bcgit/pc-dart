@@ -10,7 +10,7 @@ class ASN1Sequence extends ASN1Object {
   ///
   /// The decoded string value
   ///
-  List<ASN1Object> elements;
+  List<ASN1Object> elements = [];
 
   ///
   /// Create an [ASN1Sequence] entity with the given [elements].
@@ -69,5 +69,13 @@ class ASN1Sequence extends ASN1Object {
       l += obj.encode().length;
     });
     return l;
+  }
+
+  ///
+  /// Adds the given [obj] to the [elements] list.
+  ///
+  void add(ASN1Object obj) {
+    elements ??= [];
+    elements.add(obj);
   }
 }

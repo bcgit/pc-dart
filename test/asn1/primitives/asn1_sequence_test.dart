@@ -113,5 +113,12 @@ void main() {
     ]);
 
     expect(asn1Object.encode(), bytes);
+
+    asn1Object = ASN1Sequence();
+    asn1Object.add(e1);
+    asn1Object.add(e2);
+    asn1Object.add(e3);
+
+    expect(asn1Object.encode(), bytes);
   });
 }
