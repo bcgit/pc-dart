@@ -82,4 +82,14 @@ class ASN1UtcTime extends ASN1Object {
     }
     return stringValue.substring(0, 8) + 'T' + stringValue.substring(8);
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('UTCTime ${time.toIso8601String()}');
+    return sb.toString();
+  }
 }

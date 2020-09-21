@@ -68,4 +68,18 @@ class ASN1Set extends ASN1Object {
     });
     return l;
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('SEQUENCE (${elements.length} elem)');
+    for (var e in elements) {
+      var dump = e.dump(spaces: spaces + dumpIndent);
+      sb.write('\n $dump');
+    }
+    return sb.toString();
+  }
 }

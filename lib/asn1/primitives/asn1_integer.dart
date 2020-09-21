@@ -52,4 +52,14 @@ class ASN1Integer extends ASN1Object {
     valueByteLength = valueBytes.length;
     return super.encode();
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('INTEGER ${integer.toRadixString(16)}');
+    return sb.toString();
+  }
 }

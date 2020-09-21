@@ -56,4 +56,14 @@ class ASN1Boolean extends ASN1Object {
         : Uint8List.fromList([BOOLEAN_FALSE_VALUE]);
     return super.encode();
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('Boolean $boolValue');
+    return sb.toString();
+  }
 }

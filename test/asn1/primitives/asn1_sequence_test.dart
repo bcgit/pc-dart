@@ -120,5 +120,7 @@ void main() {
     asn1Object.add(e3);
 
     expect(asn1Object.encode(), bytes);
+
+    print(asn1Object.dump());
   });
 }

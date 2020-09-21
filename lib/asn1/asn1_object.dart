@@ -43,6 +43,8 @@ class ASN1Object {
   ///
   bool isConstructed;
 
+  int dumpIndent = 2;
+
   ASN1Object({this.tag}) {
     if (tag != null) {
       isConstructed = ASN1Utils.isConstructed(tag);
@@ -112,4 +114,13 @@ class ASN1Object {
   /// The total length of this object, including its value bytes, the encoded tag and length bytes.
   ///
   int get totalEncodedByteLength => valueStartPosition + valueByteLength;
+
+  ///
+  /// Creates a readable dump from the current ASN1Object.
+  ///
+  /// **Important note**: Subclasses need to override this method. If the ASN1Object is constructed and has child elements, dump() has to be called for each child element.
+  ///
+  String dump({int spaces = 0}) {
+    return 'UNKNOWN';
+  }
 }

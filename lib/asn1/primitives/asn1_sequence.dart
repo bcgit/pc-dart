@@ -78,4 +78,18 @@ class ASN1Sequence extends ASN1Object {
     elements ??= [];
     elements.add(obj);
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('SEQUENCE (${elements.length} elem)');
+    for (var e in elements) {
+      var dump = e.dump(spaces: spaces + dumpIndent);
+      sb.write('\n $dump');
+    }
+    return sb.toString();
+  }
 }

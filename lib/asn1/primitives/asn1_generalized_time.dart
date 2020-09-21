@@ -66,4 +66,14 @@ class ASN1GeneralizedTime extends ASN1Object {
     valueByteLength = valueBytes.length;
     return super.encode();
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('UTCTime ${dateTimeValue.toIso8601String()}');
+    return sb.toString();
+  }
 }

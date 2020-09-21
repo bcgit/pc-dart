@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
@@ -115,5 +116,23 @@ class ASN1BitString extends ASN1Object {
       return l + 2;
     }
     return l;
+  }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    if (isConstructed) {
+      sb.write('BIT STRING (${elements.length} elem)');
+      for (var e in elements) {
+        var dump = e.dump(spaces: spaces + dumpIndent);
+        sb.write('\n $dump');
+      }
+    } else {
+      sb.write('BIT STRING ${ascii.decode(stringValues)}');
+    }
+    return sb.toString();
   }
 }

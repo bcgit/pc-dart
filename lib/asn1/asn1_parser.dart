@@ -48,7 +48,7 @@ class ASN1Parser {
   /// Parses the next object in the [bytes].
   ///
   ASN1Object nextObject() {
-    // Get the curren tag in the list bytes
+    // Get the current tag in the list bytes
     var tag = bytes[_position];
 
     // Get the length of the value bytes for the current object
