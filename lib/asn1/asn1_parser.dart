@@ -5,6 +5,7 @@ import 'package:pointycastle/asn1/asn1_tags.dart';
 import 'package:pointycastle/asn1/asn1_utils.dart';
 import 'package:pointycastle/asn1/primitives/asn1_bit_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_boolean.dart';
+import 'package:pointycastle/asn1/primitives/asn1_generalized_time.dart';
 import 'package:pointycastle/asn1/primitives/asn1_ia5_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_integer.dart';
 import 'package:pointycastle/asn1/primitives/asn1_null.dart';
@@ -136,6 +137,8 @@ class ASN1Parser {
         return ASN1UtcTime.fromBytes(bytes);
       case ASN1Tags.T61_STRING:
         return ASN1TeletextString.fromBytes(bytes);
+      case ASN1Tags.GENERALIZED_TIME:
+        return ASN1GeneralizedTime.fromBytes(bytes);
       default:
         throw UnsupportedASN1TagException(tag);
     }
