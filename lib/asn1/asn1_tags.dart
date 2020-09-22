@@ -2,6 +2,33 @@
 /// Class holding all ASN1 BER tags, supported by this package
 ///
 class ASN1Tags {
+  static const List<int> TAGS = [
+    BOOLEAN,
+    INTEGER,
+    BIT_STRING,
+    BIT_STRING_CONSTRUCTED,
+    OCTET_STRING,
+    OCTET_STRING_CONSTRUCTED,
+    NULL,
+    OBJECT_IDENTIFIER,
+    EXTERNAL,
+    ENUMERATED,
+    UTF8_STRING,
+    UTF8_STRING_CONSTRUCTED,
+    SEQUENCE,
+    SEQUENCE_OF,
+    SET,
+    SET_OF,
+    T61_STRING,
+    T61_STRING_CONSTRUCTED,
+    PRINTABLE_STRING,
+    PRINTABLE_STRING_CONSTRUCTED,
+    IA5_STRING,
+    IA5_STRING_CONSTRUCTED,
+    UTC_TIME,
+    GENERALIZED_TIME
+  ];
+
   /// Decimal 1
   static const int BOOLEAN = 0x01;
 

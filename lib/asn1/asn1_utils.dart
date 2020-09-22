@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_tags.dart';
+
 ///
 /// Utils class holding different methods to ease the handling of ANS1Objects and their byte representation.
 ///
@@ -95,6 +97,10 @@ class ASN1Utils {
     var newNum = i >> (6 - 1);
     // Check if bit is set to 1
     return (newNum & 1) == 1;
+  }
+
+  static bool isASN1Tag(int i) {
+    return ASN1Tags.TAGS.contains(i);
   }
 
   ///

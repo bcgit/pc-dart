@@ -8,6 +8,7 @@ export 'asn1/asn1_utils.dart';
 export 'asn1/primitives/asn1_bit_string.dart';
 export 'asn1/primitives/asn1_boolean.dart';
 export 'asn1/primitives/asn1_enumerated.dart';
+export 'asn1/primitives/asn1_generalized_time.dart';
 export 'asn1/primitives/asn1_ia5_string.dart';
 export 'asn1/primitives/asn1_integer.dart';
 export 'asn1/primitives/asn1_null.dart';

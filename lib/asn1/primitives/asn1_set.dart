@@ -48,7 +48,8 @@ class ASN1Set extends ASN1Object {
     valueByteLength = 0;
     if (elements != null) {
       valueByteLength = _childLength();
-      var i = valueStartPosition;
+      valueBytes = Uint8List(valueByteLength);
+      var i = 0;
       elements.forEach((obj) {
         var b = obj.encode();
         valueBytes.setRange(i, i + b.length, b);
@@ -69,6 +70,14 @@ class ASN1Set extends ASN1Object {
     return l;
   }
 
+  ///
+  /// Adds the given [obj] to the [elements] list.
+  ///
+  void add(ASN1Object obj) {
+    elements ??= [];
+    elements.add(obj);
+  }
+
   @override
   String dump({int spaces = 0}) {
     var sb = StringBuffer();
@@ -78,7 +87,7 @@ class ASN1Set extends ASN1Object {
     sb.write('SEQUENCE (${elements.length} elem)');
     for (var e in elements) {
       var dump = e.dump(spaces: spaces + dumpIndent);
-      sb.write('\n $dump');
+      sb.write('\n$dump');
     }
     return sb.toString();
   }

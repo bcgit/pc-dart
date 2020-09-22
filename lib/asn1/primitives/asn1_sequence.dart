@@ -88,7 +88,7 @@ class ASN1Sequence extends ASN1Object {
     sb.write('SEQUENCE (${elements.length} elem)');
     for (var e in elements) {
       var dump = e.dump(spaces: spaces + dumpIndent);
-      sb.write('\n $dump');
+      sb.write('\n$dump');
     }
     return sb.toString();
   }

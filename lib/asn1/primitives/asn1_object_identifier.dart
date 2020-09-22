@@ -95,6 +95,7 @@ class ASN1ObjectIdentifier extends ASN1Object {
   /// Throws an [UnsupportedObjectIdentifierException] if the given [name] is not supported
   ///
   ASN1ObjectIdentifier.fromName(String name) {
+    tag = ASN1Tags.OBJECT_IDENTIFIER;
     var identifier = ObjectIdentifiers.getIdentifierByName(name);
     if (identifier == null) {
       throw UnsupportedObjectIdentifierException(name);

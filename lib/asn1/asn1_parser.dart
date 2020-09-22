@@ -68,11 +68,17 @@ class ASN1Parser {
 
     // Parse the view and the tag to an ASN1Object
     var isConstructed = ASN1Utils.isConstructed(tag);
+    var isPrimitive = (0xC0 & tag) == 0;
+    //var isApplication = (0x40 & tag) != 0;
+
     ASN1Object obj;
     if (isConstructed) {
       obj = _createConstructed(tag, subBytes);
-    } else {
+    } else if (isPrimitive) {
       obj = _createPrimitive(tag, subBytes);
+    } else {
+      // create a vanilla object
+      obj = ASN1Object.fromBytes(subBytes);
     }
 
     // Update the position

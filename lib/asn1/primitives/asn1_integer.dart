@@ -50,9 +50,9 @@ class ASN1Integer extends ASN1Object {
     }
     if (integer.bitLength == 0) {
       if (integer == BigInt.from(-1)) {
-        return Uint8List.fromList([0xff]);
+        valueBytes = Uint8List.fromList([0xff]);
       } else {
-        return Uint8List.fromList([0]);
+        valueBytes = Uint8List.fromList([0]);
       }
     } else {
       valueBytes = encodeBigInt(integer);
@@ -67,7 +67,7 @@ class ASN1Integer extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    sb.write('INTEGER ${integer.toRadixString(16)}');
+    sb.write('INTEGER ${integer.toString().toUpperCase()}');
     return sb.toString();
   }
 }

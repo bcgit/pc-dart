@@ -120,7 +120,7 @@ class ASN1UTF8String extends ASN1Object {
       sb.write('UTF8String (${elements.length} elem)');
       for (var e in elements) {
         var dump = e.dump(spaces: spaces + dumpIndent);
-        sb.write('\n $dump');
+        sb.write('\n$dump');
       }
     } else {
       sb.write('UTF8String $utf8StringValue');

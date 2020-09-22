@@ -128,10 +128,18 @@ class ASN1BitString extends ASN1Object {
       sb.write('BIT STRING (${elements.length} elem)');
       for (var e in elements) {
         var dump = e.dump(spaces: spaces + dumpIndent);
-        sb.write('\n $dump');
+        sb.write('\n$dump');
       }
     } else {
-      sb.write('BIT STRING ${ascii.decode(stringValues)}');
+      if (ASN1Utils.isASN1Tag(stringValues.elementAt(0))) {
+        var parser = ASN1Parser(stringValues);
+        var next = parser.nextObject();
+        var dump = next.dump(spaces: spaces + dumpIndent);
+        sb.write('BIT STRING\n$dump');
+      } else {
+        sb.write(
+            'BIT STRING ${ascii.decode(stringValues, allowInvalid: true)}');
+      }
     }
     return sb.toString();
   }
