@@ -21,6 +21,20 @@ void main() {
     expect(asn1Object.valueBytes, valueBytes);
   });
 
+  test('Test decode DER with unused bit', () {
+    var bytes = Uint8List.fromList([0x03, 0x03, 0x00, 0x05, 0xA0]);
+
+    var valueBytes = Uint8List.fromList([0x00, 0x05, 0xA0]);
+
+    var asn1Object = ASN1BitString.fromBytes(bytes);
+    expect(asn1Object.tag, 3);
+    expect(asn1Object.isConstructed, false);
+    expect(asn1Object.encodedBytes, bytes);
+    expect(asn1Object.valueByteLength, 3);
+    expect(asn1Object.valueStartPosition, 2);
+    expect(asn1Object.valueBytes, valueBytes);
+  });
+
   test('Test decode BER Long Form Length', () {
     var bytes = Uint8List.fromList([0x03, 0x81, 0x04, 0x06, 0x6e, 0x5d, 0xc0]);
 

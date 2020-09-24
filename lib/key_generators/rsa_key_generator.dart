@@ -2,23 +2,24 @@
 
 library impl.key_generator.rsa_key_generator;
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/asymmetric/api.dart";
-import "package:pointycastle/key_generators/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/key_generators/api.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 bool _testBit(BigInt i, int n) {
   return (i & (BigInt.one << n)) != BigInt.zero;
 }
 
 class RSAKeyGenerator implements KeyGenerator {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(KeyGenerator, "RSA", () => RSAKeyGenerator());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(KeyGenerator, 'RSA', () => RSAKeyGenerator());
 
   SecureRandom _random;
   RSAKeyGeneratorParameters _params;
 
-  String get algorithmName => "RSA";
+  @override
+  String get algorithmName => 'RSA';
 
   @override
   void init(CipherParameters params) {
@@ -26,19 +27,20 @@ class RSAKeyGenerator implements KeyGenerator {
       _random = params.random;
       _params = params.parameters;
     } else {
-      _random = new SecureRandom();
+      _random = SecureRandom();
       _params = params;
     }
 
     if (_params.bitStrength < 12) {
-      throw new ArgumentError("key bit strength cannot be smaller than 12");
+      throw ArgumentError('key bit strength cannot be smaller than 12');
     }
 
     if (!_testBit(_params.publicExponent, 0)) {
-      throw new ArgumentError("Public exponent cannot be even");
+      throw ArgumentError('Public exponent cannot be even');
     }
   }
 
+  @override
   AsymmetricKeyPair generateKeyPair() {
     BigInt p, q, n, e;
 
@@ -117,138 +119,137 @@ class RSAKeyGenerator implements KeyGenerator {
     var phi = (pSub1 * qSub1);
     var d = e.modInverse(phi);
 
-    return new AsymmetricKeyPair(
-        new RSAPublicKey(n, e), new RSAPrivateKey(n, d, p, q, e));
+    return AsymmetricKeyPair(RSAPublicKey(n, e), RSAPrivateKey(n, d, p, q, e));
   }
 }
 
-/** [List] of low primes */
+/// [List] of low primes
 final List<BigInt> _lowprimes = [
-  new BigInt.from(2),
-  new BigInt.from(3),
-  new BigInt.from(5),
-  new BigInt.from(7),
-  new BigInt.from(11),
-  new BigInt.from(13),
-  new BigInt.from(17),
-  new BigInt.from(19),
-  new BigInt.from(23),
-  new BigInt.from(29),
-  new BigInt.from(31),
-  new BigInt.from(37),
-  new BigInt.from(41),
-  new BigInt.from(43),
-  new BigInt.from(47),
-  new BigInt.from(53),
-  new BigInt.from(59),
-  new BigInt.from(61),
-  new BigInt.from(67),
-  new BigInt.from(71),
-  new BigInt.from(73),
-  new BigInt.from(79),
-  new BigInt.from(83),
-  new BigInt.from(89),
-  new BigInt.from(97),
-  new BigInt.from(101),
-  new BigInt.from(103),
-  new BigInt.from(107),
-  new BigInt.from(109),
-  new BigInt.from(113),
-  new BigInt.from(127),
-  new BigInt.from(131),
-  new BigInt.from(137),
-  new BigInt.from(139),
-  new BigInt.from(149),
-  new BigInt.from(151),
-  new BigInt.from(157),
-  new BigInt.from(163),
-  new BigInt.from(167),
-  new BigInt.from(173),
-  new BigInt.from(179),
-  new BigInt.from(181),
-  new BigInt.from(191),
-  new BigInt.from(193),
-  new BigInt.from(197),
-  new BigInt.from(199),
-  new BigInt.from(211),
-  new BigInt.from(223),
-  new BigInt.from(227),
-  new BigInt.from(229),
-  new BigInt.from(233),
-  new BigInt.from(239),
-  new BigInt.from(241),
-  new BigInt.from(251),
-  new BigInt.from(257),
-  new BigInt.from(263),
-  new BigInt.from(269),
-  new BigInt.from(271),
-  new BigInt.from(277),
-  new BigInt.from(281),
-  new BigInt.from(283),
-  new BigInt.from(293),
-  new BigInt.from(307),
-  new BigInt.from(311),
-  new BigInt.from(313),
-  new BigInt.from(317),
-  new BigInt.from(331),
-  new BigInt.from(337),
-  new BigInt.from(347),
-  new BigInt.from(349),
-  new BigInt.from(353),
-  new BigInt.from(359),
-  new BigInt.from(367),
-  new BigInt.from(373),
-  new BigInt.from(379),
-  new BigInt.from(383),
-  new BigInt.from(389),
-  new BigInt.from(397),
-  new BigInt.from(401),
-  new BigInt.from(409),
-  new BigInt.from(419),
-  new BigInt.from(421),
-  new BigInt.from(431),
-  new BigInt.from(433),
-  new BigInt.from(439),
-  new BigInt.from(443),
-  new BigInt.from(449),
-  new BigInt.from(457),
-  new BigInt.from(461),
-  new BigInt.from(463),
-  new BigInt.from(467),
-  new BigInt.from(479),
-  new BigInt.from(487),
-  new BigInt.from(491),
-  new BigInt.from(499),
-  new BigInt.from(503),
-  new BigInt.from(509)
+  BigInt.from(2),
+  BigInt.from(3),
+  BigInt.from(5),
+  BigInt.from(7),
+  BigInt.from(11),
+  BigInt.from(13),
+  BigInt.from(17),
+  BigInt.from(19),
+  BigInt.from(23),
+  BigInt.from(29),
+  BigInt.from(31),
+  BigInt.from(37),
+  BigInt.from(41),
+  BigInt.from(43),
+  BigInt.from(47),
+  BigInt.from(53),
+  BigInt.from(59),
+  BigInt.from(61),
+  BigInt.from(67),
+  BigInt.from(71),
+  BigInt.from(73),
+  BigInt.from(79),
+  BigInt.from(83),
+  BigInt.from(89),
+  BigInt.from(97),
+  BigInt.from(101),
+  BigInt.from(103),
+  BigInt.from(107),
+  BigInt.from(109),
+  BigInt.from(113),
+  BigInt.from(127),
+  BigInt.from(131),
+  BigInt.from(137),
+  BigInt.from(139),
+  BigInt.from(149),
+  BigInt.from(151),
+  BigInt.from(157),
+  BigInt.from(163),
+  BigInt.from(167),
+  BigInt.from(173),
+  BigInt.from(179),
+  BigInt.from(181),
+  BigInt.from(191),
+  BigInt.from(193),
+  BigInt.from(197),
+  BigInt.from(199),
+  BigInt.from(211),
+  BigInt.from(223),
+  BigInt.from(227),
+  BigInt.from(229),
+  BigInt.from(233),
+  BigInt.from(239),
+  BigInt.from(241),
+  BigInt.from(251),
+  BigInt.from(257),
+  BigInt.from(263),
+  BigInt.from(269),
+  BigInt.from(271),
+  BigInt.from(277),
+  BigInt.from(281),
+  BigInt.from(283),
+  BigInt.from(293),
+  BigInt.from(307),
+  BigInt.from(311),
+  BigInt.from(313),
+  BigInt.from(317),
+  BigInt.from(331),
+  BigInt.from(337),
+  BigInt.from(347),
+  BigInt.from(349),
+  BigInt.from(353),
+  BigInt.from(359),
+  BigInt.from(367),
+  BigInt.from(373),
+  BigInt.from(379),
+  BigInt.from(383),
+  BigInt.from(389),
+  BigInt.from(397),
+  BigInt.from(401),
+  BigInt.from(409),
+  BigInt.from(419),
+  BigInt.from(421),
+  BigInt.from(431),
+  BigInt.from(433),
+  BigInt.from(439),
+  BigInt.from(443),
+  BigInt.from(449),
+  BigInt.from(457),
+  BigInt.from(461),
+  BigInt.from(463),
+  BigInt.from(467),
+  BigInt.from(479),
+  BigInt.from(487),
+  BigInt.from(491),
+  BigInt.from(499),
+  BigInt.from(503),
+  BigInt.from(509)
 ];
 
 final BigInt _lplim = (BigInt.one << 26) ~/ _lowprimes.last;
 
-final BigInt _bigTwo = new BigInt.from(2);
+final BigInt _bigTwo = BigInt.from(2);
 
-/** return index of lowest 1-bit in x, x < 2^31 */
+/// return index of lowest 1-bit in x, x < 2^31
 int _lbit(BigInt x) {
   // Implementation borrowed from bignum.BigIntegerDartvm.
   if (x == BigInt.zero) return -1;
-  int r = 0;
-  while ((x & new BigInt.from(0xffffffff)) == BigInt.zero) {
+  var r = 0;
+  while ((x & BigInt.from(0xffffffff)) == BigInt.zero) {
     x >>= 32;
     r += 32;
   }
-  if ((x & new BigInt.from(0xffff)) == BigInt.zero) {
+  if ((x & BigInt.from(0xffff)) == BigInt.zero) {
     x >>= 16;
     r += 16;
   }
-  if ((x & new BigInt.from(0xff)) == BigInt.zero) {
+  if ((x & BigInt.from(0xff)) == BigInt.zero) {
     x >>= 8;
     r += 8;
   }
-  if ((x & new BigInt.from(0xf)) == BigInt.zero) {
+  if ((x & BigInt.from(0xf)) == BigInt.zero) {
     x >>= 4;
     r += 4;
   }
-  if ((x & new BigInt.from(3)) == BigInt.zero) {
+  if ((x & BigInt.from(3)) == BigInt.zero) {
     x >>= 2;
     r += 2;
   }
@@ -256,7 +257,7 @@ int _lbit(BigInt x) {
   return r;
 }
 
-/** true if probably prime (HAC 4.24, Miller-Rabin) */
+/// true if probably prime (HAC 4.24, Miller-Rabin) */
 bool _millerRabin(BigInt b, int t) {
   // Implementation borrowed from bignum.BigIntegerDartvm.
   var n1 = b - BigInt.one;
@@ -281,21 +282,29 @@ bool _millerRabin(BigInt b, int t) {
   return true;
 }
 
-/** test primality with certainty >= 1-.5^t */
+/// test primality with certainty >= 1-.5^t */
 bool _isProbablePrime(BigInt b, int t) {
   // Implementation borrowed from bignum.BigIntegerDartvm.
-  var i, x = b.abs();
+  var i;
+  var x = b.abs();
   if (b <= _lowprimes.last) {
-    for (i = 0; i < _lowprimes.length; ++i) if (b == _lowprimes[i]) return true;
+    for (i = 0; i < _lowprimes.length; ++i) {
+      if (b == _lowprimes[i]) return true;
+    }
     return false;
   }
   if (x.isEven) return false;
   i = 1;
   while (i < _lowprimes.length) {
     var m = _lowprimes[i], j = i + 1;
-    while (j < _lowprimes.length && m < _lplim) m *= _lowprimes[j++];
+    while (j < _lowprimes.length && m < _lplim) {
+      m *= _lowprimes[j++];
+    }
     m = x % m;
-    while (i < j) if (m % _lowprimes[i++] == 0) return false;
+    while (i < j)
+      if (m % _lowprimes[i++] == 0) {
+        return false;
+      }
   }
   return _millerRabin(x, t);
 }
@@ -305,7 +314,7 @@ BigInt generateProbablePrime(int bitLength, int certainty, SecureRandom rnd) {
     return BigInt.one;
   }
 
-  BigInt candidate = rnd.nextBigInteger(bitLength);
+  var candidate = rnd.nextBigInteger(bitLength);
 
   // force MSB set
   if (!_testBit(candidate, bitLength - 1)) {

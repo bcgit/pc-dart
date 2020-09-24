@@ -2,10 +2,10 @@
 
 library api.ecc;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 /// Standard ECC curve description
 abstract class ECDomainParameters {
@@ -64,6 +64,7 @@ abstract class ECPoint {
 
   bool get isInfinity;
 
+  @override
   bool operator ==(other);
 
   Uint8List getEncoded([bool compressed = true]);
@@ -78,6 +79,9 @@ abstract class ECPoint {
 
   /// Multiply this point by the given number [k].
   ECPoint operator *(BigInt k);
+
+  @override
+  int get hashCode => super.hashCode;
 }
 
 /// An elliptic curve
@@ -96,12 +100,10 @@ abstract class ECCurve {
   /// Create an [ECPoint] on its curve from its coordinates
   ECPoint createPoint(BigInt x, BigInt y, [bool withCompression = false]);
 
-  ECPoint decompressPoint(int yTilde, BigInt X1);
+  ECPoint decompressPoint(int yTilde, BigInt x1);
 
-  /**
-   * Decode a point on this curve from its ASN.1 encoding. The different encodings are taken account of, including point
-   * compression for Fp (X9.62 s 4.2.1 pg 17).
-   */
+  /// Decode a point on this curve from its ASN.1 encoding. The different encodings are taken account of, including point
+  /// compression for Fp (X9.62 s 4.2.1 pg 17).
   ECPoint decodePoint(List<int> encoded);
 }
 
@@ -121,13 +123,14 @@ class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
 
   /// Create an ECC private key for the given d and domain parameters.
   ECPrivateKey(this.d, ECDomainParameters parameters) : super(parameters);
-
+  @override
   bool operator ==(other) {
     if (other == null) return false;
     if (other is! ECPrivateKey) return false;
-    return (other.parameters == this.parameters) && (other.d == this.d);
+    return (other.parameters == parameters) && (other.d == d);
   }
 
+  @override
   int get hashCode {
     return parameters.hashCode + d.hashCode;
   }
@@ -140,13 +143,14 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
 
   /// Create an ECC public key for the given Q and domain parameters.
   ECPublicKey(this.Q, ECDomainParameters parameters) : super(parameters);
-
+  @override
   bool operator ==(other) {
     if (other == null) return false;
     if (other is! ECPublicKey) return false;
-    return (other.parameters == this.parameters) && (other.Q == this.Q);
+    return (other.parameters == parameters) && (other.Q == Q);
   }
 
+  @override
   int get hashCode {
     return parameters.hashCode + Q.hashCode;
   }
@@ -169,23 +173,25 @@ class ECSignature implements Signature {
   /// This is required to validate this signature with some libraries such as libsecp256k1
   /// which enforce lower-s form for all signatures to combat ecdsa signature malleability
   ///
-  /// Returns this if the signature was already normalized, or a new copy if it is changed.
+  /// Returns this if the signature was already normalized, or a copy if it is changed.
   ///
   ECSignature normalize(ECDomainParameters curveParams) {
     if (isNormalized(curveParams)) {
       return this;
     }
-    return new ECSignature(r, curveParams.n - s);
+    return ECSignature(r, curveParams.n - s);
   }
 
-  String toString() => "(${r.toString()},${s.toString()})";
-
+  @override
+  String toString() => '(${r.toString()},${s.toString()})';
+  @override
   bool operator ==(other) {
     if (other == null) return false;
     if (other is! ECSignature) return false;
-    return (other.r == this.r) && (other.s == this.s);
+    return (other.r == r) && (other.s == s);
   }
 
+  @override
   int get hashCode {
     return r.hashCode + s.hashCode;
   }

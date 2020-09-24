@@ -17,7 +17,7 @@ bool _testBit(BigInt i, int n) {
 class ECDSASigner implements Signer {
   /// Intended for internal use.
   // ignore: non_constant_identifier_names
-  static final FactoryConfig FACTORY_CONFIG = DynamicFactoryConfig.regex(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.regex(
       Signer, r'^(.+)/(DET-)?ECDSA$', (_, final Match match) {
     // ignore: omit_local_variable_types
     final String digestName = match.group(1);
@@ -44,7 +44,7 @@ class ECDSASigner implements Signer {
 
   @override
   String get algorithmName =>
-      "${_digest.algorithmName}/${_kMac == null ? "" : "DET-"}ECDSA";
+      '${_digest.algorithmName}/${_kMac == null ? '' : 'DET-'}ECDSA';
 
   @override
   void reset() {}

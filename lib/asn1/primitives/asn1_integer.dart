@@ -48,8 +48,26 @@ class ASN1Integer extends ASN1Object {
     if (encodingRule != ASN1EncodingRule.ENCODING_DER) {
       throw UnsupportedAsn1EncodingRuleException(encodingRule);
     }
-    valueBytes = encodeBigInt(integer);
+    if (integer.bitLength == 0) {
+      if (integer == BigInt.from(-1)) {
+        valueBytes = Uint8List.fromList([0xff]);
+      } else {
+        valueBytes = Uint8List.fromList([0]);
+      }
+    } else {
+      valueBytes = encodeBigInt(integer);
+    }
     valueByteLength = valueBytes.length;
     return super.encode();
+  }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('INTEGER ${integer.toString().toUpperCase()}');
+    return sb.toString();
   }
 }

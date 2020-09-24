@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
@@ -105,5 +106,30 @@ class ASN1OctetString extends ASN1Object {
       return l + 2;
     }
     return l;
+  }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    if (isConstructed) {
+      sb.write('OCTET STRING (${elements.length} elem)');
+      for (var e in elements) {
+        var dump = e.dump(spaces: spaces + dumpIndent);
+        sb.write('\n $dump');
+      }
+    } else {
+      if (ASN1Utils.isASN1Tag(octets.elementAt(0))) {
+        var parser = ASN1Parser(octets);
+        var next = parser.nextObject();
+        var dump = next.dump(spaces: spaces + dumpIndent);
+        sb.write('OCTET STRING\n$dump');
+      } else {
+        sb.write('OCTET STRING ${ascii.decode(octets, allowInvalid: true)}');
+      }
+    }
+    return sb.toString();
   }
 }

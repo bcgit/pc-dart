@@ -2,9 +2,9 @@
 
 library api.asymmetric;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
+import 'package:pointycastle/api.dart';
 
 /// Base class for asymmetric keys in RSA
 abstract class RSAAsymmetricKey implements AsymmetricKey {
@@ -28,7 +28,7 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 
   /// Create an RSA private key for the given parameters.
   RSAPrivateKey(BigInt modulus, BigInt privateExponent, this.p, this.q,
-      [BigInt this.pubExponent])
+      [this.pubExponent])
       : super(modulus, privateExponent);
 
   /// Get private exponent [d] = e^-1
@@ -41,14 +41,16 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
   /// Get the public exponent (e)
   BigInt get publicExponent => pubExponent;
 
+  @override
   bool operator ==(other) {
     if (other is RSAPrivateKey) {
-      return other.privateExponent == this.privateExponent &&
-          other.modulus == this.modulus;
+      return other.privateExponent == privateExponent &&
+          other.modulus == modulus;
     }
     return false;
   }
 
+  @override
   int get hashCode => modulus.hashCode + privateExponent.hashCode;
 }
 
@@ -64,14 +66,16 @@ class RSAPublicKey extends RSAAsymmetricKey implements PublicKey {
   /// Get the public exponent.
   BigInt get publicExponent => exponent;
 
+  @override
   bool operator ==(other) {
     if (other is RSAPublicKey) {
-      return (other.modulus == this.modulus) &&
-          (other.publicExponent == this.publicExponent);
+      return (other.modulus == modulus) &&
+          (other.publicExponent == publicExponent);
     }
     return false;
   }
 
+  @override
   int get hashCode => modulus.hashCode + publicExponent.hashCode;
 }
 
@@ -81,21 +85,23 @@ class RSASignature implements Signature {
 
   RSASignature(this.bytes);
 
+  @override
   String toString() => bytes.toString();
-
+  @override
   bool operator ==(other) {
     if (other == null) return false;
     if (other is! RSASignature) return false;
-    if (other.bytes.length != this.bytes.length) return false;
+    if (other.bytes.length != bytes.length) return false;
 
-    for (var i = 0; i < this.bytes.length; i++) {
-      if (this.bytes[i] != other.bytes[i]) {
+    for (var i = 0; i < bytes.length; i++) {
+      if (bytes[i] != other.bytes[i]) {
         return false;
       }
     }
     return true;
   }
 
+  @override
   int get hashCode => bytes.hashCode;
 }
 

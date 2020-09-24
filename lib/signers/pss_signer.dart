@@ -13,7 +13,7 @@ import '../src/utils.dart';
 
 class PSSSigner implements Signer {
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
+  static final FactoryConfig factoryConfig =
       DynamicFactoryConfig.suffix(Signer, '/PSS', (_, Match match) {
     final digestName = match.group(1);
     return () => PSSSigner(

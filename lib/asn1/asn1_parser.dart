@@ -5,6 +5,7 @@ import 'package:pointycastle/asn1/asn1_tags.dart';
 import 'package:pointycastle/asn1/asn1_utils.dart';
 import 'package:pointycastle/asn1/primitives/asn1_bit_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_boolean.dart';
+import 'package:pointycastle/asn1/primitives/asn1_generalized_time.dart';
 import 'package:pointycastle/asn1/primitives/asn1_ia5_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_integer.dart';
 import 'package:pointycastle/asn1/primitives/asn1_null.dart';
@@ -13,6 +14,7 @@ import 'package:pointycastle/asn1/primitives/asn1_octet_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_printable_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_sequence.dart';
 import 'package:pointycastle/asn1/primitives/asn1_set.dart';
+import 'package:pointycastle/asn1/primitives/asn1_teletext_string.dart';
 import 'package:pointycastle/asn1/primitives/asn1_utc_time.dart';
 import 'package:pointycastle/asn1/primitives/asn1_utf8_string.dart';
 import 'package:pointycastle/asn1/unsupported_asn1_tag_exception.dart';
@@ -46,7 +48,7 @@ class ASN1Parser {
   /// Parses the next object in the [bytes].
   ///
   ASN1Object nextObject() {
-    // Get the curren tag in the list bytes
+    // Get the current tag in the list bytes
     var tag = bytes[_position];
 
     // Get the length of the value bytes for the current object
@@ -66,11 +68,17 @@ class ASN1Parser {
 
     // Parse the view and the tag to an ASN1Object
     var isConstructed = ASN1Utils.isConstructed(tag);
+    var isPrimitive = (0xC0 & tag) == 0;
+    //var isApplication = (0x40 & tag) != 0;
+
     ASN1Object obj;
     if (isConstructed) {
       obj = _createConstructed(tag, subBytes);
-    } else {
+    } else if (isPrimitive) {
       obj = _createPrimitive(tag, subBytes);
+    } else {
+      // create a vanilla object
+      obj = ASN1Object.fromBytes(subBytes);
     }
 
     // Update the position
@@ -95,6 +103,8 @@ class ASN1Parser {
         return ASN1OctetString.fromBytes(bytes);
       case ASN1Tags.PRINTABLE_STRING_CONSTRUCTED:
         return ASN1PrintableString.fromBytes(bytes);
+      case ASN1Tags.T61_STRING_CONSTRUCTED:
+        return ASN1TeletextString.fromBytes(bytes);
       case 0xA0:
       case 0xA1:
       case 0xA2:
@@ -131,6 +141,10 @@ class ASN1Parser {
         return ASN1PrintableString.fromBytes(bytes);
       case ASN1Tags.UTC_TIME:
         return ASN1UtcTime.fromBytes(bytes);
+      case ASN1Tags.T61_STRING:
+        return ASN1TeletextString.fromBytes(bytes);
+      case ASN1Tags.GENERALIZED_TIME:
+        return ASN1GeneralizedTime.fromBytes(bytes);
       default:
         throw UnsupportedASN1TagException(tag);
     }

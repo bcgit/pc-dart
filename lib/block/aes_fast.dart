@@ -2,121 +2,123 @@
 
 library impl.block_cipher.aes_fast;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/base_block_cipher.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/base_block_cipher.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
-/**
- * An implementation of the AES (Rijndael), from FIPS-197.
- *
- * For further details see: [http://csrc.nist.gov/encryption/aes/]
- *
- * This implementation is based on optimizations from Dr. Brian Gladman's paper
- * and C code at [http://fp.gladman.plus.com/cryptography_technology/rijndael/]
- *
- * There are three levels of tradeoff of speed vs memory and they are written
- * as three separate classes from which to choose.
- *
- * The fastest uses 8Kbytes of static tables to precompute round calculations,
- * 4 256 word tables for encryption and 4 for decryption.
- *
- * The middle performance version uses only one 256 word table for each, for a
- * total of 2Kbytes, adding 12 rotate operations per round to compute the values
- * contained in the other tables from the contents of the first.
- *
- * The slowest version uses no static tables at all and computes the values in
- * each round.
-
- * This file contains the fast version with 8Kbytes of static tables for round
- * precomputation.
- */
+/// An implementation of the AES (Rijndael), from FIPS-197.
+///
+/// For further details see: [http://csrc.nist.gov/encryption/aes/]
+///
+/// This implementation is based on optimizations from Dr. Brian Gladman's paper
+/// and C code at [http://fp.gladman.plus.com/cryptography_technology/rijndael/]
+///
+/// There are three levels of tradeoff of speed vs memory and they are written
+/// as three separate classes from which to choose.
+///
+/// The fastest uses 8Kbytes of static tables to precompute round calculations,
+/// 4 256 word tables for encryption and 4 for decryption.
+///
+/// The middle performance version uses only one 256 word table for each, for a
+/// total of 2Kbytes, adding 12 rotate operations per round to compute the values
+/// contained in the other tables from the contents of the first.
+///
+/// The slowest version uses no static tables at all and computes the values in
+/// each round.
+/// This file contains the fast version with 8Kbytes of static tables for round
+/// precomputation.
 class AESFastEngine extends BaseBlockCipher {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(BlockCipher, "AES", () => AESFastEngine());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(BlockCipher, 'AES', () => AESFastEngine());
 
   static const _BLOCK_SIZE = 16;
 
   bool _forEncryption;
   List<List<int>> _workingKey;
-  int _ROUNDS;
-  int _C0, _C1, _C2, _C3;
+  int _rounds;
+  int _c0, _c1, _c2, _c3;
 
-  String get algorithmName => "AES";
+  @override
+  String get algorithmName => 'AES';
 
+  @override
   int get blockSize => _BLOCK_SIZE;
 
+  @override
   void reset() {
-    _ROUNDS = 0;
-    _C0 = _C1 = _C2 = _C3 = 0;
+    _rounds = 0;
+    _c0 = _c1 = _c2 = _c3 = 0;
     _forEncryption = false;
     _workingKey = null;
   }
 
+  @override
   void init(bool forEncryption, covariant KeyParameter params) {
     var key = params.key;
 
-    int KC = (key.lengthInBytes / 4).floor(); // key length in words
-    if (((KC != 4) && (KC != 6) && (KC != 8)) ||
-        ((KC * 4) != key.lengthInBytes)) {
-      throw new ArgumentError("Key length must be 128/192/256 bits");
+    var kc = (key.lengthInBytes / 4).floor(); // key length in words
+    if (((kc != 4) && (kc != 6) && (kc != 8)) ||
+        ((kc * 4) != key.lengthInBytes)) {
+      throw ArgumentError('Key length must be 128/192/256 bits');
     }
 
-    this._forEncryption = forEncryption;
-    _ROUNDS = KC +
+    _forEncryption = forEncryption;
+    _rounds = kc +
         6; // This is not always true for the generalized Rijndael that allows larger block sizes
-    _workingKey = new List.generate(
-        _ROUNDS + 1, (int i) => new List<int>(4)); // 4 words in a block
+    _workingKey = List.generate(
+        _rounds + 1, (int i) => List<int>(4)); // 4 words in a block
 
     // Copy the key into the round key array.
-    var keyView = new ByteData.view(
+    var keyView = ByteData.view(
         params.key.buffer, params.key.offsetInBytes, params.key.length);
     for (var i = 0, t = 0; i < key.lengthInBytes; i += 4, t++) {
       var value = unpack32(keyView, i, Endian.little);
       _workingKey[t >> 2][t & 3] = value;
     }
 
-    // While not enough round key material calculated calculate new values.
-    int k = (_ROUNDS + 1) << 2;
-    for (int i = KC; i < k; i++) {
-      int temp = _workingKey[(i - 1) >> 2][(i - 1) & 3].toInt();
-      if ((i % KC) == 0) {
-        temp = _subWord(_shift(temp, 8)) ^ _rcon[((i / KC) - 1).floor()];
-      } else if ((KC > 6) && ((i % KC) == 4)) {
+    // While not enough round key material calculated calculate values.
+    var k = (_rounds + 1) << 2;
+    for (var i = kc; i < k; i++) {
+      var temp = _workingKey[(i - 1) >> 2][(i - 1) & 3].toInt();
+      if ((i % kc) == 0) {
+        temp = _subWord(_shift(temp, 8)) ^ _rcon[((i / kc) - 1).floor()];
+      } else if ((kc > 6) && ((i % kc) == 4)) {
         temp = _subWord(temp);
       }
 
-      var value = _workingKey[(i - KC) >> 2][(i - KC) & 3] ^ temp;
+      var value = _workingKey[(i - kc) >> 2][(i - kc) & 3] ^ temp;
       _workingKey[i >> 2][i & 3] = value;
     }
 
     if (!forEncryption) {
-      for (var j = 1; j < _ROUNDS; j++) {
+      for (var j = 1; j < _rounds; j++) {
         for (var i = 0; i < 4; i++) {
-          var value = _inv_mcol(_workingKey[j][i].toInt());
+          var value = _invMcol(_workingKey[j][i].toInt());
           _workingKey[j][i] = value;
         }
       }
     }
   }
 
+  @override
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if (_workingKey == null) {
-      throw new StateError("AES engine not initialised");
+      throw StateError('AES engine not initialised');
     }
 
     if ((inpOff + (32 / 2)) > inp.lengthInBytes) {
-      throw new ArgumentError("Input buffer too short");
+      throw ArgumentError('Input buffer too short');
     }
 
     if ((outOff + (32 / 2)) > out.lengthInBytes) {
-      throw new ArgumentError("Output buffer too short");
+      throw ArgumentError('Output buffer too short');
     }
 
-    var inpView = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
-    var outView = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
+    var inpView = ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
+    var outView = ByteData.view(out.buffer, out.offsetInBytes, out.length);
     if (_forEncryption) {
       _unpackBlock(inpView, inpOff);
       _encryptBlock(_workingKey);
@@ -130,215 +132,215 @@ class AESFastEngine extends BaseBlockCipher {
     return _BLOCK_SIZE;
   }
 
-  void _encryptBlock(List<List<int>> KW) {
+  void _encryptBlock(List<List<int>> kw) {
     int r, r0, r1, r2, r3;
 
-    _C0 ^= KW[0][0].toInt();
-    _C1 ^= KW[0][1].toInt();
-    _C2 ^= KW[0][2].toInt();
-    _C3 ^= KW[0][3].toInt();
+    _c0 ^= kw[0][0].toInt();
+    _c1 ^= kw[0][1].toInt();
+    _c2 ^= kw[0][2].toInt();
+    _c3 ^= kw[0][3].toInt();
 
     r = 1;
-    while (r < _ROUNDS - 1) {
-      r0 = _T0[_C0 & 255] ^
-          _T1[(_C1 >> 8) & 255] ^
-          _T2[(_C2 >> 16) & 255] ^
-          _T3[(_C3 >> 24) & 255] ^
-          KW[r][0].toInt();
-      r1 = _T0[_C1 & 255] ^
-          _T1[(_C2 >> 8) & 255] ^
-          _T2[(_C3 >> 16) & 255] ^
-          _T3[(_C0 >> 24) & 255] ^
-          KW[r][1].toInt();
-      r2 = _T0[_C2 & 255] ^
-          _T1[(_C3 >> 8) & 255] ^
-          _T2[(_C0 >> 16) & 255] ^
-          _T3[(_C1 >> 24) & 255] ^
-          KW[r][2].toInt();
-      r3 = _T0[_C3 & 255] ^
-          _T1[(_C0 >> 8) & 255] ^
-          _T2[(_C1 >> 16) & 255] ^
-          _T3[(_C2 >> 24) & 255] ^
-          KW[r][3].toInt();
+    while (r < _rounds - 1) {
+      r0 = _t0[_c0 & 255] ^
+          _t1[(_c1 >> 8) & 255] ^
+          _t2[(_c2 >> 16) & 255] ^
+          _t3[(_c3 >> 24) & 255] ^
+          kw[r][0].toInt();
+      r1 = _t0[_c1 & 255] ^
+          _t1[(_c2 >> 8) & 255] ^
+          _t2[(_c3 >> 16) & 255] ^
+          _t3[(_c0 >> 24) & 255] ^
+          kw[r][1].toInt();
+      r2 = _t0[_c2 & 255] ^
+          _t1[(_c3 >> 8) & 255] ^
+          _t2[(_c0 >> 16) & 255] ^
+          _t3[(_c1 >> 24) & 255] ^
+          kw[r][2].toInt();
+      r3 = _t0[_c3 & 255] ^
+          _t1[(_c0 >> 8) & 255] ^
+          _t2[(_c1 >> 16) & 255] ^
+          _t3[(_c2 >> 24) & 255] ^
+          kw[r][3].toInt();
       r++;
-      _C0 = _T0[r0 & 255] ^
-          _T1[(r1 >> 8) & 255] ^
-          _T2[(r2 >> 16) & 255] ^
-          _T3[(r3 >> 24) & 255] ^
-          KW[r][0].toInt();
-      _C1 = _T0[r1 & 255] ^
-          _T1[(r2 >> 8) & 255] ^
-          _T2[(r3 >> 16) & 255] ^
-          _T3[(r0 >> 24) & 255] ^
-          KW[r][1].toInt();
-      _C2 = _T0[r2 & 255] ^
-          _T1[(r3 >> 8) & 255] ^
-          _T2[(r0 >> 16) & 255] ^
-          _T3[(r1 >> 24) & 255] ^
-          KW[r][2].toInt();
-      _C3 = _T0[r3 & 255] ^
-          _T1[(r0 >> 8) & 255] ^
-          _T2[(r1 >> 16) & 255] ^
-          _T3[(r2 >> 24) & 255] ^
-          KW[r][3].toInt();
+      _c0 = _t0[r0 & 255] ^
+          _t1[(r1 >> 8) & 255] ^
+          _t2[(r2 >> 16) & 255] ^
+          _t3[(r3 >> 24) & 255] ^
+          kw[r][0].toInt();
+      _c1 = _t0[r1 & 255] ^
+          _t1[(r2 >> 8) & 255] ^
+          _t2[(r3 >> 16) & 255] ^
+          _t3[(r0 >> 24) & 255] ^
+          kw[r][1].toInt();
+      _c2 = _t0[r2 & 255] ^
+          _t1[(r3 >> 8) & 255] ^
+          _t2[(r0 >> 16) & 255] ^
+          _t3[(r1 >> 24) & 255] ^
+          kw[r][2].toInt();
+      _c3 = _t0[r3 & 255] ^
+          _t1[(r0 >> 8) & 255] ^
+          _t2[(r1 >> 16) & 255] ^
+          _t3[(r2 >> 24) & 255] ^
+          kw[r][3].toInt();
       r++;
     }
 
-    r0 = _T0[_C0 & 255] ^
-        _T1[(_C1 >> 8) & 255] ^
-        _T2[(_C2 >> 16) & 255] ^
-        _T3[(_C3 >> 24) & 255] ^
-        KW[r][0].toInt();
-    r1 = _T0[_C1 & 255] ^
-        _T1[(_C2 >> 8) & 255] ^
-        _T2[(_C3 >> 16) & 255] ^
-        _T3[(_C0 >> 24) & 255] ^
-        KW[r][1].toInt();
-    r2 = _T0[_C2 & 255] ^
-        _T1[(_C3 >> 8) & 255] ^
-        _T2[(_C0 >> 16) & 255] ^
-        _T3[(_C1 >> 24) & 255] ^
-        KW[r][2].toInt();
-    r3 = _T0[_C3 & 255] ^
-        _T1[(_C0 >> 8) & 255] ^
-        _T2[(_C1 >> 16) & 255] ^
-        _T3[(_C2 >> 24) & 255] ^
-        KW[r][3].toInt();
+    r0 = _t0[_c0 & 255] ^
+        _t1[(_c1 >> 8) & 255] ^
+        _t2[(_c2 >> 16) & 255] ^
+        _t3[(_c3 >> 24) & 255] ^
+        kw[r][0].toInt();
+    r1 = _t0[_c1 & 255] ^
+        _t1[(_c2 >> 8) & 255] ^
+        _t2[(_c3 >> 16) & 255] ^
+        _t3[(_c0 >> 24) & 255] ^
+        kw[r][1].toInt();
+    r2 = _t0[_c2 & 255] ^
+        _t1[(_c3 >> 8) & 255] ^
+        _t2[(_c0 >> 16) & 255] ^
+        _t3[(_c1 >> 24) & 255] ^
+        kw[r][2].toInt();
+    r3 = _t0[_c3 & 255] ^
+        _t1[(_c0 >> 8) & 255] ^
+        _t2[(_c1 >> 16) & 255] ^
+        _t3[(_c2 >> 24) & 255] ^
+        kw[r][3].toInt();
     r++;
 
     // the final round's table is a simple function of S so we don't use a whole other four tables for it
-    _C0 = (_S[r0 & 255] & 255) ^
-        ((_S[(r1 >> 8) & 255] & 255) << 8) ^
-        ((_S[(r2 >> 16) & 255] & 255) << 16) ^
-        (_S[(r3 >> 24) & 255] << 24) ^
-        KW[r][0].toInt();
-    _C1 = (_S[r1 & 255] & 255) ^
-        ((_S[(r2 >> 8) & 255] & 255) << 8) ^
-        ((_S[(r3 >> 16) & 255] & 255) << 16) ^
-        (_S[(r0 >> 24) & 255] << 24) ^
-        KW[r][1].toInt();
-    _C2 = (_S[r2 & 255] & 255) ^
-        ((_S[(r3 >> 8) & 255] & 255) << 8) ^
-        ((_S[(r0 >> 16) & 255] & 255) << 16) ^
-        (_S[(r1 >> 24) & 255] << 24) ^
-        KW[r][2].toInt();
-    _C3 = (_S[r3 & 255] & 255) ^
-        ((_S[(r0 >> 8) & 255] & 255) << 8) ^
-        ((_S[(r1 >> 16) & 255] & 255) << 16) ^
-        (_S[(r2 >> 24) & 255] << 24) ^
-        KW[r][3].toInt();
+    _c0 = (_s[r0 & 255] & 255) ^
+        ((_s[(r1 >> 8) & 255] & 255) << 8) ^
+        ((_s[(r2 >> 16) & 255] & 255) << 16) ^
+        (_s[(r3 >> 24) & 255] << 24) ^
+        kw[r][0].toInt();
+    _c1 = (_s[r1 & 255] & 255) ^
+        ((_s[(r2 >> 8) & 255] & 255) << 8) ^
+        ((_s[(r3 >> 16) & 255] & 255) << 16) ^
+        (_s[(r0 >> 24) & 255] << 24) ^
+        kw[r][1].toInt();
+    _c2 = (_s[r2 & 255] & 255) ^
+        ((_s[(r3 >> 8) & 255] & 255) << 8) ^
+        ((_s[(r0 >> 16) & 255] & 255) << 16) ^
+        (_s[(r1 >> 24) & 255] << 24) ^
+        kw[r][2].toInt();
+    _c3 = (_s[r3 & 255] & 255) ^
+        ((_s[(r0 >> 8) & 255] & 255) << 8) ^
+        ((_s[(r1 >> 16) & 255] & 255) << 16) ^
+        (_s[(r2 >> 24) & 255] << 24) ^
+        kw[r][3].toInt();
   }
 
-  void _decryptBlock(List<List<int>> KW) {
+  void _decryptBlock(List<List<int>> kw) {
     int r, r0, r1, r2, r3;
 
-    _C0 ^= KW[_ROUNDS][0].toInt();
-    _C1 ^= KW[_ROUNDS][1].toInt();
-    _C2 ^= KW[_ROUNDS][2].toInt();
-    _C3 ^= KW[_ROUNDS][3].toInt();
+    _c0 ^= kw[_rounds][0].toInt();
+    _c1 ^= kw[_rounds][1].toInt();
+    _c2 ^= kw[_rounds][2].toInt();
+    _c3 ^= kw[_rounds][3].toInt();
 
-    r = _ROUNDS - 1;
+    r = _rounds - 1;
     while (r > 1) {
-      r0 = _Tinv0[_C0 & 255] ^
-          _Tinv1[(_C3 >> 8) & 255] ^
-          _Tinv2[(_C2 >> 16) & 255] ^
-          _Tinv3[(_C1 >> 24) & 255] ^
-          KW[r][0].toInt();
-      r1 = _Tinv0[_C1 & 255] ^
-          _Tinv1[(_C0 >> 8) & 255] ^
-          _Tinv2[(_C3 >> 16) & 255] ^
-          _Tinv3[(_C2 >> 24) & 255] ^
-          KW[r][1].toInt();
-      r2 = _Tinv0[_C2 & 255] ^
-          _Tinv1[(_C1 >> 8) & 255] ^
-          _Tinv2[(_C0 >> 16) & 255] ^
-          _Tinv3[(_C3 >> 24) & 255] ^
-          KW[r][2].toInt();
-      r3 = _Tinv0[_C3 & 255] ^
-          _Tinv1[(_C2 >> 8) & 255] ^
-          _Tinv2[(_C1 >> 16) & 255] ^
-          _Tinv3[(_C0 >> 24) & 255] ^
-          KW[r][3].toInt();
+      r0 = _tinv0[_c0 & 255] ^
+          _tinv1[(_c3 >> 8) & 255] ^
+          _tinv2[(_c2 >> 16) & 255] ^
+          _tinv3[(_c1 >> 24) & 255] ^
+          kw[r][0].toInt();
+      r1 = _tinv0[_c1 & 255] ^
+          _tinv1[(_c0 >> 8) & 255] ^
+          _tinv2[(_c3 >> 16) & 255] ^
+          _tinv3[(_c2 >> 24) & 255] ^
+          kw[r][1].toInt();
+      r2 = _tinv0[_c2 & 255] ^
+          _tinv1[(_c1 >> 8) & 255] ^
+          _tinv2[(_c0 >> 16) & 255] ^
+          _tinv3[(_c3 >> 24) & 255] ^
+          kw[r][2].toInt();
+      r3 = _tinv0[_c3 & 255] ^
+          _tinv1[(_c2 >> 8) & 255] ^
+          _tinv2[(_c1 >> 16) & 255] ^
+          _tinv3[(_c0 >> 24) & 255] ^
+          kw[r][3].toInt();
       r--;
-      _C0 = _Tinv0[r0 & 255] ^
-          _Tinv1[(r3 >> 8) & 255] ^
-          _Tinv2[(r2 >> 16) & 255] ^
-          _Tinv3[(r1 >> 24) & 255] ^
-          KW[r][0].toInt();
-      _C1 = _Tinv0[r1 & 255] ^
-          _Tinv1[(r0 >> 8) & 255] ^
-          _Tinv2[(r3 >> 16) & 255] ^
-          _Tinv3[(r2 >> 24) & 255] ^
-          KW[r][1].toInt();
-      _C2 = _Tinv0[r2 & 255] ^
-          _Tinv1[(r1 >> 8) & 255] ^
-          _Tinv2[(r0 >> 16) & 255] ^
-          _Tinv3[(r3 >> 24) & 255] ^
-          KW[r][2].toInt();
-      _C3 = _Tinv0[r3 & 255] ^
-          _Tinv1[(r2 >> 8) & 255] ^
-          _Tinv2[(r1 >> 16) & 255] ^
-          _Tinv3[(r0 >> 24) & 255] ^
-          KW[r][3].toInt();
+      _c0 = _tinv0[r0 & 255] ^
+          _tinv1[(r3 >> 8) & 255] ^
+          _tinv2[(r2 >> 16) & 255] ^
+          _tinv3[(r1 >> 24) & 255] ^
+          kw[r][0].toInt();
+      _c1 = _tinv0[r1 & 255] ^
+          _tinv1[(r0 >> 8) & 255] ^
+          _tinv2[(r3 >> 16) & 255] ^
+          _tinv3[(r2 >> 24) & 255] ^
+          kw[r][1].toInt();
+      _c2 = _tinv0[r2 & 255] ^
+          _tinv1[(r1 >> 8) & 255] ^
+          _tinv2[(r0 >> 16) & 255] ^
+          _tinv3[(r3 >> 24) & 255] ^
+          kw[r][2].toInt();
+      _c3 = _tinv0[r3 & 255] ^
+          _tinv1[(r2 >> 8) & 255] ^
+          _tinv2[(r1 >> 16) & 255] ^
+          _tinv3[(r0 >> 24) & 255] ^
+          kw[r][3].toInt();
       r--;
     }
 
-    r0 = _Tinv0[_C0 & 255] ^
-        _Tinv1[(_C3 >> 8) & 255] ^
-        _Tinv2[(_C2 >> 16) & 255] ^
-        _Tinv3[(_C1 >> 24) & 255] ^
-        KW[r][0].toInt();
-    r1 = _Tinv0[_C1 & 255] ^
-        _Tinv1[(_C0 >> 8) & 255] ^
-        _Tinv2[(_C3 >> 16) & 255] ^
-        _Tinv3[(_C2 >> 24) & 255] ^
-        KW[r][1].toInt();
-    r2 = _Tinv0[_C2 & 255] ^
-        _Tinv1[(_C1 >> 8) & 255] ^
-        _Tinv2[(_C0 >> 16) & 255] ^
-        _Tinv3[(_C3 >> 24) & 255] ^
-        KW[r][2].toInt();
-    r3 = _Tinv0[_C3 & 255] ^
-        _Tinv1[(_C2 >> 8) & 255] ^
-        _Tinv2[(_C1 >> 16) & 255] ^
-        _Tinv3[(_C0 >> 24) & 255] ^
-        KW[r][3].toInt();
+    r0 = _tinv0[_c0 & 255] ^
+        _tinv1[(_c3 >> 8) & 255] ^
+        _tinv2[(_c2 >> 16) & 255] ^
+        _tinv3[(_c1 >> 24) & 255] ^
+        kw[r][0].toInt();
+    r1 = _tinv0[_c1 & 255] ^
+        _tinv1[(_c0 >> 8) & 255] ^
+        _tinv2[(_c3 >> 16) & 255] ^
+        _tinv3[(_c2 >> 24) & 255] ^
+        kw[r][1].toInt();
+    r2 = _tinv0[_c2 & 255] ^
+        _tinv1[(_c1 >> 8) & 255] ^
+        _tinv2[(_c0 >> 16) & 255] ^
+        _tinv3[(_c3 >> 24) & 255] ^
+        kw[r][2].toInt();
+    r3 = _tinv0[_c3 & 255] ^
+        _tinv1[(_c2 >> 8) & 255] ^
+        _tinv2[(_c1 >> 16) & 255] ^
+        _tinv3[(_c0 >> 24) & 255] ^
+        kw[r][3].toInt();
 
     // the final round's table is a simple function of Si so we don't use a whole other four tables for it
-    _C0 = (_Si[r0 & 255] & 255) ^
-        ((_Si[(r3 >> 8) & 255] & 255) << 8) ^
-        ((_Si[(r2 >> 16) & 255] & 255) << 16) ^
-        (_Si[(r1 >> 24) & 255] << 24) ^
-        KW[0][0].toInt();
-    _C1 = (_Si[r1 & 255] & 255) ^
-        ((_Si[(r0 >> 8) & 255] & 255) << 8) ^
-        ((_Si[(r3 >> 16) & 255] & 255) << 16) ^
-        (_Si[(r2 >> 24) & 255] << 24) ^
-        KW[0][1].toInt();
-    _C2 = (_Si[r2 & 255] & 255) ^
-        ((_Si[(r1 >> 8) & 255] & 255) << 8) ^
-        ((_Si[(r0 >> 16) & 255] & 255) << 16) ^
-        (_Si[(r3 >> 24) & 255] << 24) ^
-        KW[0][2].toInt();
-    _C3 = (_Si[r3 & 255] & 255) ^
-        ((_Si[(r2 >> 8) & 255] & 255) << 8) ^
-        ((_Si[(r1 >> 16) & 255] & 255) << 16) ^
-        (_Si[(r0 >> 24) & 255] << 24) ^
-        KW[0][3].toInt();
+    _c0 = (_si[r0 & 255] & 255) ^
+        ((_si[(r3 >> 8) & 255] & 255) << 8) ^
+        ((_si[(r2 >> 16) & 255] & 255) << 16) ^
+        (_si[(r1 >> 24) & 255] << 24) ^
+        kw[0][0].toInt();
+    _c1 = (_si[r1 & 255] & 255) ^
+        ((_si[(r0 >> 8) & 255] & 255) << 8) ^
+        ((_si[(r3 >> 16) & 255] & 255) << 16) ^
+        (_si[(r2 >> 24) & 255] << 24) ^
+        kw[0][1].toInt();
+    _c2 = (_si[r2 & 255] & 255) ^
+        ((_si[(r1 >> 8) & 255] & 255) << 8) ^
+        ((_si[(r0 >> 16) & 255] & 255) << 16) ^
+        (_si[(r3 >> 24) & 255] << 24) ^
+        kw[0][2].toInt();
+    _c3 = (_si[r3 & 255] & 255) ^
+        ((_si[(r2 >> 8) & 255] & 255) << 8) ^
+        ((_si[(r1 >> 16) & 255] & 255) << 16) ^
+        (_si[(r0 >> 24) & 255] << 24) ^
+        kw[0][3].toInt();
   }
 
   void _unpackBlock(ByteData view, int off) {
-    _C0 = unpack32(view, off, Endian.little);
-    _C1 = unpack32(view, off + 4, Endian.little);
-    _C2 = unpack32(view, off + 8, Endian.little);
-    _C3 = unpack32(view, off + 12, Endian.little);
+    _c0 = unpack32(view, off, Endian.little);
+    _c1 = unpack32(view, off + 4, Endian.little);
+    _c2 = unpack32(view, off + 8, Endian.little);
+    _c3 = unpack32(view, off + 12, Endian.little);
   }
 
   void _packBlock(ByteData view, int off) {
-    pack32(_C0, view, off, Endian.little);
-    pack32(_C1, view, off + 4, Endian.little);
-    pack32(_C2, view, off + 8, Endian.little);
-    pack32(_C3, view, off + 12, Endian.little);
+    pack32(_c0, view, off, Endian.little);
+    pack32(_c1, view, off + 4, Endian.little);
+    pack32(_c2, view, off + 8, Endian.little);
+    pack32(_c3, view, off + 12, Endian.little);
   }
 }
 
@@ -350,26 +352,23 @@ const int _m1 = 0x80808080;
 const int _m2 = 0x7f7f7f7f;
 const int _m3 = 0x0000001b;
 
-int _FFmulX(int x) {
+int _fFmulX(int x) {
   var lsr = shiftr32((x & _m1), 7);
   return (((x & _m2) << 1) ^ lsr * _m3);
 }
 
-/*
-The following defines provide alternative definitions of FFmulX that might
-give improved performance if a fast 32-bit multiply is not available.
-
-private int FFmulX(int x) { int u = x & m1; u |= (u >> 1); return ((x & m2) << 1) ^ ((u >>> 3) | (u >>> 6)); }
-private static final int  m4 = 0x1b1b1b1b;
-private int FFmulX(int x) { int u = x & m1; return ((x & m2) << 1) ^ ((u - (u >>> 7)) & m4); }
-
-*/
-
-int _inv_mcol(int x) {
-  int f2 = _FFmulX(x);
-  int f4 = _FFmulX(f2);
-  int f8 = _FFmulX(f4);
-  int f9 = x ^ f8;
+///
+/// The following defines provide alternative definitions of FFmulX that might
+/// give improved performance if a fast 32-bit multiply is not available.
+/// private int FFmulX(int x) { int u = x & m1; u |= (u >> 1); return ((x & m2) << 1) ^ ((u >>> 3) | (u >>> 6)); }
+/// private static final int  m4 = 0x1b1b1b1b;
+/// private int FFmulX(int x) { int u = x & m1; return ((x & m2) << 1) ^ ((u - (u >>> 7)) & m4); }
+///
+int _invMcol(int x) {
+  var f2 = _fFmulX(x);
+  var f4 = _fFmulX(f2);
+  var f8 = _fFmulX(f4);
+  var f9 = x ^ f8;
 
   return f2 ^
       f4 ^
@@ -380,14 +379,14 @@ int _inv_mcol(int x) {
 }
 
 int _subWord(int x) {
-  return (_S[x & 255] & 255 |
-      ((_S[(x >> 8) & 255] & 255) << 8) |
-      ((_S[(x >> 16) & 255] & 255) << 16) |
-      _S[(x >> 24) & 255] << 24);
+  return (_s[x & 255] & 255 |
+      ((_s[(x >> 8) & 255] & 255) << 8) |
+      ((_s[(x >> 16) & 255] & 255) << 16) |
+      _s[(x >> 24) & 255] << 24);
 }
 
 // The S box
-final _S = [
+final _s = [
   99,
   124,
   119,
@@ -647,7 +646,7 @@ final _S = [
 ];
 
 // The inverse S-box
-final _Si = [
+final _si = [
   82,
   9,
   106,
@@ -941,7 +940,7 @@ final _rcon = [
 ];
 
 // precomputation tables of calculations for rounds
-final _T0 = [
+final _t0 = [
   0xa56363c6,
   0x847c7cf8,
   0x997777ee,
@@ -1200,7 +1199,7 @@ final _T0 = [
   0x3a16162c
 ];
 
-final _T1 = [
+final _t1 = [
   0x6363c6a5,
   0x7c7cf884,
   0x7777ee99,
@@ -1459,7 +1458,7 @@ final _T1 = [
   0x16162c3a
 ];
 
-final _T2 = [
+final _t2 = [
   0x63c6a563,
   0x7cf8847c,
   0x77ee9977,
@@ -1718,7 +1717,7 @@ final _T2 = [
   0x162c3a16
 ];
 
-final _T3 = [
+final _t3 = [
   0xc6a56363,
   0xf8847c7c,
   0xee997777,
@@ -1977,7 +1976,7 @@ final _T3 = [
   0x2c3a1616
 ];
 
-final _Tinv0 = [
+final _tinv0 = [
   0x50a7f451,
   0x5365417e,
   0xc3a4171a,
@@ -2236,7 +2235,7 @@ final _Tinv0 = [
   0x4257b8d0
 ];
 
-final _Tinv1 = [
+final _tinv1 = [
   0xa7f45150,
   0x65417e53,
   0xa4171ac3,
@@ -2495,7 +2494,7 @@ final _Tinv1 = [
   0x57b8d042
 ];
 
-final _Tinv2 = [
+final _tinv2 = [
   0xf45150a7,
   0x417e5365,
   0x171ac3a4,
@@ -2754,7 +2753,7 @@ final _Tinv2 = [
   0xb8d04257
 ];
 
-final _Tinv3 = [
+final _tinv3 = [
   0x5150a7f4,
   0x7e536541,
   0x1ac3a417,

@@ -109,4 +109,22 @@ class ASN1UTF8String extends ASN1Object {
     }
     return l;
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    if (isConstructed) {
+      sb.write('UTF8String (${elements.length} elem)');
+      for (var e in elements) {
+        var dump = e.dump(spaces: spaces + dumpIndent);
+        sb.write('\n$dump');
+      }
+    } else {
+      sb.write('UTF8String $utf8StringValue');
+    }
+    return sb.toString();
+  }
 }

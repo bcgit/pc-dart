@@ -2,14 +2,14 @@
 
 library impl.asymmetric_block_cipher.oeap;
 
-import "dart:typed_data";
-import "dart:math";
+import 'dart:math';
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/impl/base_asymmetric_block_cipher.dart";
-import "package:pointycastle/random/fortuna_random.dart";
-import "package:pointycastle/digests/sha1.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
+import 'package:pointycastle/random/fortuna_random.dart';
+import 'package:pointycastle/digests/sha1.dart';
 
 /// RSAES-OAEP v2.0
 ///
@@ -33,13 +33,12 @@ import "package:pointycastle/digests/sha1.dart";
 
 class OAEPEncoding extends BaseAsymmetricBlockCipher {
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.suffix(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.suffix(
       AsymmetricBlockCipher,
-      "/OAEP",
+      '/OAEP',
       (_, final Match match) => () {
-            AsymmetricBlockCipher underlyingCipher =
-                new AsymmetricBlockCipher(match.group(1));
-            return new OAEPEncoding(underlyingCipher);
+            var underlyingCipher = AsymmetricBlockCipher(match.group(1));
+            return OAEPEncoding(underlyingCipher);
           });
 
   /// Hash function used by the EME-OAEP (Encoding Method for Encryption OAEP).
@@ -62,17 +61,19 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     SHA1Digest().doFinal(defHash, 0);
   }
 
-  String get algorithmName => "${_engine.algorithmName}/OAEP";
+  @override
+  String get algorithmName => '${_engine.algorithmName}/OAEP';
 
+  @override
   void reset() {}
 
   Uint8List _seed() {
-    var random = new Random.secure();
-    List<int> seeds = [];
-    for (int i = 0; i < 32; i++) {
+    var random = Random.secure();
+    var seeds = <int>[];
+    for (var i = 0; i < 32; i++) {
       seeds.add(random.nextInt(255));
     }
-    return new Uint8List.fromList(seeds);
+    return Uint8List.fromList(seeds);
   }
 
   // for compat cleaner translation from java source
@@ -83,15 +84,16 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     return dest;
   }
 
+  @override
   void init(bool forEncryption, CipherParameters params) {
     AsymmetricKeyParameter akparams;
     mgf1Hash = hash;
     if (params is ParametersWithRandom) {
-      ParametersWithRandom paramswr = params;
+      var paramswr = params;
       _random = paramswr.random;
       akparams = paramswr.parameters;
     } else {
-      _random = new FortunaRandom();
+      _random = FortunaRandom();
       _random.seed(KeyParameter(_seed()));
       akparams = params;
     }
@@ -117,6 +119,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     }
   }
 
+  @override
   int get inputBlockSize {
     var baseBlockSize = _engine.inputBlockSize;
     if (_forEncryption) {
@@ -126,6 +129,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     }
   }
 
+  @override
   int get outputBlockSize {
     var baseBlockSize = _engine.outputBlockSize;
     if (_forEncryption) {
@@ -135,6 +139,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     }
   }
 
+  @override
   int processBlock(
       Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (_forEncryption) {
@@ -167,7 +172,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   int _encodeBlock(
       Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
     if (inpLen > inputBlockSize) {
-      throw new ArgumentError("message too long");
+      throw ArgumentError('message too long');
     }
 
     // The numbered steps below correspond to the steps in RFC 2437.
@@ -193,13 +198,13 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // 5. Calculate _DB_ = pHash || PS || 01 || M
     //
     // It is the concatenation of _pHash_, _PS_, 0x01 and the message.
-    // Note: RFC 2437 also includes "other padding", but that is an error that
+    // Note: RFC 2437 also includes 'other padding', but that is an error that
     // does not appear in subsequent versions of PKCS #1 (e.g. RFC 3447).
     //
     // The result _DB_ is stored into [block] starting at offset _hLen_ to the
     // end.
 
-    var block = new Uint8List(inputBlockSize + 1 + 2 * defHash.length);
+    var block = Uint8List(inputBlockSize + 1 + 2 * defHash.length);
 
     // M: copy the message into the end of the block.
     //
@@ -210,7 +215,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     //
     block[block.length - inpLen - 1] = 0x01;
 
-    // PS: since a new Uint8List is initialized with 0x00, PS is already zeroed
+    // PS: since a Uint8List is initialized with 0x00, PS is already zeroed
 
     // pHash: add the hash of the encoding params.
     //
@@ -220,13 +225,13 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     //
     // The _seed_ is stored in [seed].
 
-    Uint8List seed = _random.nextBytes(defHash.length);
+    var seed = _random.nextBytes(defHash.length);
 
     // 7. Calculate _dbMask_ = MGF(seed, emLen - hLen)
     //
     // The _seed_ comes from [seed]. The result _dbMask_ is stored into [mask].
 
-    Uint8List mask = _maskGeneratorFunction1(
+    var mask = _maskGeneratorFunction1(
         seed, 0, seed.length, block.length - defHash.length);
 
     // 8. Calculate _maskedDB_ = DB XOR dbMask
@@ -235,7 +240,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // _dbMask_ comes from [mask]. The result _maskedDB_ is stored into [block]
     // starting at offset _hLen_ to the end (overwriting the _DB_).
 
-    for (int i = defHash.length; i != block.length; i++) {
+    for (var i = defHash.length; i != block.length; i++) {
       block[i] ^= mask[i - defHash.length];
     }
 
@@ -260,7 +265,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // _maskedSeed_ is stored into [block], the first _hLen_ bytes (overwriting
     // the temporary _seed_).
 
-    for (int i = 0; i != defHash.length; i++) {
+    for (var i = 0; i != defHash.length; i++) {
       block[i] ^= mask[i];
     }
 
@@ -299,7 +304,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   /// The ciphertext to be decrypted and decoded is the octet string consisting
   /// of [inpLen] bytes from [inp], starting at the [inpOff] offset.
   ///
-  /// It returns the message in [out] starting at offset [offOut].
+  /// It returns the message in [out] starting at offset [outOff].
 
   int _decodeBlock(
       Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
@@ -317,7 +322,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
     // 2, 3. RSA decryption
 
-    var block = new Uint8List(_engine.outputBlockSize);
+    var block = Uint8List(_engine.outputBlockSize);
 
     var decryptFailed = false;
     try {
@@ -354,14 +359,14 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
     // 5.2 Check length
 
-    bool wrongData = (block.length < (2 * defHash.length) + 1);
+    var wrongData = (block.length < (2 * defHash.length) + 1);
 
     // 5.4 Calculate _seedMask_ = MGF(maskedDB, hLen)
     //
     // The _maskedDB_ comes from [block] starting at _hLen_ to the end.
     // The result _seedMask_ is stored in [mask].
 
-    Uint8List mask = _maskGeneratorFunction1(
+    var mask = _maskGeneratorFunction1(
         block, defHash.length, block.length - defHash.length, defHash.length);
 
     // 5.5 Calculate _seed_ = maskedSeed XOR seedMask
@@ -371,7 +376,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // The result _seed_ is stored in the first _hLen_ bytes of [block]
     // (overwriting the maskedSeed_ that was previously there).
 
-    for (int i = 0; i != defHash.length; i++) {
+    for (var i = 0; i != defHash.length; i++) {
       block[i] ^= mask[i];
     }
 
@@ -386,7 +391,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // _dbMask_ comes from [mask]. The result _DB_ is stored in [block] from
     // _hLen_ to the end (overwriting the _maskedDB_ that was previously there).
 
-    for (int i = defHash.length; i != block.length; i++) {
+    for (var i = defHash.length; i != block.length; i++) {
       block[i] ^= mask[i - defHash.length];
     }
 
@@ -402,9 +407,9 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     //
     // The _pHash'_ comes from the first _hLen_ bytes of [block]
 
-    bool defHashWrong = false;
+    var defHashWrong = false;
 
-    for (int i = 0; i != defHash.length; i++) {
+    for (var i = 0; i != defHash.length; i++) {
       if (defHash[i] != block[defHash.length + i]) {
         defHashWrong = true;
       }
@@ -416,8 +421,8 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // byte from hash.digestLength * 2 to the end of [block]. Setting [start]
     // to that first non-zero byte (or will be block.length if none found).
 
-    int start = block.length;
-    for (int index = 2 * defHash.length; index != block.length; index++) {
+    var start = block.length;
+    for (var index = 2 * defHash.length; index != block.length; index++) {
       if ((block[index] != 0) & (start == block.length)) {
         start = index;
       }
@@ -426,12 +431,12 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // The data-start-is-wrong if the rest of the [block] contains all 0x00
     // bytes or that first non-zero byte is not 0x01.
 
-    bool dataStartWrong = (start > (block.length - 1)) | (block[start] != 0x01);
+    var dataStartWrong = (start > (block.length - 1)) | (block[start] != 0x01);
     start++;
 
     if (decryptFailed || defHashWrong || wrongData || dataStartWrong) {
       block.fillRange(0, block.length, 0);
-      throw new ArgumentError("decoding error");
+      throw ArgumentError('decoding error');
     }
 
     // 5.11 Output M
@@ -444,10 +449,11 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     return mLen;
   }
 
+  // ignore: slash_for_doc_comments
   /**
   * int to octet string.
   */
-  Uint8List _ItoOSP(int i, Uint8List sp) {
+  Uint8List _itoOSP(int i, Uint8List sp) {
     sp[0] = i >> 24;
     sp[1] = i >> 16;
     sp[2] = i >> 8;
@@ -471,14 +477,14 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
   Uint8List _maskGeneratorFunction1(
       Uint8List Z, int zOff, int zLen, int length) {
-    Uint8List mask = Uint8List(length);
-    Uint8List hashBuf = Uint8List(mgf1Hash.digestSize);
-    Uint8List C = Uint8List(4);
-    int counter = 0;
+    var mask = Uint8List(length);
+    var hashBuf = Uint8List(mgf1Hash.digestSize);
+    var C = Uint8List(4);
+    var counter = 0;
     mgf1Hash.reset();
 
     while (counter < (length / hashBuf.length).floor()) {
-      _ItoOSP(counter, C);
+      _itoOSP(counter, C);
       mgf1Hash.update(Z, zOff, zLen);
       mgf1Hash.update(C, 0, C.length);
       mgf1Hash.doFinal(hashBuf, 0);
@@ -488,7 +494,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     }
 
     if ((counter * hashBuf.length) < length) {
-      _ItoOSP(counter, C);
+      _itoOSP(counter, C);
       mgf1Hash.update(Z, zOff, zLen);
       mgf1Hash.update(C, 0, C.length);
       mgf1Hash.doFinal(hashBuf, 0);

@@ -56,9 +56,9 @@ class SHAKEDigest extends KeccakEngine implements Xof {
       throw ArgumentError('partialBits must be in the range [0,7]');
     }
 
-    int finalInput =
+    var finalInput =
         (partialByte & ((1 << partialBits) - 1)) | (0x0F << partialBits);
-    int finalBits = partialBits + 4;
+    var finalBits = partialBits + 4;
 
     if (finalBits >= 8) {
       absorb(finalInput);

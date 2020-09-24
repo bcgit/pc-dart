@@ -109,4 +109,22 @@ class ASN1IA5String extends ASN1Object {
     }
     return l;
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    if (isConstructed) {
+      sb.write('IA5String (${elements.length} elem)');
+      for (var e in elements) {
+        var dump = e.dump(spaces: spaces + dumpIndent);
+        sb.write('\n $dump');
+      }
+    } else {
+      sb.write('IA5String $stringValue');
+    }
+    return sb.toString();
+  }
 }

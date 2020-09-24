@@ -170,7 +170,92 @@ class ObjectIdentifiers {
       'identifierString': '1.2.840.10045.4.3.2',
       'readableName': 'ecdsaWithSHA256',
       'identifier': [1, 2, 840, 10045, 4, 3, 2]
-    }
+    },
+    {
+      'identifierString': '2.5.4.3',
+      'readableName': 'CN',
+      'identifier': [2, 5, 4, 3]
+    },
+    {
+      'identifierString': '2.5.4.4',
+      'readableName': 'SN',
+      'identifier': [2, 5, 4, 4]
+    },
+    {
+      'identifierString': '2.5.4.5',
+      'readableName': 'SERIALNUMBER',
+      'identifier': [2, 5, 4, 5]
+    },
+    {
+      'identifierString': '2.5.4.6',
+      'readableName': 'C',
+      'identifier': [2, 5, 4, 6]
+    },
+    {
+      'identifierString': '2.5.4.7',
+      'readableName': 'L',
+      'identifier': [2, 5, 4, 7]
+    },
+    {
+      'identifierString': '2.5.4.8',
+      'readableName': 'ST',
+      'identifier': [2, 5, 4, 8]
+    },
+    {
+      'identifierString': '2.5.4.8',
+      'readableName': 'S',
+      'identifier': [2, 5, 4, 8]
+    },
+    {
+      'identifierString': '2.5.4.9',
+      'readableName': 'streetAddress',
+      'identifier': [2, 5, 4, 9]
+    },
+    {
+      'identifierString': '2.5.4.9',
+      'readableName': 'STREET',
+      'identifier': [2, 5, 4, 9]
+    },
+    {
+      'identifierString': '2.5.4.10',
+      'readableName': 'O',
+      'identifier': [2, 5, 4, 10]
+    },
+    {
+      'identifierString': '2.5.4.11',
+      'readableName': 'OU',
+      'identifier': [2, 5, 4, 11]
+    },
+    {
+      'identifierString': '2.5.4.12',
+      'readableName': 'title',
+      'identifier': [2, 5, 4, 12]
+    },
+    {
+      'identifierString': '2.5.4.12',
+      'readableName': 'T',
+      'identifier': [2, 5, 4, 12]
+    },
+    {
+      'identifierString': '2.5.4.12',
+      'readableName': 'TITLE',
+      'identifier': [2, 5, 4, 12]
+    },
+    {
+      'identifierString': '2.5.4.42',
+      'readableName': 'givenName',
+      'identifier': [2, 5, 4, 42]
+    },
+    {
+      'identifierString': '2.5.4.42',
+      'readableName': 'G',
+      'identifier': [2, 5, 4, 42]
+    },
+    {
+      'identifierString': '2.5.4.42',
+      'readableName': 'GN',
+      'identifier': [2, 5, 4, 42]
+    },
   ];
 
   ///

@@ -3,10 +3,8 @@
 part of api;
 
 //TODO rename
-/**
- * [CipherParameters] consisting of an underlying [CipherParameters] (of type [UnderlyingParameters]) and an initialization
- * vector of arbitrary length.
- */
+/// [CipherParameters] consisting of an underlying [CipherParameters] (of type [UnderlyingParameters]) and an initialization
+/// vector of arbitrary length.
 class ParametersWithIV<UnderlyingParameters extends CipherParameters>
     implements CipherParameters {
   final Uint8List iv;

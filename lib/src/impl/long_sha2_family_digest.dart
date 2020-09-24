@@ -35,6 +35,7 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
     reset();
   }
 
+  @override
   int get byteLength => _BYTE_LENGTH;
 
   @override

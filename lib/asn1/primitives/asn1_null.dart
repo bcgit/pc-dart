@@ -40,4 +40,14 @@ class ASN1Null extends ASN1Object {
         throw UnsupportedAsn1EncodingRuleException(encodingRule);
     }
   }
+
+  @override
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    sb.write('NULL');
+    return sb.toString();
+  }
 }

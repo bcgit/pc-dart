@@ -2,21 +2,23 @@
 
 library impl.key_generator.ec_key_generator;
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/ecc/api.dart";
-import "package:pointycastle/key_generators/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/ecc/api.dart';
+import 'package:pointycastle/key_generators/api.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 /// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGenerator implements KeyGenerator {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(KeyGenerator, "EC", () => ECKeyGenerator());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(KeyGenerator, 'EC', () => ECKeyGenerator());
 
   ECDomainParameters _params;
   SecureRandom _random;
 
-  String get algorithmName => "EC";
+  @override
+  String get algorithmName => 'EC';
 
+  @override
   void init(CipherParameters params) {
     ECKeyGeneratorParameters ecparams;
 
@@ -24,17 +26,18 @@ class ECKeyGenerator implements KeyGenerator {
       _random = params.random;
       ecparams = params.parameters;
     } else {
-      _random = new SecureRandom();
+      _random = SecureRandom();
       ecparams = params;
     }
 
     _params = ecparams.domainParameters;
   }
 
+  @override
   AsymmetricKeyPair generateKeyPair() {
     var n = _params.n;
     var nBitLength = n.bitLength;
-    var d;
+    BigInt d;
 
     do {
       d = _random.nextBigInteger(nBitLength);
@@ -42,7 +45,6 @@ class ECKeyGenerator implements KeyGenerator {
 
     var Q = _params.G * d;
 
-    return new AsymmetricKeyPair(
-        new ECPublicKey(Q, _params), new ECPrivateKey(d, _params));
+    return AsymmetricKeyPair(ECPublicKey(Q, _params), ECPrivateKey(d, _params));
   }
 }

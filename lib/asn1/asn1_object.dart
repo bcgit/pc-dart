@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1/asn1_parser.dart';
 import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
 import 'package:pointycastle/asn1/asn1_utils.dart';
 
@@ -42,6 +43,8 @@ class ASN1Object {
   /// The object is marked as constructed if bit 6 of the [tag] field has value **1**
   ///
   bool isConstructed;
+
+  int dumpIndent = 2;
 
   ASN1Object({this.tag}) {
     if (tag != null) {
@@ -112,4 +115,25 @@ class ASN1Object {
   /// The total length of this object, including its value bytes, the encoded tag and length bytes.
   ///
   int get totalEncodedByteLength => valueStartPosition + valueByteLength;
+
+  ///
+  /// Creates a readable dump from the current ASN1Object.
+  ///
+  /// **Important note**: Subclasses need to override this method. If the ASN1Object is constructed and has child elements, dump() has to be called for each child element.
+  ///
+  String dump({int spaces = 0}) {
+    var sb = StringBuffer();
+    for (var i = 0; i < spaces; i++) {
+      sb.write(' ');
+    }
+    if (tag == 0xA0 || tag == 0xA3) {
+      sb.write('[$tag]');
+      var parser = ASN1Parser(valueBytes);
+      var next = parser.nextObject();
+      var dump = next.dump(spaces: spaces + dumpIndent);
+      sb.write('\n$dump');
+    }
+    sb.write('UNKNOWN');
+    return sb.toString();
+  }
 }

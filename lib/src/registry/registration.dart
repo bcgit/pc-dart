@@ -114,23 +114,23 @@ void registerFactories(FactoryRegistry registry) {
 }
 
 void _registerAsymmetricCiphers(FactoryRegistry registry) {
-  registry.register(OAEPEncoding.FACTORY_CONFIG);
-  registry.register(PKCS1Encoding.FACTORY_CONFIG);
-  registry.register(RSAEngine.FACTORY_CONFIG);
+  registry.register(OAEPEncoding.factoryConfig);
+  registry.register(PKCS1Encoding.factoryConfig);
+  registry.register(RSAEngine.factoryConfig);
 }
 
 void _registerBlockCiphers(FactoryRegistry registry) {
-  registry.register(AESFastEngine.FACTORY_CONFIG);
+  registry.register(AESFastEngine.factoryConfig);
 
   // modes
-  registry.register(CBCBlockCipher.FACTORY_CONFIG);
-  registry.register(CFBBlockCipher.FACTORY_CONFIG);
-  registry.register(CTRBlockCipher.FACTORY_CONFIG);
-  registry.register(ECBBlockCipher.FACTORY_CONFIG);
-  registry.register(GCTRBlockCipher.FACTORY_CONFIG);
-  registry.register(OFBBlockCipher.FACTORY_CONFIG);
-  registry.register(SICBlockCipher.FACTORY_CONFIG);
-  registry.register(GCMBlockCipher.FACTORY_CONFIG);
+  registry.register(CBCBlockCipher.factoryConfig);
+  registry.register(CFBBlockCipher.factoryConfig);
+  registry.register(CTRBlockCipher.factoryConfig);
+  registry.register(ECBBlockCipher.factoryConfig);
+  registry.register(GCTRBlockCipher.factoryConfig);
+  registry.register(OFBBlockCipher.factoryConfig);
+  registry.register(SICBlockCipher.factoryConfig);
+  registry.register(GCMBlockCipher.factoryConfig);
 }
 
 void _registerDigests(FactoryRegistry registry) {
@@ -201,14 +201,14 @@ void _registerECCurves(FactoryRegistry registry) {
 }
 
 void _registerKeyDerivators(FactoryRegistry registry) {
-  registry.register(PBKDF2KeyDerivator.FACTORY_CONFIG);
-  registry.register(Scrypt.FACTORY_CONFIG);
-  registry.register(HKDFKeyDerivator.FACTORY_CONFIG);
+  registry.register(PBKDF2KeyDerivator.factoryConfig);
+  registry.register(Scrypt.factoryConfig);
+  registry.register(HKDFKeyDerivator.factoryConfig);
 }
 
 void _registerKeyGenerators(FactoryRegistry registry) {
-  registry.register(ECKeyGenerator.FACTORY_CONFIG);
-  registry.register(RSAKeyGenerator.FACTORY_CONFIG);
+  registry.register(ECKeyGenerator.factoryConfig);
+  registry.register(RSAKeyGenerator.factoryConfig);
 }
 
 void _registerMacs(FactoryRegistry registry) {
@@ -219,31 +219,31 @@ void _registerMacs(FactoryRegistry registry) {
 }
 
 void _registerPaddedBlockCiphers(FactoryRegistry registry) {
-  registry.register(PaddedBlockCipherImpl.FACTORY_CONFIG);
+  registry.register(PaddedBlockCipherImpl.factoryConfig);
 }
 
 void _registerPaddings(FactoryRegistry registry) {
-  registry.register(PKCS7Padding.FACTORY_CONFIG);
-  registry.register(ISO7816d4Padding.FACTORY_CONFIG);
+  registry.register(PKCS7Padding.factoryConfig);
+  registry.register(ISO7816d4Padding.factoryConfig);
 }
 
 void _registerRandoms(FactoryRegistry registry) {
-  registry.register(AutoSeedBlockCtrRandom.FACTORY_CONFIG);
-  registry.register(BlockCtrRandom.FACTORY_CONFIG);
-  registry.register(FortunaRandom.FACTORY_CONFIG);
+  registry.register(AutoSeedBlockCtrRandom.factoryConfig);
+  registry.register(BlockCtrRandom.factoryConfig);
+  registry.register(FortunaRandom.factoryConfig);
 }
 
 void _registerSigners(FactoryRegistry registry) {
-  registry.register(ECDSASigner.FACTORY_CONFIG);
-  registry.register(PSSSigner.FACTORY_CONFIG);
-  registry.register(RSASigner.FACTORY_CONFIG);
+  registry.register(ECDSASigner.factoryConfig);
+  registry.register(PSSSigner.factoryConfig);
+  registry.register(RSASigner.factoryConfig);
 }
 
 void _registerStreamCiphers(FactoryRegistry registry) {
-  registry.register(CTRStreamCipher.FACTORY_CONFIG);
-  registry.register(Salsa20Engine.FACTORY_CONFIG);
-  registry.register(ChaCha20Engine.FACTORY_CONFIG);
-  registry.register(ChaCha7539Engine.FACTORY_CONFIG);
-  registry.register(ChaCha20Poly1305.FACTORY_CONFIG);
-  registry.register(SICStreamCipher.FACTORY_CONFIG);
+  registry.register(CTRStreamCipher.factoryConfig);
+  registry.register(Salsa20Engine.factoryConfig);
+  registry.register(ChaCha20Engine.factoryConfig);
+  registry.register(ChaCha7539Engine.factoryConfig);
+  registry.register(ChaCha20Poly1305.factoryConfig);
+  registry.register(SICStreamCipher.factoryConfig);
 }

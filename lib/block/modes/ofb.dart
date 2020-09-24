@@ -2,66 +2,68 @@
 
 library impl.block_cipher.modes.ofb;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/impl/base_block_cipher.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/impl/base_block_cipher.dart';
 
 /// Implementation of Output FeedBack mode (OFB) on top of a [BlockCipher].
 class OFBBlockCipher extends BaseBlockCipher {
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.regex(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.regex(
       BlockCipher,
-      r"^(.+)/OFB-([0-9]+)$",
+      r'^(.+)/OFB-([0-9]+)$',
       (_, final Match match) => () {
-            BlockCipher underlying = new BlockCipher(match.group(1));
-            int blockSizeInBits = int.parse(match.group(2));
+            var underlying = BlockCipher(match.group(1));
+            var blockSizeInBits = int.parse(match.group(2));
             if ((blockSizeInBits % 8) != 0) {
-              throw new RegistryFactoryException.invalid(
-                  "Bad OFB block size: $blockSizeInBits (must be a multiple of 8)");
+              throw RegistryFactoryException.invalid(
+                  'Bad OFB block size: $blockSizeInBits (must be a multiple of 8)');
             }
-            return new OFBBlockCipher(underlying, blockSizeInBits ~/ 8);
+            return OFBBlockCipher(underlying, blockSizeInBits ~/ 8);
           });
 
+  @override
   final int blockSize;
 
   final BlockCipher _underlyingCipher;
 
-  Uint8List _IV;
+  Uint8List _iv;
   Uint8List _ofbV;
   Uint8List _ofbOutV;
 
   OFBBlockCipher(this._underlyingCipher, this.blockSize) {
-    _IV = new Uint8List(_underlyingCipher.blockSize);
-    _ofbV = new Uint8List(_underlyingCipher.blockSize);
-    _ofbOutV = new Uint8List(_underlyingCipher.blockSize);
+    _iv = Uint8List(_underlyingCipher.blockSize);
+    _ofbV = Uint8List(_underlyingCipher.blockSize);
+    _ofbOutV = Uint8List(_underlyingCipher.blockSize);
   }
 
+  @override
   String get algorithmName =>
-      "${_underlyingCipher.algorithmName}/OFB-${blockSize * 8}";
+      '${_underlyingCipher.algorithmName}/OFB-${blockSize * 8}';
 
+  @override
   void reset() {
-    _ofbV.setRange(0, _IV.length, _IV);
+    _ofbV.setRange(0, _iv.length, _iv);
     _underlyingCipher.reset();
   }
 
-  /**
-   * Initialise the cipher and, possibly, the initialisation vector (IV). If an IV isn't passed as part of the parameter, the
-   * IV will be all zeros. An IV which is too short is handled in FIPS compliant fashion.
-   */
+  /// Initialise the cipher and, possibly, the initialisation vector (IV). If an IV isn't passed as part of the parameter, the
+  /// IV will be all zeros. An IV which is too short is handled in FIPS compliant fashion.
+  @override
   void init(bool forEncryption, CipherParameters params) {
     if (params is ParametersWithIV) {
-      ParametersWithIV ivParam = params;
+      var ivParam = params;
       var iv = ivParam.iv;
 
-      if (iv.length < _IV.length) {
+      if (iv.length < _iv.length) {
         // prepend the supplied IV with zeros (per FIPS PUB 81)
-        var offset = _IV.length - iv.length;
-        _IV.fillRange(0, offset, 0);
-        _IV.setAll(offset, iv);
+        var offset = _iv.length - iv.length;
+        _iv.fillRange(0, offset, 0);
+        _iv.setAll(offset, iv);
       } else {
-        _IV.setRange(0, _IV.length, iv);
+        _iv.setRange(0, _iv.length, iv);
       }
 
       reset();
@@ -75,19 +77,20 @@ class OFBBlockCipher extends BaseBlockCipher {
     }
   }
 
+  @override
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if ((inpOff + blockSize) > inp.length) {
-      throw new ArgumentError("Input buffer too short");
+      throw ArgumentError('Input buffer too short');
     }
 
     if ((outOff + blockSize) > out.length) {
-      throw new ArgumentError("Output buffer too short");
+      throw ArgumentError('Output buffer too short');
     }
 
     _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
 
     // XOR the ofbV with the plaintext producing the cipher text (and the next input block).
-    for (int i = 0; i < blockSize; i++) {
+    for (var i = 0; i < blockSize; i++) {
       out[outOff + i] = _ofbOutV[i] ^ inp[inpOff + i];
     }
 

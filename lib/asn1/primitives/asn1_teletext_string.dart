@@ -9,48 +9,43 @@ import 'package:pointycastle/asn1/asn1_utils.dart';
 import 'package:pointycastle/asn1/unsupported_asn1_encoding_rule_exception.dart';
 
 ///
-/// An ASN1 Bit String object
+/// An ASN1 Octed String object
 ///
-class ASN1BitString extends ASN1Object {
+class ASN1TeletextString extends ASN1Object {
   ///
-  /// The decoded string value
+  /// The ascii decoded string value
   ///
-  List<int> stringValues;
+  String stringValue;
 
   ///
-  /// The unused bits
-  ///
-  int unusedbits;
-
-  ///
-  /// A list of elements. Only set if this ASN1IA5String is constructed, otherwhise null.
-  ///
+  /// A list of elements. Only set if this ASN1TeletextString is constructed, otherwhise null.
   ///
   List<ASN1Object> elements;
 
   ///
-  /// Create an [ASN1BitString] entity with the given [stringValues].
+  /// Create an [ASN1TeletextString] entity with the given [stringValue].
   ///
-  ASN1BitString(
-      {this.stringValues, this.elements, int tag = ASN1Tags.BIT_STRING})
+  ASN1TeletextString(
+      {this.stringValue, this.elements, int tag = ASN1Tags.T61_STRING})
       : super(tag: tag);
 
   ///
-  /// Creates an [ASN1BitString] entity from the given [encodedBytes].
+  /// Creates an [ASN1TeletextString] entity from the given [encodedBytes].
   ///
-  ASN1BitString.fromBytes(Uint8List bytes) : super.fromBytes(bytes) {
+  ASN1TeletextString.fromBytes(Uint8List encodedBytes)
+      : super.fromBytes(encodedBytes) {
     if (ASN1Utils.isConstructed(encodedBytes.elementAt(0))) {
       elements = [];
       var parser = ASN1Parser(valueBytes);
-      stringValues = [];
+      var sb = StringBuffer();
       while (parser.hasNext()) {
-        var bitString = parser.nextObject() as ASN1BitString;
-        stringValues.addAll(bitString.stringValues);
-        elements.add(bitString);
+        var printableString = parser.nextObject() as ASN1TeletextString;
+        sb.write(printableString.stringValue);
+        elements.add(printableString);
       }
+      stringValue = sb.toString();
     } else {
-      unusedbits = valueBytes[0];
-      stringValues = valueBytes.sublist(1);
+      stringValue = ascii.decode(valueBytes);
     }
   }
 
@@ -64,7 +59,6 @@ class ASN1BitString extends ASN1Object {
   /// * [ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM]
   /// * [ASN1EncodingRule.ENCODING_BER_CONSTRUCTED]
   /// * [ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH]
-  /// * [ASN1EncodingRule.ENCODING_BER_PADDED]
   ///
   /// Throws an [UnsupportedAsn1EncodingRuleException] if the given [encodingRule] is not supported.
   ///
@@ -72,21 +66,17 @@ class ASN1BitString extends ASN1Object {
   Uint8List encode(
       {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     switch (encodingRule) {
-      case ASN1EncodingRule.ENCODING_BER_PADDED:
       case ASN1EncodingRule.ENCODING_DER:
       case ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM:
-        var b = <int>[];
-        if (unusedbits != null) {
-          b.add(unusedbits);
-        }
-        b.addAll(stringValues);
-        valueBytes = Uint8List.fromList(b);
+        var octets = ascii.encode(stringValue);
+        valueByteLength = octets.length;
+        valueBytes = Uint8List.fromList(octets);
         break;
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH:
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED:
         valueByteLength = 0;
         if (elements == null) {
-          elements.add(ASN1BitString(stringValues: stringValues));
+          elements.add(ASN1TeletextString(stringValue: stringValue));
         }
         valueByteLength = _childLength(
             isIndefinite: encodingRule ==
@@ -99,6 +89,8 @@ class ASN1BitString extends ASN1Object {
           i += b.length;
         });
         break;
+      case ASN1EncodingRule.ENCODING_BER_PADDED:
+        throw UnsupportedAsn1EncodingRuleException(encodingRule);
     }
 
     return super.encode(encodingRule: encodingRule);
@@ -125,21 +117,13 @@ class ASN1BitString extends ASN1Object {
       sb.write(' ');
     }
     if (isConstructed) {
-      sb.write('BIT STRING (${elements.length} elem)');
+      sb.write('T61String (${elements.length} elem)');
       for (var e in elements) {
         var dump = e.dump(spaces: spaces + dumpIndent);
-        sb.write('\n$dump');
+        sb.write('\n $dump');
       }
     } else {
-      if (ASN1Utils.isASN1Tag(stringValues.elementAt(0))) {
-        var parser = ASN1Parser(stringValues);
-        var next = parser.nextObject();
-        var dump = next.dump(spaces: spaces + dumpIndent);
-        sb.write('BIT STRING\n$dump');
-      } else {
-        sb.write(
-            'BIT STRING ${ascii.decode(stringValues, allowInvalid: true)}');
-      }
+      sb.write('T61String $stringValue');
     }
     return sb.toString();
   }
