@@ -1,7 +1,9 @@
 Changelog
 =========
+#### Version 2.0.0 (2020-10-02)
+* No changes from 2.0.0-rc2
 
-#### Version 2.0.0-rc2 (2020-02-25)
+#### Version 2.0.0-rc2 (2020-09-25)
 
 * Linter Fixes
 * Updates to ASN1 API
