@@ -2,7 +2,6 @@
 
 library test.digests.keccak_test;
 
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:pointycastle/digests/keccak.dart';
