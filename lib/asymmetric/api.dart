@@ -24,12 +24,31 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
   // The secret prime factors of n
   final BigInt p;
   final BigInt q;
-  final BigInt pubExponent;
+  BigInt _pubExp;
 
   /// Create an RSA private key for the given parameters.
-  RSAPrivateKey(BigInt modulus, BigInt privateExponent, this.p, this.q,
-      [this.pubExponent])
-      : super(modulus, privateExponent);
+  ///
+  /// The optional public exponent parameter has been deprecated. It does not
+  /// have to be provided, because it can be calculated from the other values.
+  /// The optional parameter is retained for backward compatibility, but it
+  /// does not need to be provided.
+
+  RSAPrivateKey(
+      BigInt modulus,
+      BigInt privateExponent,
+      this.p,
+      this.q,
+      [@Deprecated('Public exponent is calculated from the other values')
+          BigInt publicExponent])
+      : super(modulus, privateExponent) {
+    // Calculate the correct RSA public exponent
+    _pubExp = privateExponent.modInverse(((p - BigInt.one) * (q - BigInt.one)));
+
+    // If explicitly provided, the public exponent value must be correct.
+    if (publicExponent != null && publicExponent != _pubExp) {
+      throw ArgumentError('incorrect public exponent');
+    }
+  }
 
   /// Get private exponent [d] = e^-1
   @Deprecated('Use privateExponent.')
@@ -39,7 +58,11 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
   BigInt get privateExponent => exponent;
 
   /// Get the public exponent (e)
-  BigInt get publicExponent => pubExponent;
+  BigInt get publicExponent => _pubExp;
+
+  /// Get the public exponent (e)
+  @Deprecated('Use publicExponent.')
+  BigInt get pubExponent => publicExponent;
 
   @override
   bool operator ==(other) {
