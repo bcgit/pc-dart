@@ -41,12 +41,20 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
       [@Deprecated('Public exponent is calculated from the other values')
           BigInt publicExponent])
       : super(modulus, privateExponent) {
+    // Check RSA relationship between p, q and modulus hold true.
+
+    if (p * q != modulus) {
+      throw ArgumentError.value('modulus inconsistent with RSA p and q');
+    }
+
     // Calculate the correct RSA public exponent
+
     _pubExp = privateExponent.modInverse(((p - BigInt.one) * (q - BigInt.one)));
 
     // If explicitly provided, the public exponent value must be correct.
     if (publicExponent != null && publicExponent != _pubExp) {
-      throw ArgumentError('incorrect public exponent');
+      throw ArgumentError(
+          'public exponent inconsistent with RSA private exponent, p and q');
     }
   }
 
