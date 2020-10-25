@@ -30,11 +30,13 @@ void main() {
     expect(privk.publicExponent, equals(publicExponent));
 
     // Wrong public exponent provided to the constructor raises an exception.
-    // ignore: deprecated_member_use
+    // ignore: deprecated_member_use_from_same_package
     expect(
         () => RSAPrivateKey(modulus, privateExponent, p, q, BigInt.zero),
         throwsA(predicate((e) =>
-            e is ArgumentError && e.message == 'incorrect public exponent')));
+            e is ArgumentError &&
+            e.message ==
+                'public exponent inconsistent with RSA private exponent, p and q')));
   });
 
   // Test using the RSA key pair to perform block cipher encryption/decryption.
