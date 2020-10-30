@@ -113,7 +113,7 @@ void main() {
   test('Test encode DER', () {
     var asn1BitString = ASN1BitString(stringValues: [0x05, 0xA0]);
 
-    var bytes = Uint8List.fromList([0x03, 0x02, 0x05, 0xA0]);
+    var bytes = Uint8List.fromList([0x03, 0x03, 0x00, 0x05, 0xA0]);
 
     expect(asn1BitString.encode(), bytes);
   });
@@ -126,8 +126,21 @@ void main() {
     var asn1Object =
         ASN1BitString(elements: [e1, e2], tag: ASN1Tags.BIT_STRING_CONSTRUCTED);
 
-    var bytes = Uint8List.fromList(
-        [0x23, 0x09, 0x03, 0x03, 0x00, 0x6e, 0x5d, 0x03, 0x02, 0x06, 0xc0]);
+    var bytes = Uint8List.fromList([
+      0x23,
+      0x0b,
+      0x03,
+      0x04,
+      0x00,
+      0x00,
+      0x6e,
+      0x5d,
+      0x03,
+      0x03,
+      0x00,
+      0x06,
+      0xc0
+    ]);
 
     expect(
         asn1Object.encode(
@@ -138,7 +151,8 @@ void main() {
   test('Test encode BER Long Form Length', () {
     var asn1Object = ASN1BitString(stringValues: [0x06, 0x6e, 0x5d, 0xc0]);
 
-    var bytes = Uint8List.fromList([0x03, 0x81, 0x04, 0x06, 0x6e, 0x5d, 0xc0]);
+    var bytes =
+        Uint8List.fromList([0x03, 0x81, 0x05, 0x00, 0x06, 0x6e, 0x5d, 0xc0]);
 
     expect(
         asn1Object.encode(
@@ -158,12 +172,14 @@ void main() {
       0x23,
       0x80,
       0x03,
-      0x03,
+      0x04,
+      0x00,
       0x00,
       0x6e,
       0x5d,
       0x03,
-      0x02,
+      0x03,
+      0x00,
       0x06,
       0xc0,
       0x00,
@@ -180,7 +196,7 @@ void main() {
   test('Test encode BER Padded', () {
     var asn1Object = ASN1BitString(stringValues: [0x06, 0x6e, 0x5d, 0xe0]);
 
-    var bytes = Uint8List.fromList([0x03, 0x04, 0x06, 0x6e, 0x5d, 0xe0]);
+    var bytes = Uint8List.fromList([0x03, 0x05, 0x00, 0x06, 0x6e, 0x5d, 0xe0]);
 
     expect(
         asn1Object.encode(encodingRule: ASN1EncodingRule.ENCODING_BER_PADDED),
