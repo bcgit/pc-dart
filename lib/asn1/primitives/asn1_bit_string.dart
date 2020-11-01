@@ -78,6 +78,8 @@ class ASN1BitString extends ASN1Object {
         var b = <int>[];
         if (unusedbits != null) {
           b.add(unusedbits);
+        } else {
+          b.add(0);
         }
         b.addAll(stringValues);
         valueBytes = Uint8List.fromList(b);
@@ -86,6 +88,7 @@ class ASN1BitString extends ASN1Object {
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED:
         valueByteLength = 0;
         if (elements == null) {
+          elements = <ASN1Object>[];
           elements.add(ASN1BitString(stringValues: stringValues));
         }
         valueByteLength = _childLength(
