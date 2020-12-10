@@ -2,7 +2,6 @@
 
 library impl.digest.keccak;
 
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
