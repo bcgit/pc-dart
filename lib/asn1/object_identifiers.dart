@@ -256,6 +256,11 @@ class ObjectIdentifiers {
       'readableName': 'GN',
       'identifier': [2, 5, 4, 42]
     },
+    {
+      'identifierString': '1.3.132.0.34',
+      'readableName': 'secp384r1',
+      'identifier': [1, 3, 132, 0, 34],
+    },
   ];
 
   ///
