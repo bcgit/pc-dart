@@ -1,5 +1,8 @@
 Changelog
 =========
+
+* RSAPrivateKey calculates the public exponent from the other values.
+
 #### Version 2.0.0 (2020-10-02)
 * No changes from 2.0.0-rc2
 
