@@ -214,7 +214,7 @@ abstract class ECCurveBase implements ECCurve {
   }
 
   BigInt _fromArray(List<int> buf, int off, int length) {
-    return utils.decodeBigInt(buf.sublist(off, off + length));
+    return utils.decodeBigIntWithSign(1, buf.sublist(off, off + length));
   }
 }
 

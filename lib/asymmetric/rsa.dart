@@ -102,7 +102,7 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
           'Too large for maximum RSA cipher input block size ($inputBlockSize)');
     }
 
-    var res = utils.decodeBigInt(inp.sublist(inpOff, inpOff + len));
+    var res = utils.decodeBigIntWithSign(1, inp.sublist(inpOff, inpOff + len));
     if (res >= _key.modulus) {
       throw ArgumentError('Input block too large for RSA key size');
     }

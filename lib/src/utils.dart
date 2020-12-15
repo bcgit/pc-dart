@@ -15,10 +15,54 @@ Uint8List concatUint8List(Iterable<Uint8List> list) =>
     Uint8List.fromList(list.expand((element) => element).toList());
 
 /// Decode a BigInt from bytes in big-endian encoding.
+/// Twos compliment.
 BigInt decodeBigInt(List<int> bytes) {
-  var result = BigInt.from(0);
-  for (var i = 0; i < bytes.length; i++) {
-    result += BigInt.from(bytes[bytes.length - i - 1]) << (8 * i);
+  var negative = bytes.isNotEmpty && bytes[0] & 0x80 == 0x80;
+
+  BigInt result;
+
+  if (bytes.length == 1) {
+    result = BigInt.from(bytes[0]);
+  } else {
+    result = BigInt.zero;
+    for (var i = 0; i < bytes.length; i++) {
+      var item = bytes[bytes.length - i - 1];
+      result |= (BigInt.from(item) << (8 * i));
+    }
+  }
+  return result != BigInt.zero
+      ? negative ? result.toSigned(result.bitLength) : result
+      : BigInt.zero;
+}
+
+/// Decode a big integer with arbitrary sign.
+/// When:
+/// sign == 0: Zero regardless of magnitude
+/// sign < 0: Negative
+/// sign > 0: Positive
+BigInt decodeBigIntWithSign(int sign, List<int> magnitude) {
+  if (sign == 0) {
+    return BigInt.zero;
+  }
+
+  BigInt result;
+
+  if (magnitude.length == 1) {
+    result = BigInt.from(magnitude[0]);
+  } else {
+    result = BigInt.from(0);
+    for (var i = 0; i < magnitude.length; i++) {
+      var item = magnitude[magnitude.length - i - 1];
+      result |= (BigInt.from(item) << (8 * i));
+    }
+  }
+
+  if (result != BigInt.zero) {
+    if (sign < 0) {
+      result = result.toSigned(result.bitLength);
+    } else {
+      result = result.toUnsigned(result.bitLength);
+    }
   }
   return result;
 }
@@ -30,13 +74,22 @@ final negativeFlag = BigInt.from(0x80);
 /// It encodes the integer to a minimal twos-compliment integer as defined by
 /// ASN.1
 Uint8List encodeBigInt(BigInt number) {
-  // Not handling negative numbers. Decide how you want to do that.
-  var rawSize = (number.bitLength + 7) >> 3;
-  // If the first byte has 0x80 set, we need an extra byte
-  final needsPaddingByte = number > BigInt.from(0) &&
-          ((number >> (rawSize - 1) * 8) & negativeFlag) == negativeFlag
-      ? 1
-      : 0;
+  if (number == BigInt.zero) {
+    return Uint8List.fromList([0]);
+  }
+
+  int needsPaddingByte;
+  int rawSize;
+
+  if (number > BigInt.zero) {
+    rawSize = (number.bitLength + 7) >> 3;
+    needsPaddingByte =
+        ((number >> (rawSize - 1) * 8) & negativeFlag) == negativeFlag ? 1 : 0;
+  } else {
+    needsPaddingByte = 0;
+    rawSize = (number.bitLength + 8) >> 3;
+  }
+
   final size = rawSize + needsPaddingByte;
   var result = Uint8List(size);
   for (var i = 0; i < rawSize; i++) {
@@ -46,8 +99,12 @@ Uint8List encodeBigInt(BigInt number) {
   return result;
 }
 
+/// Encode as Big Endian unsigned byte array.
 Uint8List encodeBigIntAsUnsigned(BigInt number) {
-  var size = (number.bitLength + 7) >> 3;
+  if (number == BigInt.zero) {
+    return Uint8List.fromList([0]);
+  }
+  var size = number.bitLength + (number.isNegative ? 8 : 7) >> 3;
   var result = Uint8List(size);
   for (var i = 0; i < size; i++) {
     result[size - i - 1] = (number & _byteMask).toInt();

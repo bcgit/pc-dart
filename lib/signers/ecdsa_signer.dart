@@ -183,9 +183,9 @@ class ECDSASigner implements Signer {
     var messageBitLength = message.length * 8;
 
     if (log2n >= messageBitLength) {
-      return utils.decodeBigInt(message);
+      return utils.decodeBigIntWithSign(1, message);
     } else {
-      var trunc = utils.decodeBigInt(message);
+      var trunc = utils.decodeBigIntWithSign(1, message);
 
       trunc = trunc >> (messageBitLength - log2n);
 
@@ -375,7 +375,7 @@ class _RFC6979KCalculator {
   }
 
   BigInt _bitsToInt(Uint8List t) {
-    var v = utils.decodeBigInt(t);
+    var v = utils.decodeBigIntWithSign(1, t);
     if ((t.length * 8) > _n.bitLength) {
       v = v >> ((t.length * 8) - _n.bitLength);
     }

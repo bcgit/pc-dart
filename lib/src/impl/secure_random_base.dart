@@ -29,7 +29,7 @@ abstract class SecureRandomBase implements SecureRandom {
 
   @override
   BigInt nextBigInteger(int bitLength) {
-    return utils.decodeBigInt(_randomBits(bitLength));
+    return utils.decodeBigIntWithSign(1, _randomBits(bitLength));
   }
 
   @override

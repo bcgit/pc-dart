@@ -27,46 +27,52 @@ void rsaOaepStandardTests() {
   // RSA key information
 
   // n, the modulus:
-  final n = decodeBigInt(createUint8ListFromHexString(
-      'bb f8 2f 09 06 82 ce 9c 23 38 ac 2b 9d a8 71 f7 36 8d 07 ee d4 10 43 a4'
-      '40 d6 b6 f0 74 54 f5 1f b8 df ba af 03 5c 02 ab 61 ea 48 ce eb 6f cd 48'
-      '76 ed 52 0d 60 e1 ec 46 19 71 9d 8a 5b 8b 80 7f af b8 e0 a3 df c7 37 72'
-      '3e e6 b4 b7 d9 3a 25 84 ee 6a 64 9d 06 09 53 74 88 34 b2 45 45 98 39 4e'
-      'e0 aa b1 2d 7b 61 a5 1f 52 7a 9a 41 f6 c1 68 7f e2 53 72 98 ca 2a 8f 59'
-      '46 f8 e5 fd 09 1d bd cb'));
+  final n = decodeBigIntWithSign(
+      1,
+      createUint8ListFromHexString(
+          'bb f8 2f 09 06 82 ce 9c 23 38 ac 2b 9d a8 71 f7 36 8d 07 ee d4 10 43 a4'
+          '40 d6 b6 f0 74 54 f5 1f b8 df ba af 03 5c 02 ab 61 ea 48 ce eb 6f cd 48'
+          '76 ed 52 0d 60 e1 ec 46 19 71 9d 8a 5b 8b 80 7f af b8 e0 a3 df c7 37 72'
+          '3e e6 b4 b7 d9 3a 25 84 ee 6a 64 9d 06 09 53 74 88 34 b2 45 45 98 39 4e'
+          'e0 aa b1 2d 7b 61 a5 1f 52 7a 9a 41 f6 c1 68 7f e2 53 72 98 ca 2a 8f 59'
+          '46 f8 e5 fd 09 1d bd cb'));
 
   // e, the public exponent
-  final e = decodeBigInt(createUint8ListFromHexString('11'));
+  final e = decodeBigIntWithSign(1, createUint8ListFromHexString('11'));
 
   // p, the first prime factor of n
-  final p = decodeBigInt(createUint8ListFromHexString(
-      'ee cf ae 81 b1 b9 b3 c9 08 81 0b 10 a1 b5 60 01 99 eb 9f 44 ae f4 fd a4'
-      '93 b8 1a 9e 3d 84 f6 32 12 4e f0 23 6e 5d 1e 3b 7e 28 fa e7 aa 04 0a 2d'
-      '5b 25 21 76 45 9d 1f 39 75 41 ba 2a 58 fb 65 99'));
+  final p = decodeBigIntWithSign(
+      1,
+      createUint8ListFromHexString(
+          'ee cf ae 81 b1 b9 b3 c9 08 81 0b 10 a1 b5 60 01 99 eb 9f 44 ae f4 fd a4'
+          '93 b8 1a 9e 3d 84 f6 32 12 4e f0 23 6e 5d 1e 3b 7e 28 fa e7 aa 04 0a 2d'
+          '5b 25 21 76 45 9d 1f 39 75 41 ba 2a 58 fb 65 99'));
 
   // q, the second prime factor of n:
-  final q = decodeBigInt(createUint8ListFromHexString(
-      'c9 7f b1 f0 27 f4 53 f6 34 12 33 ea aa d1 d9 35 3f 6c 42 d0 88 66 b1 d0'
-      '5a 0f 20 35 02 8b 9d 86 98 40 b4 16 66 b4 2e 92 ea 0d a3 b4 32 04 b5 cf'
-      'ce 33 52 52 4d 04 16 a5 a4 41 e7 00 af 46 15 03'));
+  final q = decodeBigIntWithSign(
+      1,
+      createUint8ListFromHexString(
+          'c9 7f b1 f0 27 f4 53 f6 34 12 33 ea aa d1 d9 35 3f 6c 42 d0 88 66 b1 d0'
+          '5a 0f 20 35 02 8b 9d 86 98 40 b4 16 66 b4 2e 92 ea 0d a3 b4 32 04 b5 cf'
+          'ce 33 52 52 4d 04 16 a5 a4 41 e7 00 af 46 15 03'));
 
   // dP , p’s exponent:
-  final dP = decodeBigInt(createUint8ListFromHexString(
+  final dP = decodeBigIntWithSign(1, createUint8ListFromHexString(
       '54 49 4c a6 3e ba 03 37 e4 e2 40 23 fc d6 9a 5a eb 07 dd dc 01 83 a4 d0'
-      'ac 9b 54 b0 51 f2 b1 3e d9 49 09 75 ea b7 74 14 ff 59 c1 f7 69 2e 9a 2e'
-      '20 2b 38 fc 91 0a 47 41 74 ad c9 3c 1f 67 c9 81'));
+          'ac 9b 54 b0 51 f2 b1 3e d9 49 09 75 ea b7 74 14 ff 59 c1 f7 69 2e 9a 2e'
+          '20 2b 38 fc 91 0a 47 41 74 ad c9 3c 1f 67 c9 81'));
 
   // dQ, q’s exponent:
-  final dQ = decodeBigInt(createUint8ListFromHexString(
+  final dQ = decodeBigIntWithSign(1, createUint8ListFromHexString(
       '47 1e 02 90 ff 0a f0 75 03 51 b7 f8 78 86 4c a9 61 ad bd 3a 8a 7e 99 1c'
-      '5c 05 56 a9 4c 31 46 a7 f9 80 3f 8f 6f 8a e3 42 e9 31 fd 8a e4 7a 22 0d'
-      '1b 99 a4 95 84 98 07 fe 39 f9 24 5a 98 36 da 3d'));
+          '5c 05 56 a9 4c 31 46 a7 f9 80 3f 8f 6f 8a e3 42 e9 31 fd 8a e4 7a 22 0d'
+          '1b 99 a4 95 84 98 07 fe 39 f9 24 5a 98 36 da 3d'));
 
   // qInv, the CRT coefficient:
-  final qInv = decodeBigInt(createUint8ListFromHexString(
+  final qInv = decodeBigIntWithSign(1, createUint8ListFromHexString(
       'b0 6c 4f da bb 63 01 19 8d 26 5b db ae 94 23 b3 80 f2 71 f7 34 53 88 50'
-      '93 07 7f cd 39 e2 11 9f c9 86 32 15 4f 58 83 b1 67 a9 67 bf 40 2b 4e 9e'
-      '2e 0f 96 56 e6 98 ea 36 66 ed fb 25 79 80 39 f7'));
+          '93 07 7f cd 39 e2 11 9f c9 86 32 15 4f 58 83 b1 67 a9 67 bf 40 2b 4e 9e'
+          '2e 0f 96 56 e6 98 ea 36 66 ed fb 25 79 80 39 f7'));
 
   //----------------
   // Encryption
