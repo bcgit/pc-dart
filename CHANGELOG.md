@@ -1,9 +1,21 @@
 Changelog
 =========
 
+* The default BigInt handling functions in the util package now treat encoded BigInts as twos compliment numbers, so:
+* Removal of 'dart:io'
 * RSAPrivateKey calculates the public exponent from the other values.
 
+utils.dart:
+
+- decodeBigInt is twos compliment.
+- encodeBigInt is twos compliment and adds padding to preserve sign.
+- encodeBigIntAsUnsigned writes the magnitude without any padding.
+- decodeBigIntWithSign allows the specification of an arbitrary sign.
+- Previous uses of decodeBigInt where the expectation is an unsigned integer have been updated with
+  decodeBigIntWithSign(1, magnitude).
+
 #### Version 2.0.0 (2020-10-02)
+
 * No changes from 2.0.0-rc2
 
 #### Version 2.0.0-rc2 (2020-09-25)
