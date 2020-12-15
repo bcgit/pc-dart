@@ -16,7 +16,28 @@ Uint8List randomBytes(int length) {
   }, growable: false));
 }
 
+void testBigIntEncoding() {
+  group('BigInt utility ', () {
+    test('twos compliment encoding', () {
+      BigInt bi1 = BigInt.zero - BigInt.from(128);
+
+      Uint8List out = encodeBigInt(bi1);
+      expect([128], equals(out));
+      out = encodeBigIntAsUnsigned(bi1);
+      expect([128], equals(out));
+
+      BigInt bi2 = BigInt.from(128);
+      out = encodeBigInt(bi2); // [0,128]
+      expect([0, 128], equals(out));
+      out = encodeBigIntAsUnsigned(bi2);
+      expect([128], equals(out));
+    });
+  });
+}
+
 void main() {
+  testBigIntEncoding();
+
   test('decode encode roundtrip', () {
     for (var size = 1; size < 100; size++) {
       var bytes = randomBytes(size);
