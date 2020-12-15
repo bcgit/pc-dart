@@ -24,10 +24,29 @@ BigInt decodeBigInt(List<int> bytes) {
 }
 
 var _byteMask = BigInt.from(0xff);
+final negativeFlag = BigInt.from(0x80);
 
 /// Encode a BigInt into bytes using big-endian encoding.
+/// It encodes the integer to a minimal twos-compliment integer as defined by
+/// ASN.1
 Uint8List encodeBigInt(BigInt number) {
   // Not handling negative numbers. Decide how you want to do that.
+  var rawSize = (number.bitLength + 7) >> 3;
+  // If the first byte has 0x80 set, we need an extra byte
+  final needsPaddingByte = number > BigInt.from(0) &&
+          ((number >> (rawSize - 1) * 8) & negativeFlag) == negativeFlag
+      ? 1
+      : 0;
+  final size = rawSize + needsPaddingByte;
+  var result = Uint8List(size);
+  for (var i = 0; i < rawSize; i++) {
+    result[size - i - 1] = (number & _byteMask).toInt();
+    number = number >> 8;
+  }
+  return result;
+}
+
+Uint8List encodeBigIntAsUnsigned(BigInt number) {
   var size = (number.bitLength + 7) >> 3;
   var result = Uint8List(size);
   for (var i = 0; i < size; i++) {
