@@ -11,6 +11,10 @@ import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:pointycastle/digests/sha1.dart';
 
+import '../digests/sha1.dart';
+import '../digests/sha256.dart';
+import '../digests/sha256.dart';
+
 /// RSAES-OAEP v2.0
 ///
 /// This implementation is based on the RSAES-OAEP (RSA Encryption Scheme -
@@ -42,7 +46,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
           });
 
   /// Hash function used by the EME-OAEP (Encoding Method for Encryption OAEP).
-  Digest hash = SHA1Digest();
+  Digest hash = SHA256Digest();
 
   /// Hash function used by the MGF1 Mask Generation Function.
   Digest mgf1Hash;
@@ -51,14 +55,14 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   ///
   /// Note: in this implementation the encoding parameters is always zero
   /// octets. There is no mechanism to provide encoding parameters.
-  Uint8List defHash = Uint8List(SHA1Digest().digestSize);
+  Uint8List defHash = Uint8List(32);
 
   final AsymmetricBlockCipher _engine;
   SecureRandom _random;
   bool _forEncryption;
 
   OAEPEncoding(this._engine) {
-    SHA1Digest().doFinal(defHash, 0);
+    SHA256Digest().doFinal(defHash, 0);
   }
 
   @override
