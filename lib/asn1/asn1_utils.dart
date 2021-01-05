@@ -29,7 +29,7 @@ class ASN1Utils {
   static int decodeLength(Uint8List encodedBytes) {
     var valueStartPosition = 2;
     var length = encodedBytes[1];
-    if (length < 0x7F) {
+    if (length <= 0x7F) {
       return length;
     }
     if (length == 0x80) {
