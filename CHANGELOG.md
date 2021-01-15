@@ -1,6 +1,8 @@
 Changelog
 =========
+#### Version 2.0.1 (2021-01-16)
 
+* Bug fix, ASN1Utils
 * Removal of 'dart:io'
 * RSAPrivateKey calculates the public exponent from the other values.
 
