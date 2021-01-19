@@ -17,16 +17,19 @@ This library was adopted from the original project at https://github.com/PointyC
 
 ## Algorithms
 
-In this release, the following algorithms are implemented. 
+In this release, the following algorithms are implemented. Algorithms must be instantiated and then initialized with
+their parameters.
 
 (Most of the below can be used directly with the registry, which is an easy way to instantiate classes in PointyCastle. See "Using the Registry" for more).
 
-(The relevant parameter type is provided for all the algorithms. To initialize an algorithm, call `algorithm.init(paramsHere)`.)
+(The relevant parameter type is provided for all the algorithms. To initialize an algorithm, call 
+`algorithm.init(parameter)`.)
 
 **AEAD ciphers:** To use with the registry, instantiate like this `AEADCipher('ChaCha20-Poly1305')`. Ciphers use `AEADParameters` to initialize.
   * 'ChaCha20-Poly1305'
 
-**Block ciphers:** To use with the registry, instantiate like this `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` or like this `StreamCipher('AES/SomeStreamModeHere')`.
+**Block ciphers:** To use with the registry, instantiate like this `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` 
+or like this `StreamCipher('AES/SomeStreamModeHere')`. See sections below for modes and paddings.
   * 'AES'
   * *Note that block ciphers can be used in stream cipher modes of operation*
   
