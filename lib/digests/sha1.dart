@@ -2,25 +2,28 @@
 
 library impl.digest.sha1;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/md4_family_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/md4_family_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of SHA-1 digest
 class SHA1Digest extends MD4FamilyDigest implements Digest {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "SHA-1", () => SHA1Digest());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(Digest, 'SHA-1', () => SHA1Digest());
 
   static const _DIGEST_LENGTH = 20;
 
   SHA1Digest() : super(Endian.big, 5, 80);
 
-  final algorithmName = "SHA-1";
+  @override
+  final algorithmName = 'SHA-1';
+  @override
   final digestSize = _DIGEST_LENGTH;
 
+  @override
   void resetState() {
     state[0] = 0x67452301;
     state[1] = 0xefcdab89;
@@ -29,6 +32,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
     state[4] = 0xc3d2e1f0;
   }
 
+  @override
   void processBlock() {
     // expand 16 word block into 80 word block.
     for (var i = 16; i < 80; i++) {
@@ -135,4 +139,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
   int _h(int u, int v, int w) => (u ^ v ^ w);
 
   int _g(int u, int v, int w) => ((u & v) | (u & w) | (v & w));
+
+  @override
+  int get byteLength => 64;
 }

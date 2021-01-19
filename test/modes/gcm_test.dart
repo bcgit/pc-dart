@@ -225,7 +225,7 @@ void main() {
     },
   ];
 
-  group("AES-GCM", () {
+  group('AES-GCM', () {
     for (var map in paramList) {
       test(map['name'], () {
         var encrypter = GCMBlockCipher(AESFastEngine());

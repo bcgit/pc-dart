@@ -2,56 +2,62 @@
 
 library impl.digest.md2;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/base_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/base_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 /// Implementation of MD2 as outlined in RFC1319 by B.Kaliski from RSA Laboratories April 1992
 class MD2Digest extends BaseDigest {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "MD2", () => MD2Digest());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(Digest, 'MD2', () => MD2Digest());
 
   static const _DIGEST_LENGTH = 16;
 
   /* X buffer */
-  var _X = new Uint8List(48);
+  final _x = Uint8List(48);
   int _xOff = 0;
 
   /* M buffer */
-  var _M = new Uint8List(16);
+  final _m = Uint8List(16);
   int _mOff = 0;
 
   /* check sum */
-  var _C = new Uint8List(16);
-  int _COff = 0;
+  final _c = Uint8List(16);
+  // ignore: unused_field
+  int _cOff = 0;
 
-  String get algorithmName => "MD2";
+  @override
+  String get algorithmName => 'MD2';
 
+  @override
   int get digestSize => _DIGEST_LENGTH;
 
+  @override
   void reset() {
     _xOff = 0;
-    _X.fillRange(0, _X.length, 0);
+    _x.fillRange(0, _x.length, 0);
 
     _mOff = 0;
-    _M.fillRange(0, _M.length, 0);
+    _m.fillRange(0, _m.length, 0);
 
-    _COff = 0;
-    _C.fillRange(0, _C.length, 0);
+    _cOff = 0;
+    _c.fillRange(0, _c.length, 0);
   }
 
+  @override
   void updateByte(int inp) {
-    _M[_mOff++] = inp;
+    _m[_mOff++] = inp;
 
     if (_mOff == 16) {
-      _processCheckSum(_M);
-      _processBlock(_M);
+      _processCheckSum(_m);
+      _processBlock(_m);
       _mOff = 0;
     }
   }
 
+  @override
   void update(Uint8List inp, int inpOff, int len) {
     // fill the current word
     while ((_mOff != 0) && (len > 0)) {
@@ -62,9 +68,9 @@ class MD2Digest extends BaseDigest {
 
     // process whole words.
     while (len > 16) {
-      _M.setRange(0, 16, inp.sublist(inpOff));
-      _processCheckSum(_M);
-      _processBlock(_M);
+      _m.setRange(0, 16, inp.sublist(inpOff));
+      _processCheckSum(_m);
+      _processBlock(_m);
       len -= 16;
       inpOff += 16;
     }
@@ -77,22 +83,23 @@ class MD2Digest extends BaseDigest {
     }
   }
 
+  @override
   int doFinal(Uint8List out, int outOff) {
     // add padding
-    var paddingByte = _M.length - _mOff;
-    for (var i = _mOff; i < _M.length; i++) {
-      _M[i] = paddingByte;
+    var paddingByte = _m.length - _mOff;
+    for (var i = _mOff; i < _m.length; i++) {
+      _m[i] = paddingByte;
     }
 
     //do final check sum
-    _processCheckSum(_M);
+    _processCheckSum(_m);
 
     // do final block process
-    _processBlock(_M);
+    _processBlock(_m);
 
-    _processBlock(_C);
+    _processBlock(_c);
 
-    out.setRange(outOff, outOff + 16, _X.sublist(_xOff));
+    out.setRange(outOff, outOff + 16, _x.sublist(_xOff));
 
     reset();
 
@@ -101,8 +108,8 @@ class MD2Digest extends BaseDigest {
 
   void _processBlock(Uint8List m) {
     for (var i = 0; i < 16; i++) {
-      _X[i + 16] = m[i];
-      _X[i + 32] = m[i] ^ _X[i];
+      _x[i + 16] = m[i];
+      _x[i + 32] = m[i] ^ _x[i];
     }
 
     // encrypt block
@@ -110,7 +117,7 @@ class MD2Digest extends BaseDigest {
 
     for (var j = 0; j < 18; j++) {
       for (var k = 0; k < 48; k++) {
-        t = _X[k] ^= _S[t];
+        t = _x[k] ^= _s[t];
         t = t & 0xff;
       }
       t = (t + j) % 256;
@@ -118,15 +125,15 @@ class MD2Digest extends BaseDigest {
   }
 
   void _processCheckSum(Uint8List m) {
-    var L = _C[15];
+    var L = _c[15];
     for (var i = 0; i < 16; i++) {
-      _C[i] ^= _S[(m[i] ^ L) & 0xff];
-      L = _C[i];
+      _c[i] ^= _s[(m[i] ^ L) & 0xff];
+      L = _c[i];
     }
   }
 
   // 256-byte random permutation constructed from the digits of PI
-  static final _S = [
+  static final _s = [
     41,
     46,
     67,
@@ -384,4 +391,7 @@ class MD2Digest extends BaseDigest {
     131,
     20
   ];
+
+  @override
+  int get byteLength => 16;
 }

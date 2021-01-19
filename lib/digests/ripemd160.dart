@@ -2,25 +2,29 @@
 
 library impl.digest.ripemd160;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/md4_family_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/md4_family_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of RIPEMD-160 digest.
 class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "RIPEMD-160", () => RIPEMD160Digest());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(Digest, 'RIPEMD-160', () => RIPEMD160Digest());
 
   static const _DIGEST_LENGTH = 20;
 
   RIPEMD160Digest() : super(Endian.little, 5, 16);
 
-  final algorithmName = "RIPEMD-160";
+  @override
+  final algorithmName = 'RIPEMD-160';
+
+  @override
   final digestSize = _DIGEST_LENGTH;
 
+  @override
   void resetState() {
     state[0] = 0x67452301;
     state[1] = 0xefcdab89;
@@ -29,12 +33,13 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     state[4] = 0xc3d2e1f0;
   }
 
+  @override
   void processBlock() {
-    var a, aa;
-    var b, bb;
-    var c, cc;
-    var d, dd;
-    var e, ee;
+    int a, aa;
+    int b, bb;
+    int c, cc;
+    int d, dd;
+    int e, ee;
 
     a = aa = state[0];
     b = bb = state[1];
@@ -404,4 +409,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
   int _f4(int x, int y, int z) => (x & z) | (y & ~z);
 
   int _f5(int x, int y, int z) => x ^ (y | ~z);
+
+  @override
+  int get byteLength => 64;
 }

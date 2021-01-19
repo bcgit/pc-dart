@@ -12,7 +12,7 @@ import 'package:pointycastle/pointycastle.dart';
 /// Demonstrate the use of `process` to provide the data completely.
 
 Uint8List completeExample(Uint8List dataToDigest) {
-  Digest d = new Digest("SHA-256");
+  var d = Digest('SHA-256');
 
   final hash = d.process(dataToDigest);
 
@@ -24,20 +24,20 @@ Uint8List completeExample(Uint8List dataToDigest) {
 /// to provide the data progressively.
 
 Uint8List progressiveExample() {
-  Digest d = new Digest("SHA-256");
+  var d = Digest('SHA-256');
 
   final chunk1 = utf8.encode('cellophane');
   final chunk2 = utf8.encode('world');
 
   d.updateByte(0x48); // 'H'
-  d.update(chunk1, 1, 4);
+  d.update(Uint8List.fromList(chunk1), 1, 4);
   d.updateByte(0x20); // ' '
-  d.update(chunk2, 0, chunk2.length);
+  d.update(Uint8List.fromList(chunk2), 0, chunk2.length);
   d.updateByte(0x21); // '!'
 
   final hash = Uint8List(d.digestSize);
 
-  d.doFinal(hash, 0); // hash of "Hello world!"
+  d.doFinal(hash, 0); // hash of 'Hello world!'
 
   return hash;
 }
@@ -54,29 +54,29 @@ void resetExample() {
   {
     print('  Using `process` automatically resets:');
 
-    Digest d = new Digest("SHA-256");
+    var d = Digest('SHA-256');
 
-    final h1 = d.process(data1);
+    final h1 = d.process(Uint8List.fromList(data1));
     print('    ${bin2hex(h1)}');
 
-    final h2 = d.process(data2);
+    final h2 = d.process(Uint8List.fromList(data2));
     print('    ${bin2hex(h2)}');
   }
 
   {
     print('  Using `doFinal` automatically resets:');
 
-    Digest d = new Digest("SHA-256");
+    var d = Digest('SHA-256');
 
     final h1 = Uint8List(d.digestSize);
-    d.update(data1, 0, data1.length);
+    d.update(Uint8List.fromList(data1), 0, data1.length);
     d.doFinal(h1, 0);
     print('    ${bin2hex(h1)}');
 
     d.reset();
 
     final h2 = Uint8List(d.digestSize);
-    d.update(data2, 0, data2.length);
+    d.update(Uint8List.fromList(data2), 0, data2.length);
     d.doFinal(h2, 0);
     print('    ${bin2hex(h2)}');
   }
@@ -85,22 +85,22 @@ void resetExample() {
     final part1 = utf8.encode('Hello ');
     final part2 = utf8.encode('world!');
 
-    Digest d = new Digest("SHA-256");
+    var d = Digest('SHA-256');
     final hash = Uint8List(d.digestSize);
 
     // With reset
 
-    d.update(part1, 0, part1.length);
+    d.update(Uint8List.fromList(part1), 0, part1.length);
     d.reset();
-    d.update(part2, 0, part2.length);
-    d.doFinal(hash, 0); // hash of "world!"
+    d.update(Uint8List.fromList(part2), 0, part2.length);
+    d.doFinal(hash, 0); // hash of 'world!'
     print('  Using `update` with reset:\n    ${bin2hex(hash)}');
 
     // Without rest
 
-    d.update(part1, 0, part1.length);
-    d.update(part2, 0, part2.length);
-    d.doFinal(hash, 0); // hash of "Hello world!"
+    d.update(Uint8List.fromList(part1), 0, part1.length);
+    d.update(Uint8List.fromList(part2), 0, part2.length);
+    d.doFinal(hash, 0); // hash of 'Hello world!'
     print('  Using `update` without reset:\n    ${bin2hex(hash)}');
   }
 }
@@ -117,7 +117,7 @@ void resetExample() {
 void binaryExample() {
   print('\nExamples from RFC 2634:');
 
-  Digest d = new Digest("SHA-256");
+  var d = Digest('SHA-256');
 
   // TEST1
 
@@ -127,8 +127,8 @@ void binaryExample() {
   assert(test1[2] == 0x63);
   assert(test1.length == 3);
 
-  final expected1 = "BA7816BF8F01CFEA4141"
-      "40DE5DAE2223B00361A396177A9CB410FF61F20015AD";
+  final expected1 = 'BA7816BF8F01CFEA4141'
+      '40DE5DAE2223B00361A396177A9CB410FF61F20015AD';
 
   final hash1 = bin2hex(d.process(test1));
 
@@ -141,7 +141,7 @@ void binaryExample() {
   // TEST7_256
 
   final test7_256 = Uint8List.fromList(
-      "\xbe\x27\x46\xc6\xdb\x52\x76\x5f\xdb\x2f\x88\x70\x0f\x9a\x73".codeUnits);
+      '\xbe\x27\x46\xc6\xdb\x52\x76\x5f\xdb\x2f\x88\x70\x0f\x9a\x73'.codeUnits);
   assert(test7_256[0] == 0xbe);
   assert(test7_256[1] == 0x27);
   assert(test7_256[2] == 0x46);
@@ -151,8 +151,8 @@ void binaryExample() {
   final extraBits7 = 0x60;
   final numberExtraBits7 = 3;
 
-  final expected7 = "77EC1DC8"
-      "9C821FF2A1279089FA091B35B8CD960BCAF7DE01C6A7680756BEB972";
+  final expected7 = '77EC1DC8'
+      '9C821FF2A1279089FA091B35B8CD960BCAF7DE01C6A7680756BEB972';
 
   for (var repeat = 0; repeat < repeatCount7; repeat++) {
     d.update(test7_256, 0, test7_256.length);
@@ -213,13 +213,14 @@ void main(List<String> args) {
   // Calculate digest with complete data
   //
   // Note: the progressive example is hardcoded to produce the digest of
-  // "Hello world!", so there is no point in changing the "data" if you want
+  // 'Hello world!', so there is no point in changing the 'data' if you want
   // to see they both produce the same result.
 
   const dataForComplete = 'Hello world!';
 
   print('SHA-256 digest of "$dataForComplete":');
-  final hash1 = completeExample(utf8.encode(dataForComplete));
+  final hash1 =
+      completeExample(Uint8List.fromList(utf8.encode(dataForComplete)));
   print('   with complete data: ${bin2hex(hash1)}');
 
   // Calculate digest by providing the data progressively
@@ -229,7 +230,7 @@ void main(List<String> args) {
 
   // Prove they both produce the same digest value
 
-  for (int x = 0; x < hash1.length; x++) {
+  for (var x = 0; x < hash1.length; x++) {
     if (hash1[x] != hash2[x]) {
       print('Error: hashes are different');
     }

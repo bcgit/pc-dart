@@ -2,15 +2,15 @@
 
 library test.hmacs.hmac_test;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
-import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 import 'package:test/test.dart';
 
-import "../test/mac_tests.dart";
-import "../test/src/helpers.dart";
+import '../test/mac_tests.dart';
+import '../test/src/helpers.dart';
 
 /// Testing HMAC with using the test vectors from
 /// [RFC 4231](https://tools.ietf.org/html/rfc4231) _Identifiers and Test
@@ -188,75 +188,9 @@ void testWithRfc4231() {
   ]);
 }
 
-class _brokenDigest implements Digest {
-  @override
-  String get algorithmName => '-';
-
-  @override
-  int get digestSize => throw UnimplementedError();
-
-  @override
-  int doFinal(Uint8List out, int outOff) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Uint8List process(Uint8List outa) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void reset() {}
-
-  @override
-  void update(Uint8List out, int outOff, int len) {}
-
-  @override
-  void updateByte(int out) {}
-}
-
-/// Test handling of digest that do not extend ExtendedHmac and are not in
-/// internal block size lookup table.
-void testDigestNoBlockKLen() {
-  group('invalid digest for hmac', () {
-    registry.register(DynamicFactoryConfig(
-        Digest,
-        new RegExp('^Broken'),
-        (_, final Match match) => () {
-              return _brokenDigest();
-            }));
-
-    test('direct creation', () {
-      // A non extended digest instance that is not in the _DIGEST_BLOCK_LENGTH.
-      // which cannot be used by an hmac.
-      try {
-        HMac.withDigest(_brokenDigest());
-        fail(
-            "hmac created with unknown digest that did not implement ExtendedDigest");
-      } on ArgumentError catch (e) {
-        expect(e.message,
-            "Digest, - does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map");
-      }
-    });
-
-    test("by name", () {
-      // A non extended digest instance that is not in the _DIGEST_BLOCK_LENGTH.
-      // which cannot be used by an hmac.
-      try {
-        new Mac("Broken/HMAC");
-        fail(
-            "hmac created with unknown digest that did not implement ExtendedDigest");
-      } on ArgumentError catch (e) {
-        expect(e.message,
-            "Digest, - does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map");
-      }
-    });
-  });
-}
-
 void main() {
-  final mac = new Mac("SHA-1/HMAC");
-  final key = new Uint8List.fromList([
+  final mac = Mac('SHA-1/HMAC');
+  final key = Uint8List.fromList([
     0x00,
     0x11,
     0x22,
@@ -274,21 +208,20 @@ void main() {
     0xEE,
     0xFF
   ]);
-  final keyParam = new KeyParameter(key);
+  final keyParam = KeyParameter(key);
 
   mac.init(keyParam);
 
   runMacTests(mac, [
     PlainTextDigestPair(
         createUint8ListFromString(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."),
-        "a646990cca06cb7550a91bdd9ae481c6472f06bc"),
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit...'),
+        'a646990cca06cb7550a91bdd9ae481c6472f06bc'),
     PlainTextDigestPair(
         createUint8ListFromString(
-            "En un lugar de La Mancha, de cuyo nombre no quiero acordarme..."),
-        "1d710be3529ecee6ddd2f1ad4c3c12d6f467243f"),
+            'En un lugar de La Mancha, de cuyo nombre no quiero acordarme...'),
+        '1d710be3529ecee6ddd2f1ad4c3c12d6f467243f'),
   ]);
 
   testWithRfc4231();
-  testDigestNoBlockKLen();
 }

@@ -11,6 +11,10 @@ abstract class Digest extends Algorithm {
   /// Get this digest's output size in bytes
   int get digestSize;
 
+  /// Return the size in bytes of the internal buffer the digest applies
+  /// it's compression function to.
+  int get byteLength;
+
   /// Reset the digest to its original state.
   void reset();
 
@@ -20,25 +24,11 @@ abstract class Digest extends Algorithm {
   /// Add one byte of data to the digested input.
   void updateByte(int inp);
 
-  /**
-   * Add [len] bytes of data contained in [inp], starting at position [inpOff]
-   * ti the digested input.
-   */
+  /// Add [len] bytes of data contained in [inp], starting at position [inpOff]
+  /// ti the digested input.
   void update(Uint8List inp, int inpOff, int len);
 
-  /**
-   * Store the digest of previously given data in buffer [out] starting at
-   * offset [outOff]. This method returns the size of the digest.
-   */
+  /// Store the digest of previously given data in buffer [out] starting at
+  /// offset [outOff]. This method returns the size of the digest.
   int doFinal(Uint8List out, int outOff);
-}
-
-mixin ExtendedDigest implements Digest {
-  ///
-  /// Return the size of the internal buffer the digest applies it's compression
-  /// function to.
-  ///
-  /// Returns the length of the internal buffer in bytes.
-  ///
-  int getByteLength();
 }

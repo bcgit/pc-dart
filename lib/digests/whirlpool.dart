@@ -2,43 +2,46 @@
 
 library impl.digest.whirlpool;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/base_digest.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/base_digest.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Implementation of Whirlpool digest.
 class WhirlpoolDigest extends BaseDigest implements Digest {
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "Whirlpool", () => WhirlpoolDigest());
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(Digest, 'Whirlpool', () => WhirlpoolDigest());
 
-  static const _DIGEST_LENGTH_BYTES = 512 ~/ 8;
+  static const _DIGEST_lENGTH_BYTES = 512 ~/ 8;
   static const _BUFFER_SIZE = 64;
   static const _ROUNDS = 10;
-  static final _R64_ZERO = new Register64(0);
+  static final _r64Zero = Register64(0);
 
-  static final _ZEROS_LIST = new Uint8List(_BUFFER_SIZE);
+  static final _zerosList = Uint8List(_BUFFER_SIZE);
 
-  final _buffer = new Uint8List(_BUFFER_SIZE);
+  final _buffer = Uint8List(_BUFFER_SIZE);
   int _bufferPos = 0;
 
-  final _bitCount = new Register64List(4);
+  final _bitCount = Register64List(4);
 
-  final _hash = new Register64List(8);
-  final _K = new Register64List(8);
-  final _L = new Register64List(8);
-  final _block = new Register64List(8);
-  final _state = new Register64List(8);
+  final _hash = Register64List(8);
+  final _k = Register64List(8);
+  final _l = Register64List(8);
+  final _block = Register64List(8);
+  final _state = Register64List(8);
 
   WhirlpoolDigest() {
     reset();
   }
 
-  final algorithmName = "Whirlpool";
-  final digestSize = _DIGEST_LENGTH_BYTES;
+  @override
+  final algorithmName = 'Whirlpool';
+  @override
+  final digestSize = _DIGEST_lENGTH_BYTES;
 
+  @override
   void reset() {
     _bufferPos = 0;
     _buffer.fillRange(0, _buffer.length, 0);
@@ -46,12 +49,13 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     _bitCount.fillRange(0, _bitCount.length, 0);
 
     _hash.fillRange(0, _hash.length, 0);
-    _K.fillRange(0, _K.length, 0);
-    _L.fillRange(0, _L.length, 0);
+    _k.fillRange(0, _k.length, 0);
+    _l.fillRange(0, _l.length, 0);
     _block.fillRange(0, _block.length, 0);
     _state.fillRange(0, _state.length, 0);
   }
 
+  @override
   void updateByte(int inp) {
     _buffer[_bufferPos++] = inp;
 
@@ -62,8 +66,9 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     _increment();
   }
 
+  @override
   void update(Uint8List inp, int inpOff, int len) {
-    for (int i = 0; i < len; i++) {
+    for (var i = 0; i < len; i++) {
       _buffer[_bufferPos++] = inp[inpOff + i];
 
       if (_bufferPos == _buffer.length) {
@@ -74,10 +79,11 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     _increment(len * 8);
   }
 
+  @override
   int doFinal(Uint8List out, int outOff) {
     _finish();
 
-    for (int i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       _hash[i].pack(out, outOff + (i * 8), Endian.big);
     }
 
@@ -87,7 +93,7 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
   }
 
   void _processFilledBuffer(Uint8List inp, int inpOff) {
-    for (int i = 0; i < _state.length; i++) {
+    for (var i = 0; i < _state.length; i++) {
       _block[i].unpack(_buffer, i * 8, Endian.big);
     }
 
@@ -99,51 +105,51 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
 
   void _processBlock() {
     // compute and apply K^0
-    for (int i = 0; i < 8; i++) {
-      _K[i].set(_hash[i]);
+    for (var i = 0; i < 8; i++) {
+      _k[i].set(_hash[i]);
       _state[i]
         ..set(_block[i])
-        ..xor(_K[i]);
+        ..xor(_k[i]);
     }
 
     // iterate over the rounds
-    for (int round = 1; round <= _ROUNDS; round++) {
-      for (int i = 0; i < 8; i++) {
-        _L[i].set(0);
-        _L[i].xor(_C0[clip8(_K[(i - 0) & 7].hi32 >> 24)]);
-        _L[i].xor(_C1[clip8(_K[(i - 1) & 7].hi32 >> 16)]);
-        _L[i].xor(_C2[clip8(_K[(i - 2) & 7].hi32 >> 8)]);
-        _L[i].xor(_C3[clip8(_K[(i - 3) & 7].hi32)]);
-        _L[i].xor(_C4[clip8(_K[(i - 4) & 7].lo32 >> 24)]);
-        _L[i].xor(_C5[clip8(_K[(i - 5) & 7].lo32 >> 16)]);
-        _L[i].xor(_C6[clip8(_K[(i - 6) & 7].lo32 >> 8)]);
-        _L[i].xor(_C7[clip8(_K[(i - 7) & 7].lo32)]);
+    for (var round = 1; round <= _ROUNDS; round++) {
+      for (var i = 0; i < 8; i++) {
+        _l[i].set(0);
+        _l[i].xor(_c0[clip8(_k[(i - 0) & 7].hi32 >> 24)]);
+        _l[i].xor(_c1[clip8(_k[(i - 1) & 7].hi32 >> 16)]);
+        _l[i].xor(_c2[clip8(_k[(i - 2) & 7].hi32 >> 8)]);
+        _l[i].xor(_c3[clip8(_k[(i - 3) & 7].hi32)]);
+        _l[i].xor(_c4[clip8(_k[(i - 4) & 7].lo32 >> 24)]);
+        _l[i].xor(_c5[clip8(_k[(i - 5) & 7].lo32 >> 16)]);
+        _l[i].xor(_c6[clip8(_k[(i - 6) & 7].lo32 >> 8)]);
+        _l[i].xor(_c7[clip8(_k[(i - 7) & 7].lo32)]);
       }
 
-      _K.setRange(0, _K.length, _L);
+      _k.setRange(0, _k.length, _l);
 
-      _K[0].xor(_rc[round]);
+      _k[0].xor(_rc[round]);
 
       // apply the round transformation
-      for (int i = 0; i < 8; i++) {
-        _L[i].set(_K[i]);
-        _L[i].xor(_C0[clip8(_state[(i - 0) & 7].hi32 >> 24)]);
-        _L[i].xor(_C1[clip8(_state[(i - 1) & 7].hi32 >> 16)]);
-        _L[i].xor(_C2[clip8(_state[(i - 2) & 7].hi32 >> 8)]);
-        _L[i].xor(_C3[clip8(_state[(i - 3) & 7].hi32)]);
-        _L[i].xor(_C4[clip8(_state[(i - 4) & 7].lo32 >> 24)]);
-        _L[i].xor(_C5[clip8(_state[(i - 5) & 7].lo32 >> 16)]);
-        _L[i].xor(_C6[clip8(_state[(i - 6) & 7].lo32 >> 8)]);
-        _L[i].xor(_C7[clip8(_state[(i - 7) & 7].lo32)]);
+      for (var i = 0; i < 8; i++) {
+        _l[i].set(_k[i]);
+        _l[i].xor(_c0[clip8(_state[(i - 0) & 7].hi32 >> 24)]);
+        _l[i].xor(_c1[clip8(_state[(i - 1) & 7].hi32 >> 16)]);
+        _l[i].xor(_c2[clip8(_state[(i - 2) & 7].hi32 >> 8)]);
+        _l[i].xor(_c3[clip8(_state[(i - 3) & 7].hi32)]);
+        _l[i].xor(_c4[clip8(_state[(i - 4) & 7].lo32 >> 24)]);
+        _l[i].xor(_c5[clip8(_state[(i - 5) & 7].lo32 >> 16)]);
+        _l[i].xor(_c6[clip8(_state[(i - 6) & 7].lo32 >> 8)]);
+        _l[i].xor(_c7[clip8(_state[(i - 7) & 7].lo32)]);
       }
 
       // save the current state
-      _state.setRange(0, _state.length, _L);
+      _state.setRange(0, _state.length, _l);
     }
 
     // apply Miuaguchi-Preneel compression
-    final r = new Register64();
-    for (int i = 0; i < 8; i++) {
+    final r = Register64();
+    for (var i = 0; i < 8; i++) {
       _hash[i].xor(r
         ..set(_state[i])
         ..xor(_block[i]));
@@ -156,7 +162,7 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     var i = (_bitCount.length - 1);
     _bitCount[i].sum(bits);
 
-    while (_bitCount[i] == _R64_ZERO) {
+    while (_bitCount[i] == _r64Zero) {
       i--;
       _bitCount[i].sum(1);
     }
@@ -179,10 +185,10 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
 
     if (_bufferPos > 32) {
       final padCount = (_buffer.length - _bufferPos);
-      update(_ZEROS_LIST, 0, padCount);
+      update(_zerosList, 0, padCount);
     } else {
       final padCount = (32 - _bufferPos);
-      update(_ZEROS_LIST, 0, padCount);
+      update(_zerosList, 0, padCount);
     }
 
     // Add the length information to the final 32 bytes of the 64 byte block
@@ -193,15 +199,18 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
   }
 
   Uint8List _copyBitLength() {
-    final rv = new Uint8List(_bitCount.length * 8);
+    final rv = Uint8List(_bitCount.length * 8);
     for (var i = 0; i < _bitCount.length; i++) {
       _bitCount[i].pack(rv, i * 8, Endian.big);
     }
     return rv;
   }
+
+  @override
+  int get byteLength => 64;
 }
 
-final _C0 = new Register64List.from([
+final _c0 = Register64List.from([
   [0x18186018, 0xc07830d8],
   [0x23238c23, 0x05af4626],
   [0xc6c63fc6, 0x7ef991b8],
@@ -460,7 +469,7 @@ final _C0 = new Register64List.from([
   [0x86862286, 0x44a411c2]
 ]);
 
-final _C1 = new Register64List.from([
+final _c1 = Register64List.from([
   [0xd8181860, 0x18c07830],
   [0x2623238c, 0x2305af46],
   [0xb8c6c63f, 0xc67ef991],
@@ -719,7 +728,7 @@ final _C1 = new Register64List.from([
   [0xc2868622, 0x8644a411]
 ]);
 
-final _C2 = new Register64List.from([
+final _c2 = Register64List.from([
   [0x30d81818, 0x6018c078],
   [0x46262323, 0x8c2305af],
   [0x91b8c6c6, 0x3fc67ef9],
@@ -978,7 +987,7 @@ final _C2 = new Register64List.from([
   [0x11c28686, 0x228644a4]
 ]);
 
-final _C3 = new Register64List.from([
+final _c3 = Register64List.from([
   [0x7830d818, 0x186018c0],
   [0xaf462623, 0x238c2305],
   [0xf991b8c6, 0xc63fc67e],
@@ -1237,7 +1246,7 @@ final _C3 = new Register64List.from([
   [0xa411c286, 0x86228644]
 ]);
 
-final _C4 = new Register64List.from([
+final _c4 = Register64List.from([
   [0xc07830d8, 0x18186018],
   [0x05af4626, 0x23238c23],
   [0x7ef991b8, 0xc6c63fc6],
@@ -1496,7 +1505,7 @@ final _C4 = new Register64List.from([
   [0x44a411c2, 0x86862286]
 ]);
 
-final _C5 = new Register64List.from([
+final _c5 = Register64List.from([
   [0x18c07830, 0xd8181860],
   [0x2305af46, 0x2623238c],
   [0xc67ef991, 0xb8c6c63f],
@@ -1755,7 +1764,7 @@ final _C5 = new Register64List.from([
   [0x8644a411, 0xc2868622]
 ]);
 
-final _C6 = new Register64List.from([
+final _c6 = Register64List.from([
   [0x6018c078, 0x30d81818],
   [0x8c2305af, 0x46262323],
   [0x3fc67ef9, 0x91b8c6c6],
@@ -2014,7 +2023,7 @@ final _C6 = new Register64List.from([
   [0x228644a4, 0x11c28686]
 ]);
 
-final _C7 = new Register64List.from([
+final _c7 = Register64List.from([
   [0x186018c0, 0x7830d818],
   [0x238c2305, 0xaf462623],
   [0xc63fc67e, 0xf991b8c6],
@@ -2273,7 +2282,7 @@ final _C7 = new Register64List.from([
   [0x86228644, 0xa411c286]
 ]);
 
-final _rc = new Register64List.from([
+final _rc = Register64List.from([
   [0x00000000, 0x00000000],
   [0x1823c6e8, 0x87b8014f],
   [0x36a6d2f5, 0x796f9152],

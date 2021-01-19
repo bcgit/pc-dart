@@ -2,20 +2,20 @@
 
 library test.random.auto_seed_block_ctr_random_test;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/pointycastle.dart';
 
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
 void main() {
-  group("AutoSeedBlockCtrRandom:", () {
-    final rnd = new SecureRandom("AES/CTR/AUTO-SEED-PRNG");
+  group('AutoSeedBlockCtrRandom:', () {
+    final rnd = SecureRandom('AES/CTR/AUTO-SEED-PRNG');
 
-    test("${rnd.algorithmName}", () {
-      final key = new Uint8List(16);
-      final keyParam = new KeyParameter(key);
-      final params = new ParametersWithIV(keyParam, new Uint8List(16));
+    test('${rnd.algorithmName}', () {
+      final key = Uint8List(16);
+      final keyParam = KeyParameter(key);
+      final params = ParametersWithIV(keyParam, Uint8List(16));
 
       rnd.seed(params);
 

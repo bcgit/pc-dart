@@ -99,8 +99,7 @@ class _RegistryImpl implements FactoryRegistry {
   }
 
   RegistrableConstructor getConstructor(Type type, String registrableName) {
-    var constructor =
-        _constructorCache['$type.$registrableName'];
+    var constructor = _constructorCache['$type.$registrableName'];
 
     if (constructor == null) {
       constructor = _createConstructor(type, registrableName);
@@ -123,8 +122,7 @@ class _RegistryImpl implements FactoryRegistry {
 
     if (_dynamicFactories.containsKey(type)) {
       for (var factory in _dynamicFactories[type]) {
-        var constructor =
-            factory.tryFactory(registrableName);
+        var constructor = factory.tryFactory(registrableName);
         if (constructor != null) {
           return constructor;
         }
@@ -158,7 +156,9 @@ class _RegistryImpl implements FactoryRegistry {
 
   void _addDynamicFactoryConfig(DynamicFactoryConfig config) {
     Set factories = _dynamicFactories.putIfAbsent(
-        config.type, () => <DynamicFactoryConfig>{});
+        config.type,
+        () => Set<DynamicFactoryConfig>.of(
+            [])); // ignore: prefer_collection_literals
     factories.add(config);
   }
 

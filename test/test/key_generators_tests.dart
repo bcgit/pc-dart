@@ -2,15 +2,15 @@
 
 library test.test.key_generators_tests;
 
-import "package:test/test.dart";
-import "package:pointycastle/pointycastle.dart";
+import 'package:test/test.dart';
+import 'package:pointycastle/pointycastle.dart';
 
 void runKeyGeneratorTests(
     KeyGenerator keyGenerator, List<AsymmetricKeyPair> expectedKeyPairs) {
-  group("${keyGenerator.algorithmName}:", () {
-    group("generateKeyPair:", () {
+  group('${keyGenerator.algorithmName}:', () {
+    group('generateKeyPair:', () {
       for (var i = 0; i < expectedKeyPairs.length; i++) {
-        test("${i}",
+        test('$i',
             () => _runKeyGeneratorTest(keyGenerator, expectedKeyPairs[i]));
       }
     });

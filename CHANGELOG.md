@@ -1,18 +1,59 @@
 Changelog
 =========
+#### Version 2.0.1 (2021-01-16)
 
-#### Version TBD
+* Bug fix, ASN1Utils
+* Removal of 'dart:io'
+* RSAPrivateKey calculates the public exponent from the other values.
+
+The previous BigInt handling functions in the util package now treat encoded BigInts as twos compliment numbers, this
+may cause sudden unexpected failures if a number is suddenly negative. Users are advised to review their use of
+decodeBigInt and encodeBigInt.
+
+**utils.dart:**
+- decodeBigInt is twos compliment.
+- encodeBigInt is twos compliment and adds padding to preserve sign.
+- encodeBigIntAsUnsigned writes the magnitude without any padding.
+- decodeBigIntWithSign allows the specification of an arbitrary sign.
+- Previous uses of decodeBigInt where the expectation is an unsigned integer have been updated with
+  decodeBigIntWithSign(1, magnitude).
+
+#### Version 2.0.0 (2020-10-02)
+
+* No changes from 2.0.0-rc2
+
+#### Version 2.0.0-rc2 (2020-09-25)
+
+* Linter Fixes
+* Updates to ASN1 API
+
+#### Version 2.0.0-rc1 (2020-09-11) (Dart SDK version 2.1.1)::q!
 
 * Fixed OAEPEncoding and PKCS1Encoding to use provided output offset value.
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
 * Fixed RSASigner.verifySignature to return false when signature is bad.
 * Add HKDF support (IETF RFC 5869)
-* Add Poly1305, ChaCha20
-* Fixed randomly occuring bug with OAEP decoding.
+* Add Poly1305, ChaCha20, ChaCha7539, AES-GCM, SHA3, Keccak, RSA/PSS
+* Add CSHAKE, SHAKE
+* Fixed randomly occurring bug with OAEP decoding.
 * Added NormalizedECDSASigner that wraps ECDSASigner to guarantee an ecdsa signature in lower-s form. (Enforcement on verification supported).
 * Reduce copies in CBC mode.
+* Linter issues fixed.
+* FixedSecureRandom to use seed only once.
+* ASN1 - BOOLEAN, INTEGER, BIT_STRING, OCTET_STRING, NULL, OBJECT_IDENTIFIER, 
+  ENUMERATED, UTF8_STRING, SEQUENCE, SET, PRINTABLE_STRING, IA5_STRING & UTC_TIME
+* ASN1 Encoding - DER & BER
+* RSA Keys - Private Key carries public key exponent, added publicExponent and privateExponent where necessary
+  and deprecated single variable getters in for those values.
 
-
+##### Thanks, Steven
+ At this release the Point Castle Crypto API has been fully handed over to the 
+ Legion of the Bouncy Castle Inc. Steven Roose, it is no small thing to single headedly 
+ manage a cryptography API and your effort is rightfully respected by the Pointy Castle user 
+ base. We would like to thank you for your trust in us to carry the project forward, and we
+ wish you all the best!
+  
+  
 #### Version 1.0.2 (2019-11-15)
 
 * Add non-Keccak SHA3 support

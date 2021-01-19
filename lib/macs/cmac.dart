@@ -2,44 +2,43 @@
 
 library impl.mac.cmac;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/impl/base_mac.dart";
-import "package:pointycastle/paddings/iso7816d4.dart";
-import "package:pointycastle/block/modes/cbc.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/impl/base_mac.dart';
+import 'package:pointycastle/paddings/iso7816d4.dart';
+import 'package:pointycastle/block/modes/cbc.dart';
 
-/**
- * CMAC - as specified at www.nuee.nagoya-u.ac.jp/labs/tiwata/omac/omac.html
- * <p>
- * CMAC is analogous to OMAC1 - see also en.wikipedia.org/wiki/CMAC
- * </p><p>
- * CMAC is a NIST recomendation - see 
- * csrc.nist.gov/CryptoToolkit/modes/800-38_Series_Publications/SP800-38B.pdf
- * </p><p>
- * CMAC/OMAC1 is a blockcipher-based message authentication code designed and
- * analyzed by Tetsu Iwata and Kaoru Kurosawa.
- * </p><p>
- * CMAC/OMAC1 is a simple variant of the CBC MAC (Cipher Block Chaining Message 
- * Authentication Code). OMAC stands for One-Key CBC MAC.
- * </p><p>
- * It supports 128- or 64-bits block ciphers, with any key size, and returns
- * a MAC with dimension less or equal to the block size of the underlying 
- * cipher.
- * </p>
- */
+/// CMAC - as specified at www.nuee.nagoya-u.ac.jp/labs/tiwata/omac/omac.html
+/// <p>
+/// CMAC is analogous to OMAC1 - see also en.wikipedia.org/wiki/CMAC
+/// </p><p>
+/// CMAC is a NIST recomendation - see
+/// csrc.nist.gov/CryptoToolkit/modes/800-38_Series_Publications/SP800-38B.pdf
+/// </p><p>
+/// CMAC/OMAC1 is a blockcipher-based message authentication code designed and
+/// analyzed by Tetsu Iwata and Kaoru Kurosawa.
+/// </p><p>
+/// CMAC/OMAC1 is a simple variant of the CBC MAC (Cipher Block Chaining Message
+/// Authentication Code). OMAC stands for One-Key CBC MAC.
+/// </p><p>
+/// It supports 128- or 64-bits block ciphers, with any key size, and returns
+/// a MAC with dimension less or equal to the block size of the underlying
+/// cipher.
+/// </p>
 class CMac extends BaseMac {
-  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.suffix(
-      Mac,
-      "/CMAC",
-      (_, final Match match) => () {
-            BlockCipher cipher = new BlockCipher(match.group(1));
-            return new CMac.fromCipher(cipher);
-          });
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.suffix(
+    Mac,
+    '/CMAC',
+    (_, final Match match) => () {
+      var cipher = BlockCipher(match.group(1));
+      return CMac.fromCipher(cipher);
+    },
+  );
 
   Uint8List _poly;
-  Uint8List _ZEROES;
+  Uint8List _zeros;
 
   Uint8List _mac;
 
@@ -49,66 +48,64 @@ class CMac extends BaseMac {
 
   final int _macSize;
 
-  Uint8List _Lu, _Lu2;
+  Uint8List _lu, _lu2;
 
   ParametersWithIV _params;
 
-  /**
-     * create a standard MAC based on a CBC block cipher (64 or 128 bit block).
-     * This will produce an authentication code the length of the block size
-     * of the cipher.
-     *
-     * @param cipher the cipher to be used as the basis of the MAC generation.
-     */
+  ///
+  /// create a standard MAC based on a CBC block cipher (64 or 128 bit block).
+  /// This will produce an authentication code the length of the block size
+  /// of the cipher.
+  ///
+  /// @param cipher the cipher to be used as the basis of the MAC generation.
   CMac.fromCipher(BlockCipher cipher) : this(cipher, cipher.blockSize * 8);
 
-  /**
-     * create a standard MAC based on a block cipher with the size of the
-     * MAC been given in bits.
-     * <p>
-     * Note: the size of the MAC must be at least 24 bits (FIPS Publication 81),
-     * or 16 bits if being used as a data authenticator (FIPS Publication 113),
-     * and in general should be less than the size of the block cipher as it
-     * reduces the chance of an exhaustive attack (see Handbook of Applied
-     * Cryptography).
-     *
-     * @param cipher        the cipher to be used as the basis of the MAC generation.
-     * @param macSizeInBits the size of the MAC in bits, must be a multiple of 8 and &lt;= 128.
-     */
+  ///
+  /// create a standard MAC based on a block cipher with the size of the
+  /// MAC been given in bits.
+  /// <p>
+  /// Note: the size of the MAC must be at least 24 bits (FIPS Publication 81),
+  /// or 16 bits if being used as a data authenticator (FIPS Publication 113),
+  /// and in general should be less than the size of the block cipher as it
+  /// reduces the chance of an exhaustive attack (see Handbook of Applied
+  /// Cryptography).
+  ///
+  /// @param cipher        the cipher to be used as the basis of the MAC generation.
+  /// @param macSizeInBits the size of the MAC in bits, must be a multiple of 8 and &lt;= 128.
   CMac(BlockCipher cipher, int macSizeInBits)
-      : this._macSize = macSizeInBits ~/ 8,
-        this._cipher = new CBCBlockCipher(cipher) {
+      : _macSize = macSizeInBits ~/ 8,
+        _cipher = CBCBlockCipher(cipher) {
     if ((macSizeInBits % 8) != 0) {
-      throw new ArgumentError("MAC size must be multiple of 8");
+      throw ArgumentError('MAC size must be multiple of 8');
     }
 
     if (macSizeInBits > (_cipher.blockSize * 8)) {
-      throw new ArgumentError(
-          "MAC size must be less or equal to ${_cipher.blockSize * 8}");
+      throw ArgumentError(
+          'MAC size must be less or equal to ${_cipher.blockSize * 8}');
     }
 
     _poly = lookupPoly(cipher.blockSize);
 
-    _mac = new Uint8List(cipher.blockSize);
+    _mac = Uint8List(cipher.blockSize);
 
-    _buf = new Uint8List(cipher.blockSize);
+    _buf = Uint8List(cipher.blockSize);
 
-    _ZEROES = new Uint8List(cipher.blockSize);
+    _zeros = Uint8List(cipher.blockSize);
 
     _bufOff = 0;
   }
 
   @override
   String get algorithmName {
-    String blockCipherAlgorithmName = _cipher.algorithmName.split("/").first;
-    return "${blockCipherAlgorithmName}/CMAC";
+    var blockCipherAlgorithmName = _cipher.algorithmName.split('/').first;
+    return '$blockCipherAlgorithmName/CMAC';
   }
 
   static int shiftLeft(Uint8List block, Uint8List output) {
-    int i = block.length;
-    int bit = 0;
+    var i = block.length;
+    var bit = 0;
     while (--i >= 0) {
-      int b = block[i] & 0xff;
+      var b = block[i] & 0xff;
       output[i] = ((b << 1) | bit);
       bit = (b >> 7) & 1;
     }
@@ -116,11 +113,11 @@ class CMac extends BaseMac {
   }
 
   Uint8List _doubleLu(Uint8List inp) {
-    Uint8List ret = new Uint8List(inp.length);
-    int carry = shiftLeft(inp, ret);
+    var ret = Uint8List(inp.length);
+    var carry = shiftLeft(inp, ret);
 
     // NOTE: This construction is an attempt at a constant-time implementation.
-    int mask = (-carry) & 0xff;
+    var mask = (-carry) & 0xff;
     ret[inp.length - 3] ^= _poly[1] & mask;
     ret[inp.length - 2] ^= _poly[2] & mask;
     ret[inp.length - 1] ^= _poly[3] & mask;
@@ -171,11 +168,11 @@ class CMac extends BaseMac {
         xor = 0x86001;
         break;
       default:
-        throw new ArgumentError(
-            "Unknown block size for CMAC: ${blockSizeLength * 8}");
+        throw ArgumentError(
+            'Unknown block size for CMAC: ${blockSizeLength * 8}');
     }
 
-    final out = new Uint8List(4);
+    final out = Uint8List(4);
     out[3] = (xor >> 0);
     out[2] = (xor >> 8);
     out[1] = (xor >> 16);
@@ -185,24 +182,24 @@ class CMac extends BaseMac {
 
   @override
   void init(covariant KeyParameter keyParams) {
-    final zeroIV = new Uint8List(keyParams.key.length);
-    this._params = new ParametersWithIV(keyParams, zeroIV);
+    final zeroIV = Uint8List(keyParams.key.length);
+    _params = ParametersWithIV(keyParams, zeroIV);
 
     // Initialize before computing L, Lu, Lu2
     _cipher.init(true, _params);
 
     //initializes the L, Lu, Lu2 numbers
-    Uint8List L = new Uint8List(_ZEROES.length);
-    _cipher.processBlock(_ZEROES, 0, L, 0);
-    _Lu = _doubleLu(L);
-    _Lu2 = _doubleLu(_Lu);
+    var L = Uint8List(_zeros.length);
+    _cipher.processBlock(_zeros, 0, L, 0);
+    _lu = _doubleLu(L);
+    _lu2 = _doubleLu(_lu);
 
     // Reset _buf/_cipher state after computing L, Lu, Lu2
     reset();
   }
 
   @override
-  get macSize => _macSize;
+  int get macSize => _macSize;
 
   @override
   void updateByte(int inp) {
@@ -217,11 +214,11 @@ class CMac extends BaseMac {
   @override
   void update(Uint8List inp, int inOff, int len) {
     if (len < 0) {
-      throw new ArgumentError("Can't have a negative input length!");
+      throw ArgumentError('Can\'t have a negative input length!');
     }
 
-    int blockSize = _cipher.blockSize;
-    int gapLen = blockSize - _bufOff;
+    var blockSize = _cipher.blockSize;
+    var gapLen = blockSize - _bufOff;
 
     if (len > gapLen) {
       _buf.setRange(_bufOff, _bufOff + gapLen, inp.sublist(inOff));
@@ -247,17 +244,17 @@ class CMac extends BaseMac {
 
   @override
   int doFinal(Uint8List out, int outOff) {
-    int blockSize = _cipher.blockSize;
+    var blockSize = _cipher.blockSize;
 
     Uint8List lu;
     if (_bufOff == blockSize) {
-      lu = _Lu;
+      lu = _lu;
     } else {
-      new ISO7816d4Padding().addPadding(_buf, _bufOff);
-      lu = _Lu2;
+      ISO7816d4Padding().addPadding(_buf, _bufOff);
+      lu = _lu2;
     }
 
-    for (int i = 0; i < _mac.length; i++) {
+    for (var i = 0; i < _mac.length; i++) {
       _buf[i] ^= lu[i];
     }
 
@@ -274,7 +271,7 @@ class CMac extends BaseMac {
   @override
   void reset() {
     // clean the buffer.
-    for (int i = 0; i < _buf.length; i++) {
+    for (var i = 0; i < _buf.length; i++) {
       _buf[i] = 0;
     }
 

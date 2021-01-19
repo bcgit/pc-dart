@@ -8,12 +8,12 @@ import 'package:pointycastle/block/modes/cbc.dart';
 import 'package:pointycastle/block/modes/cfb.dart';
 import 'package:pointycastle/block/modes/ctr.dart';
 import 'package:pointycastle/block/modes/ecb.dart';
+import 'package:pointycastle/block/modes/gcm.dart';
 import 'package:pointycastle/block/modes/gctr.dart';
 import 'package:pointycastle/block/modes/ofb.dart';
-import 'package:pointycastle/block/modes/gcm.dart';
 import 'package:pointycastle/block/modes/sic.dart';
-import 'package:pointycastle/digests/keccak.dart';
 import 'package:pointycastle/digests/blake2b.dart';
+import 'package:pointycastle/digests/keccak.dart';
 import 'package:pointycastle/digests/md2.dart';
 import 'package:pointycastle/digests/md4.dart';
 import 'package:pointycastle/digests/md5.dart';
@@ -28,6 +28,8 @@ import 'package:pointycastle/digests/sha3.dart';
 import 'package:pointycastle/digests/sha384.dart';
 import 'package:pointycastle/digests/sha512.dart';
 import 'package:pointycastle/digests/sha512t.dart';
+import 'package:pointycastle/digests/shake.dart';
+import 'package:pointycastle/digests/cshake.dart';
 import 'package:pointycastle/digests/tiger.dart';
 import 'package:pointycastle/digests/whirlpool.dart';
 import 'package:pointycastle/ecc/curves/brainpoolp160r1.dart';
@@ -112,133 +114,136 @@ void registerFactories(FactoryRegistry registry) {
 }
 
 void _registerAsymmetricCiphers(FactoryRegistry registry) {
-  registry.register(OAEPEncoding.FACTORY_CONFIG);
-  registry.register(PKCS1Encoding.FACTORY_CONFIG);
-  registry.register(RSAEngine.FACTORY_CONFIG);
+  registry.register(OAEPEncoding.factoryConfig);
+  registry.register(PKCS1Encoding.factoryConfig);
+  registry.register(RSAEngine.factoryConfig);
 }
 
 void _registerBlockCiphers(FactoryRegistry registry) {
-  registry.register(AESFastEngine.FACTORY_CONFIG);
+  registry.register(AESFastEngine.factoryConfig);
 
   // modes
-  registry.register(CBCBlockCipher.FACTORY_CONFIG);
-  registry.register(CFBBlockCipher.FACTORY_CONFIG);
-  registry.register(CTRBlockCipher.FACTORY_CONFIG);
-  registry.register(ECBBlockCipher.FACTORY_CONFIG);
-  registry.register(GCTRBlockCipher.FACTORY_CONFIG);
-  registry.register(OFBBlockCipher.FACTORY_CONFIG);
-  registry.register(SICBlockCipher.FACTORY_CONFIG);
-  registry.register(GCMBlockCipher.FACTORY_CONFIG);
+  registry.register(CBCBlockCipher.factoryConfig);
+  registry.register(CFBBlockCipher.factoryConfig);
+  registry.register(CTRBlockCipher.factoryConfig);
+  registry.register(ECBBlockCipher.factoryConfig);
+  registry.register(GCTRBlockCipher.factoryConfig);
+  registry.register(OFBBlockCipher.factoryConfig);
+  registry.register(SICBlockCipher.factoryConfig);
+  registry.register(GCMBlockCipher.factoryConfig);
 }
 
 void _registerDigests(FactoryRegistry registry) {
-  registry.register(Blake2bDigest.FACTORY_CONFIG);
-  registry.register(MD2Digest.FACTORY_CONFIG);
-  registry.register(MD4Digest.FACTORY_CONFIG);
-  registry.register(MD5Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD128Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD160Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD256Digest.FACTORY_CONFIG);
-  registry.register(RIPEMD320Digest.FACTORY_CONFIG);
-  registry.register(SHA1Digest.FACTORY_CONFIG);
-  registry.register(SHA3Digest.FACTORY_CONFIG);
-  registry.register(KeccakDigest.FACTORY_CONFIG);
-  registry.register(SHA224Digest.FACTORY_CONFIG);
-  registry.register(SHA256Digest.FACTORY_CONFIG);
-  registry.register(SHA384Digest.FACTORY_CONFIG);
-  registry.register(SHA512Digest.FACTORY_CONFIG);
-  registry.register(SHA512tDigest.FACTORY_CONFIG);
-  registry.register(TigerDigest.FACTORY_CONFIG);
-  registry.register(WhirlpoolDigest.FACTORY_CONFIG);
+  registry.register(Blake2bDigest.factoryConfig);
+  registry.register(MD2Digest.factoryConfig);
+  registry.register(MD4Digest.factoryConfig);
+  registry.register(MD5Digest.factoryConfig);
+  registry.register(RIPEMD128Digest.factoryConfig);
+  registry.register(RIPEMD160Digest.factoryConfig);
+  registry.register(RIPEMD256Digest.factoryConfig);
+  registry.register(RIPEMD320Digest.factoryConfig);
+  registry.register(SHA1Digest.factoryConfig);
+  registry.register(SHA3Digest.factoryConfig);
+  registry.register(KeccakDigest.factoryConfig);
+  registry.register(SHA224Digest.factoryConfig);
+  registry.register(SHA256Digest.factoryConfig);
+  registry.register(SHA384Digest.factoryConfig);
+  registry.register(SHA512Digest.factoryConfig);
+  registry.register(SHA512tDigest.factoryConfig);
+  registry.register(TigerDigest.factoryConfig);
+  registry.register(WhirlpoolDigest.factoryConfig);
+  registry.register(SHAKEDigest.factoryConfig);
+  registry.register(CSHAKEDigest.factoryConfig);
 }
 
 void _registerECCurves(FactoryRegistry registry) {
-  registry.register(ECCurve_brainpoolp160r1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp160t1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp192r1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp192t1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp224r1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp224t1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp256r1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp256t1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp320r1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp320t1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp384r1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp384t1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp512r1.FACTORY_CONFIG);
-  registry.register(ECCurve_brainpoolp512t1.FACTORY_CONFIG);
-  registry.register(ECCurve_gostr3410_2001_cryptopro_a.FACTORY_CONFIG);
-  registry.register(ECCurve_gostr3410_2001_cryptopro_b.FACTORY_CONFIG);
-  registry.register(ECCurve_gostr3410_2001_cryptopro_c.FACTORY_CONFIG);
-  registry.register(ECCurve_gostr3410_2001_cryptopro_xcha.FACTORY_CONFIG);
-  registry.register(ECCurve_gostr3410_2001_cryptopro_xchb.FACTORY_CONFIG);
-  registry.register(ECCurve_prime192v1.FACTORY_CONFIG);
-  registry.register(ECCurve_prime192v2.FACTORY_CONFIG);
-  registry.register(ECCurve_prime192v3.FACTORY_CONFIG);
-  registry.register(ECCurve_prime239v1.FACTORY_CONFIG);
-  registry.register(ECCurve_prime239v2.FACTORY_CONFIG);
-  registry.register(ECCurve_prime239v3.FACTORY_CONFIG);
-  registry.register(ECCurve_prime256v1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp112r1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp112r2.FACTORY_CONFIG);
-  registry.register(ECCurve_secp128r1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp128r2.FACTORY_CONFIG);
-  registry.register(ECCurve_secp160k1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp160r1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp160r2.FACTORY_CONFIG);
-  registry.register(ECCurve_secp192k1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp192r1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp224k1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp224r1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp256k1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp256r1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp384r1.FACTORY_CONFIG);
-  registry.register(ECCurve_secp521r1.FACTORY_CONFIG);
+  registry.register(ECCurve_brainpoolp160r1.factoryConfig);
+  registry.register(ECCurve_brainpoolp160t1.factoryConfig);
+  registry.register(ECCurve_brainpoolp192r1.factoryConfig);
+  registry.register(ECCurve_brainpoolp192t1.factoryConfig);
+  registry.register(ECCurve_brainpoolp224r1.factoryConfig);
+  registry.register(ECCurve_brainpoolp224t1.factoryConfig);
+  registry.register(ECCurve_brainpoolp256r1.factoryConfig);
+  registry.register(ECCurve_brainpoolp256t1.factoryConfig);
+  registry.register(ECCurve_brainpoolp320r1.factoryConfig);
+  registry.register(ECCurve_brainpoolp320t1.factoryConfig);
+  registry.register(ECCurve_brainpoolp384r1.factoryConfig);
+  registry.register(ECCurve_brainpoolp384t1.factoryConfig);
+  registry.register(ECCurve_brainpoolp512r1.factoryConfig);
+  registry.register(ECCurve_brainpoolp512t1.factoryConfig);
+  registry.register(ECCurve_gostr3410_2001_cryptopro_a.factoryConfig);
+  registry.register(ECCurve_gostr3410_2001_cryptopro_b.factoryConfig);
+  registry.register(ECCurve_gostr3410_2001_cryptopro_c.factoryConfig);
+  registry.register(ECCurve_gostr3410_2001_cryptopro_xcha.factoryConfig);
+  registry.register(ECCurve_gostr3410_2001_cryptopro_xchb.factoryConfig);
+  registry.register(ECCurve_prime192v1.factoryConfig);
+  registry.register(ECCurve_prime192v2.factoryConfig);
+  registry.register(ECCurve_prime192v3.factoryConfig);
+  registry.register(ECCurve_prime239v1.factoryConfig);
+  registry.register(ECCurve_prime239v2.factoryConfig);
+  registry.register(ECCurve_prime239v3.factoryConfig);
+  registry.register(ECCurve_prime256v1.factoryConfig);
+  registry.register(ECCurve_secp112r1.factoryConfig);
+  registry.register(ECCurve_secp112r2.factoryConfig);
+  registry.register(ECCurve_secp128r1.factoryConfig);
+  registry.register(ECCurve_secp128r2.factoryConfig);
+  registry.register(ECCurve_secp160k1.factoryConfig);
+  registry.register(ECCurve_secp160r1.factoryConfig);
+  registry.register(ECCurve_secp160r2.factoryConfig);
+  registry.register(ECCurve_secp192k1.factoryConfig);
+  registry.register(ECCurve_secp192r1.factoryConfig);
+  registry.register(ECCurve_secp224k1.factoryConfig);
+  registry.register(ECCurve_secp224r1.factoryConfig);
+  registry.register(ECCurve_secp256k1.factoryConfig);
+  registry.register(ECCurve_secp256r1.factoryConfig);
+  registry.register(ECCurve_secp384r1.factoryConfig);
+  registry.register(ECCurve_secp521r1.factoryConfig);
 }
 
 void _registerKeyDerivators(FactoryRegistry registry) {
-  registry.register(PBKDF2KeyDerivator.FACTORY_CONFIG);
-  registry.register(Scrypt.FACTORY_CONFIG);
-  registry.register(HKDFKeyDerivator.FACTORY_CONFIG);
+  registry.register(PBKDF2KeyDerivator.factoryConfig);
+  registry.register(Scrypt.factoryConfig);
+  registry.register(HKDFKeyDerivator.factoryConfig);
 }
 
 void _registerKeyGenerators(FactoryRegistry registry) {
-  registry.register(ECKeyGenerator.FACTORY_CONFIG);
-  registry.register(RSAKeyGenerator.FACTORY_CONFIG);
+  registry.register(ECKeyGenerator.factoryConfig);
+  registry.register(RSAKeyGenerator.factoryConfig);
 }
 
 void _registerMacs(FactoryRegistry registry) {
-  registry.register(HMac.FACTORY_CONFIG);
-  registry.register(CMac.FACTORY_CONFIG);
-  registry.register(CBCBlockCipherMac.FACTORY_CONFIG);
-  registry.register(Poly1305.FACTORY_CONFIG);
+  registry.register(HMac.factoryConfig);
+  registry.register(CMac.factoryConfig);
+  registry.register(CBCBlockCipherMac.factoryConfig);
+  registry.register(Poly1305.factoryConfig);
 }
 
 void _registerPaddedBlockCiphers(FactoryRegistry registry) {
-  registry.register(PaddedBlockCipherImpl.FACTORY_CONFIG);
+  registry.register(PaddedBlockCipherImpl.factoryConfig);
 }
 
 void _registerPaddings(FactoryRegistry registry) {
-  registry.register(PKCS7Padding.FACTORY_CONFIG);
-  registry.register(ISO7816d4Padding.FACTORY_CONFIG);
+  registry.register(PKCS7Padding.factoryConfig);
+  registry.register(ISO7816d4Padding.factoryConfig);
 }
 
 void _registerRandoms(FactoryRegistry registry) {
-  registry.register(AutoSeedBlockCtrRandom.FACTORY_CONFIG);
-  registry.register(BlockCtrRandom.FACTORY_CONFIG);
-  registry.register(FortunaRandom.FACTORY_CONFIG);
+  registry.register(AutoSeedBlockCtrRandom.factoryConfig);
+  registry.register(BlockCtrRandom.factoryConfig);
+  registry.register(FortunaRandom.factoryConfig);
 }
 
 void _registerSigners(FactoryRegistry registry) {
-  registry.register(ECDSASigner.FACTORY_CONFIG);
-  registry.register(RSASigner.FACTORY_CONFIG);
+  registry.register(ECDSASigner.factoryConfig);
+  registry.register(PSSSigner.factoryConfig);
+  registry.register(RSASigner.factoryConfig);
 }
 
 void _registerStreamCiphers(FactoryRegistry registry) {
-  registry.register(CTRStreamCipher.FACTORY_CONFIG);
-  registry.register(Salsa20Engine.FACTORY_CONFIG);
-  registry.register(ChaCha20Engine.FACTORY_CONFIG);
-  registry.register(ChaCha7539Engine.FACTORY_CONFIG);
-  registry.register(ChaCha20Poly1305.FACTORY_CONFIG);
-  registry.register(SICStreamCipher.FACTORY_CONFIG);
+  registry.register(CTRStreamCipher.factoryConfig);
+  registry.register(Salsa20Engine.factoryConfig);
+  registry.register(ChaCha20Engine.factoryConfig);
+  registry.register(ChaCha7539Engine.factoryConfig);
+  registry.register(ChaCha20Poly1305.factoryConfig);
+  registry.register(SICStreamCipher.factoryConfig);
 }

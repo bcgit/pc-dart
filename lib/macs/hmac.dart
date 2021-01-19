@@ -2,49 +2,33 @@
 
 library impl.mac.hmac;
 
-import "dart:typed_data";
+import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/src/impl/base_mac.dart";
-import "package:pointycastle/src/registry/registry.dart";
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/base_mac.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
-/**
- * HMAC implementation based on RFC2104
- *
- * H(K XOR opad, H(K XOR ipad, text))
- */
+/// HMAC implementation based on RFC2104
+///
+/// H(K XOR opad, H(K XOR ipad, text))
 class HMac extends BaseMac {
-  static final FactoryConfig FACTORY_CONFIG =
-      DynamicFactoryConfig.suffix(Mac, '/HMAC', (_, Match match) {
-    final digestName = match.group(1);
-    return () {
-      return HMac.withDigest(Digest(digestName));
-    };
-  });
-
-  //TODO make this more generic
-  static final Map<String, int> _DIGEST_BLOCK_LENGTH = {
-    "GOST3411": 32,
-    "MD2": 16,
-    "MD4": 64,
-    "MD5": 64,
-    "RIPEMD-128": 64,
-    "RIPEMD-160": 64,
-    "SHA-1": 64,
-    "SHA-224": 64,
-    "SHA-256": 64,
-    "SHA-384": 128,
-    "SHA-512": 128,
-    "Tiger": 64,
-    "Whirlpool": 64,
-  };
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.suffix(
+    Mac,
+    '/HMAC',
+    (_, Match match) {
+      final digestName = match.group(1);
+      return () {
+        return HMac.withDigest(Digest(digestName));
+      };
+    },
+  );
 
   //TODO reindent
 
-  static final _IPAD = 0x36;
-  static final _OPAD = 0x5C;
+  static final _ipad = 0x36;
+  static final _opad = 0x5C;
 
-  Digest _digest;
+  final Digest _digest;
   int _digestSize;
   int _blockLength;
 
@@ -53,37 +37,29 @@ class HMac extends BaseMac {
 
   HMac(this._digest, this._blockLength) {
     _digestSize = _digest.digestSize;
-    _inputPad = new Uint8List(_blockLength);
-    _outputBuf = new Uint8List(_blockLength + _digestSize);
+    _inputPad = Uint8List(_blockLength);
+    _outputBuf = Uint8List(_blockLength + _digestSize);
   }
 
   HMac.withDigest(this._digest) {
-    //
-    // TODO Digests should report length of internal buffer .. read on.
-    // Anything that consumes a digest that needs this information should
-    // be able to obtain it from the digest instance.
-    //
-
-    if (_digest is ExtendedDigest) {
-      _blockLength = (_digest as ExtendedDigest).getByteLength();
-    } else {
-      _blockLength = _DIGEST_BLOCK_LENGTH[_digest.algorithmName];
-      if (_blockLength == null) {
-        throw ArgumentError(
-            'Digest, ${_digest
-                .algorithmName} does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
-      }
+    _blockLength = _digest.byteLength;
+    if (_blockLength == null) {
+      throw ArgumentError(
+          'Digest, ${_digest.algorithmName} does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
     }
 
     _digestSize = _digest.digestSize;
-    _inputPad = new Uint8List(_blockLength);
-    _outputBuf = new Uint8List(_blockLength + _digestSize);
+    _inputPad = Uint8List(_blockLength);
+    _outputBuf = Uint8List(_blockLength + _digestSize);
   }
 
-  String get algorithmName => "${_digest.algorithmName}/HMAC";
+  @override
+  String get algorithmName => '${_digest.algorithmName}/HMAC';
 
+  @override
   int get macSize => _digestSize;
 
+  @override
   void reset() {
     // reset the underlying digest.
     _digest.reset();
@@ -92,6 +68,7 @@ class HMac extends BaseMac {
     _digest.update(_inputPad, 0, _inputPad.length);
   }
 
+  @override
   void init(covariant KeyParameter params) {
     _digest.reset();
 
@@ -111,20 +88,23 @@ class HMac extends BaseMac {
 
     _outputBuf.setRange(0, _blockLength, _inputPad);
 
-    _xorPad(_inputPad, _blockLength, _IPAD);
-    _xorPad(_outputBuf, _blockLength, _OPAD);
+    _xorPad(_inputPad, _blockLength, _ipad);
+    _xorPad(_outputBuf, _blockLength, _opad);
 
     _digest.update(_inputPad, 0, _inputPad.length);
   }
 
+  @override
   void updateByte(int inp) {
     _digest.updateByte(inp);
   }
 
+  @override
   void update(Uint8List inp, int inpOff, int len) {
     _digest.update(inp, inpOff, len);
   }
 
+  @override
   int doFinal(Uint8List out, int outOff) {
     _digest.doFinal(_outputBuf, _blockLength);
     _digest.update(_outputBuf, 0, _outputBuf.length);

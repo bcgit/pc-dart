@@ -151,7 +151,7 @@ Uint8List unpad(Uint8List padded) =>
 //----------------------------------------------------------------
 /// Derive a key from a passphrase.
 ///
-/// The [passphrase] is an arbitrary length secret string.
+/// The [passPhrase] is an arbitrary length secret string.
 ///
 /// The [bitLength] is the length of key produced. It determines whether
 /// AES-128, AES-192, or AES-256 will be used. It must be one of those values.
@@ -164,7 +164,8 @@ Uint8List passphraseToKey(String passPhrase,
   final numBytes = bitLength ~/ 8;
 
   final kd = KeyDerivator('SHA-256/HMAC/PBKDF2')
-    ..init(Pbkdf2Parameters(utf8.encode(salt) as Uint8List, iterations, numBytes));
+    ..init(
+        Pbkdf2Parameters(utf8.encode(salt) as Uint8List, iterations, numBytes));
 
   return kd.process(utf8.encode(passPhrase) as Uint8List);
 }

@@ -15,10 +15,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/pointycastle.dart';
 
 Uint8List md5Digest(Uint8List dataToDigest) {
-  Digest d = new Digest("MD5");
+  var d = Digest('MD5');
 
   return d.process(dataToDigest);
 }
@@ -33,7 +33,7 @@ void main(List<String> args) {
 
   for (final data in valuesToDigest) {
     print('Data: "$data"');
-    final hash = md5Digest(utf8.encode(data));
+    final hash = md5Digest(Uint8List.fromList(utf8.encode(data)));
     print('MD5: $hash');
     print('MD5: ${bin2hex(hash)}'); // output in hexadecimal
   }

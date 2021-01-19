@@ -2,8 +2,8 @@
 
 library benchmark.digests.md4_benchmark;
 
-import "../benchmark/digest_benchmark.dart";
+import '../benchmark/digest_benchmark.dart';
 
-main() {
-  new DigestBenchmark("MD4").report();
+void main() {
+  DigestBenchmark('MD4').report();
 }

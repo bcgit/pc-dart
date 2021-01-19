@@ -124,12 +124,12 @@ void testSHA3AgainstVectors() {
         'cf9a30ac1f1f6ac0916f9fef1919c595debe2ee80c85421210fdf05f1c6af73aa9cac881d0f91db6d034a2bbadc1cf7fbcb2ecfa9d191d3a5016fb3fad8709c9')
   ];
 
-  group("SHA-3", () {
+  group('SHA-3', () {
     for (var vector in vectors) {
       test(vector.algo, () {
         var partialBits = vector.bits % 8;
         var bitLen = algoToSize[vector.algo];
-        var digest = new SHA3Digest(bitLen);
+        var digest = SHA3Digest(bitLen);
         Uint8List out;
 
         if (partialBits == 0) {
@@ -173,7 +173,8 @@ void testSHA3SizeEnforcement() {
 
       var bitLen = 123;
       try {
-        new SHA3Digest(bitLen);
+        SHA3Digest(bitLen);
+        fail('Invalid sha3 bitlen accepted');
       } on StateError catch (se) {
         expect(se.message,
             'invalid bitLength ($bitLen) for SHA-3 must only be 224,256,384,512');

@@ -14,12 +14,10 @@ bool _testBit(BigInt i, int n) {
   return (i & (BigInt.one << n)) != BigInt.zero;
 }
 
-
-
 class ECDSASigner implements Signer {
   /// Intended for internal use.
   // ignore: non_constant_identifier_names
-  static final FactoryConfig FACTORY_CONFIG = DynamicFactoryConfig.regex(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.regex(
       Signer, r'^(.+)/(DET-)?ECDSA$', (_, final Match match) {
     // ignore: omit_local_variable_types
     final String digestName = match.group(1);
@@ -46,7 +44,7 @@ class ECDSASigner implements Signer {
 
   @override
   String get algorithmName =>
-      "${_digest.algorithmName}/${_kMac == null ? "" : "DET-"}ECDSA";
+      '${_digest.algorithmName}/${_kMac == null ? '' : 'DET-'}ECDSA';
 
   @override
   void reset() {}
@@ -185,9 +183,9 @@ class ECDSASigner implements Signer {
     var messageBitLength = message.length * 8;
 
     if (log2n >= messageBitLength) {
-      return utils.decodeBigInt(message);
+      return utils.decodeBigIntWithSign(1, message);
     } else {
-      var trunc = utils.decodeBigInt(message);
+      var trunc = utils.decodeBigIntWithSign(1, message);
 
       trunc = trunc >> (messageBitLength - log2n);
 
@@ -203,7 +201,8 @@ class ECDSASigner implements Signer {
     }
 
     // Point multiplication for Koblitz curves (using WTNAF) beats Shamir's trick
-    /* TODO: uncomment this when F2m available
+    // TODO: uncomment this when F2m available
+    /*
     if( c is ECCurve.F2m ) {
       ECCurve.F2m f2mCurve = (ECCurve.F2m)c;
       if( f2mCurve.isKoblitz() ) {
@@ -273,14 +272,13 @@ class NormalizedECDSASigner implements Signer {
   @override
   bool verifySignature(Uint8List message, Signature signature) {
     var isNormalized =
-    (signature as ECSignature).isNormalized(signer._pbkey.parameters);
-    var isVerified = signer.verifySignature(message, signature);
+        (signature as ECSignature).isNormalized(signer._pbkey.parameters);
+    var isVerified = signer.verifySignature(message, signature as ECSignature);
 
     // Constant time.
     return (isNormalized | !enforceNormalized) & isVerified;
   }
 }
-
 
 class _RFC6979KCalculator {
   final Mac _mac;
@@ -377,7 +375,7 @@ class _RFC6979KCalculator {
   }
 
   BigInt _bitsToInt(Uint8List t) {
-    var v = utils.decodeBigInt(t);
+    var v = utils.decodeBigIntWithSign(1, t);
     if ((t.length * 8) > _n.bitLength) {
       v = v >> ((t.length * 8) - _n.bitLength);
     }

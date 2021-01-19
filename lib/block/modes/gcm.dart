@@ -1,4 +1,3 @@
-
 library impl.block_cipher.modes.gcm;
 
 import 'dart:math' show min;
@@ -11,14 +10,13 @@ import '../../src/registry/registry.dart';
 class GCMBlockCipher extends BaseAEADBlockCipher {
   /// Intended for internal use.
   // ignore: non_constant_identifier_names
-  static final FactoryConfig FACTORY_CONFIG = DynamicFactoryConfig.suffix(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.suffix(
       BlockCipher,
       '/GCM',
-          (_, final Match match) =>
-          () {
-        var underlying = BlockCipher(match.group(1));
-        return GCMBlockCipher(underlying);
-      });
+      (_, final Match match) => () {
+            var underlying = BlockCipher(match.group(1));
+            return GCMBlockCipher(underlying);
+          });
 
   Uint8List _h;
   Uint8List _counter;
@@ -74,7 +72,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
   @override
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     var length =
-    blockSize < inp.length - inpOff ? blockSize : inp.length - inpOff;
+        blockSize < inp.length - inpOff ? blockSize : inp.length - inpOff;
 
     var i = Uint8List(blockSize);
     i.setAll(0, inp.skip(inpOff).take(length));
@@ -149,13 +147,13 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
   }
 
   bool _bit(Uint8List x, int n) {
-    int byte = n ~/ 8;
-    int mask = 1 << (7 - n % 8);
+    var byte = n ~/ 8;
+    var mask = 1 << (7 - n % 8);
     return x[byte] & mask == mask;
   }
 
   bool _shiftRight(Uint8List x) {
-    bool overflow = false;
+    var overflow = false;
     for (var i = 0; i < x.length; i++) {
       var nextOverflow = x[i] & 0x1 == 0x1;
       x[i] >>= 1;
@@ -172,8 +170,8 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
         : 0;
 
     var len = Uint8List.view((Uint64List(2)
-      ..[1] = aad.length * 8
-      ..[0] = _processedBytes * 8)
+          ..[1] = aad.length * 8
+          ..[0] = _processedBytes * 8)
         .buffer);
     len = Uint8List.fromList(len.reversed.toList());
 

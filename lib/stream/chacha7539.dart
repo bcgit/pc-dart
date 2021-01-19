@@ -17,7 +17,7 @@ import '../src/ufixnum.dart';
 /// other changes.
 class ChaCha7539Engine extends BaseStreamCipher {
   // ignore: non_constant_identifier_names
-  static final FactoryConfig FACTORY_CONFIG = DynamicFactoryConfig.prefix(
+  static final FactoryConfig factoryConfig = DynamicFactoryConfig.prefix(
       StreamCipher,
       'ChaCha7539/',
           (_, final Match match) => () {
@@ -310,5 +310,5 @@ class ChaCha7539Engine extends BaseStreamCipher {
   }
 
   @override
-  external dynamic noSuchMethod(Invocation invocation);
+  dynamic noSuchMethod(Invocation invocation);
 }

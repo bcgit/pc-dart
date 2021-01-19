@@ -15,7 +15,7 @@ import 'dart:typed_data';
 //import 'package:pointycastle/pointycastle.dart';
 
 // When not using the registry:
-import "package:pointycastle/export.dart";
+import 'package:pointycastle/export.dart';
 
 //================================================================
 // Test data
@@ -140,7 +140,7 @@ AsymmetricBlockCipher _createBlockCipher(AsymBlockCipherToUse scheme) {
 
 Uint8List rsaEncrypt(RSAPublicKey myPublic, Uint8List dataToEncrypt,
     AsymBlockCipherToUse scheme) {
-  AsymmetricBlockCipher encryptor = _createBlockCipher(scheme);
+  var encryptor = _createBlockCipher(scheme);
 
   encryptor.init(
     true,
@@ -154,7 +154,7 @@ Uint8List rsaEncrypt(RSAPublicKey myPublic, Uint8List dataToEncrypt,
 
 Uint8List rsaDecrypt(RSAPrivateKey myPrivate, Uint8List cipherText,
     AsymBlockCipherToUse scheme) {
-  AsymmetricBlockCipher decryptor = _createBlockCipher(scheme);
+  var decryptor = _createBlockCipher(scheme);
 
   decryptor.init(
     false,
@@ -206,7 +206,7 @@ SecureRandom getSecureRandom() {
 
   final seedSource = Random.secure();
   final seeds = <int>[];
-  for (int i = 0; i < 32; i++) {
+  for (var i = 0; i < 32; i++) {
     seeds.add(seedSource.nextInt(255));
   }
   secureRandom.seed(KeyParameter(Uint8List.fromList(seeds)));
@@ -283,10 +283,10 @@ String bin2hex(Uint8List bytes, {String separator, int wrap}) {
 
 Uint8List hex2bin(String hexStr) {
   if (hexStr.length % 2 != 0) {
-    throw FormatException('not an even number of hexadecimal characters');
+    throw const FormatException('not an even number of hexadecimal characters');
   }
   final result = Uint8List(hexStr.length ~/ 2);
-  for (int i = 0; i < result.length; i++) {
+  for (var i = 0; i < result.length; i++) {
     result[i] = int.parse(hexStr.substring(2 * i, 2 * (i + 1)), radix: 16);
   }
   return result;
@@ -337,7 +337,7 @@ void _testSignAndVerify(AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> rsaPair,
       print('Signature verify: detected tampered signature successfully');
     }
   } catch (e, st) {
-    print("fail: signature validation: threw exception: ${e.runtimeType}");
+    print('fail: signature validation: threw exception: ${e.runtimeType}');
     if (verbose) {
       print('$e\n$st\n');
     }
@@ -421,9 +421,12 @@ void main(List<String> args) {
   }
   final bytes = utf8.encode(plaintext);
 
-  _testSignAndVerify(rsaPair, bytes, verbose);
+  _testSignAndVerify(rsaPair, Uint8List.fromList(bytes), verbose);
 
-  _testEncryptAndDecrypt(rsaPair, AsymBlockCipherToUse.rsa, bytes, verbose);
-  _testEncryptAndDecrypt(rsaPair, AsymBlockCipherToUse.pkcs1, bytes, verbose);
-  _testEncryptAndDecrypt(rsaPair, AsymBlockCipherToUse.oaep, bytes, verbose);
+  _testEncryptAndDecrypt(
+      rsaPair, AsymBlockCipherToUse.rsa, Uint8List.fromList(bytes), verbose);
+  _testEncryptAndDecrypt(
+      rsaPair, AsymBlockCipherToUse.pkcs1, Uint8List.fromList(bytes), verbose);
+  _testEncryptAndDecrypt(
+      rsaPair, AsymBlockCipherToUse.oaep, Uint8List.fromList(bytes), verbose);
 }

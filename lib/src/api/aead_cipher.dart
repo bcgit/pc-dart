@@ -6,6 +6,7 @@ abstract class AEADCipher extends Algorithm {
   factory AEADCipher(String algorithmName) =>
       registry.create<AEADCipher>(algorithmName);
 
+  @override
   String get algorithmName;
 
   void processAADByte(int inp);

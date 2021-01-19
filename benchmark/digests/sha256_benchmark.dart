@@ -2,8 +2,8 @@
 
 library benchmark.digests.sha256_benchmark;
 
-import "../benchmark/digest_benchmark.dart";
+import '../benchmark/digest_benchmark.dart';
 
-main() {
-  new DigestBenchmark("SHA-256").report();
+void main() {
+  DigestBenchmark('SHA-256').report();
 }

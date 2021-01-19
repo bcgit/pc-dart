@@ -10,21 +10,23 @@ abstract class RateBenchmark extends BenchmarkBase {
   int _totalData = 0;
   int _iterations = 0;
 
-  RateBenchmark(String name) : super(name, emitter: new RateEmitter()) {
+  RateBenchmark(String name) : super(name, emitter: RateEmitter()) {
     emitter.benchmark = this;
   }
 
-  RateEmitter get emitter => super.emitter;
+  @override
+  RateEmitter get emitter => super.emitter as RateEmitter;
 
   void addSample(int processedData) {
     _totalData += processedData;
   }
 
+  @override
   void exercise() {
     _totalData = 0;
     _iterations = 0;
 
-    var watch = new Stopwatch()..start();
+    var watch = Stopwatch()..start();
     while (watch.elapsedMilliseconds < _RUN_LENGTH_MILLIS) {
       run();
       _iterations++;
@@ -38,25 +40,26 @@ class RateEmitter implements ScoreEmitter {
   int get totalData => benchmark._totalData;
   int get iterations => benchmark._iterations;
 
+  @override
   void emit(String testName, double value) {
     var ms = value / 1000;
     var s = ms / 1000;
-    print("| ${testName} | "
-        "${_formatDataLength(totalData / s)}/s | "
-        "${iterations} iterations | "
-        "${ms.toInt()} ms | "
-        "${_formatDataLength(totalData)} |");
+    print('| $testName | '
+        '${_formatDataLength(totalData / s)}/s | '
+        '$iterations iterations | '
+        '${ms.toInt()} ms | '
+        '${_formatDataLength(totalData)} |');
   }
 
   String _formatDataLength(num dataLen) {
     if (dataLen < 1024) {
-      return "${dataLen.toStringAsFixed(2)} B";
+      return '${dataLen.toStringAsFixed(2)} B';
     } else if (dataLen < (1024 * 1024)) {
-      return "${(dataLen / 1024).toStringAsFixed(2)} KB";
+      return '${(dataLen / 1024).toStringAsFixed(2)} KB';
     } else if (dataLen < (1024 * 1024 * 1024)) {
-      return "${(dataLen / (1024 * 1024)).toStringAsFixed(2)} MB";
+      return '${(dataLen / (1024 * 1024)).toStringAsFixed(2)} MB';
     } else {
-      return "${(dataLen / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB";
+      return '${(dataLen / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
     }
   }
 }
