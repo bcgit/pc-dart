@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.secure_random.fortuna_random;
 
 import 'dart:typed_data';
@@ -14,20 +16,19 @@ class FortunaRandom implements SecureRandom {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(SecureRandom, 'Fortuna', () => FortunaRandom());
 
-  AESFastEngine? _aes;
+  final AESFastEngine _aes;
   late AutoSeedBlockCtrRandom _prng;
 
   @override
   String get algorithmName => 'Fortuna';
 
-  FortunaRandom() {
-    _aes = AESFastEngine();
+  FortunaRandom() : _aes = AESFastEngine()  {
     _prng = AutoSeedBlockCtrRandom(_aes, false);
   }
 
   @override
   void seed(covariant KeyParameter param) {
-    if (param.key!.length != 32) {
+    if (param.key.length != 32) {
       throw ArgumentError('Fortuna PRNG can only be used with 256 bits keys');
     }
 
@@ -37,20 +38,20 @@ class FortunaRandom implements SecureRandom {
   }
 
   @override
-  int? nextUint8() => _prng.nextUint8();
+  int nextUint8() => _prng.nextUint8();
 
   @override
-  int? nextUint16() => _prng.nextUint16();
+  int nextUint16() => _prng.nextUint16();
 
   @override
-  int? nextUint32() => _prng.nextUint32();
+  int nextUint32() => _prng.nextUint32();
 
   @override
-  BigInt? nextBigInteger(int bitLength) => _prng.nextBigInteger(bitLength);
+  BigInt nextBigInteger(int bitLength) => _prng.nextBigInteger(bitLength);
 
   @override
-  Uint8List? nextBytes(int? count) {
-    if (count! > 1048576) {
+  Uint8List nextBytes(int count) {
+    if (count > 1048576) {
       throw ArgumentError(
           'Fortuna PRNG cannot generate more than 1MB of random data per invocation');
     }

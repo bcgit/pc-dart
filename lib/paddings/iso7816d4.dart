@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.padding.iso7816d4;
 
 import 'dart:typed_data' show Uint8List;
@@ -25,13 +27,13 @@ class ISO7816d4Padding extends BasePadding {
   /// add the pad bytes to the passed in block, returning the
   /// number of bytes added.
   @override
-  int addPadding(Uint8List? data, int? offset) {
-    var added = (data!.length - offset!);
+  int addPadding(Uint8List data, int offset) {
+    var added = (data.length - offset);
 
     data[offset] = 0x80;
     offset++;
 
-    while (offset! < data.length) {
+    while (offset < data.length) {
       data[offset] = 0;
       offset++;
     }

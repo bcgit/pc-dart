@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.secure_random.auto_seed_block_ctr_random;
 
 import 'dart:typed_data';
@@ -19,7 +21,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
       r'^(.*)/CTR/AUTO-SEED-PRNG$',
       (_, final Match match) => () {
             var blockCipherName = match.group(1);
-            var blockCipher = BlockCipher(blockCipherName);
+            var blockCipher = BlockCipher(blockCipherName!);
             return AutoSeedBlockCtrRandom(blockCipher);
           });
 
@@ -27,13 +29,13 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
   final bool _reseedIV;
 
   var _inAutoReseed = false;
-  int? _autoReseedKeyLength;
+  late int _autoReseedKeyLength;
 
   @override
   String get algorithmName =>
-      '${_delegate.cipher!.algorithmName}/CTR/AUTO-SEED-PRNG';
+      '${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG';
 
-  AutoSeedBlockCtrRandom(BlockCipher? cipher, [this._reseedIV = true]) {
+  AutoSeedBlockCtrRandom(BlockCipher cipher, [this._reseedIV = true]) {
     _delegate = BlockCtrRandom(cipher);
   }
 
@@ -52,27 +54,27 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
   }
 
   @override
-  int? nextUint8() => _autoReseedIfNeededAfter(() {
+  int nextUint8() => _autoReseedIfNeededAfter(() {
         return _delegate.nextUint8();
       });
 
   @override
-  int? nextUint16() => _autoReseedIfNeededAfter(() {
+  int nextUint16() => _autoReseedIfNeededAfter(() {
         return _delegate.nextUint16();
       });
 
   @override
-  int? nextUint32() => _autoReseedIfNeededAfter(() {
+  int nextUint32() => _autoReseedIfNeededAfter(() {
         return _delegate.nextUint32();
       });
 
   @override
-  BigInt? nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
+  BigInt nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
         return _delegate.nextBigInteger(bitLength);
       });
 
   @override
-  Uint8List? nextBytes(int? count) => _autoReseedIfNeededAfter(() {
+  Uint8List nextBytes(int count) => _autoReseedIfNeededAfter(() {
         return _delegate.nextBytes(count);
       });
 

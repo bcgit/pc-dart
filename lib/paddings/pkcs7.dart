@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.padding.pkcs7;
 
 import 'dart:typed_data';
@@ -23,10 +25,10 @@ class PKCS7Padding extends BasePadding {
   }
 
   @override
-  int addPadding(Uint8List? data, int? offset) {
-    var code = (data!.length - offset!);
+  int addPadding(Uint8List data, int offset) {
+    var code = (data.length - offset);
 
-    while (offset! < data.length) {
+    while (offset < data.length) {
       data[offset] = code;
       offset++;
     }
