@@ -31,4 +31,8 @@ class NullDigest extends BaseDigest {
     out.fillRange(0, digestSize, 0);
     return digestSize;
   }
+
+  @override
+  // TODO: implement byteLength
+  int get byteLength => throw UnimplementedError();
 }
