@@ -8,7 +8,7 @@ import 'package:pointycastle/src/registry/registration.dart';
 final FactoryRegistry registry = _RegistryImpl();
 
 abstract class FactoryRegistry {
-  T create<T>(String registrableName);
+  T create<T>(String? registrableName);
 
   void register<T>(FactoryConfig config);
 }
@@ -66,8 +66,8 @@ class DynamicFactoryConfig extends FactoryConfig {
       : this.regex(type, '^(.+)${_escapeRegExp(suffix)}\$', factory);
 
   /// Invokes the factory when it matches. Else returns null.
-  RegistrableConstructor tryFactory(String algorithmName) {
-    Match match = regExp.firstMatch(algorithmName);
+  RegistrableConstructor? tryFactory(String algorithmName) {
+    Match? match = regExp.firstMatch(algorithmName);
     if (match == null) {
       return null;
     }
@@ -81,8 +81,8 @@ class _RegistryImpl implements FactoryRegistry {
   final Map<Type, Map<String, RegistrableConstructor>> _staticFactories;
   final Map<Type, Set<DynamicFactoryConfig>> _dynamicFactories;
 
-  final Map<String, RegistrableConstructor> _constructorCache =
-      <String, RegistrableConstructor>{};
+  final Map<String, RegistrableConstructor?> _constructorCache =
+      <String, RegistrableConstructor?>{};
 
   bool _initialized = false;
 
@@ -91,14 +91,14 @@ class _RegistryImpl implements FactoryRegistry {
         _dynamicFactories = <Type, Set<DynamicFactoryConfig>>{};
 
   @override
-  T create<T>(String registrableName) {
+  T create<T>(String? registrableName) {
     var type = T;
     var constructor = getConstructor(type, registrableName);
     var result = constructor() as T;
     return result;
   }
 
-  RegistrableConstructor getConstructor(Type type, String registrableName) {
+  RegistrableConstructor getConstructor(Type type, String? registrableName) {
     var constructor = _constructorCache['$type.$registrableName'];
 
     if (constructor == null) {
@@ -108,21 +108,21 @@ class _RegistryImpl implements FactoryRegistry {
       }
       _constructorCache['$type.$registrableName'] = constructor;
     }
-    return constructor;
+    return constructor!;
   }
 
-  RegistrableConstructor _createConstructor(Type type, String registrableName) {
+  RegistrableConstructor? _createConstructor(Type type, String? registrableName) {
     // Init lazily
     _checkInit();
 
     if (_staticFactories.containsKey(type) &&
-        _staticFactories[type].containsKey(registrableName)) {
-      return _staticFactories[type][registrableName];
+        _staticFactories[type]!.containsKey(registrableName)) {
+      return _staticFactories[type]![registrableName!];
     }
 
     if (_dynamicFactories.containsKey(type)) {
-      for (var factory in _dynamicFactories[type]) {
-        var constructor = factory.tryFactory(registrableName);
+      for (var factory in _dynamicFactories[type]!) {
+        var constructor = factory.tryFactory(registrableName!);
         if (constructor != null) {
           return constructor;
         }

@@ -98,7 +98,7 @@ void main() {
         var ikm = createUint8ListFromHexString(
             '0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b');
         var salt = Uint8List(0);
-        Uint8List info;
+        Uint8List? info;
         var l = 42;
         var okm = Uint8List(l);
 
@@ -161,7 +161,7 @@ void main() {
       test('Test Case 6 - Test with SHA-1 and zero-length salt/info', () {
         var ikm = createUint8ListFromHexString(
             '0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b');
-        Uint8List salt;
+        Uint8List? salt;
         var info = Uint8List(0);
         var l = 42;
         var okm = Uint8List(l);
@@ -183,7 +183,7 @@ void main() {
           () {
         var ikm = createUint8ListFromHexString(
             '0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c');
-        Uint8List salt;
+        Uint8List? salt;
         var info = Uint8List(0);
         var l = 42;
         var okm = Uint8List(l);

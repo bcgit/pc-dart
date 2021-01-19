@@ -33,11 +33,11 @@ class ECBBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  void init(bool forEncryption, CipherParameters params) {
+  void init(bool forEncryption, CipherParameters? params) {
     _underlyingCipher.init(forEncryption, params);
   }
 
   @override
-  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) =>
+  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) =>
       _underlyingCipher.processBlock(inp, inpOff, out, outOff);
 }

@@ -9,7 +9,7 @@ import 'package:pointycastle/pointycastle.dart';
 
 import './src/helpers.dart';
 
-void runPaddingTest(Padding pad, CipherParameters params, Uint8List unpadData,
+void runPaddingTest(Padding pad, CipherParameters? params, Uint8List unpadData,
     int padLength, String padData) {
   group('${pad.algorithmName}:', () {
     test('addPadding: ${unpadData.toString()}', () {

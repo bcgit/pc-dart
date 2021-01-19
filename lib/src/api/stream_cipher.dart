@@ -17,7 +17,7 @@ abstract class StreamCipher extends Algorithm {
   ///
   /// Use the argument [forEncryption] to tell the cipher if you want to encrypt
   /// or decrypt data.
-  void init(bool forEncryption, CipherParameters params);
+  void init(bool forEncryption, CipherParameters? params);
 
   /// Process a whole block of [data] at once, returning the result in a byte array.
   Uint8List process(Uint8List data);
@@ -28,5 +28,5 @@ abstract class StreamCipher extends Algorithm {
   /// Process [len] bytes of data given by [inp] and starting at offset [inpOff].
   /// The resulting cipher text is put in [out] beginning at position [outOff].
   void processBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff);
+      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff);
 }

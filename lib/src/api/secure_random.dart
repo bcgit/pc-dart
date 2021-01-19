@@ -18,17 +18,17 @@ abstract class SecureRandom extends Algorithm {
   void seed(CipherParameters params);
 
   /// Get one byte long random int.
-  int nextUint8();
+  int? nextUint8();
 
   /// Get two bytes long random int.
-  int nextUint16();
+  int? nextUint16();
 
   /// Get four bytes long random int.
-  int nextUint32();
+  int? nextUint32();
 
   /// Get a random BigInteger of [bitLength] bits.
-  BigInt nextBigInteger(int bitLength);
+  BigInt? nextBigInteger(int bitLength);
 
   /// Get a list of bytes of arbitrary length.
-  Uint8List nextBytes(int count);
+  Uint8List? nextBytes(int? count);
 }

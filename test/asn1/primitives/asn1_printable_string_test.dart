@@ -74,7 +74,7 @@ void main() {
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.valueByteLength, 15);
     expect(asn1Object.valueStartPosition, 2);
-    expect(asn1Object.elements.length, 2);
+    expect(asn1Object.elements!.length, 2);
     expect(asn1Object.stringValue, 'Test User 1');
     expect(asn1Object.valueBytes, valueBytes);
   });
@@ -126,7 +126,7 @@ void main() {
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.valueByteLength, 15);
     expect(asn1Object.valueStartPosition, 2);
-    expect(asn1Object.elements.length, 2);
+    expect(asn1Object.elements!.length, 2);
     expect(asn1Object.stringValue, 'Test User 1');
     expect(asn1Object.valueBytes, valueBytes);
   });

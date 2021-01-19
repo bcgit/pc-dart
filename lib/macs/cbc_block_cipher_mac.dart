@@ -19,23 +19,23 @@ class CBCBlockCipherMac extends BaseMac {
       var cipher = BlockCipher(match.group(1));
       var padding = match.groupCount >= 3 &&
               match.group(3) != null &&
-              match.group(3).isNotEmpty
+              match.group(3)!.isNotEmpty
           ? Padding(match.group(3))
           : null;
       return CBCBlockCipherMac.fromCipherAndPadding(cipher, padding);
     },
   );
 
-  Uint8List _mac;
+  Uint8List? _mac;
 
-  Uint8List _buf;
-  int _bufOff;
+  Uint8List? _buf;
+  int? _bufOff;
   final BlockCipher _cipher;
-  final Padding _padding;
+  final Padding? _padding;
 
   final int _macSize;
 
-  ParametersWithIV _params;
+  ParametersWithIV? _params;
 
   ///
   /// create a standard MAC based on a CBC block cipher. This will produce an
@@ -51,7 +51,7 @@ class CBCBlockCipherMac extends BaseMac {
   ///
   /// * [cipher] the cipher to be used as the basis of the MAC generation.
   /// * [padding] the padding to be used to complete the last block.
-  CBCBlockCipherMac.fromCipherAndPadding(BlockCipher cipher, Padding padding)
+  CBCBlockCipherMac.fromCipherAndPadding(BlockCipher cipher, Padding? padding)
       : this(cipher, (cipher.blockSize * 8) ~/ 2, padding);
 
   ///
@@ -84,7 +84,7 @@ class CBCBlockCipherMac extends BaseMac {
   /// * [cipher] the cipher to be used as the basis of the MAC generation.
   /// * [macSizeInBits] the size of the MAC in bits, must be a multiple of 8.
   /// * [padding] the padding to be used to complete the last block.
-  CBCBlockCipherMac(BlockCipher cipher, int macSizeInBits, Padding padding)
+  CBCBlockCipherMac(BlockCipher cipher, int macSizeInBits, Padding? padding)
       : _cipher = CBCBlockCipher(cipher),
         _macSize = macSizeInBits ~/ 8,
         _padding = padding {
@@ -100,7 +100,7 @@ class CBCBlockCipherMac extends BaseMac {
 
   @override
   String get algorithmName {
-    var paddingName = _padding != null ? '/${_padding.algorithmName}' : '';
+    var paddingName = _padding != null ? '/${_padding!.algorithmName}' : '';
     return '${_cipher.algorithmName}_CMAC$paddingName';
   }
 
@@ -109,7 +109,7 @@ class CBCBlockCipherMac extends BaseMac {
     if (params is ParametersWithIV) {
       _params = params;
     } else if (params is KeyParameter) {
-      final zeroIV = Uint8List(params.key.length);
+      final zeroIV = Uint8List(params.key!.length);
       _params = ParametersWithIV(params, zeroIV);
     }
 
@@ -123,25 +123,25 @@ class CBCBlockCipherMac extends BaseMac {
 
   @override
   void updateByte(int inp) {
-    if (_bufOff == _buf.length) {
+    if (_bufOff == _buf!.length) {
       _cipher.processBlock(_buf, 0, _mac, 0);
       _bufOff = 0;
     }
 
-    _buf[_bufOff++] = inp;
+    _buf![_bufOff++!] = inp;
   }
 
   @override
-  void update(Uint8List inp, int inOff, int len) {
+  void update(Uint8List? inp, int inOff, int len) {
     if (len < 0) {
       throw ArgumentError('Can\'t have a negative input length!');
     }
 
     var blockSize = _cipher.blockSize;
-    var gapLen = blockSize - _bufOff;
+    var gapLen = blockSize - _bufOff!;
 
     if (len > gapLen) {
-      _buf.setRange(_bufOff, _bufOff + gapLen, inp.sublist(inOff));
+      _buf!.setRange(_bufOff!, _bufOff! + gapLen, inp!.sublist(inOff));
 
       _cipher.processBlock(_buf, 0, _mac, 0);
 
@@ -157,21 +157,21 @@ class CBCBlockCipherMac extends BaseMac {
       }
     }
 
-    _buf.setRange(_bufOff, _bufOff + len, inp.sublist(inOff));
+    _buf!.setRange(_bufOff!, _bufOff! + len, inp!.sublist(inOff));
 
     _bufOff += len;
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int outOff) {
     var blockSize = _cipher.blockSize;
 
     if (_padding == null) {
       //
       // pad with zeroes
       //
-      while (_bufOff < blockSize) {
-        _buf[_bufOff] = 0;
+      while (_bufOff! < blockSize) {
+        _buf![_bufOff!] = 0;
         _bufOff++;
       }
     } else {
@@ -180,12 +180,12 @@ class CBCBlockCipherMac extends BaseMac {
         _bufOff = 0;
       }
 
-      _padding.addPadding(_buf, _bufOff);
+      _padding!.addPadding(_buf, _bufOff);
     }
 
     _cipher.processBlock(_buf, 0, _mac, 0);
 
-    out.setRange(outOff, outOff + _macSize, _mac);
+    out!.setRange(outOff, outOff + _macSize, _mac!);
 
     reset();
 
@@ -196,8 +196,8 @@ class CBCBlockCipherMac extends BaseMac {
   @override
   void reset() {
     // clean the buffer.
-    for (var i = 0; i < _buf.length; i++) {
-      _buf[i] = 0;
+    for (var i = 0; i < _buf!.length; i++) {
+      _buf![i] = 0;
     }
 
     _bufOff = 0;

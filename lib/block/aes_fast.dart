@@ -15,31 +15,16 @@ import 'package:pointycastle/src/ufixnum.dart';
 ///
 /// This implementation is based on optimizations from Dr. Brian Gladman's paper
 /// and C code at [http://fp.gladman.plus.com/cryptography_technology/rijndael/]
-///
-/// There are three levels of tradeoff of speed vs memory and they are written
-/// as three separate classes from which to choose.
-///
-/// The fastest uses 8Kbytes of static tables to precompute round calculations,
-/// 4 256 word tables for encryption and 4 for decryption.
-///
-/// The middle performance version uses only one 256 word table for each, for a
-/// total of 2Kbytes, adding 12 rotate operations per round to compute the values
-/// contained in the other tables from the contents of the first.
-///
-/// The slowest version uses no static tables at all and computes the values in
-/// each round.
-/// This file contains the fast version with 8Kbytes of static tables for round
-/// precomputation.
 class AESFastEngine extends BaseBlockCipher {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(BlockCipher, 'AES', () => AESFastEngine());
 
   static const _BLOCK_SIZE = 16;
 
-  bool _forEncryption;
-  List<List<int>> _workingKey;
-  int _rounds;
-  int _c0, _c1, _c2, _c3;
+  late bool _forEncryption;
+  List<List<int>>? _workingKey;
+  late int _rounds;
+  late int _c0, _c1, _c2, _c3;
 
   @override
   String get algorithmName => 'AES';
@@ -57,7 +42,7 @@ class AESFastEngine extends BaseBlockCipher {
 
   @override
   void init(bool forEncryption, covariant KeyParameter params) {
-    var key = params.key;
+    var key = params.key!;
 
     var kc = (key.lengthInBytes / 4).floor(); // key length in words
     if (((kc != 4) && (kc != 6) && (kc != 8)) ||
@@ -69,51 +54,51 @@ class AESFastEngine extends BaseBlockCipher {
     _rounds = kc +
         6; // This is not always true for the generalized Rijndael that allows larger block sizes
     _workingKey = List.generate(
-        _rounds + 1, (int i) => List<int>(4)); // 4 words in a block
+        _rounds + 1, (int i) => List<int>.filled(4, 0, growable: false)); // 4 words in a block
 
     // Copy the key into the round key array.
     var keyView = ByteData.view(
-        params.key.buffer, params.key.offsetInBytes, params.key.length);
+        params.key!.buffer, params.key!.offsetInBytes, params.key!.length);
     for (var i = 0, t = 0; i < key.lengthInBytes; i += 4, t++) {
       var value = unpack32(keyView, i, Endian.little);
-      _workingKey[t >> 2][t & 3] = value;
+      _workingKey![t >> 2][t & 3] = value;
     }
 
     // While not enough round key material calculated calculate values.
     var k = (_rounds + 1) << 2;
     for (var i = kc; i < k; i++) {
-      var temp = _workingKey[(i - 1) >> 2][(i - 1) & 3].toInt();
+      var temp = _workingKey![(i - 1) >> 2][(i - 1) & 3]!.toInt();
       if ((i % kc) == 0) {
         temp = _subWord(_shift(temp, 8)) ^ _rcon[((i / kc) - 1).floor()];
       } else if ((kc > 6) && ((i % kc) == 4)) {
         temp = _subWord(temp);
       }
 
-      var value = _workingKey[(i - kc) >> 2][(i - kc) & 3] ^ temp;
-      _workingKey[i >> 2][i & 3] = value;
+      var value = _workingKey![(i - kc) >> 2][(i - kc) & 3]! ^ temp;
+      _workingKey![i >> 2][i & 3] = value;
     }
 
     if (!forEncryption) {
       for (var j = 1; j < _rounds; j++) {
         for (var i = 0; i < 4; i++) {
-          var value = _invMcol(_workingKey[j][i].toInt());
-          _workingKey[j][i] = value;
+          var value = _invMcol(_workingKey![j][i]!.toInt());
+          _workingKey![j][i] = value;
         }
       }
     }
   }
 
   @override
-  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
+  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) {
     if (_workingKey == null) {
       throw StateError('AES engine not initialised');
     }
 
-    if ((inpOff + (32 / 2)) > inp.lengthInBytes) {
+    if ((inpOff + (32 / 2)) > inp!.lengthInBytes) {
       throw ArgumentError('Input buffer too short');
     }
 
-    if ((outOff + (32 / 2)) > out.lengthInBytes) {
+    if ((outOff + (32 / 2)) > out!.lengthInBytes) {
       throw ArgumentError('Output buffer too short');
     }
 
@@ -121,24 +106,24 @@ class AESFastEngine extends BaseBlockCipher {
     var outView = ByteData.view(out.buffer, out.offsetInBytes, out.length);
     if (_forEncryption) {
       _unpackBlock(inpView, inpOff);
-      _encryptBlock(_workingKey);
+      _encryptBlock(_workingKey!);
       _packBlock(outView, outOff);
     } else {
       _unpackBlock(inpView, inpOff);
-      _decryptBlock(_workingKey);
+      _decryptBlock(_workingKey!);
       _packBlock(outView, outOff);
     }
 
     return _BLOCK_SIZE;
   }
 
-  void _encryptBlock(List<List<int>> kw) {
+  void _encryptBlock(List<List<int?>> kw) {
     int r, r0, r1, r2, r3;
 
-    _c0 ^= kw[0][0].toInt();
-    _c1 ^= kw[0][1].toInt();
-    _c2 ^= kw[0][2].toInt();
-    _c3 ^= kw[0][3].toInt();
+    _c0 ^= kw[0][0]!.toInt();
+    _c1 ^= kw[0][1]!.toInt();
+    _c2 ^= kw[0][2]!.toInt();
+    _c3 ^= kw[0][3]!.toInt();
 
     r = 1;
     while (r < _rounds - 1) {
@@ -146,43 +131,43 @@ class AESFastEngine extends BaseBlockCipher {
           _t1[(_c1 >> 8) & 255] ^
           _t2[(_c2 >> 16) & 255] ^
           _t3[(_c3 >> 24) & 255] ^
-          kw[r][0].toInt();
+          kw[r][0]!.toInt();
       r1 = _t0[_c1 & 255] ^
           _t1[(_c2 >> 8) & 255] ^
           _t2[(_c3 >> 16) & 255] ^
           _t3[(_c0 >> 24) & 255] ^
-          kw[r][1].toInt();
+          kw[r][1]!.toInt();
       r2 = _t0[_c2 & 255] ^
           _t1[(_c3 >> 8) & 255] ^
           _t2[(_c0 >> 16) & 255] ^
           _t3[(_c1 >> 24) & 255] ^
-          kw[r][2].toInt();
+          kw[r][2]!.toInt();
       r3 = _t0[_c3 & 255] ^
           _t1[(_c0 >> 8) & 255] ^
           _t2[(_c1 >> 16) & 255] ^
           _t3[(_c2 >> 24) & 255] ^
-          kw[r][3].toInt();
+          kw[r][3]!.toInt();
       r++;
       _c0 = _t0[r0 & 255] ^
           _t1[(r1 >> 8) & 255] ^
           _t2[(r2 >> 16) & 255] ^
           _t3[(r3 >> 24) & 255] ^
-          kw[r][0].toInt();
+          kw[r][0]!.toInt();
       _c1 = _t0[r1 & 255] ^
           _t1[(r2 >> 8) & 255] ^
           _t2[(r3 >> 16) & 255] ^
           _t3[(r0 >> 24) & 255] ^
-          kw[r][1].toInt();
+          kw[r][1]!.toInt();
       _c2 = _t0[r2 & 255] ^
           _t1[(r3 >> 8) & 255] ^
           _t2[(r0 >> 16) & 255] ^
           _t3[(r1 >> 24) & 255] ^
-          kw[r][2].toInt();
+          kw[r][2]!.toInt();
       _c3 = _t0[r3 & 255] ^
           _t1[(r0 >> 8) & 255] ^
           _t2[(r1 >> 16) & 255] ^
           _t3[(r2 >> 24) & 255] ^
-          kw[r][3].toInt();
+          kw[r][3]!.toInt();
       r++;
     }
 
@@ -190,22 +175,22 @@ class AESFastEngine extends BaseBlockCipher {
         _t1[(_c1 >> 8) & 255] ^
         _t2[(_c2 >> 16) & 255] ^
         _t3[(_c3 >> 24) & 255] ^
-        kw[r][0].toInt();
+        kw[r][0]!.toInt();
     r1 = _t0[_c1 & 255] ^
         _t1[(_c2 >> 8) & 255] ^
         _t2[(_c3 >> 16) & 255] ^
         _t3[(_c0 >> 24) & 255] ^
-        kw[r][1].toInt();
+        kw[r][1]!.toInt();
     r2 = _t0[_c2 & 255] ^
         _t1[(_c3 >> 8) & 255] ^
         _t2[(_c0 >> 16) & 255] ^
         _t3[(_c1 >> 24) & 255] ^
-        kw[r][2].toInt();
+        kw[r][2]!.toInt();
     r3 = _t0[_c3 & 255] ^
         _t1[(_c0 >> 8) & 255] ^
         _t2[(_c1 >> 16) & 255] ^
         _t3[(_c2 >> 24) & 255] ^
-        kw[r][3].toInt();
+        kw[r][3]!.toInt();
     r++;
 
     // the final round's table is a simple function of S so we don't use a whole other four tables for it
@@ -213,31 +198,31 @@ class AESFastEngine extends BaseBlockCipher {
         ((_s[(r1 >> 8) & 255] & 255) << 8) ^
         ((_s[(r2 >> 16) & 255] & 255) << 16) ^
         (_s[(r3 >> 24) & 255] << 24) ^
-        kw[r][0].toInt();
+        kw[r][0]!.toInt();
     _c1 = (_s[r1 & 255] & 255) ^
         ((_s[(r2 >> 8) & 255] & 255) << 8) ^
         ((_s[(r3 >> 16) & 255] & 255) << 16) ^
         (_s[(r0 >> 24) & 255] << 24) ^
-        kw[r][1].toInt();
+        kw[r][1]!.toInt();
     _c2 = (_s[r2 & 255] & 255) ^
         ((_s[(r3 >> 8) & 255] & 255) << 8) ^
         ((_s[(r0 >> 16) & 255] & 255) << 16) ^
         (_s[(r1 >> 24) & 255] << 24) ^
-        kw[r][2].toInt();
+        kw[r][2]!.toInt();
     _c3 = (_s[r3 & 255] & 255) ^
         ((_s[(r0 >> 8) & 255] & 255) << 8) ^
         ((_s[(r1 >> 16) & 255] & 255) << 16) ^
         (_s[(r2 >> 24) & 255] << 24) ^
-        kw[r][3].toInt();
+        kw[r][3]!.toInt();
   }
 
-  void _decryptBlock(List<List<int>> kw) {
+  void _decryptBlock(List<List<int?>> kw) {
     int r, r0, r1, r2, r3;
 
-    _c0 ^= kw[_rounds][0].toInt();
-    _c1 ^= kw[_rounds][1].toInt();
-    _c2 ^= kw[_rounds][2].toInt();
-    _c3 ^= kw[_rounds][3].toInt();
+    _c0 ^= kw[_rounds][0]!.toInt();
+    _c1 ^= kw[_rounds][1]!.toInt();
+    _c2 ^= kw[_rounds][2]!.toInt();
+    _c3 ^= kw[_rounds][3]!.toInt();
 
     r = _rounds - 1;
     while (r > 1) {
@@ -245,43 +230,43 @@ class AESFastEngine extends BaseBlockCipher {
           _tinv1[(_c3 >> 8) & 255] ^
           _tinv2[(_c2 >> 16) & 255] ^
           _tinv3[(_c1 >> 24) & 255] ^
-          kw[r][0].toInt();
+          kw[r][0]!.toInt();
       r1 = _tinv0[_c1 & 255] ^
           _tinv1[(_c0 >> 8) & 255] ^
           _tinv2[(_c3 >> 16) & 255] ^
           _tinv3[(_c2 >> 24) & 255] ^
-          kw[r][1].toInt();
+          kw[r][1]!.toInt();
       r2 = _tinv0[_c2 & 255] ^
           _tinv1[(_c1 >> 8) & 255] ^
           _tinv2[(_c0 >> 16) & 255] ^
           _tinv3[(_c3 >> 24) & 255] ^
-          kw[r][2].toInt();
+          kw[r][2]!.toInt();
       r3 = _tinv0[_c3 & 255] ^
           _tinv1[(_c2 >> 8) & 255] ^
           _tinv2[(_c1 >> 16) & 255] ^
           _tinv3[(_c0 >> 24) & 255] ^
-          kw[r][3].toInt();
+          kw[r][3]!.toInt();
       r--;
       _c0 = _tinv0[r0 & 255] ^
           _tinv1[(r3 >> 8) & 255] ^
           _tinv2[(r2 >> 16) & 255] ^
           _tinv3[(r1 >> 24) & 255] ^
-          kw[r][0].toInt();
+          kw[r][0]!.toInt();
       _c1 = _tinv0[r1 & 255] ^
           _tinv1[(r0 >> 8) & 255] ^
           _tinv2[(r3 >> 16) & 255] ^
           _tinv3[(r2 >> 24) & 255] ^
-          kw[r][1].toInt();
+          kw[r][1]!.toInt();
       _c2 = _tinv0[r2 & 255] ^
           _tinv1[(r1 >> 8) & 255] ^
           _tinv2[(r0 >> 16) & 255] ^
           _tinv3[(r3 >> 24) & 255] ^
-          kw[r][2].toInt();
+          kw[r][2]!.toInt();
       _c3 = _tinv0[r3 & 255] ^
           _tinv1[(r2 >> 8) & 255] ^
           _tinv2[(r1 >> 16) & 255] ^
           _tinv3[(r0 >> 24) & 255] ^
-          kw[r][3].toInt();
+          kw[r][3]!.toInt();
       r--;
     }
 
@@ -289,44 +274,44 @@ class AESFastEngine extends BaseBlockCipher {
         _tinv1[(_c3 >> 8) & 255] ^
         _tinv2[(_c2 >> 16) & 255] ^
         _tinv3[(_c1 >> 24) & 255] ^
-        kw[r][0].toInt();
+        kw[r][0]!.toInt();
     r1 = _tinv0[_c1 & 255] ^
         _tinv1[(_c0 >> 8) & 255] ^
         _tinv2[(_c3 >> 16) & 255] ^
         _tinv3[(_c2 >> 24) & 255] ^
-        kw[r][1].toInt();
+        kw[r][1]!.toInt();
     r2 = _tinv0[_c2 & 255] ^
         _tinv1[(_c1 >> 8) & 255] ^
         _tinv2[(_c0 >> 16) & 255] ^
         _tinv3[(_c3 >> 24) & 255] ^
-        kw[r][2].toInt();
+        kw[r][2]!.toInt();
     r3 = _tinv0[_c3 & 255] ^
         _tinv1[(_c2 >> 8) & 255] ^
         _tinv2[(_c1 >> 16) & 255] ^
         _tinv3[(_c0 >> 24) & 255] ^
-        kw[r][3].toInt();
+        kw[r][3]!.toInt();
 
     // the final round's table is a simple function of Si so we don't use a whole other four tables for it
     _c0 = (_si[r0 & 255] & 255) ^
         ((_si[(r3 >> 8) & 255] & 255) << 8) ^
         ((_si[(r2 >> 16) & 255] & 255) << 16) ^
         (_si[(r1 >> 24) & 255] << 24) ^
-        kw[0][0].toInt();
+        kw[0][0]!.toInt();
     _c1 = (_si[r1 & 255] & 255) ^
         ((_si[(r0 >> 8) & 255] & 255) << 8) ^
         ((_si[(r3 >> 16) & 255] & 255) << 16) ^
         (_si[(r2 >> 24) & 255] << 24) ^
-        kw[0][1].toInt();
+        kw[0][1]!.toInt();
     _c2 = (_si[r2 & 255] & 255) ^
         ((_si[(r1 >> 8) & 255] & 255) << 8) ^
         ((_si[(r0 >> 16) & 255] & 255) << 16) ^
         (_si[(r3 >> 24) & 255] << 24) ^
-        kw[0][2].toInt();
+        kw[0][2]!.toInt();
     _c3 = (_si[r3 & 255] & 255) ^
         ((_si[(r2 >> 8) & 255] & 255) << 8) ^
         ((_si[(r1 >> 16) & 255] & 255) << 16) ^
         (_si[(r0 >> 24) & 255] << 24) ^
-        kw[0][3].toInt();
+        kw[0][3]!.toInt();
   }
 
   void _unpackBlock(ByteData view, int off) {

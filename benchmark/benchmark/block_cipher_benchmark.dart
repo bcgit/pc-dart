@@ -14,9 +14,9 @@ class BlockCipherBenchmark extends RateBenchmark {
   final String _blockCipherName;
   final bool _forEncryption;
   final CipherParametersFactory _cipherParametersFactory;
-  Uint8List _data;
+  Uint8List? _data;
 
-  BlockCipher _blockCipher;
+  late BlockCipher _blockCipher;
 
   BlockCipherBenchmark(String blockCipherName, String blockCipherVariant,
       bool forEncryption, this._cipherParametersFactory)
@@ -35,6 +35,6 @@ class BlockCipherBenchmark extends RateBenchmark {
   @override
   void run() {
     _blockCipher.process(_data);
-    addSample(_data.length);
+    addSample(_data!.length);
   }
 }

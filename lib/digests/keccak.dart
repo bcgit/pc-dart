@@ -17,7 +17,7 @@ class KeccakDigest extends KeccakEngine {
       Digest,
       _keccakREGEX,
       (_, final Match match) => () {
-            var bitLength = int.parse(match.group(1));
+            var bitLength = int.parse(match.group(1)!);
             return KeccakDigest(bitLength);
           });
 
@@ -41,7 +41,7 @@ class KeccakDigest extends KeccakEngine {
   String get algorithmName => 'Keccak/$fixedOutputLength';
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int? outOff) {
     squeeze(out, outOff, fixedOutputLength);
     reset();
     return digestSize;

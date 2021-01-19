@@ -162,8 +162,7 @@ void testDigestDoFinal(KeccakDigest digest) {
   digest.doFinal(hash, 0);
 
   for (var i = 0; i <= digest.digestSize; ++i) {
-    var cmp = List(2 * digest.digestSize);
-    cmp.fillRange(0, cmp.length, 0);
+    var cmp = List.filled(2 * digest.digestSize, 0, growable: false);
     cmp.setRange(i, i + hash.length, hash);
     var buf = Uint8List(2 * digest.digestSize);
     digest.doFinal(buf, i);
@@ -264,7 +263,7 @@ void exerciseKeccakMac(Digest digest, List<Uint8List> keys, List<String> data,
 
       mac.update(mData, 0, mData.length);
 
-      var macV = Uint8List(mac.macSize);
+      var macV = Uint8List(mac.macSize!);
 
       mac.doFinal(macV, 0);
 
@@ -278,7 +277,7 @@ void exerciseKeccakMac(Digest digest, List<Uint8List> keys, List<String> data,
 
     mac.update(_truncData, 0, _truncData.length);
 
-    var macV = Uint8List(mac.macSize);
+    var macV = Uint8List(mac.macSize!);
 
     mac.doFinal(macV, 0);
 

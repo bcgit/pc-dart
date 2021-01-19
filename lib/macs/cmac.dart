@@ -37,20 +37,20 @@ class CMac extends BaseMac {
     },
   );
 
-  Uint8List _poly;
-  Uint8List _zeros;
+  late Uint8List _poly;
+  Uint8List? _zeros;
 
-  Uint8List _mac;
+  Uint8List? _mac;
 
-  Uint8List _buf;
-  int _bufOff;
+  Uint8List? _buf;
+  int? _bufOff;
   final BlockCipher _cipher;
 
   final int _macSize;
 
-  Uint8List _lu, _lu2;
+  Uint8List? _lu, _lu2;
 
-  ParametersWithIV _params;
+  ParametersWithIV? _params;
 
   ///
   /// create a standard MAC based on a CBC block cipher (64 or 128 bit block).
@@ -182,17 +182,17 @@ class CMac extends BaseMac {
 
   @override
   void init(covariant KeyParameter keyParams) {
-    final zeroIV = Uint8List(keyParams.key.length);
+    final zeroIV = Uint8List(keyParams.key!.length);
     _params = ParametersWithIV(keyParams, zeroIV);
 
     // Initialize before computing L, Lu, Lu2
     _cipher.init(true, _params);
 
     //initializes the L, Lu, Lu2 numbers
-    var L = Uint8List(_zeros.length);
+    var L = Uint8List(_zeros!.length);
     _cipher.processBlock(_zeros, 0, L, 0);
     _lu = _doubleLu(L);
-    _lu2 = _doubleLu(_lu);
+    _lu2 = _doubleLu(_lu!);
 
     // Reset _buf/_cipher state after computing L, Lu, Lu2
     reset();
@@ -203,25 +203,25 @@ class CMac extends BaseMac {
 
   @override
   void updateByte(int inp) {
-    if (_bufOff == _buf.length) {
+    if (_bufOff == _buf!.length) {
       _cipher.processBlock(_buf, 0, _mac, 0);
       _bufOff = 0;
     }
 
-    _buf[_bufOff++] = inp;
+    _buf![_bufOff++!] = inp;
   }
 
   @override
-  void update(Uint8List inp, int inOff, int len) {
+  void update(Uint8List? inp, int inOff, int len) {
     if (len < 0) {
       throw ArgumentError('Can\'t have a negative input length!');
     }
 
     var blockSize = _cipher.blockSize;
-    var gapLen = blockSize - _bufOff;
+    var gapLen = blockSize - _bufOff!;
 
     if (len > gapLen) {
-      _buf.setRange(_bufOff, _bufOff + gapLen, inp.sublist(inOff));
+      _buf!.setRange(_bufOff!, _bufOff! + gapLen, inp!.sublist(inOff));
 
       _cipher.processBlock(_buf, 0, _mac, 0);
 
@@ -237,16 +237,16 @@ class CMac extends BaseMac {
       }
     }
 
-    _buf.setRange(_bufOff, _bufOff + len, inp.sublist(inOff));
+    _buf!.setRange(_bufOff!, _bufOff! + len, inp!.sublist(inOff));
 
     _bufOff += len;
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int outOff) {
     var blockSize = _cipher.blockSize;
 
-    Uint8List lu;
+    Uint8List? lu;
     if (_bufOff == blockSize) {
       lu = _lu;
     } else {
@@ -254,13 +254,13 @@ class CMac extends BaseMac {
       lu = _lu2;
     }
 
-    for (var i = 0; i < _mac.length; i++) {
-      _buf[i] ^= lu[i];
+    for (var i = 0; i < _mac!.length; i++) {
+      _buf![i] ^= lu![i];
     }
 
     _cipher.processBlock(_buf, 0, _mac, 0);
 
-    out.setRange(outOff, outOff + _macSize, _mac);
+    out!.setRange(outOff, outOff + _macSize, _mac!);
 
     reset();
 
@@ -271,8 +271,8 @@ class CMac extends BaseMac {
   @override
   void reset() {
     // clean the buffer.
-    for (var i = 0; i < _buf.length; i++) {
-      _buf[i] = 0;
+    for (var i = 0; i < _buf!.length; i++) {
+      _buf![i] = 0;
     }
 
     _bufOff = 0;

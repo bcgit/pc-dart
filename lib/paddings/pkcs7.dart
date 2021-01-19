@@ -18,15 +18,15 @@ class PKCS7Padding extends BasePadding {
   String get algorithmName => 'PKCS7';
 
   @override
-  void init([CipherParameters params]) {
+  void init([CipherParameters? params]) {
     // nothing to do.
   }
 
   @override
-  int addPadding(Uint8List data, int offset) {
-    var code = (data.length - offset);
+  int addPadding(Uint8List? data, int? offset) {
+    var code = (data!.length - offset!);
 
-    while (offset < data.length) {
+    while (offset! < data.length) {
       data[offset] = code;
       offset++;
     }

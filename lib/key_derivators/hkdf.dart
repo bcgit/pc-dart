@@ -5,6 +5,7 @@ library impl.key_derivator.hkdf;
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/key_derivators/api.dart';
@@ -40,15 +41,15 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
     'Whirlpool': 64,
   };
 
-  HkdfParameters _params;
+  late HkdfParameters _params;
 
-  HMac _hMac;
-  int _hashLen;
+  late HMac _hMac;
+  int? _hashLen;
 
-  Uint8List _info;
-  Uint8List _currentT;
+  Uint8List? _info;
+  Uint8List? _currentT;
 
-  int _generatedBytes;
+  int? _generatedBytes;
 
   HKDFKeyDerivator(Digest digest) {
     ArgumentError.checkNotNull(digest);
@@ -77,35 +78,35 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
     _info = _params.info;
 
     _generatedBytes = 0;
-    _currentT = Uint8List(_hashLen);
+    _currentT = Uint8List(_hashLen!);
   }
 
   @override
-  int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
+  int deriveKey(Uint8List? inp, int inpOff, Uint8List out, int outOff) {
     // append input to the 'info' part for key derivation
     if (inp != null) {
-      _info = Uint8List.fromList(_info + inp);
+      _info = Uint8List.fromList(_info! + inp);
     }
 
     return _generate(out, outOff, keySize);
   }
 
   /// Performs the extract part of the key derivation function.
-  KeyParameter extract(Uint8List salt, Uint8List ikm) {
+  KeyParameter extract(Uint8List? salt, Uint8List ikm) {
     if (salt == null || salt.isEmpty) {
       if (_hashLen != _hMac.macSize) {
         throw ArgumentError(
             'Hash length doesn\'t equal MAC size of: ${_hMac.algorithmName}');
       }
 
-      _hMac.init(KeyParameter(Uint8List(_hashLen)));
+      _hMac.init(KeyParameter(Uint8List(_hashLen!)));
     } else {
       _hMac.init(KeyParameter(salt));
     }
 
     _hMac.update(ikm, 0, ikm.length);
 
-    var prk = Uint8List(_hashLen);
+    var prk = Uint8List(_hashLen!);
     _hMac.doFinal(prk, 0);
     return KeyParameter(prk);
   }
@@ -113,7 +114,7 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
   /// Performs the expand part of the key derivation function, using currentT
   /// as input and output buffer.
   void expandNext() {
-    var n = _generatedBytes ~/ _hashLen + 1;
+    var n = _generatedBytes! ~/ _hashLen! + 1;
     if (n >= 256) {
       throw ArgumentError(
           'HKDF cannot generate more than 255 blocks of HashLen size');
@@ -124,35 +125,35 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
       _hMac.update(_currentT, 0, _hashLen);
     }
 
-    _hMac.update(_info, 0, _info.length);
+    _hMac.update(_info, 0, _info!.length);
     _hMac.updateByte(n);
     _hMac.doFinal(_currentT, 0);
   }
 
   int _generate(Uint8List out, int outOff, int len) {
-    if (_generatedBytes + len > 255 * _hashLen) {
+    if (_generatedBytes! + len > 255 * _hashLen!) {
       throw ArgumentError(
           'HKDF may only be used for 255 * HashLen bytes of output');
     }
 
-    if (_generatedBytes % _hashLen == 0) {
+    if (_generatedBytes! % _hashLen! == 0) {
       expandNext();
     }
 
     // copy what is left in the currentT
     var toGenerate = len;
-    var posInT = _generatedBytes % _hashLen;
-    var leftInT = _hashLen - _generatedBytes % _hashLen;
+    var posInT = _generatedBytes! % _hashLen!;
+    var leftInT = _hashLen! - _generatedBytes! % _hashLen!;
     var toCopy = min(leftInT, toGenerate);
-    out.setRange(outOff, outOff + toCopy, _currentT.sublist(posInT));
+    out.setRange(outOff, outOff + toCopy, _currentT!.sublist(posInT));
     _generatedBytes += toCopy;
     toGenerate -= toCopy;
     outOff += toCopy;
 
     while (toGenerate > 0) {
       expandNext();
-      toCopy = min(_hashLen, toGenerate);
-      out.setRange(outOff, outOff + toCopy, _currentT.sublist(0));
+      toCopy = min(_hashLen!, toGenerate);
+      out.setRange(outOff, outOff + toCopy, _currentT!.sublist(0));
       _generatedBytes += toCopy;
       toGenerate -= toCopy;
       outOff += toCopy;
@@ -163,8 +164,7 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
 
   static int _getBlockLengthFromDigest(String digestName) {
     var blockLength = _digestBlockLength.entries
-        .firstWhere((map) => map.key.toLowerCase() == digestName.toLowerCase(),
-            orElse: () => null)
+        .firstWhereOrNull((map) => map.key.toLowerCase() == digestName.toLowerCase())!
         .value;
     if (blockLength == null) {
       throw ArgumentError('Invalid block length for digest: $digestName');

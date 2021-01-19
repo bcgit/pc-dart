@@ -51,7 +51,7 @@ void main() {
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.valueBytes, valueBytes);
     expect(
-        asn1Object.dateTimeValue.toIso8601String(), '2010-10-30T10:10:30.000Z');
+        asn1Object.dateTimeValue!.toIso8601String(), '2010-10-30T10:10:30.000Z');
   });
 
   test('Test encode', () {

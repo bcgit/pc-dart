@@ -16,7 +16,7 @@ class OFBBlockCipher extends BaseBlockCipher {
       r'^(.+)/OFB-([0-9]+)$',
       (_, final Match match) => () {
             var underlying = BlockCipher(match.group(1));
-            var blockSizeInBits = int.parse(match.group(2));
+            var blockSizeInBits = int.parse(match.group(2)!);
             if ((blockSizeInBits % 8) != 0) {
               throw RegistryFactoryException.invalid(
                   'Bad OFB block size: $blockSizeInBits (must be a multiple of 8)');
@@ -29,9 +29,9 @@ class OFBBlockCipher extends BaseBlockCipher {
 
   final BlockCipher _underlyingCipher;
 
-  Uint8List _iv;
-  Uint8List _ofbV;
-  Uint8List _ofbOutV;
+  late Uint8List _iv;
+  Uint8List? _ofbV;
+  Uint8List? _ofbOutV;
 
   OFBBlockCipher(this._underlyingCipher, this.blockSize) {
     _iv = Uint8List(_underlyingCipher.blockSize);
@@ -45,17 +45,17 @@ class OFBBlockCipher extends BaseBlockCipher {
 
   @override
   void reset() {
-    _ofbV.setRange(0, _iv.length, _iv);
+    _ofbV!.setRange(0, _iv.length, _iv);
     _underlyingCipher.reset();
   }
 
   /// Initialise the cipher and, possibly, the initialisation vector (IV). If an IV isn't passed as part of the parameter, the
   /// IV will be all zeros. An IV which is too short is handled in FIPS compliant fashion.
   @override
-  void init(bool forEncryption, CipherParameters params) {
+  void init(bool forEncryption, CipherParameters? params) {
     if (params is ParametersWithIV) {
       var ivParam = params;
-      var iv = ivParam.iv;
+      var iv = ivParam.iv!;
 
       if (iv.length < _iv.length) {
         // prepend the supplied IV with zeros (per FIPS PUB 81)
@@ -78,12 +78,12 @@ class OFBBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    if ((inpOff + blockSize) > inp.length) {
+  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) {
+    if ((inpOff + blockSize) > inp!.length) {
       throw ArgumentError('Input buffer too short');
     }
 
-    if ((outOff + blockSize) > out.length) {
+    if ((outOff + blockSize) > out!.length) {
       throw ArgumentError('Output buffer too short');
     }
 
@@ -91,13 +91,13 @@ class OFBBlockCipher extends BaseBlockCipher {
 
     // XOR the ofbV with the plaintext producing the cipher text (and the next input block).
     for (var i = 0; i < blockSize; i++) {
-      out[outOff + i] = _ofbOutV[i] ^ inp[inpOff + i];
+      out[outOff + i] = _ofbOutV![i] ^ inp[inpOff + i];
     }
 
     // change over the input block.
-    var offset = _ofbV.length - blockSize;
-    _ofbV.setRange(0, offset, _ofbV.sublist(blockSize));
-    _ofbV.setRange(offset, _ofbV.length, _ofbOutV);
+    var offset = _ofbV!.length - blockSize;
+    _ofbV!.setRange(0, offset, _ofbV!.sublist(blockSize));
+    _ofbV!.setRange(offset, _ofbV!.length, _ofbOutV!);
 
     return blockSize;
   }

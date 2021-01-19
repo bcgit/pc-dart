@@ -12,17 +12,17 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
   BaseAEADBlockCipher(this._underlyingCipher);
 
   // These fields are set by init and not modified by processing
-  bool _forEncryption;
-  int _macSize;
-  Uint8List _lastKey;
-  Uint8List _nonce;
-  Uint8List _initialAssociatedText;
+  late bool _forEncryption;
+  late int _macSize;
+  Uint8List? _lastKey;
+  late Uint8List _nonce;
+  late Uint8List _initialAssociatedText;
 
   // These fields are modified during processing
-  Uint8List _bufBlock;
-  int _bufOff;
-  Uint8List _lastMacSizeBytes;
-  int _lastMacSizeBytesOff;
+  Uint8List? _bufBlock;
+  int? _bufOff;
+  Uint8List? _lastMacSizeBytes;
+  late int _lastMacSizeBytesOff;
 
   @override
   int get blockSize => underlyingCipher.blockSize;
@@ -41,7 +41,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
 
   /// Any remaining input yet to be processed
   Uint8List get remainingInput =>
-      Uint8List.view(_bufBlock.buffer, _bufBlock.offsetInBytes, _bufOff);
+      Uint8List.view(_bufBlock!.buffer, _bufBlock!.offsetInBytes, _bufOff);
 
   /// The length in bytes of the authentication tag
   int get macSize => _macSize;
@@ -55,7 +55,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
   void prepare(KeyParameter keyParam);
 
   /// Processes the additional authentication data
-  void processAADBytes(Uint8List inp, int inpOff, int len);
+  void processAADBytes(Uint8List? inp, int inpOff, int len);
 
   /// When decrypting, validates the generated authentication tag with the one
   /// in the input stream. When not equal throws [InvalidCipherTextException].
@@ -67,7 +67,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
     if (_lastMacSizeBytesOff != macSize) {
       throw InvalidCipherTextException('Input data too short');
     }
-    if (!_compareLists(mac, _lastMacSizeBytes)) {
+    if (!_compareLists(mac, _lastMacSizeBytes!)) {
       throw InvalidCipherTextException('Authentication tag check failed');
     }
   }
@@ -81,11 +81,11 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
   }
 
   @override
-  void init(bool forEncryption, CipherParameters params) {
+  void init(bool forEncryption, CipherParameters? params) {
     _forEncryption = forEncryption;
 
     KeyParameter keyParam;
-    Uint8List newNonce;
+    Uint8List? newNonce;
 
     if (params is AEADParameters) {
       var param = params;
@@ -126,8 +126,8 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
   }
 
   @override
-  Uint8List process(Uint8List data) {
-    var out = Uint8List(_getOutputSize(data.length));
+  Uint8List process(Uint8List? data) {
+    var out = Uint8List(_getOutputSize(data!.length));
 
     var len = processBytes(data, 0, data.length, out, 0);
 
@@ -138,7 +138,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
 
   @override
   int processBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff) {
     if (len == 0) return 0;
 
     if (forEncryption) {
@@ -161,7 +161,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
           min(_lastMacSizeBytesOff, cipherLen), out, outOff);
       outOff += resultLen;
       cipherLen -= l;
-      _lastMacSizeBytes.setRange(0, macSize - l, _lastMacSizeBytes.skip(l));
+      _lastMacSizeBytes!.setRange(0, macSize - l, _lastMacSizeBytes!.skip(l));
       _lastMacSizeBytesOff -= l;
     }
 
@@ -170,24 +170,24 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
       resultLen += _processCipherBytes(inp, inpOff, cipherLen, out, outOff);
     }
 
-    _lastMacSizeBytes.setRange(_lastMacSizeBytesOff,
-        _lastMacSizeBytesOff + len - cipherLen, inp.skip(inpOff + cipherLen));
+    _lastMacSizeBytes!.setRange(_lastMacSizeBytesOff,
+        _lastMacSizeBytesOff + len - cipherLen, inp!.skip(inpOff + cipherLen));
     _lastMacSizeBytesOff += len - cipherLen;
 
     return resultLen;
   }
 
   int _processCipherBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff) {
     if (len == 0) return 0;
 
     var resultLen = 0;
 
     if (_bufOff != 0) {
       // add to buffer until full
-      var end = blockSize < _bufOff + len ? blockSize : _bufOff + len;
-      _bufBlock.setRange(_bufOff, end, inp.skip(inpOff));
-      len -= end - _bufOff;
+      var end = blockSize < _bufOff! + len ? blockSize : _bufOff! + len;
+      _bufBlock!.setRange(_bufOff!, end, inp!.skip(inpOff));
+      len -= end - _bufOff!;
       _bufOff = end;
 
       // if buffer full and has more data -> process buffer
@@ -208,7 +208,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
 
     // keep last block in buffer
     if (len > 0) {
-      _bufBlock.setRange(0, len, inp.skip(inpOff));
+      _bufBlock!.setRange(0, len, inp!.skip(inpOff));
       _bufOff = len;
     }
 

@@ -27,13 +27,13 @@ class Scrypt extends BaseKeyDerivator {
 
   static final int _maxValue = 0x7fffffff;
 
-  ScryptParameters _params;
+  ScryptParameters? _params;
 
   @override
   final String algorithmName = 'scrypt';
 
   @override
-  int get keySize => _params.desiredKeyLength;
+  int get keySize => _params!.desiredKeyLength;
 
   void reset() {
     _params = null;
@@ -46,8 +46,8 @@ class Scrypt extends BaseKeyDerivator {
 
   @override
   int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    var key = _scryptJ(Uint8List.fromList(inp.sublist(inpOff)), _params.salt,
-        _params.N, _params.r, _params.p, _params.desiredKeyLength);
+    var key = _scryptJ(Uint8List.fromList(inp.sublist(inpOff)), _params!.salt,
+        _params!.N, _params!.r, _params!.p, _params!.desiredKeyLength);
 
     out.setRange(0, keySize, key);
 

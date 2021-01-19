@@ -5,7 +5,7 @@ part of api;
 /// Block cipher engines are expected to conform to this interface.
 abstract class BlockCipher extends Algorithm {
   /// Create the cipher specified by the standard [algorithmName].
-  factory BlockCipher(String algorithmName) =>
+  factory BlockCipher(String? algorithmName) =>
       registry.create<BlockCipher>(algorithmName);
 
   /// Get this ciphers's block size.

@@ -18,20 +18,20 @@ class ISO7816d4Padding extends BasePadding {
   String get algorithmName => 'ISO7816-4';
 
   @override
-  void init([CipherParameters params]) {
+  void init([CipherParameters? params]) {
     // nothing to do.
   }
 
   /// add the pad bytes to the passed in block, returning the
   /// number of bytes added.
   @override
-  int addPadding(Uint8List data, int offset) {
-    var added = (data.length - offset);
+  int addPadding(Uint8List? data, int? offset) {
+    var added = (data!.length - offset!);
 
     data[offset] = 0x80;
     offset++;
 
-    while (offset < data.length) {
+    while (offset! < data.length) {
       data[offset] = 0;
       offset++;
     }

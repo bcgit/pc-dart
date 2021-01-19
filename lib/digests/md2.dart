@@ -58,17 +58,17 @@ class MD2Digest extends BaseDigest {
   }
 
   @override
-  void update(Uint8List inp, int inpOff, int len) {
+  void update(Uint8List? inp, int inpOff, int? len) {
     // fill the current word
-    while ((_mOff != 0) && (len > 0)) {
-      updateByte(inp[inpOff]);
+    while ((_mOff != 0) && (len! > 0)) {
+      updateByte(inp![inpOff]);
       inpOff++;
       len--;
     }
 
     // process whole words.
-    while (len > 16) {
-      _m.setRange(0, 16, inp.sublist(inpOff));
+    while (len! > 16) {
+      _m.setRange(0, 16, inp!.sublist(inpOff));
       _processCheckSum(_m);
       _processBlock(_m);
       len -= 16;
@@ -76,15 +76,15 @@ class MD2Digest extends BaseDigest {
     }
 
     // load in the remainder.
-    while (len > 0) {
-      updateByte(inp[inpOff]);
+    while (len! > 0) {
+      updateByte(inp![inpOff]);
       inpOff++;
       len--;
     }
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int? outOff) {
     // add padding
     var paddingByte = _m.length - _mOff;
     for (var i = _mOff; i < _m.length; i++) {
@@ -99,7 +99,7 @@ class MD2Digest extends BaseDigest {
 
     _processBlock(_c);
 
-    out.setRange(outOff, outOff + 16, _x.sublist(_xOff));
+    out!.setRange(outOff!, outOff + 16, _x.sublist(_xOff));
 
     reset();
 

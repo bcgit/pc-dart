@@ -119,7 +119,7 @@ void pack16(int x, dynamic out, int offset, Endian endian) {
   if (out is! ByteData) {
     out = ByteData.view(out.buffer, out.offsetInBytes, out.length);
   }
-  (out as ByteData).setUint16(offset, x, endian);
+  out.setUint16(offset, x, endian);
 }
 
 /// Unpacks a 16 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
@@ -127,9 +127,9 @@ void pack16(int x, dynamic out, int offset, Endian endian) {
 int unpack16(dynamic inp, int offset, Endian endian) {
   if (inp is! ByteData) {
     inp = ByteData.view(
-        inp.buffer as ByteBuffer, inp.offsetInBytes as int, inp.length as int);
+        inp.buffer as ByteBuffer, inp.offsetInBytes as int, inp.length as int?);
   }
-  return (inp as ByteData).getUint16(offset, endian);
+  return inp.getUint16(offset, endian);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,7 +202,7 @@ void pack32(int x, dynamic out, int offset, Endian endian) {
     out =
         ByteData.view(out.buffer as ByteBuffer, out.offsetInBytes, out.length);
   }
-  (out as ByteData).setUint32(offset, x, endian);
+  out.setUint32(offset, x, endian);
 }
 
 /// Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
@@ -211,7 +211,7 @@ int unpack32(dynamic inp, int offset, Endian endian) {
   if (inp is! ByteData) {
     inp = ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
   }
-  return (inp as ByteData).getUint32(offset, endian);
+  return inp.getUint32(offset, endian);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,10 +220,10 @@ int unpack32(dynamic inp, int offset, Endian endian) {
 class Register64 {
   static final Register64 _maxValue = Register64(0xFFFFFFFF, 0xFFFFFFFF);
 
-  int _hi32;
-  int _lo32;
+  late int _hi32;
+  late int _lo32;
 
-  Register64([dynamic hiOrLo32OrY = 0, int lo32]) {
+  Register64([dynamic hiOrLo32OrY = 0, int? lo32]) {
     set(hiOrLo32OrY, lo32);
   }
 
@@ -240,7 +240,7 @@ class Register64 {
       ((_hi32 > y._hi32) || ((_hi32 == y._hi32) && (_lo32 > y._lo32)));
   bool operator >=(Register64 y) => ((this > y) || (this == y));
 
-  void set(dynamic hiOrLo32OrY, [int lo32]) {
+  void set(dynamic hiOrLo32OrY, [int? lo32]) {
     if (lo32 == null) {
       if (hiOrLo32OrY is Register64) {
         _hi32 = hiOrLo32OrY._hi32;
@@ -268,7 +268,7 @@ class Register64 {
         _hi32 &= _MASK_32;
       }
     } else {
-      int slo32 = (_lo32 + y._lo32);
+      int slo32 = _lo32 + y._lo32 as int;
       _lo32 = (slo32 & _MASK_32);
       var carry = ((slo32 != _lo32) ? 1 : 0);
       _hi32 = (((_hi32 + y._hi32 + carry) as int) & _MASK_32);
@@ -300,10 +300,10 @@ class Register64 {
       final lo32 = _lo32 * y._lo32;
       final carry = (lo32 ~/
           0x100000000); // TODO: use shift right when bug 17715 is fixed
-      final hi32 = clip32(_hi32 * y._lo32) + clip32(_lo32 * y._hi32) + carry;
+      final hi32 = clip32(_hi32 * y._lo32 as int) + clip32(_lo32 * y._hi32 as int) + carry;
 
       _hi32 = clip32(hi32);
-      _lo32 = clip32(lo32);
+      _lo32 = clip32(lo32 as int);
     }
   }
 
@@ -481,7 +481,7 @@ class Register64List {
 
   Register64 operator [](int index) => _list[index];
 
-  void fillRange(int start, int end, dynamic hiOrLo32OrY, [int lo32]) {
+  void fillRange(int start, int end, dynamic hiOrLo32OrY, [int? lo32]) {
     for (var i = start; i < end; i++) {
       _list[i].set(hiOrLo32OrY, lo32);
     }

@@ -24,12 +24,12 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
             return PBKDF2KeyDerivator(mac);
           });
 
-  Pbkdf2Parameters _params;
+  late Pbkdf2Parameters _params;
   final Mac _mac;
-  Uint8List _state;
+  Uint8List? _state;
 
   PBKDF2KeyDerivator(this._mac) {
-    _state = Uint8List(_mac.macSize);
+    _state = Uint8List(_mac.macSize!);
   }
 
   @override
@@ -40,7 +40,7 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
 
   void reset() {
     _mac.reset();
-    _state.fillRange(0, _state.length, 0);
+    _state!.fillRange(0, _state!.length, 0);
   }
 
   @override
@@ -51,7 +51,7 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
   @override
   int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     var dkLen = _params.desiredKeyLength;
-    var hLen = _mac.macSize;
+    var hLen = _mac.macSize!;
     var l = (dkLen + hLen - 1) ~/ hLen;
     var iBuf = Uint8List(4);
     var outBytes = Uint8List(l * hLen);
@@ -76,7 +76,7 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
     return keySize;
   }
 
-  void _f(Uint8List S, int c, Uint8List iBuf, Uint8List out, int outOff) {
+  void _f(Uint8List? S, int c, Uint8List iBuf, Uint8List out, int outOff) {
     if (c <= 0) {
       throw ArgumentError('Iteration count must be at least 1.');
     }
@@ -88,14 +88,14 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
     _mac.update(iBuf, 0, iBuf.length);
     _mac.doFinal(_state, 0);
 
-    out.setRange(outOff, outOff + _state.length, _state);
+    out.setRange(outOff, outOff + _state!.length, _state!);
 
     for (var count = 1; count < c; count++) {
-      _mac.update(_state, 0, _state.length);
+      _mac.update(_state, 0, _state!.length);
       _mac.doFinal(_state, 0);
 
-      for (var j = 0; j != _state.length; j++) {
-        out[outOff + j] ^= _state[j];
+      for (var j = 0; j != _state!.length; j++) {
+        out[outOff + j] ^= _state![j];
       }
     }
   }

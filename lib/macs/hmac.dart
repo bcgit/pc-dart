@@ -29,16 +29,16 @@ class HMac extends BaseMac {
   static final _opad = 0x5C;
 
   final Digest _digest;
-  int _digestSize;
-  int _blockLength;
+  int? _digestSize;
+  int? _blockLength;
 
-  Uint8List _inputPad;
-  Uint8List _outputBuf;
+  Uint8List? _inputPad;
+  Uint8List? _outputBuf;
 
   HMac(this._digest, this._blockLength) {
     _digestSize = _digest.digestSize;
-    _inputPad = Uint8List(_blockLength);
-    _outputBuf = Uint8List(_blockLength + _digestSize);
+    _inputPad = Uint8List(_blockLength!);
+    _outputBuf = Uint8List(_blockLength! + _digestSize!);
   }
 
   HMac.withDigest(this._digest) {
@@ -49,15 +49,15 @@ class HMac extends BaseMac {
     }
 
     _digestSize = _digest.digestSize;
-    _inputPad = Uint8List(_blockLength);
-    _outputBuf = Uint8List(_blockLength + _digestSize);
+    _inputPad = Uint8List(_blockLength!);
+    _outputBuf = Uint8List(_blockLength! + _digestSize!);
   }
 
   @override
   String get algorithmName => '${_digest.algorithmName}/HMAC';
 
   @override
-  int get macSize => _digestSize;
+  int? get macSize => _digestSize;
 
   @override
   void reset() {
@@ -65,33 +65,33 @@ class HMac extends BaseMac {
     _digest.reset();
 
     // reinitialize the digest.
-    _digest.update(_inputPad, 0, _inputPad.length);
+    _digest.update(_inputPad, 0, _inputPad!.length);
   }
 
   @override
   void init(covariant KeyParameter params) {
     _digest.reset();
 
-    var key = params.key;
+    var key = params.key!;
     var keyLength = key.length;
 
-    if (keyLength > _blockLength) {
+    if (keyLength > _blockLength!) {
       _digest.update(key, 0, keyLength);
       _digest.doFinal(_inputPad, 0);
 
-      keyLength = _digestSize;
+      keyLength = _digestSize!;
     } else {
-      _inputPad.setRange(0, keyLength, key);
+      _inputPad!.setRange(0, keyLength, key);
     }
 
-    _inputPad.fillRange(keyLength, _inputPad.length, 0);
+    _inputPad!.fillRange(keyLength, _inputPad!.length, 0);
 
-    _outputBuf.setRange(0, _blockLength, _inputPad);
+    _outputBuf!.setRange(0, _blockLength!, _inputPad!);
 
-    _xorPad(_inputPad, _blockLength, _ipad);
-    _xorPad(_outputBuf, _blockLength, _opad);
+    _xorPad(_inputPad, _blockLength!, _ipad);
+    _xorPad(_outputBuf, _blockLength!, _opad);
 
-    _digest.update(_inputPad, 0, _inputPad.length);
+    _digest.update(_inputPad, 0, _inputPad!.length);
   }
 
   @override
@@ -100,25 +100,25 @@ class HMac extends BaseMac {
   }
 
   @override
-  void update(Uint8List inp, int inpOff, int len) {
+  void update(Uint8List? inp, int inpOff, int? len) {
     _digest.update(inp, inpOff, len);
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int outOff) {
     _digest.doFinal(_outputBuf, _blockLength);
-    _digest.update(_outputBuf, 0, _outputBuf.length);
+    _digest.update(_outputBuf, 0, _outputBuf!.length);
 
     var len = _digest.doFinal(out, outOff);
-    _outputBuf.fillRange(_blockLength, _outputBuf.length, 0);
-    _digest.update(_inputPad, 0, _inputPad.length);
+    _outputBuf!.fillRange(_blockLength!, _outputBuf!.length, 0);
+    _digest.update(_inputPad, 0, _inputPad!.length);
 
     return len;
   }
 
-  void _xorPad(Uint8List pad, int len, int n) {
+  void _xorPad(Uint8List? pad, int len, int n) {
     for (var i = 0; i < len; i++) {
-      pad[i] ^= n;
+      pad![i] ^= n;
     }
   }
 }

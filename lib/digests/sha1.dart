@@ -36,7 +36,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
   void processBlock() {
     // expand 16 word block into 80 word block.
     for (var i = 16; i < 80; i++) {
-      var t = buffer[i - 3] ^ buffer[i - 8] ^ buffer[i - 14] ^ buffer[i - 16];
+      var t = buffer[i - 3]! ^ buffer[i - 8]! ^ buffer[i - 14]! ^ buffer[i - 16]!;
       buffer[i] = rotl32(t, 1);
     }
 
@@ -51,81 +51,81 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
 
     // round 1
     for (var j = 0; j < 4; j++) {
-      E = clip32(E + rotl32(A, 5) + _f(B, C, D) + buffer[idx++] + _Y1);
+      E = clip32(E! + rotl32(A!, 5) + _f(B!, C!, D!) + buffer[idx++]! + _Y1);
       B = rotl32(B, 30);
 
-      D = clip32(D + rotl32(E, 5) + _f(A, B, C) + buffer[idx++] + _Y1);
+      D = clip32(D + rotl32(E, 5) + _f(A, B, C) + buffer[idx++]! + _Y1);
       A = rotl32(A, 30);
 
-      C = clip32(C + rotl32(D, 5) + _f(E, A, B) + buffer[idx++] + _Y1);
+      C = clip32(C + rotl32(D, 5) + _f(E, A, B) + buffer[idx++]! + _Y1);
       E = rotl32(E, 30);
 
-      B = clip32(B + rotl32(C, 5) + _f(D, E, A) + buffer[idx++] + _Y1);
+      B = clip32(B + rotl32(C, 5) + _f(D, E, A) + buffer[idx++]! + _Y1);
       D = rotl32(D, 30);
 
-      A = clip32(A + rotl32(B, 5) + _f(C, D, E) + buffer[idx++] + _Y1);
+      A = clip32(A + rotl32(B, 5) + _f(C, D, E) + buffer[idx++]! + _Y1);
       C = rotl32(C, 30);
     }
 
     // round 2
     for (var j = 0; j < 4; j++) {
-      E = clip32(E + rotl32(A, 5) + _h(B, C, D) + buffer[idx++] + _Y2);
+      E = clip32(E! + rotl32(A!, 5) + _h(B!, C!, D!) + buffer[idx++]! + _Y2);
       B = rotl32(B, 30);
 
-      D = clip32(D + rotl32(E, 5) + _h(A, B, C) + buffer[idx++] + _Y2);
+      D = clip32(D + rotl32(E, 5) + _h(A, B, C) + buffer[idx++]! + _Y2);
       A = rotl32(A, 30);
 
-      C = clip32(C + rotl32(D, 5) + _h(E, A, B) + buffer[idx++] + _Y2);
+      C = clip32(C + rotl32(D, 5) + _h(E, A, B) + buffer[idx++]! + _Y2);
       E = rotl32(E, 30);
 
-      B = clip32(B + rotl32(C, 5) + _h(D, E, A) + buffer[idx++] + _Y2);
+      B = clip32(B + rotl32(C, 5) + _h(D, E, A) + buffer[idx++]! + _Y2);
       D = rotl32(D, 30);
 
-      A = clip32(A + rotl32(B, 5) + _h(C, D, E) + buffer[idx++] + _Y2);
+      A = clip32(A + rotl32(B, 5) + _h(C, D, E) + buffer[idx++]! + _Y2);
       C = rotl32(C, 30);
     }
 
     // round 3
     for (var j = 0; j < 4; j++) {
-      E = clip32(E + rotl32(A, 5) + _g(B, C, D) + buffer[idx++] + _Y3);
+      E = clip32(E! + rotl32(A!, 5) + _g(B!, C!, D!) + buffer[idx++]! + _Y3);
       B = rotl32(B, 30);
 
-      D = clip32(D + rotl32(E, 5) + _g(A, B, C) + buffer[idx++] + _Y3);
+      D = clip32(D + rotl32(E, 5) + _g(A, B, C) + buffer[idx++]! + _Y3);
       A = rotl32(A, 30);
 
-      C = clip32(C + rotl32(D, 5) + _g(E, A, B) + buffer[idx++] + _Y3);
+      C = clip32(C + rotl32(D, 5) + _g(E, A, B) + buffer[idx++]! + _Y3);
       E = rotl32(E, 30);
 
-      B = clip32(B + rotl32(C, 5) + _g(D, E, A) + buffer[idx++] + _Y3);
+      B = clip32(B + rotl32(C, 5) + _g(D, E, A) + buffer[idx++]! + _Y3);
       D = rotl32(D, 30);
 
-      A = clip32(A + rotl32(B, 5) + _g(C, D, E) + buffer[idx++] + _Y3);
+      A = clip32(A + rotl32(B, 5) + _g(C, D, E) + buffer[idx++]! + _Y3);
       C = rotl32(C, 30);
     }
 
     // round 4
     for (var j = 0; j < 4; j++) {
-      E = clip32(E + rotl32(A, 5) + _h(B, C, D) + buffer[idx++] + _Y4);
+      E = clip32(E! + rotl32(A!, 5) + _h(B!, C!, D!) + buffer[idx++]! + _Y4);
       B = rotl32(B, 30);
 
-      D = clip32(D + rotl32(E, 5) + _h(A, B, C) + buffer[idx++] + _Y4);
+      D = clip32(D + rotl32(E, 5) + _h(A, B, C) + buffer[idx++]! + _Y4);
       A = rotl32(A, 30);
 
-      C = clip32(C + rotl32(D, 5) + _h(E, A, B) + buffer[idx++] + _Y4);
+      C = clip32(C + rotl32(D, 5) + _h(E, A, B) + buffer[idx++]! + _Y4);
       E = rotl32(E, 30);
 
-      B = clip32(B + rotl32(C, 5) + _h(D, E, A) + buffer[idx++] + _Y4);
+      B = clip32(B + rotl32(C, 5) + _h(D, E, A) + buffer[idx++]! + _Y4);
       D = rotl32(D, 30);
 
-      A = clip32(A + rotl32(B, 5) + _h(C, D, E) + buffer[idx++] + _Y4);
+      A = clip32(A + rotl32(B, 5) + _h(C, D, E) + buffer[idx++]! + _Y4);
       C = rotl32(C, 30);
     }
 
-    state[0] = clip32(state[0] + A);
-    state[1] = clip32(state[1] + B);
-    state[2] = clip32(state[2] + C);
-    state[3] = clip32(state[3] + D);
-    state[4] = clip32(state[4] + E);
+    state[0] = clip32(state[0]! + A!);
+    state[1] = clip32(state[1]! + B!);
+    state[2] = clip32(state[2]! + C!);
+    state[3] = clip32(state[3]! + D!);
+    state[4] = clip32(state[4]! + E!);
   }
 
   // Additive constants

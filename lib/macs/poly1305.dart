@@ -17,7 +17,7 @@ class Poly1305 extends BaseMac {
   }
 
   Poly1305.withCipher(final this.cipher) {
-    if (cipher.blockSize != BLOCK_SIZE) {
+    if (cipher!.blockSize != BLOCK_SIZE) {
       throw ArgumentError('Poly1305 requires a 128 bit block cipher.');
     }
   }
@@ -65,14 +65,14 @@ class Poly1305 extends BaseMac {
 
   @override
   String get algorithmName =>
-      cipher == null ? 'Poly1305' : cipher.algorithmName + '/Poly1305';
+      cipher == null ? 'Poly1305' : cipher!.algorithmName + '/Poly1305';
 
   @override
   int get macSize => BLOCK_SIZE;
 
   static const BLOCK_SIZE = 16;
 
-  BlockCipher cipher;
+  BlockCipher? cipher;
 
   final Uint8List singleByte = Uint8List(1);
 
@@ -90,7 +90,7 @@ class Poly1305 extends BaseMac {
 
   @override
   void init(CipherParameters params) {
-    Uint8List nonce;
+    Uint8List? nonce;
 
     if (cipher != null) {
       if (!(params is ParametersWithIV)) {
@@ -109,14 +109,14 @@ class Poly1305 extends BaseMac {
 
     var keyParams = params as KeyParameter;
 
-    if (!checkKey(keyParams.key)) clamp(keyParams.key);
+    if (!checkKey(keyParams.key!)) clamp(keyParams.key);
 
     setKey(keyParams.key, nonce);
 
     reset();
   }
 
-  void setKey(Uint8List key, Uint8List nonce) {
+  void setKey(Uint8List key, Uint8List? nonce) {
     if (key.length != 32) throw ArgumentError('Poly1305 key must be 256 bits.');
     if (cipher != null && (nonce == null || nonce.length != BLOCK_SIZE)) {
       throw ArgumentError('Poly1305-AES requires a 128 bit IV.');
@@ -167,7 +167,7 @@ class Poly1305 extends BaseMac {
   }
 
   @override
-  void update(final Uint8List inp, final int inOff, final int len) {
+  void update(final Uint8List? inp, final int inOff, final int len) {
     var copied = 0;
     while (len > copied) {
       if (currentBlockOffset == BLOCK_SIZE) {
@@ -229,7 +229,7 @@ class Poly1305 extends BaseMac {
   }
 
   @override
-  int doFinal(Uint8List out, final int outOff) {
+  int doFinal(Uint8List? out, final int outOff) {
     if (outOff + BLOCK_SIZE > out.length) {
       throw ArgumentError('Output buffer is too short.');
     }

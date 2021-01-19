@@ -15,8 +15,8 @@ class RSAKeyGenerator implements KeyGenerator {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(KeyGenerator, 'RSA', () => RSAKeyGenerator());
 
-  SecureRandom _random;
-  RSAKeyGeneratorParameters _params;
+  SecureRandom? _random;
+  late RSAKeyGeneratorParameters _params;
 
   @override
   String get algorithmName => 'RSA';
@@ -25,10 +25,10 @@ class RSAKeyGenerator implements KeyGenerator {
   void init(CipherParameters params) {
     if (params is ParametersWithRandom) {
       _random = params.random;
-      _params = params.parameters;
+      _params = params.parameters as RSAKeyGeneratorParameters;
     } else {
       _random = SecureRandom();
-      _params = params;
+      _params = params as RSAKeyGeneratorParameters;
     }
 
     if (_params.bitStrength < 12) {
@@ -296,11 +296,11 @@ bool _isProbablePrime(BigInt b, int t) {
   if (x.isEven) return false;
   i = 1;
   while (i < _lowprimes.length) {
-    var m = _lowprimes[i], j = i + 1;
-    while (j < _lowprimes.length && m < _lplim) {
-      m *= _lowprimes[j++];
+    BigInt? m = _lowprimes[i], j = i + 1;
+    while (j! < (_lowprimes.length as BigInt) && m! < _lplim) {
+      m *= _lowprimes[j++ as int];
     }
-    m = x % m;
+    m = x % m!;
     while (i < j)
       if (m % _lowprimes[i++] == 0) {
         return false;
@@ -309,12 +309,12 @@ bool _isProbablePrime(BigInt b, int t) {
   return _millerRabin(x, t);
 }
 
-BigInt generateProbablePrime(int bitLength, int certainty, SecureRandom rnd) {
+BigInt generateProbablePrime(int bitLength, int certainty, SecureRandom? rnd) {
   if (bitLength < 2) {
     return BigInt.one;
   }
 
-  var candidate = rnd.nextBigInteger(bitLength);
+  var candidate = rnd!.nextBigInteger(bitLength)!;
 
   // force MSB set
   if (!_testBit(candidate, bitLength - 1)) {

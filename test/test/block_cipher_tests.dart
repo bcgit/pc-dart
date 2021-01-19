@@ -9,7 +9,7 @@ import 'package:pointycastle/pointycastle.dart';
 
 import './src/helpers.dart';
 
-void runBlockCipherTests(BlockCipher cipher, CipherParameters params,
+void runBlockCipherTests(BlockCipher cipher, CipherParameters? params,
     List<String> plainCipherTextPairs) {
   group('${cipher.algorithmName}:', () {
     group('cipher  :', () {
@@ -41,13 +41,13 @@ void runBlockCipherTests(BlockCipher cipher, CipherParameters params,
 }
 
 void _resetCipher(
-    BlockCipher cipher, bool forEncryption, CipherParameters params) {
+    BlockCipher cipher, bool forEncryption, CipherParameters? params) {
   cipher
     ..reset()
     ..init(forEncryption, params);
 }
 
-void _runBlockCipherTest(BlockCipher cipher, CipherParameters params,
+void _runBlockCipherTest(BlockCipher cipher, CipherParameters? params,
     String plainTextString, String expectedHexCipherText) {
   var plainText = createUint8ListFromString(plainTextString);
 
@@ -58,7 +58,7 @@ void _runBlockCipherTest(BlockCipher cipher, CipherParameters params,
   expect(hexCipherText, equals(expectedHexCipherText));
 }
 
-void _runBlockDecipherTest(BlockCipher cipher, CipherParameters params,
+void _runBlockDecipherTest(BlockCipher cipher, CipherParameters? params,
     String hexCipherText, String expectedPlainText) {
   var cipherText = createUint8ListFromHexString(hexCipherText);
 
@@ -69,7 +69,7 @@ void _runBlockDecipherTest(BlockCipher cipher, CipherParameters params,
 }
 
 void _runBlockCipherDecipherTest(
-    BlockCipher cipher, CipherParameters params, Uint8List plainText) {
+    BlockCipher cipher, CipherParameters? params, Uint8List plainText) {
   _resetCipher(cipher, true, params);
   var cipherText = _processBlocks(cipher, plainText);
 

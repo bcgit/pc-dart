@@ -23,27 +23,27 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
             return AutoSeedBlockCtrRandom(blockCipher);
           });
 
-  BlockCtrRandom _delegate;
+  late BlockCtrRandom _delegate;
   final bool _reseedIV;
 
   var _inAutoReseed = false;
-  int _autoReseedKeyLength;
+  int? _autoReseedKeyLength;
 
   @override
   String get algorithmName =>
-      '${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG';
+      '${_delegate.cipher!.algorithmName}/CTR/AUTO-SEED-PRNG';
 
-  AutoSeedBlockCtrRandom(BlockCipher cipher, [this._reseedIV = true]) {
+  AutoSeedBlockCtrRandom(BlockCipher? cipher, [this._reseedIV = true]) {
     _delegate = BlockCtrRandom(cipher);
   }
 
   @override
   void seed(CipherParameters params) {
     if (params is ParametersWithIV<KeyParameter>) {
-      _autoReseedKeyLength = params.parameters.key.length;
+      _autoReseedKeyLength = params.parameters.key!.length;
       _delegate.seed(params);
     } else if (params is KeyParameter) {
-      _autoReseedKeyLength = params.key.length;
+      _autoReseedKeyLength = params.key!.length;
       _delegate.seed(params);
     } else {
       throw ArgumentError(
@@ -52,27 +52,27 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
   }
 
   @override
-  int nextUint8() => _autoReseedIfNeededAfter(() {
+  int? nextUint8() => _autoReseedIfNeededAfter(() {
         return _delegate.nextUint8();
       });
 
   @override
-  int nextUint16() => _autoReseedIfNeededAfter(() {
+  int? nextUint16() => _autoReseedIfNeededAfter(() {
         return _delegate.nextUint16();
       });
 
   @override
-  int nextUint32() => _autoReseedIfNeededAfter(() {
+  int? nextUint32() => _autoReseedIfNeededAfter(() {
         return _delegate.nextUint32();
       });
 
   @override
-  BigInt nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
+  BigInt? nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
         return _delegate.nextBigInteger(bitLength);
       });
 
   @override
-  Uint8List nextBytes(int count) => _autoReseedIfNeededAfter(() {
+  Uint8List? nextBytes(int? count) => _autoReseedIfNeededAfter(() {
         return _delegate.nextBytes(count);
       });
 
@@ -95,7 +95,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
     CipherParameters params;
     if (_reseedIV) {
       params =
-          ParametersWithIV(keyParam, nextBytes(_delegate.cipher.blockSize));
+          ParametersWithIV(keyParam, nextBytes(_delegate.cipher!.blockSize));
     } else {
       params = keyParam;
     }

@@ -19,7 +19,7 @@ class SHAKEDigest extends KeccakEngine implements Xof {
       Digest,
       _shakeREGEX,
       (_, final Match match) => () {
-            var bitLength = int.parse(match.group(1));
+            var bitLength = int.parse(match.group(1)!);
             return SHAKEDigest(bitLength);
           });
 
@@ -39,12 +39,12 @@ class SHAKEDigest extends KeccakEngine implements Xof {
   String get algorithmName => 'SHAKE-$fixedOutputLength';
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int? outOff) {
     return doFinalRange(out, digestSize, digestSize);
   }
 
   @override
-  int doFinalRange(Uint8List out, int outOff, int outLen) {
+  int doFinalRange(Uint8List? out, int outOff, int outLen) {
     var length = doOutput(out, outOff, outLen);
     reset();
     return length;
@@ -78,8 +78,8 @@ class SHAKEDigest extends KeccakEngine implements Xof {
   }
 
   @override
-  int doOutput(Uint8List out, int outOff, int outLen) {
-    if (!squeezing) {
+  int doOutput(Uint8List? out, int outOff, int outLen) {
+    if (!squeezing!) {
       absorbBits(0x0F, 4);
     }
 

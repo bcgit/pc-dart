@@ -26,10 +26,10 @@ class SICStreamCipher extends BaseStreamCipher {
 
   final BlockCipher underlyingCipher;
 
-  Uint8List _iv;
-  Uint8List _counter;
-  Uint8List _counterOut;
-  int _consumed;
+  late Uint8List _iv;
+  Uint8List? _counter;
+  Uint8List? _counterOut;
+  late int _consumed;
 
   SICStreamCipher(this.underlyingCipher) {
     _iv = Uint8List(underlyingCipher.blockSize);
@@ -43,35 +43,35 @@ class SICStreamCipher extends BaseStreamCipher {
   @override
   void reset() {
     underlyingCipher.reset();
-    _counter.setAll(0, _iv);
-    _counterOut.fillRange(0, _counterOut.length, 0);
-    _consumed = _counterOut.length;
+    _counter!.setAll(0, _iv);
+    _counterOut!.fillRange(0, _counterOut!.length, 0);
+    _consumed = _counterOut!.length;
   }
 
   @override
   void init(bool forEncryption, covariant ParametersWithIV params) {
-    _iv.setAll(0, params.iv);
+    _iv.setAll(0, params.iv!);
     reset();
     underlyingCipher.init(true, params.parameters);
   }
 
   @override
   void processBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff) {
     for (var i = 0; i < len; i++) {
-      out[outOff + i] = returnByte(inp[inpOff + i]);
+      out![outOff + i] = returnByte(inp![inpOff + i]);
     }
   }
 
   @override
   int returnByte(int inp) {
     _feedCounterIfNeeded();
-    return clip8(inp) ^ _counterOut[_consumed++];
+    return clip8(inp) ^ _counterOut![_consumed++];
   }
 
   /// Calls [_feedCounter] if all [_counterOut] bytes have been consumed
   void _feedCounterIfNeeded() {
-    if (_consumed >= _counterOut.length) {
+    if (_consumed >= _counterOut!.length) {
       _feedCounter();
     }
   }
@@ -91,11 +91,11 @@ class SICStreamCipher extends BaseStreamCipher {
   /// Increments [_counter] by 1
   void _incrementCounter() {
     int i;
-    for (i = _counter.lengthInBytes - 1; i >= 0; i--) {
-      var val = _counter[i];
+    for (i = _counter!.lengthInBytes - 1; i >= 0; i--) {
+      var val = _counter![i];
       val++;
-      _counter[i] = val;
-      if (_counter[i] != 0) break;
+      _counter![i] = val;
+      if (_counter![i] != 0) break;
     }
   }
 }

@@ -22,48 +22,48 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
             return BlockCtrRandom(blockCipher);
           });
 
-  final BlockCipher cipher;
+  final BlockCipher? cipher;
 
-  Uint8List _input;
-  Uint8List _output;
-  int _used;
+  Uint8List? _input;
+  Uint8List? _output;
+  int? _used;
 
   BlockCtrRandom(this.cipher) {
-    _input = Uint8List(cipher.blockSize);
-    _output = Uint8List(cipher.blockSize);
-    _used = _output.length;
+    _input = Uint8List(cipher!.blockSize);
+    _output = Uint8List(cipher!.blockSize);
+    _used = _output!.length;
   }
 
   @override
-  String get algorithmName => '${cipher.algorithmName}/CTR/PRNG';
+  String get algorithmName => '${cipher!.algorithmName}/CTR/PRNG';
 
   @override
   void seed(CipherParameters params) {
-    _used = _output.length;
+    _used = _output!.length;
     if (params is ParametersWithIV) {
-      _input.setAll(0, params.iv);
-      cipher.init(true, params.parameters);
+      _input!.setAll(0, params.iv!);
+      cipher!.init(true, params.parameters);
     } else {
-      cipher.init(true, params);
+      cipher!.init(true, params);
     }
   }
 
   @override
   int nextUint8() {
-    if (_used == _output.length) {
-      cipher.processBlock(_input, 0, _output, 0);
+    if (_used == _output!.length) {
+      cipher!.processBlock(_input, 0, _output, 0);
       _used = 0;
       _incrementInput();
     }
 
-    return clip8(_output[_used++]);
+    return clip8(_output![_used++!]);
   }
 
   void _incrementInput() {
-    var offset = _input.length;
+    var offset = _input!.length;
     do {
       offset--;
-      _input[offset] += 1;
-    } while (_input[offset] == 0);
+      _input![offset] += 1;
+    } while (_input![offset] == 0);
   }
 }

@@ -45,7 +45,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   Digest hash = SHA1Digest();
 
   /// Hash function used by the MGF1 Mask Generation Function.
-  Digest mgf1Hash;
+  late Digest mgf1Hash;
 
   /// Hash of the encoding parameters.
   ///
@@ -54,8 +54,8 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   Uint8List defHash = Uint8List(SHA1Digest().digestSize);
 
   final AsymmetricBlockCipher _engine;
-  SecureRandom _random;
-  bool _forEncryption;
+  late SecureRandom _random;
+  late bool _forEncryption;
 
   OAEPEncoding(this._engine) {
     SHA1Digest().doFinal(defHash, 0);
@@ -91,11 +91,11 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     if (params is ParametersWithRandom) {
       var paramswr = params;
       _random = paramswr.random;
-      akparams = paramswr.parameters;
+      akparams = paramswr.parameters as AsymmetricKeyParameter<AsymmetricKey>;
     } else {
       _random = FortunaRandom();
       _random.seed(KeyParameter(_seed()));
-      akparams = params;
+      akparams = params as AsymmetricKeyParameter<AsymmetricKey>;
     }
     _engine.init(forEncryption, akparams);
     _forEncryption = forEncryption;
@@ -141,9 +141,9 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
   @override
   int processBlock(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff) {
     if (_forEncryption) {
-      return _encodeBlock(inp, inpOff, len, out, outOff);
+      return _encodeBlock(inp!, inpOff, len, out, outOff);
     } else {
       return _decodeBlock(inp, inpOff, len, out, outOff);
     }
@@ -225,7 +225,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     //
     // The _seed_ is stored in [seed].
 
-    var seed = _random.nextBytes(defHash.length);
+    var seed = _random.nextBytes(defHash.length)!;
 
     // 7. Calculate _dbMask_ = MGF(seed, emLen - hLen)
     //
@@ -307,7 +307,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   /// It returns the message in [out] starting at offset [outOff].
 
   int _decodeBlock(
-      Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int inpLen, Uint8List out, int outOff) {
     // The numbered steps below correspond to the steps from section 7.1.2 of
     // [RFC 2437](https://tools.ietf.org/html/rfc2437#section-7.1.2).
     //

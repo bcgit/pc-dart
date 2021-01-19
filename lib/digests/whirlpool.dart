@@ -67,9 +67,9 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
   }
 
   @override
-  void update(Uint8List inp, int inpOff, int len) {
-    for (var i = 0; i < len; i++) {
-      _buffer[_bufferPos++] = inp[inpOff + i];
+  void update(Uint8List? inp, int inpOff, int? len) {
+    for (var i = 0; i < len!; i++) {
+      _buffer[_bufferPos++] = inp![inpOff + i];
 
       if (_bufferPos == _buffer.length) {
         _processFilledBuffer(_buffer, 0);
@@ -80,11 +80,11 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int? outOff) {
     _finish();
 
     for (var i = 0; i < 8; i++) {
-      _hash[i].pack(out, outOff + (i * 8), Endian.big);
+      _hash[i].pack(out, outOff! + (i * 8), Endian.big);
     }
 
     reset();
@@ -116,14 +116,14 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     for (var round = 1; round <= _ROUNDS; round++) {
       for (var i = 0; i < 8; i++) {
         _l[i].set(0);
-        _l[i].xor(_c0[clip8(_k[(i - 0) & 7].hi32 >> 24)]);
-        _l[i].xor(_c1[clip8(_k[(i - 1) & 7].hi32 >> 16)]);
-        _l[i].xor(_c2[clip8(_k[(i - 2) & 7].hi32 >> 8)]);
-        _l[i].xor(_c3[clip8(_k[(i - 3) & 7].hi32)]);
-        _l[i].xor(_c4[clip8(_k[(i - 4) & 7].lo32 >> 24)]);
-        _l[i].xor(_c5[clip8(_k[(i - 5) & 7].lo32 >> 16)]);
-        _l[i].xor(_c6[clip8(_k[(i - 6) & 7].lo32 >> 8)]);
-        _l[i].xor(_c7[clip8(_k[(i - 7) & 7].lo32)]);
+        _l[i].xor(_c0[clip8(_k[(i - 0) & 7].hi32! >> 24)]);
+        _l[i].xor(_c1[clip8(_k[(i - 1) & 7].hi32! >> 16)]);
+        _l[i].xor(_c2[clip8(_k[(i - 2) & 7].hi32! >> 8)]);
+        _l[i].xor(_c3[clip8(_k[(i - 3) & 7].hi32!)]);
+        _l[i].xor(_c4[clip8(_k[(i - 4) & 7].lo32! >> 24)]);
+        _l[i].xor(_c5[clip8(_k[(i - 5) & 7].lo32! >> 16)]);
+        _l[i].xor(_c6[clip8(_k[(i - 6) & 7].lo32! >> 8)]);
+        _l[i].xor(_c7[clip8(_k[(i - 7) & 7].lo32!)]);
       }
 
       _k.setRange(0, _k.length, _l);
@@ -133,14 +133,14 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
       // apply the round transformation
       for (var i = 0; i < 8; i++) {
         _l[i].set(_k[i]);
-        _l[i].xor(_c0[clip8(_state[(i - 0) & 7].hi32 >> 24)]);
-        _l[i].xor(_c1[clip8(_state[(i - 1) & 7].hi32 >> 16)]);
-        _l[i].xor(_c2[clip8(_state[(i - 2) & 7].hi32 >> 8)]);
-        _l[i].xor(_c3[clip8(_state[(i - 3) & 7].hi32)]);
-        _l[i].xor(_c4[clip8(_state[(i - 4) & 7].lo32 >> 24)]);
-        _l[i].xor(_c5[clip8(_state[(i - 5) & 7].lo32 >> 16)]);
-        _l[i].xor(_c6[clip8(_state[(i - 6) & 7].lo32 >> 8)]);
-        _l[i].xor(_c7[clip8(_state[(i - 7) & 7].lo32)]);
+        _l[i].xor(_c0[clip8(_state[(i - 0) & 7].hi32! >> 24)]);
+        _l[i].xor(_c1[clip8(_state[(i - 1) & 7].hi32! >> 16)]);
+        _l[i].xor(_c2[clip8(_state[(i - 2) & 7].hi32! >> 8)]);
+        _l[i].xor(_c3[clip8(_state[(i - 3) & 7].hi32!)]);
+        _l[i].xor(_c4[clip8(_state[(i - 4) & 7].lo32! >> 24)]);
+        _l[i].xor(_c5[clip8(_state[(i - 5) & 7].lo32! >> 16)]);
+        _l[i].xor(_c6[clip8(_state[(i - 6) & 7].lo32! >> 8)]);
+        _l[i].xor(_c7[clip8(_state[(i - 7) & 7].lo32!)]);
       }
 
       // save the current state

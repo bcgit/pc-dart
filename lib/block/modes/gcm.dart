@@ -18,12 +18,12 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
             return GCMBlockCipher(underlying);
           });
 
-  Uint8List _h;
-  Uint8List _counter;
-  Uint8List _e;
-  Uint8List _e0;
-  Uint8List _x;
-  int _processedBytes;
+  late Uint8List _h;
+  late Uint8List _counter;
+  late Uint8List _e;
+  late Uint8List _e0;
+  late Uint8List _x;
+  late int _processedBytes;
 
   GCMBlockCipher(BlockCipher cipher) : super(cipher);
 
@@ -85,7 +85,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
     _xor(o, _e);
     if (length < blockSize) o.fillRange(length, blockSize, 0);
 
-    out.setRange(outOff, outOff + length, o);
+    out!.setRange(outOff, outOff + length, o);
 
     var c = forEncryption ? o : i;
 
@@ -140,9 +140,9 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
     x.setAll(0, z);
   }
 
-  void _xor(Uint8List x, Uint8List y) {
+  void _xor(Uint8List x, Uint8List? y) {
     for (var i = 0; i < x.length; i++) {
-      x[i] ^= y[i];
+      x[i] ^= y![i];
     }
   }
 
@@ -193,12 +193,12 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
   Uint8List get mac => _x;
 
   @override
-  void processAADBytes(Uint8List inp, int inpOff, int len) {
+  void processAADBytes(Uint8List? inp, int inpOff, int len) {
     var block = Uint8List(16);
     for (var i = 0; i < len; i += 16) {
       block.fillRange(0, 16, 0);
       block.setAll(
-          0, inp.sublist(inpOff + i, inpOff + min(i + 16, len) as int));
+          0, inp!.sublist(inpOff + i, inpOff + min(i + 16, len) as int));
       _gHASHBlock(_x, block);
     }
   }

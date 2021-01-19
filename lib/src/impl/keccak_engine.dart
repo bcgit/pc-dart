@@ -69,10 +69,10 @@ abstract class KeccakEngine extends BaseDigest {
   final _state = Uint8List(200);
   final _dataQueue = Uint8List(192);
 
-  int _rate;
-  int fixedOutputLength;
-  int _bitsInQueue;
-  bool _squeezing;
+  late int _rate;
+  late int fixedOutputLength;
+  late int _bitsInQueue;
+  late bool _squeezing;
 
   /// dataQueue intended for use by subclasses only.
   Uint8List get dataQueue => _dataQueue;
@@ -99,8 +99,8 @@ abstract class KeccakEngine extends BaseDigest {
   }
 
   @override
-  void update(Uint8List inp, int inpOff, int len) {
-    _doUpdate(inp, inpOff, len);
+  void update(Uint8List? inp, int inpOff, int? len) {
+    _doUpdate(inp, inpOff, len!);
   }
 
   void absorb(int data) {
@@ -133,11 +133,11 @@ abstract class KeccakEngine extends BaseDigest {
     _bitsInQueue += bits;
   }
 
-  void absorbRange(Uint8List data, int off, int len) {
+  void absorbRange(Uint8List? data, int off, int len) {
     if ((_bitsInQueue % 8) != 0) {
       throw StateError('attempt to absorb with odd length queue');
     }
-    if (squeezing) {
+    if (squeezing!) {
       throw StateError('attempt to absorb while squeezing');
     }
 
@@ -146,7 +146,7 @@ abstract class KeccakEngine extends BaseDigest {
 
     var available = rateBytes - bytesInQueue;
     if (len < available) {
-      _dataQueue.setRange(bytesInQueue, bytesInQueue + len, data, off);
+      _dataQueue.setRange(bytesInQueue, bytesInQueue + len, data!, off);
       _bitsInQueue += (len << 3);
       return;
     }
@@ -154,7 +154,7 @@ abstract class KeccakEngine extends BaseDigest {
     var count = 0;
     if (bytesInQueue > 0) {
       _dataQueue.setRange(
-          bytesInQueue, bytesInQueue + available, data.sublist(off));
+          bytesInQueue, bytesInQueue + available, data!.sublist(off));
       count += available;
       _keccakAbsorb(_dataQueue, 0);
     }
@@ -165,7 +165,7 @@ abstract class KeccakEngine extends BaseDigest {
       count += rateBytes;
     }
 
-    _dataQueue.setRange(0, remaining, data, off + count);
+    _dataQueue.setRange(0, remaining, data!, off + count);
     _bitsInQueue = remaining << 3;
   }
 
@@ -173,7 +173,7 @@ abstract class KeccakEngine extends BaseDigest {
     _dataQueue.fillRange(off, off + len, 0);
   }
 
-  void _doUpdate(Uint8List data, int off, int databitlen) {
+  void _doUpdate(Uint8List? data, int off, int databitlen) {
     absorbRange(data, off, databitlen);
   }
 
@@ -209,10 +209,10 @@ abstract class KeccakEngine extends BaseDigest {
     }
   }
 
-  void _keccakAbsorb(Uint8List data, int off) {
+  void _keccakAbsorb(Uint8List? data, int off) {
     var count = _rate >> 3;
     for (var i = 0; i < count; ++i) {
-      _state[i] ^= data[off + i];
+      _state[i] ^= data![off + i];
     }
     _keccakPermutation();
   }
@@ -220,11 +220,11 @@ abstract class KeccakEngine extends BaseDigest {
   void _keccakExtract() {
     _keccakPermutation();
 
-    _dataQueue.setRange(0, (_rate >> 3), _state);
+    _dataQueue.setRange(0, (_rate! >> 3), _state);
     _bitsInQueue = _rate;
   }
 
-  void squeeze(Uint8List output, int offset, int outputLength) {
+  void squeeze(Uint8List? output, int? offset, int outputLength) {
     if (!squeezing) {
       _padAndSwitchToSqueezingPhase();
     }
@@ -239,10 +239,10 @@ abstract class KeccakEngine extends BaseDigest {
         _keccakExtract();
       }
 
-      var partialBlock = min(_bitsInQueue, outputLength - i);
+      var partialBlock = min(_bitsInQueue!, outputLength - i);
 
-      output.setRange(
-          offset + (i ~/ 8),
+      output!.setRange(
+          offset! + (i ~/ 8),
           offset + (i ~/ 8) + (partialBlock ~/ 8),
           dataQueue.sublist((_rate - _bitsInQueue) ~/ 8));
 
@@ -251,7 +251,6 @@ abstract class KeccakEngine extends BaseDigest {
       i += partialBlock;
     }
   }
-
   void _padAndSwitchToSqueezingPhase() {
     _dataQueue[_bitsInQueue >> 3] |= (1 << (_bitsInQueue & 7));
     if (++_bitsInQueue == _rate) {
@@ -299,7 +298,7 @@ abstract class KeccakEngine extends BaseDigest {
       for (var j = 0; j < (64 ~/ 8); j++) {
         r.set(stateAsWords[i]);
         r.shiftr(8 * j);
-        state[index + j] = r.lo32;
+        state[index + j] = r.lo32!;
       }
     }
   }
@@ -402,7 +401,7 @@ abstract class KeccakEngine extends BaseDigest {
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int? outOff) {
     throw UnimplementedError('Subclasses must implement this.');
   }
 }

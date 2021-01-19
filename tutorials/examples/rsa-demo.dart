@@ -60,9 +60,9 @@ AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
   // The RSA numbers will always satisfy these properties
 
   assert(myPublic.modulus == myPrivate.modulus);
-  assert(myPrivate.p * myPrivate.q == myPrivate.modulus, 'p.q != n');
-  final phi = (myPrivate.p - BigInt.one) * (myPrivate.q - BigInt.one);
-  assert((myPublic.exponent * myPrivate.exponent) % phi == BigInt.one);
+  assert(myPrivate.p! * myPrivate.q! == myPrivate.modulus, 'p.q != n');
+  final phi = (myPrivate.p! - BigInt.one) * (myPrivate.q! - BigInt.one);
+  assert((myPublic.exponent! * myPrivate.exponent!) % phi == BigInt.one);
 
   return AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>(myPublic, myPrivate);
 }
@@ -233,7 +233,7 @@ Uint8List tamperWithData(Uint8List original) {
 
 String dumpRsaKeys(AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> k,
     {bool verbose = false}) {
-  final bitLength = k.privateKey.modulus.bitLength;
+  final bitLength = k.privateKey.modulus!.bitLength;
   final buf = StringBuffer('RSA key generated (bit-length: $bitLength)');
 
   if (verbose) {
@@ -257,7 +257,7 @@ Private:
 /// representing each byte. Otherwise, all the hexadecimal characters are
 /// simply concatenated together.
 
-String bin2hex(Uint8List bytes, {String separator, int wrap}) {
+String bin2hex(Uint8List bytes, {String? separator, int? wrap}) {
   var len = 0;
   final buf = StringBuffer();
   for (final b in bytes) {

@@ -60,7 +60,7 @@ void main(List<String> args) {
 /// representing each byte. Otherwise, all the hexadecimal characters are
 /// simply concatenated together.
 
-String bin2hex(Uint8List bytes, {String separator, int wrap}) {
+String bin2hex(Uint8List bytes, {String? separator, int? wrap}) {
   var len = 0;
   final buf = StringBuffer();
   for (final b in bytes) {

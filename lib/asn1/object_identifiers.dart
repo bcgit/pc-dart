@@ -268,7 +268,7 @@ class ObjectIdentifiers {
   ///
   /// Returns null if none object identifier can be found for the given [readableName].
   ///
-  static Map<String, dynamic> getIdentifierByName(String readableName) {
+  static Map<String, dynamic>? getIdentifierByName(String readableName) {
     for (var element in oi) {
       if (element['readableName'] == readableName) {
         return element;
@@ -282,7 +282,7 @@ class ObjectIdentifiers {
   ///
   /// Returns null if none object identifier can be found for the given [identifier].
   ///
-  static Map<String, dynamic> getIdentifierByIdentifier(String identifier) {
+  static Map<String, dynamic>? getIdentifierByIdentifier(String? identifier) {
     for (var element in oi) {
       if (element['identifierString'] == identifier) {
         return element;

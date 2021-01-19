@@ -19,8 +19,8 @@ class _SHAKEVector {
   String label;
   String algo;
   int bits;
-  Uint8List msg;
-  Uint8List digest;
+  Uint8List? msg;
+  Uint8List? digest;
 }
 
 void testAgainstCAVPVectors() {
@@ -77,7 +77,7 @@ void testAgainstCAVPVectors() {
 
   group('SHAKE', () {
     for (var vector in vectors) {
-      SHAKEDigest dig;
+      late SHAKEDigest dig;
       switch (vector.algo) {
         case 'SHAKE-128':
           dig = SHAKEDigest(128);
@@ -90,17 +90,17 @@ void testAgainstCAVPVectors() {
       }
 
       test('${vector.algo}, label = ${vector.label} ', () {
-        var result = Uint8List(vector.digest.length);
+        var result = Uint8List(vector.digest!.length);
 
         var partialBits = vector.bits % 8;
 
         if (partialBits == 0) {
-          dig.update(vector.msg, 0, vector.msg.length);
+          dig.update(vector.msg, 0, vector.msg!.length);
           dig.doFinalRange(result, 0, result.length);
         } else {
-          dig.update(vector.msg, 0, vector.msg.length - 1);
+          dig.update(vector.msg, 0, vector.msg!.length - 1);
           dig.doFinalPartial(result, 0, result.length,
-              vector.msg[vector.msg.length - 1], partialBits);
+              vector.msg![vector.msg!.length - 1], partialBits);
         }
 
         expect(vector.digest, equals(result));

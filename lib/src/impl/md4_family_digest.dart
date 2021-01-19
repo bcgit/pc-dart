@@ -12,7 +12,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   final _byteCount = Register64(0);
 
   final _wordBuffer = Uint8List(4);
-  int _wordBufferOffset;
+  late int _wordBufferOffset;
 
   final Endian _endian;
   final int _packedStateSize;
@@ -20,14 +20,14 @@ abstract class MD4FamilyDigest extends BaseDigest {
   final List<int> state;
 
   final List<int> buffer;
-  int bufferOffset;
+  late int bufferOffset;
 
   MD4FamilyDigest(this._endian, int stateSize, int bufferSize,
-      [int packedStateSize])
+      [int? packedStateSize])
       : _packedStateSize =
             (packedStateSize == null) ? stateSize : packedStateSize,
-        state = List<int>(stateSize),
-        buffer = List<int>(bufferSize) {
+        state = List<int>.filled(stateSize, 0, growable: false),
+        buffer = List<int>.filled(bufferSize, 0, growable: false) {
     reset();
   }
 
@@ -52,7 +52,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
 
   @override
   void updateByte(int inp) {
-    _wordBuffer[_wordBufferOffset++] = clip8(inp);
+    _wordBuffer[_wordBufferOffset++!] = clip8(inp);
     _processWordIfBufferFull();
     _byteCount.sum(1);
   }
@@ -73,7 +73,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int? outOff) {
     var bitLength = Register64(_byteCount)..shiftl(3);
 
     _processPadding();
@@ -88,7 +88,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   }
 
   /// Process a word (4 bytes) of data stored in [inp], starting at [inpOff].
-  void _processWord(Uint8List inp, int inpOff) {
+  void _processWord(Uint8List? inp, int inpOff) {
     buffer[bufferOffset++] = unpack32(inp, inpOff, _endian);
 
     if (bufferOffset == 16) {
@@ -106,9 +106,9 @@ abstract class MD4FamilyDigest extends BaseDigest {
   }
 
   /// Process [len] bytes from [inp] starting at [inpOff]
-  void _processBytes(Uint8List inp, int inpOff, int len) {
+  void _processBytes(Uint8List? inp, int inpOff, int len) {
     while (len > 0) {
-      updateByte(inp[inpOff]);
+      updateByte(inp![inpOff]);
 
       inpOff++;
       len--;
@@ -116,7 +116,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   }
 
   /// Process data word by word until no more words can be extracted from [inp] and return the number of bytes processed.
-  int _processWholeWords(Uint8List inp, int inpOff, int len) {
+  int _processWholeWords(Uint8List? inp, int inpOff, int len) {
     var processed = 0;
     while (len > _wordBuffer.length) {
       _processWord(inp, inpOff);
@@ -130,11 +130,11 @@ abstract class MD4FamilyDigest extends BaseDigest {
   }
 
   /// Process bytes from [inp] until the word buffer [_wordBuffer] is full and reset and return the number of bytes processed.
-  int _processUntilNextWord(Uint8List inp, int inpOff, int len) {
+  int _processUntilNextWord(Uint8List? inp, int inpOff, int? len) {
     var processed = 0;
 
-    while ((_wordBufferOffset != 0) && (len > 0)) {
-      updateByte(inp[inpOff]);
+    while ((_wordBufferOffset != 0) && (len! > 0)) {
+      updateByte(inp![inpOff]);
 
       inpOff++;
       len--;
@@ -184,9 +184,9 @@ abstract class MD4FamilyDigest extends BaseDigest {
     }
   }
 
-  void _packState(Uint8List out, int outOff) {
+  void _packState(Uint8List? out, int? outOff) {
     for (var i = 0; i < _packedStateSize; i++) {
-      pack32(state[i], out, (outOff + i * 4), _endian);
+      pack32(state[i], out, (outOff! + i * 4), _endian);
     }
   }
 }

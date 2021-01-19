@@ -16,12 +16,11 @@ import '../src/ufixnum.dart';
 
 /// Implementation of Daniel J. Bernstein's ChaCha20 stream cipher, Snuffle 2005.
 class ChaCha20Engine extends BaseStreamCipher {
-  // ignore: non_constant_identifier_names
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.prefix(
       StreamCipher,
       'ChaCha20/',
       (_, final Match match) => () {
-            var rounds = int.parse(match.group(1));
+            var rounds = int.parse(match.group(1)!);
             return ChaCha20Engine.fromRounds(rounds);
           });
 
@@ -66,11 +65,11 @@ class ChaCha20Engine extends BaseStreamCipher {
     107
   ]);
 
-  Uint8List _workingKey;
-  Uint8List _workingIV;
+  Uint8List? _workingKey;
+  Uint8List? _workingIV;
 
-  final _state = List<int>(STATE_SIZE);
-  final _buffer = List<int>(STATE_SIZE);
+  final _state = List<int>.filled(STATE_SIZE, 0, growable: false);
+  final _buffer = List<int>.filled(STATE_SIZE, 0, growable: false);
 
   final _keyStream = Uint8List(STATE_SIZE * 4);
   var _keyStreamOffset = 0;
@@ -126,17 +125,17 @@ class ChaCha20Engine extends BaseStreamCipher {
 
   @override
   void processBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff) {
     if (!_initialised) {
       throw StateError('ChaCha20 not initialized: please call init() first');
     }
 
-    if ((inpOff + len) > inp.length) {
+    if ((inpOff + len) > inp!.length) {
       throw ArgumentError(
           'Input buffer too short or requested length too long');
     }
 
-    if ((outOff + len) > out.length) {
+    if ((outOff + len) > out!.length) {
       throw ArgumentError(
           'Output buffer too short or requested length too long');
     }
@@ -155,7 +154,7 @@ class ChaCha20Engine extends BaseStreamCipher {
     }
   }
 
-  void _setKey(Uint8List keyBytes, Uint8List ivBytes) {
+  void _setKey(Uint8List? keyBytes, Uint8List? ivBytes) {
     _workingKey = keyBytes;
     _workingIV = ivBytes;
 
@@ -169,7 +168,7 @@ class ChaCha20Engine extends BaseStreamCipher {
     _state[6] = unpack32(_workingKey, 8, Endian.little);
     _state[7] = unpack32(_workingKey, 12, Endian.little);
 
-    if (_workingKey.length == 32) {
+    if (_workingKey!.length == 32) {
       constants = _sigma;
       offset = 16;
     } else {

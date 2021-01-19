@@ -38,8 +38,8 @@ class NullAsymmetricBlockCipher extends BaseAsymmetricBlockCipher {
 
   @override
   int processBlock(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
-    out.setRange(outOff, outOff + len, inp.sublist(inpOff));
+      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff) {
+    out.setRange(outOff, outOff + len, inp!.sublist(inpOff));
     return len;
   }
 }

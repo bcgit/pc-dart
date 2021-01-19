@@ -5,9 +5,9 @@ library src.utils;
 import 'dart:typed_data';
 
 void arrayCopy(
-    Uint8List sourceArr, int sourcePos, Uint8List outArr, int outPos, int len) {
+    Uint8List? sourceArr, int sourcePos, Uint8List? outArr, int outPos, int len) {
   for (var i = 0; i < len; i++) {
-    outArr[outPos + i] = sourceArr[sourcePos + i];
+    outArr![outPos + i] = sourceArr![sourcePos + i];
   }
 }
 
@@ -73,7 +73,7 @@ final negativeFlag = BigInt.from(0x80);
 /// Encode a BigInt into bytes using big-endian encoding.
 /// It encodes the integer to a minimal twos-compliment integer as defined by
 /// ASN.1
-Uint8List encodeBigInt(BigInt number) {
+Uint8List encodeBigInt(BigInt? number) {
   if (number == BigInt.zero) {
     return Uint8List.fromList([0]);
   }
@@ -81,7 +81,7 @@ Uint8List encodeBigInt(BigInt number) {
   int needsPaddingByte;
   int rawSize;
 
-  if (number > BigInt.zero) {
+  if (number! > BigInt.zero) {
     rawSize = (number.bitLength + 7) >> 3;
     needsPaddingByte =
         ((number >> (rawSize - 1) * 8) & negativeFlag) == negativeFlag ? 1 : 0;
@@ -93,7 +93,7 @@ Uint8List encodeBigInt(BigInt number) {
   final size = rawSize + needsPaddingByte;
   var result = Uint8List(size);
   for (var i = 0; i < rawSize; i++) {
-    result[size - i - 1] = (number & _byteMask).toInt();
+    result[size - i - 1] = (number! & _byteMask).toInt();
     number = number >> 8;
   }
   return result;
