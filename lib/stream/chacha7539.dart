@@ -1,5 +1,7 @@
 library impl.stream_cipher.chacha7539;
 
+// This file has been migrated.
+
 import 'dart:typed_data';
 
 import '../export.dart';
@@ -70,7 +72,7 @@ class ChaCha7539Engine extends BaseStreamCipher {
   ]);
 
   Uint8List? _workingKey;
-  Uint8List? _workingIV;
+  late Uint8List _workingIV;
 
   final _state = List<int>.filled(STATE_SIZE, 0, growable: false);
   final _buffer = List<int>.filled(STATE_SIZE, 0, growable: false);
@@ -87,7 +89,7 @@ class ChaCha7539Engine extends BaseStreamCipher {
   void reset() {
     _state[12] = 0;
     if (_workingKey != null) {
-      _setKey(_workingKey, _workingIV);
+      _setKey(_workingKey!, _workingIV);
     }
   }
 
@@ -96,14 +98,14 @@ class ChaCha7539Engine extends BaseStreamCipher {
       bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 12) {
+    if (iv.length != 12) {
       throw ArgumentError('ChaCha20-7539 requires exactly 12 bytes of IV');
     }
 
     _workingIV = iv;
     _workingKey = uparams.key;
 
-    _setKey(_workingKey, _workingIV);
+    _setKey(_workingKey!, _workingIV);
   }
 
   @override
@@ -124,17 +126,17 @@ class ChaCha7539Engine extends BaseStreamCipher {
 
   @override
   void processBytes(
-      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff) {
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (!_initialised) {
       throw StateError('ChaCha20 not initialized: please call init() first');
     }
 
-    if ((inpOff + len) > inp!.length) {
+    if ((inpOff + len) > inp.length) {
       throw ArgumentError(
           'Input buffer too short or requested length too long');
     }
 
-    if ((outOff + len) > out!.length) {
+    if ((outOff + len) > out.length) {
       throw ArgumentError(
           'Output buffer too short or requested length too long');
     }
@@ -151,7 +153,7 @@ class ChaCha7539Engine extends BaseStreamCipher {
     }
   }
 
-  void _setKey(Uint8List? keyBytes, Uint8List? ivBytes) {
+  void _setKey(Uint8List keyBytes, Uint8List ivBytes) {
     _workingKey = keyBytes;
     _workingIV = ivBytes;
 

@@ -1,5 +1,7 @@
 library impl.stream_cipher.chacha20poly1305;
 
+// This file has been migrated.
+
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -125,7 +127,7 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
 
   @override
   int getUpdateOutputSize(int len) {
-    var total = max(0, len) + _bufPos!;
+    var total = max(0, len) + _bufPos;
 
     switch (_state) {
       case State.DEC_INIT:

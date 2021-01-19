@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 part of api;
 
 /// This kind of exception is thrown when a user tries to create an algorithm
@@ -11,7 +13,7 @@ class RegistryFactoryException implements Exception {
 
   RegistryFactoryException(this.message);
 
-  RegistryFactoryException.unknown(String? algorithm, [Type? type])
+  RegistryFactoryException.unknown(String algorithm, [Type? type])
       : this('No algorithm registered' +
             (type != null ? ' of type $type' : '') +
             ' with name: $algorithm');

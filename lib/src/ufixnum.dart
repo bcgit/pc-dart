@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library src.ufixnum;
 
 import 'dart:typed_data';
@@ -261,14 +263,14 @@ class Register64 {
   void sum(dynamic y) {
     if (y is int) {
       y &= _MASK_32;
-      int slo32 = (_lo32 + y);
+      var slo32 = (_lo32 + y);
       _lo32 = (slo32 & _MASK_32);
       if (slo32 != _lo32) {
         _hi32++;
         _hi32 &= _MASK_32;
       }
     } else {
-      int slo32 = _lo32 + y._lo32 as int;
+      var slo32 = _lo32 + y._lo32 as int;
       _lo32 = (slo32 & _MASK_32);
       var carry = ((slo32 != _lo32) ? 1 : 0);
       _hi32 = (((_hi32 + y._hi32 + carry) as int) & _MASK_32);

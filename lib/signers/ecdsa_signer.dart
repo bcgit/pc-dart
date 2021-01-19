@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.signer.ecdsa_signer;
 
 import 'dart:math';
@@ -24,7 +26,7 @@ class ECDSASigner implements Signer {
     // ignore: omit_local_variable_types
     final bool withMac = match.group(2) != null;
     return () {
-      var underlyingDigest = Digest(digestName);
+      var underlyingDigest = Digest(digestName!);
       var mac = withMac ? Mac('$digestName/HMAC') : null;
       return ECDSASigner(underlyingDigest, mac);
     };
@@ -99,9 +101,9 @@ class ECDSASigner implements Signer {
 
     dynamic kCalculator;
     if (_kMac != null) {
-      kCalculator = _RFC6979KCalculator(_kMac, n, _pvkey!.d, message);
+      kCalculator = _RFC6979KCalculator(_kMac!, n, _pvkey!.d!, message);
     } else {
-      kCalculator = _RandomKCalculator(n, _random);
+      kCalculator = _RandomKCalculator(n, _random!);
     }
 
     // 5.3.2
@@ -281,22 +283,22 @@ class NormalizedECDSASigner implements Signer {
 }
 
 class _RFC6979KCalculator {
-  final Mac? _mac;
+  final Mac _mac;
   // ignore: non_constant_identifier_names
-  Uint8List? _K;
+  late Uint8List _K;
   // ignore: non_constant_identifier_names
-  Uint8List? _V;
+  late Uint8List _V;
   final BigInt _n;
 
-  _RFC6979KCalculator(this._mac, this._n, BigInt? d, Uint8List message) {
-    _V = Uint8List(_mac!.macSize!);
-    _K = Uint8List(_mac!.macSize!);
+  _RFC6979KCalculator(this._mac, this._n, BigInt d, Uint8List message) {
+    _V = Uint8List(_mac.macSize);
+    _K = Uint8List(_mac.macSize);
     _init(d, message);
   }
 
-  void _init(BigInt? d, Uint8List message) {
-    _V!.fillRange(0, _V!.length, 0x01);
-    _K!.fillRange(0, _K!.length, 0x00);
+  void _init(BigInt d, Uint8List message) {
+    _V.fillRange(0, _V.length, 0x01);
+    _K.fillRange(0, _K.length, 0x00);
 
     var x = Uint8List((_n.bitLength + 7) ~/ 8);
     var dVal = _asUnsignedByteArray(d);
@@ -315,27 +317,27 @@ class _RFC6979KCalculator {
 
     m.setRange((m.length - mVal.length), m.length, mVal);
 
-    _mac!.init(KeyParameter(_K));
+    _mac.init(KeyParameter(_K));
 
-    _mac!.update(_V, 0, _V!.length);
-    _mac!.updateByte(0x00);
-    _mac!.update(x, 0, x.length);
-    _mac!.update(m, 0, m.length);
-    _mac!.doFinal(_K, 0);
+    _mac.update(_V, 0, _V.length);
+    _mac.updateByte(0x00);
+    _mac.update(x, 0, x.length);
+    _mac.update(m, 0, m.length);
+    _mac.doFinal(_K, 0);
 
-    _mac!.init(KeyParameter(_K));
-    _mac!.update(_V, 0, _V!.length);
-    _mac!.doFinal(_V, 0);
+    _mac.init(KeyParameter(_K));
+    _mac.update(_V, 0, _V.length);
+    _mac.doFinal(_V, 0);
 
-    _mac!.update(_V, 0, _V!.length);
-    _mac!.updateByte(0x01);
-    _mac!.update(x, 0, x.length);
-    _mac!.update(m, 0, m.length);
-    _mac!.doFinal(_K, 0);
+    _mac.update(_V, 0, _V.length);
+    _mac.updateByte(0x01);
+    _mac.update(x, 0, x.length);
+    _mac.update(m, 0, m.length);
+    _mac.doFinal(_K, 0);
 
-    _mac!.init(KeyParameter(_K));
-    _mac!.update(_V, 0, _V!.length);
-    _mac!.doFinal(_V, 0);
+    _mac.init(KeyParameter(_K));
+    _mac.update(_V, 0, _V.length);
+    _mac.doFinal(_V, 0);
   }
 
   BigInt nextK() {
@@ -345,15 +347,15 @@ class _RFC6979KCalculator {
       var tOff = 0;
 
       while (tOff < t.length) {
-        _mac!.update(_V, 0, _V!.length);
-        _mac!.doFinal(_V, 0);
+        _mac.update(_V, 0, _V!.length);
+        _mac.doFinal(_V, 0);
 
-        if ((t.length - tOff) < _V!.length) {
-          t.setRange(tOff, t.length, _V!);
+        if ((t.length - tOff) < _V.length) {
+          t.setRange(tOff, t.length, _V);
           tOff += (t.length - tOff);
         } else {
-          t.setRange(tOff, tOff + _V!.length, _V!);
-          tOff += _V!.length;
+          t.setRange(tOff, tOff + _V.length, _V);
+          tOff += _V.length;
         }
       }
 
@@ -361,13 +363,13 @@ class _RFC6979KCalculator {
 
       // ignore: unrelated_type_equality_checks
       if ((k == 0) || (k >= _n)) {
-        _mac!.update(_V, 0, _V!.length);
-        _mac!.updateByte(0x00);
-        _mac!.doFinal(_K, 0);
+        _mac.update(_V, 0, _V.length);
+        _mac.updateByte(0x00);
+        _mac.doFinal(_K, 0);
 
-        _mac!.init(KeyParameter(_K));
-        _mac!.update(_V, 0, _V!.length);
-        _mac!.doFinal(_V, 0);
+        _mac.init(KeyParameter(_K));
+        _mac.update(_V, 0, _V.length);
+        _mac.doFinal(_V, 0);
       } else {
         return k;
       }
@@ -383,7 +385,7 @@ class _RFC6979KCalculator {
     return v;
   }
 
-  Uint8List _asUnsignedByteArray(BigInt? value) {
+  Uint8List _asUnsignedByteArray(BigInt value) {
     var bytes = utils.encodeBigInt(value);
 
     if (bytes[0] == 0) {
@@ -396,15 +398,15 @@ class _RFC6979KCalculator {
 
 class _RandomKCalculator {
   final BigInt _n;
-  final SecureRandom? _random;
+  final SecureRandom _random;
 
   _RandomKCalculator(this._n, this._random);
 
-  BigInt? nextK() {
-    BigInt? k;
+  BigInt nextK() {
+    BigInt k;
     do {
-      k = _random!.nextBigInteger(_n.bitLength);
-    } while (k == BigInt.zero || k! >= _n);
+      k = _random.nextBigInteger(_n.bitLength);
+    } while (k == BigInt.zero || k >= _n);
     return k;
   }
 }

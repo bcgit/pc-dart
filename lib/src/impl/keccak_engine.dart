@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library src.impl.digests.keccak_engine;
 
 import 'dart:math';
@@ -99,8 +101,8 @@ abstract class KeccakEngine extends BaseDigest {
   }
 
   @override
-  void update(Uint8List? inp, int inpOff, int? len) {
-    _doUpdate(inp, inpOff, len!);
+  void update(Uint8List inp, int inpOff, int len) {
+    _doUpdate(inp, inpOff, len);
   }
 
   void absorb(int data) {
@@ -133,7 +135,7 @@ abstract class KeccakEngine extends BaseDigest {
     _bitsInQueue += bits;
   }
 
-  void absorbRange(Uint8List? data, int off, int len) {
+  void absorbRange(Uint8List data, int off, int len) {
     if ((_bitsInQueue % 8) != 0) {
       throw StateError('attempt to absorb with odd length queue');
     }
@@ -173,7 +175,7 @@ abstract class KeccakEngine extends BaseDigest {
     _dataQueue.fillRange(off, off + len, 0);
   }
 
-  void _doUpdate(Uint8List? data, int off, int databitlen) {
+  void _doUpdate(Uint8List data, int off, int databitlen) {
     absorbRange(data, off, databitlen);
   }
 
@@ -220,7 +222,7 @@ abstract class KeccakEngine extends BaseDigest {
   void _keccakExtract() {
     _keccakPermutation();
 
-    _dataQueue.setRange(0, (_rate! >> 3), _state);
+    _dataQueue.setRange(0, (_rate >> 3), _state);
     _bitsInQueue = _rate;
   }
 
@@ -239,7 +241,7 @@ abstract class KeccakEngine extends BaseDigest {
         _keccakExtract();
       }
 
-      var partialBlock = min(_bitsInQueue!, outputLength - i);
+      var partialBlock = min(_bitsInQueue, outputLength - i);
 
       output!.setRange(
           offset! + (i ~/ 8),
@@ -298,7 +300,7 @@ abstract class KeccakEngine extends BaseDigest {
       for (var j = 0; j < (64 ~/ 8); j++) {
         r.set(stateAsWords[i]);
         r.shiftr(8 * j);
-        state[index + j] = r.lo32!;
+        state[index + j] = r.lo32;
       }
     }
   }
@@ -401,7 +403,7 @@ abstract class KeccakEngine extends BaseDigest {
   }
 
   @override
-  int doFinal(Uint8List? out, int? outOff) {
+  int doFinal(Uint8List out, int outOff) {
     throw UnimplementedError('Subclasses must implement this.');
   }
 }

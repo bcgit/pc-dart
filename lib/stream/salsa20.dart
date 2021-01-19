@@ -20,7 +20,7 @@ class Salsa20Engine extends BaseStreamCipher {
   static final _tau = Uint8List.fromList('expand 16-byte k'.codeUnits);
 
   Uint8List? _workingKey;
-  Uint8List? _workingIV;
+  late Uint8List _workingIV;
 
   final _state = List<int>.filled(_STATE_SIZE, 0, growable: false);
   final _buffer = List<int>.filled(_STATE_SIZE, 0, growable: false);
@@ -36,7 +36,7 @@ class Salsa20Engine extends BaseStreamCipher {
   @override
   void reset() {
     if (_workingKey != null) {
-      _setKey(_workingKey, _workingIV);
+      _setKey(_workingKey!, _workingIV);
     }
   }
 
@@ -52,7 +52,7 @@ class Salsa20Engine extends BaseStreamCipher {
     _workingIV = iv;
     _workingKey = uparams.key;
 
-    _setKey(_workingKey, _workingIV);
+    _setKey(_workingKey!, _workingIV);
   }
 
   @override
@@ -102,7 +102,7 @@ class Salsa20Engine extends BaseStreamCipher {
     }
   }
 
-  void _setKey(Uint8List? keyBytes, Uint8List? ivBytes) {
+  void _setKey(Uint8List keyBytes, Uint8List ivBytes) {
     _workingKey = keyBytes;
     _workingIV = ivBytes;
 

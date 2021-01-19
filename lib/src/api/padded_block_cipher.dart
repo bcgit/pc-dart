@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 part of api;
 
 /// All padded block ciphers conform to this interface.
@@ -31,7 +33,7 @@ abstract class PaddedBlockCipher implements BlockCipher {
   /// This call does as many calls to [processBlock] as needed to process all the given data and a
   /// final one to [doFinal] so that the padding can do its job.
   @override
-  Uint8List process(Uint8List? data);
+  Uint8List process(Uint8List data);
 
   /// Process the last block of data given by [inp] and starting at offset [inpOff] and pad it as
   /// explained in this interface's description.

@@ -9,6 +9,8 @@ import '../src/impl/base_stream_cipher.dart';
 import '../src/registry/registry.dart';
 import '../src/ufixnum.dart';
 
+// This file has been migrated.
+
 // ignore_for_file: omit_local_variable_types, prefer_single_quotes
 // ignore_for_file: non_constant_identifier_names, directives_ordering
 // ignore_for_file: prefer_typing_uninitialized_variables, camel_case_types
@@ -66,7 +68,7 @@ class ChaCha20Engine extends BaseStreamCipher {
   ]);
 
   Uint8List? _workingKey;
-  Uint8List? _workingIV;
+  late Uint8List _workingIV;
 
   final _state = List<int>.filled(STATE_SIZE, 0, growable: false);
   final _buffer = List<int>.filled(STATE_SIZE, 0, growable: false);
@@ -88,7 +90,7 @@ class ChaCha20Engine extends BaseStreamCipher {
   @override
   void reset() {
     if (_workingKey != null) {
-      _setKey(_workingKey, _workingIV);
+      _setKey(_workingKey!, _workingIV);
     }
   }
 
@@ -104,7 +106,7 @@ class ChaCha20Engine extends BaseStreamCipher {
     _workingIV = iv;
     _workingKey = uparams.key;
 
-    _setKey(_workingKey, _workingIV);
+    _setKey(_workingKey!, _workingIV);
   }
 
   @override
@@ -125,7 +127,7 @@ class ChaCha20Engine extends BaseStreamCipher {
 
   @override
   void processBytes(
-      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff) {
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (!_initialised) {
       throw StateError('ChaCha20 not initialized: please call init() first');
     }
@@ -154,7 +156,7 @@ class ChaCha20Engine extends BaseStreamCipher {
     }
   }
 
-  void _setKey(Uint8List? keyBytes, Uint8List? ivBytes) {
+  void _setKey(Uint8List keyBytes, Uint8List ivBytes) {
     _workingKey = keyBytes;
     _workingIV = ivBytes;
 

@@ -14,7 +14,7 @@ class CTRStreamCipher extends SICStreamCipher {
       '/CTR',
       (_, final Match match) => () {
             var digestName = match.group(1);
-            return CTRStreamCipher(BlockCipher(digestName));
+            return CTRStreamCipher(BlockCipher(digestName!));
           });
 
   CTRStreamCipher(BlockCipher underlyingCipher) : super(underlyingCipher);

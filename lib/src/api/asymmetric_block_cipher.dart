@@ -1,11 +1,13 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 part of api;
 
 /// Asymmetric block cipher engines are expected to conform to this interface.
 abstract class AsymmetricBlockCipher extends Algorithm {
   /// Create the cipher specified by the standard [algorithmName].
-  factory AsymmetricBlockCipher(String? algorithmName) =>
+  factory AsymmetricBlockCipher(String algorithmName) =>
       registry.create<AsymmetricBlockCipher>(algorithmName);
 
   /// Get this ciphers's maximum input block size.
@@ -24,12 +26,12 @@ abstract class AsymmetricBlockCipher extends Algorithm {
   void init(bool forEncryption, CipherParameters params);
 
   /// Process a whole block of [data] at once, returning the result in a byte array.
-  Uint8List process(Uint8List? data);
+  Uint8List process(Uint8List data);
 
   /// Process a block of [len] bytes given by [inp] and starting at offset [inpOff] and put the resulting cipher text in [out]
   /// beginning at position [outOff].
   ///
   /// This method returns the total bytes put in the output buffer.
   int processBlock(
-      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff);
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff);
 }

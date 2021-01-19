@@ -28,5 +28,5 @@ abstract class StreamCipher extends Algorithm {
   /// Process [len] bytes of data given by [inp] and starting at offset [inpOff].
   /// The resulting cipher text is put in [out] beginning at position [outOff].
   void processBytes(
-      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff);
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff);
 }

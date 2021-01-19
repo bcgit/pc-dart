@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library src.impl.digests.long_sha2_family_digest;
 
 import 'dart:typed_data';
@@ -63,17 +65,17 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
   }
 
   @override
-  void update(Uint8List? inp, int inpOff, int? len) {
+  void update(Uint8List inp, int inpOff, int len) {
     // fill the current word
-    while ((_wordBufferOffset != 0) && (len! > 0)) {
-      updateByte(inp![inpOff]);
+    while ((_wordBufferOffset != 0) && (len > 0)) {
+      updateByte(inp[inpOff]);
 
       inpOff++;
       len--;
     }
 
     // process whole words.
-    while (len! > _wordBuffer.length) {
+    while (len > _wordBuffer.length) {
       _processWord(inp, inpOff);
 
       inpOff += _wordBuffer.length;
@@ -82,8 +84,8 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
     }
 
     // load in the remainder.
-    while (len! > 0) {
-      updateByte(inp![inpOff]);
+    while (len > 0) {
+      updateByte(inp[inpOff]);
 
       inpOff++;
       len--;
@@ -108,7 +110,7 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
     _processBlock();
   }
 
-  void _processWord(Uint8List? inp, int inpOff) {
+  void _processWord(Uint8List inp, int inpOff) {
     _w[_wOff++].unpack(inp, inpOff, Endian.big);
 
     if (_wOff == 16) {

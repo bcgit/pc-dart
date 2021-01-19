@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.signer.pss_signer;
 
 import 'dart:typed_data';
@@ -18,7 +20,7 @@ class PSSSigner implements Signer {
     final digestName = match.group(1);
     return () => PSSSigner(
           RSAEngine(),
-          Digest(digestName),
+          Digest(digestName!),
           Digest(digestName),
         );
   });
@@ -33,13 +35,13 @@ class PSSSigner implements Signer {
   final int _trailer;
 
   late bool _sSet;
-  int? _sLen;
-  Uint8List? _salt;
+  late int _sLen;
+  late Uint8List _salt;
   late SecureRandom _random;
 
   late int _emBits;
-  Uint8List? _block;
-  Uint8List? _mDash;
+  late Uint8List _block;
+  late Uint8List _mDash;
 
   late bool _forSigning;
 
@@ -62,12 +64,12 @@ class PSSSigner implements Signer {
       _random = params.random;
       _sSet = false;
       _sLen = params.saltLength;
-      _salt = Uint8List(_sLen!);
+      _salt = Uint8List(_sLen);
     } else if (params is ParametersWithSalt) {
       akparams = params.parameters as AsymmetricKeyParameter<AsymmetricKey>;
       _sSet = true;
       _salt = params.salt;
-      _sLen = _salt?.length ?? 0;
+      _sLen = _salt.length;
     } else {
       throw ArgumentError(
           'Unsupported parameters type ${params.runtimeType}: should be ParametersWithSaltConfiguration or ParametersWithSalt');
@@ -89,11 +91,11 @@ class PSSSigner implements Signer {
 
     _emBits = k.modulus!.bitLength - 1;
 
-    if (_emBits < (8 * _hLen + 8 * _sLen! + 9)) {
+    if (_emBits < (8 * _hLen + 8 * _sLen + 9)) {
       throw ArgumentError('Key too small for specified hash and salt lengths');
     }
 
-    _mDash = Uint8List(8 + _sLen! + _contentDigest.digestSize);
+    _mDash = Uint8List(8 + _sLen + _contentDigest.digestSize);
 
     _cipher.init(forSigning, akparams);
 
@@ -122,41 +124,41 @@ class PSSSigner implements Signer {
 
     _contentDigest.reset();
     _contentDigest.update(message, 0, message.length);
-    _contentDigest.doFinal(_mDash, _mDash!.length - _hLen - _sLen!);
+    _contentDigest.doFinal(_mDash, _mDash.length - _hLen - _sLen);
 
     if (_sLen != 0) {
       if (!_sSet) {
         _salt = _random.nextBytes(_sLen);
       }
 
-      arrayCopy(_salt, 0, _mDash, _mDash!.length - _sLen!, _sLen!);
+      arrayCopy(_salt, 0, _mDash, _mDash.length - _sLen, _sLen);
     }
 
     var h = Uint8List(_hLen);
 
-    _contentDigest.update(_mDash, 0, _mDash!.length);
+    _contentDigest.update(_mDash, 0, _mDash.length);
 
     _contentDigest.doFinal(h, 0);
 
-    _block![_block!.length - _sLen! - 1 - _hLen - 1] = 0x01;
-    arrayCopy(_salt, 0, _block, _block!.length - _sLen! - _hLen - 1, _sLen!);
+    _block[_block.length - _sLen - 1 - _hLen - 1] = 0x01;
+    arrayCopy(_salt, 0, _block, _block.length - _sLen - _hLen - 1, _sLen);
 
     var dbMask =
-        _maskGeneratorFunction1(h, 0, h.length, _block!.length - _hLen - 1);
+        _maskGeneratorFunction1(h, 0, h.length, _block.length - _hLen - 1);
     for (var i = 0; i != dbMask.length; i++) {
-      _block![i] ^= dbMask[i];
+      _block[i] ^= dbMask[i];
     }
 
-    arrayCopy(h, 0, _block, _block!.length - _hLen - 1, _hLen);
+    arrayCopy(h, 0, _block, _block.length - _hLen - 1, _hLen);
 
-    var firstByteMask = 0xff >> ((_block!.length * 8) - _emBits);
+    var firstByteMask = 0xff >> ((_block.length * 8) - _emBits);
 
-    _block![0] &= firstByteMask;
-    _block![_block!.length - 1] = _trailer;
+    _block[0] &= firstByteMask;
+    _block[_block.length - 1] = _trailer;
 
     var b = _cipher.process(_block);
 
-    _clearBlock(_block!);
+    _clearBlock(_block);
 
     return PSSSignature(b);
   }
@@ -169,63 +171,63 @@ class PSSSigner implements Signer {
 
     _contentDigest.reset();
     _contentDigest.update(message, 0, message.length);
-    _contentDigest.doFinal(_mDash, _mDash!.length - _hLen - _sLen!);
+    _contentDigest.doFinal(_mDash, _mDash.length - _hLen - _sLen);
 
     var b = _cipher.process(signature.bytes);
-    _block!.fillRange(0, _block!.length - b.length, 0);
-    arrayCopy(b, 0, _block, _block!.length - b.length, b.length);
+    _block!.fillRange(0, _block.length - b.length, 0);
+    arrayCopy(b, 0, _block, _block.length - b.length, b.length);
 
-    var firstByteMask = 0xFF >> ((_block!.length * 8) - _emBits);
+    var firstByteMask = 0xFF >> ((_block.length * 8) - _emBits);
 
-    if (_block![0] != (_block![0] & firstByteMask) ||
-        _block![_block!.length - 1] != _trailer) {
-      _clearBlock(_block!);
+    if (_block[0] != (_block[0] & firstByteMask) ||
+        _block[_block.length - 1] != _trailer) {
+      _clearBlock(_block);
       return false;
     }
 
     var dbMask = _maskGeneratorFunction1(
-        _block, _block!.length - _hLen - 1, _hLen, _block!.length - _hLen - 1);
+        _block, _block.length - _hLen - 1, _hLen, _block.length - _hLen - 1);
 
     for (var i = 0; i != dbMask.length; i++) {
-      _block![i] ^= dbMask[i];
+      _block[i] ^= dbMask[i];
     }
 
-    _block![0] &= firstByteMask;
+    _block[0] &= firstByteMask;
 
-    for (var i = 0; i != _block!.length - _hLen - _sLen! - 2; i++) {
-      if (_block![i] != 0) {
-        _clearBlock(_block!);
+    for (var i = 0; i != _block.length - _hLen - _sLen - 2; i++) {
+      if (_block[i] != 0) {
+        _clearBlock(_block);
         return false;
       }
     }
 
-    if (_block![_block!.length - _hLen - _sLen! - 2] != 0x01) {
-      _clearBlock(_block!);
+    if (_block[_block.length - _hLen - _sLen - 2] != 0x01) {
+      _clearBlock(_block);
       return false;
     }
 
     if (_sSet) {
-      arrayCopy(_salt, 0, _mDash, _mDash!.length - _sLen!, _sLen!);
+      arrayCopy(_salt, 0, _mDash, _mDash.length - _sLen, _sLen);
     } else {
-      arrayCopy(_block, _block!.length - _sLen! - _hLen - 1, _mDash,
-          _mDash!.length - _sLen!, _sLen!);
+      arrayCopy(_block, _block.length - _sLen - _hLen - 1, _mDash,
+          _mDash!.length - _sLen, _sLen);
     }
 
-    _contentDigest.update(_mDash, 0, _mDash!.length);
-    _contentDigest.doFinal(_mDash, _mDash!.length - _hLen);
+    _contentDigest.update(_mDash, 0, _mDash.length);
+    _contentDigest.doFinal(_mDash, _mDash.length - _hLen);
 
-    for (var i = _block!.length - _hLen - 1, j = _mDash!.length - _hLen;
-        j != _mDash!.length;
+    for (var i = _block.length - _hLen - 1, j = _mDash.length - _hLen;
+        j != _mDash.length;
         i++, j++) {
-      if ((_block![i] ^ _mDash![j]) != 0) {
-        _clearBlock(_mDash!);
-        _clearBlock(_block!);
+      if ((_block[i] ^ _mDash[j]) != 0) {
+        _clearBlock(_mDash);
+        _clearBlock(_block);
         return false;
       }
     }
 
-    _clearBlock(_mDash!);
-    _clearBlock(_block!);
+    _clearBlock(_mDash);
+    _clearBlock(_block);
     return true;
   }
 
@@ -238,7 +240,7 @@ class PSSSigner implements Signer {
   }
 
   Uint8List _maskGeneratorFunction1(
-      Uint8List? Z, int zOff, int zLen, int length) {
+      Uint8List Z, int zOff, int zLen, int length) {
     var mask = Uint8List(length);
     var hashBuf = Uint8List(_mgfhLen);
     var C = Uint8List(4);

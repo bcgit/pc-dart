@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library src.registry;
 
 import 'package:pointycastle/api.dart';
@@ -8,7 +10,7 @@ import 'package:pointycastle/src/registry/registration.dart';
 final FactoryRegistry registry = _RegistryImpl();
 
 abstract class FactoryRegistry {
-  T create<T>(String? registrableName);
+  T create<T>(String registrableName);
 
   void register<T>(FactoryConfig config);
 }
@@ -81,8 +83,8 @@ class _RegistryImpl implements FactoryRegistry {
   final Map<Type, Map<String, RegistrableConstructor>> _staticFactories;
   final Map<Type, Set<DynamicFactoryConfig>> _dynamicFactories;
 
-  final Map<String, RegistrableConstructor?> _constructorCache =
-      <String, RegistrableConstructor?>{};
+  final Map<String, RegistrableConstructor> _constructorCache =
+      <String, RegistrableConstructor>{};
 
   bool _initialized = false;
 
@@ -91,14 +93,14 @@ class _RegistryImpl implements FactoryRegistry {
         _dynamicFactories = <Type, Set<DynamicFactoryConfig>>{};
 
   @override
-  T create<T>(String? registrableName) {
+  T create<T>(String registrableName) {
     var type = T;
     var constructor = getConstructor(type, registrableName);
     var result = constructor() as T;
     return result;
   }
 
-  RegistrableConstructor getConstructor(Type type, String? registrableName) {
+  RegistrableConstructor getConstructor(Type type, String registrableName) {
     var constructor = _constructorCache['$type.$registrableName'];
 
     if (constructor == null) {
@@ -106,12 +108,12 @@ class _RegistryImpl implements FactoryRegistry {
       if (_constructorCache.length > _CONSTRUCTOR_CACHE_SIZE) {
         _constructorCache.clear();
       }
-      _constructorCache['$type.$registrableName'] = constructor;
+      _constructorCache['$type.$registrableName'] = constructor!;
     }
-    return constructor!;
+    return constructor;
   }
 
-  RegistrableConstructor? _createConstructor(Type type, String? registrableName) {
+  RegistrableConstructor? _createConstructor(Type type, String registrableName) {
     // Init lazily
     _checkInit();
 
@@ -157,8 +159,7 @@ class _RegistryImpl implements FactoryRegistry {
   void _addDynamicFactoryConfig(DynamicFactoryConfig config) {
     Set factories = _dynamicFactories.putIfAbsent(
         config.type,
-        () => Set<DynamicFactoryConfig>.of(
-            [])); // ignore: prefer_collection_literals
+        () => <DynamicFactoryConfig>{});
     factories.add(config);
   }
 
