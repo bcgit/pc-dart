@@ -113,12 +113,12 @@ class Poly1305 extends BaseMac {
 
     if (!checkKey(keyParams.key)) clamp(keyParams.key);
 
-    setKey(keyParams.key, nonce!);
+    setKey(keyParams.key, nonce);
 
     reset();
   }
 
-  void setKey(Uint8List key, Uint8List nonce) {
+  void setKey(Uint8List key, Uint8List? nonce) {
     if (key.length != 32) throw ArgumentError('Poly1305 key must be 256 bits.');
     if (cipher != null && (nonce == null || nonce.length != BLOCK_SIZE)) {
       throw ArgumentError('Poly1305-AES requires a 128 bit IV.');
@@ -151,7 +151,7 @@ class Poly1305 extends BaseMac {
       kOff = 0;
 
       cipher!.init(true, KeyParameter.offset(key, BLOCK_SIZE, BLOCK_SIZE));
-      cipher!.processBlock(nonce, 0, kBytes, 0);
+      cipher!.processBlock(nonce!, 0, kBytes, 0);
     }
 
     var kByteData =

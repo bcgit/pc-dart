@@ -296,14 +296,14 @@ bool _isProbablePrime(BigInt b, int t) {
   if (x.isEven) return false;
   i = 1;
   while (i < _lowprimes.length) {
-    BigInt? m = _lowprimes[i], j = i + 1;
-    while (j! < (_lowprimes.length as BigInt) && m! < _lplim) {
-      m *= _lowprimes[j + BigInt.one as int];
+    var m = _lowprimes[i], j = BigInt.from(i + 1);
+    while (j < (BigInt.from(_lowprimes.length)) && m < _lplim) {
+      m *= _lowprimes[(j + BigInt.one).toInt()];
       j = j + BigInt.one;
     }
-    m = x % m!;
-    while (i < j) {
-      if (m % _lowprimes[i++] == 0) {
+    m = x % m;
+    while (BigInt.from(i) < j) {
+      if (m % _lowprimes[i++] == BigInt.zero) {
         return false;
       }
     }
