@@ -29,8 +29,8 @@ void runSignerTests(Signer signer, CipherParameters Function() signParams,
 
         test(
             '${formatAsTruncated(message as String)}',
-            () => _runVerifySignatureTest(signer, verifyParams,
-                message, signature as Signature));
+            () => _runVerifySignatureTest(
+                signer, verifyParams, message, signature as Signature));
       }
     });
   });
@@ -84,8 +84,8 @@ void runSignerTestsFail(Signer signer, CipherParameters Function() signParams,
 
         test(
             '${formatAsTruncated(message as String)}',
-            () => _runVerifySignatureTestFail(signer, verifyParams,
-                message, signature as Signature));
+            () => _runVerifySignatureTestFail(
+                signer, verifyParams, message, signature as Signature));
       }
     });
   });

@@ -17,12 +17,11 @@ class CBCBlockCipherMac extends BaseMac {
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.regex(
     Mac,
     r'^(.+)/CBC_CMAC(/(.+))?$',
-        (_, final Match match) =>
-        () {
+    (_, final Match match) => () {
       var cipher = BlockCipher(match.group(1)!);
       var padding = match.groupCount >= 3 &&
-          match.group(3) != null &&
-          match.group(3)!.isNotEmpty
+              match.group(3) != null &&
+              match.group(3)!.isNotEmpty
           ? Padding(match.group(3)!)
           : null;
       return CBCBlockCipherMac.fromCipherAndPadding(cipher, padding);

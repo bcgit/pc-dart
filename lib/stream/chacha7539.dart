@@ -21,12 +21,14 @@ class ChaCha7539Engine extends BaseStreamCipher {
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.prefix(
       StreamCipher,
       'ChaCha7539/',
-          (_, final Match match) => () {
-        var rounds = int.parse(match.group(1)!);
-        return ChaCha7539Engine.fromRounds(rounds);
-      });
+      (_, final Match match) => () {
+            var rounds = int.parse(match.group(1)!);
+            return ChaCha7539Engine.fromRounds(rounds);
+          });
 
-  ChaCha7539Engine () {rounds = 20;}
+  ChaCha7539Engine() {
+    rounds = 20;
+  }
 
   ChaCha7539Engine.fromRounds(this.rounds);
 

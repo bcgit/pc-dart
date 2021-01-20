@@ -36,7 +36,8 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
   void processBlock() {
     // expand 16 word block into 80 word block.
     for (var i = 16; i < 80; i++) {
-      var t = buffer[i - 3]! ^ buffer[i - 8]! ^ buffer[i - 14]! ^ buffer[i - 16]!;
+      var t =
+          buffer[i - 3]! ^ buffer[i - 8]! ^ buffer[i - 14]! ^ buffer[i - 16]!;
       buffer[i] = rotl32(t, 1);
     }
 

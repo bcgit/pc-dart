@@ -14,8 +14,7 @@ class ECCurve_prime256v1 extends ECDomainParametersImpl {
 
   factory ECCurve_prime256v1() => constructFpStandardCurve(
       'prime256v1', ECCurve_prime256v1._make,
-      q: BigInt.parse(
-          'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
+      q: BigInt.parse('ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
           radix: 16),
       a: BigInt.parse(
           'ffffffff00000001000000000000000000000000fffffffffffffffffffffffc',
@@ -30,8 +29,8 @@ class ECCurve_prime256v1 extends ECDomainParametersImpl {
           'ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551',
           radix: 16),
       h: BigInt.parse('1', radix: 16),
-      seed:
-          BigInt.parse('c49d360886e704936a6678e1139d26b7819f7e90', radix: 16)) as ECCurve_prime256v1;
+      seed: BigInt.parse('c49d360886e704936a6678e1139d26b7819f7e90',
+          radix: 16)) as ECCurve_prime256v1;
 
   static ECCurve_prime256v1 _make(String domainName, ECCurve curve, ECPoint G,
           BigInt n, BigInt _h, List<int> seed) =>

@@ -115,7 +115,7 @@ class Blake2bDigest extends BaseDigest implements Digest {
     _internalState[14]
       ..set(_f0)
       ..xor(_blake2bIV[6]);
-    _internalState[15]..set(_blake2bIV[7]); // ^ f1 with f1 = 0
+    _internalState[15].set(_blake2bIV[7]); // ^ f1 with f1 = 0
   }
 
   @override
@@ -144,7 +144,8 @@ class Blake2bDigest extends BaseDigest implements Digest {
     if (_bufferPos != 0) {
       remainingLength = _blockSize - _bufferPos;
       if (remainingLength < len!) {
-        _buffer!.setRange(_bufferPos, _bufferPos + remainingLength, inp, inpOff);
+        _buffer!
+            .setRange(_bufferPos, _bufferPos + remainingLength, inp, inpOff);
         _t0.sum(_blockSize);
         if (_t0.lo32 == 0 && _t0.hi32 == 0) _t1.sum(1);
         _compress(inp, 0);

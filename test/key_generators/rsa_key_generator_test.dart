@@ -213,7 +213,6 @@ void _equalityTests() {
         expect(badPair2, isNot(equals(pairB)));
       });
     });
-
   } catch (e, s) {
     print(s);
   }

@@ -30,13 +30,13 @@ class ECCurve_brainpoolp224r1 extends ECDomainParametersImpl {
           'd7c134aa264366862a18302575d0fb98d116bc4b6ddebca3a5a7939f',
           radix: 16),
       h: BigInt.parse('1', radix: 16),
-      seed: null) as ECCurve_brainpoolp224r1 ;
+      seed: null) as ECCurve_brainpoolp224r1;
 
-  static ECCurve_brainpoolp224r1 _make(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed) =>
+  static ECCurve_brainpoolp224r1 _make(String domainName, ECCurve curve,
+          ECPoint G, BigInt n, BigInt _h, List<int> seed) =>
       ECCurve_brainpoolp224r1._super(domainName, curve, G, n, _h, seed);
 
   ECCurve_brainpoolp224r1._super(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed)
+      BigInt n, BigInt _h, List<int> seed)
       : super(domainName, curve, G, n, _h, seed);
 }

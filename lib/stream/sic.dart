@@ -79,11 +79,9 @@ class SICStreamCipher extends BaseStreamCipher {
   }
 
   // ignore: slash_for_doc_comments
-  /**
-   * Fills [_counterOut] with a value got from encrypting [_counter] with
-   * the _underlyingCipher, resets [_consumed] to 0 and increments the
-   * [_counter].
-   */
+  /// Fills [_counterOut] with a value got from encrypting [_counter] with
+  /// the _underlyingCipher, resets [_consumed] to 0 and increments the
+  /// [_counter].
   void _feedCounter() {
     underlyingCipher.processBlock(_counter, 0, _counterOut, 0);
     _incrementCounter();

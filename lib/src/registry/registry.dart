@@ -113,7 +113,8 @@ class _RegistryImpl implements FactoryRegistry {
     return constructor;
   }
 
-  RegistrableConstructor? _createConstructor(Type type, String registrableName) {
+  RegistrableConstructor? _createConstructor(
+      Type type, String registrableName) {
     // Init lazily
     _checkInit();
 
@@ -158,8 +159,7 @@ class _RegistryImpl implements FactoryRegistry {
 
   void _addDynamicFactoryConfig(DynamicFactoryConfig config) {
     Set factories = _dynamicFactories.putIfAbsent(
-        config.type,
-        () => <DynamicFactoryConfig>{});
+        config.type, () => <DynamicFactoryConfig>{});
     factories.add(config);
   }
 

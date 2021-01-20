@@ -40,7 +40,8 @@ class RSASigner implements Signer {
 
   final AsymmetricBlockCipher _rsa = PKCS1Encoding(RSAEngine());
   final Digest _digest;
-  late Uint8List _digestIdentifier; // DER encoded with trailing tag (06)+length byte
+  late Uint8List
+      _digestIdentifier; // DER encoded with trailing tag (06)+length byte
   late bool _forSigning;
 
   RSASigner(this._digest, String digestIdentifierHex) {

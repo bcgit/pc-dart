@@ -302,7 +302,9 @@ class Register64 {
       final lo32 = _lo32 * y._lo32;
       final carry = (lo32 ~/
           0x100000000); // TODO: use shift right when bug 17715 is fixed
-      final hi32 = clip32(_hi32 * y._lo32 as int) + clip32(_lo32 * y._hi32 as int) + carry;
+      final hi32 = clip32(_hi32 * y._lo32 as int) +
+          clip32(_lo32 * y._hi32 as int) +
+          carry;
 
       _hi32 = clip32(hi32);
       _lo32 = clip32(lo32 as int);

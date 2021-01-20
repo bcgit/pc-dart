@@ -166,7 +166,8 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
 
   static int _getBlockLengthFromDigest(String digestName) {
     var blockLength = _digestBlockLength.entries
-        .firstWhereOrNull((map) => map.key.toLowerCase() == digestName.toLowerCase())
+        .firstWhereOrNull(
+            (map) => map.key.toLowerCase() == digestName.toLowerCase())
         ?.value;
     return blockLength!;
   }

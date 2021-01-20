@@ -87,15 +87,15 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
 
     // Validate key
     if (KEY_SIZE != initKeyParam.key!.length) {
-        throw ArgumentError('Key must be 256 bits');
-      }
+      throw ArgumentError('Key must be 256 bits');
+    }
 
     // Validate nonce
     if (null == initNonce || NONCE_SIZE != initNonce.length) {
       throw ArgumentError('Nonce must be 96 bits');
     }
 
-      utils.arrayCopy(initKeyParam.key, 0, _key, 0, KEY_SIZE);
+    utils.arrayCopy(initKeyParam.key, 0, _key, 0, KEY_SIZE);
 
     utils.arrayCopy(initNonce, 0, _nonce, 0, NONCE_SIZE);
 

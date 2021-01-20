@@ -49,7 +49,8 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 
     // Calculate the correct RSA public exponent
 
-    _pubExp = privateExponent.modInverse(((p! - BigInt.one) * (q! - BigInt.one)));
+    _pubExp =
+        privateExponent.modInverse(((p! - BigInt.one) * (q! - BigInt.one)));
 
     // If explicitly provided, the public exponent value must be correct.
     if (publicExponent != null && publicExponent != _pubExp) {

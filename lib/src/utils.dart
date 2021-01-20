@@ -4,8 +4,8 @@ library src.utils;
 
 import 'dart:typed_data';
 
-void arrayCopy(
-    Uint8List? sourceArr, int sourcePos, Uint8List? outArr, int outPos, int len) {
+void arrayCopy(Uint8List? sourceArr, int sourcePos, Uint8List? outArr,
+    int outPos, int len) {
   for (var i = 0; i < len; i++) {
     outArr![outPos + i] = sourceArr![sourcePos + i];
   }
@@ -31,7 +31,9 @@ BigInt decodeBigInt(List<int> bytes) {
     }
   }
   return result != BigInt.zero
-      ? negative ? result.toSigned(result.bitLength) : result
+      ? negative
+          ? result.toSigned(result.bitLength)
+          : result
       : BigInt.zero;
 }
 

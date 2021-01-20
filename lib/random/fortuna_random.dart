@@ -22,7 +22,7 @@ class FortunaRandom implements SecureRandom {
   @override
   String get algorithmName => 'Fortuna';
 
-  FortunaRandom() : _aes = AESFastEngine()  {
+  FortunaRandom() : _aes = AESFastEngine() {
     _prng = AutoSeedBlockCtrRandom(_aes, false);
   }
 

@@ -26,8 +26,8 @@ class ECCurve_secp192r1 extends ECDomainParametersImpl {
       n: BigInt.parse('ffffffffffffffffffffffff99def836146bc9b1b4d22831',
           radix: 16),
       h: BigInt.parse('1', radix: 16),
-      seed:
-          BigInt.parse('3045ae6fc8422f64ed579528d38120eae12196d5', radix: 16)) as ECCurve_secp192r1;
+      seed: BigInt.parse('3045ae6fc8422f64ed579528d38120eae12196d5',
+          radix: 16)) as ECCurve_secp192r1;
 
   static ECCurve_secp192r1 _make(String domainName, ECCurve curve, ECPoint G,
           BigInt n, BigInt _h, List<int> seed) =>

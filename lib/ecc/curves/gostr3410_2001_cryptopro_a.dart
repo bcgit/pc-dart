@@ -32,12 +32,12 @@ class ECCurve_gostr3410_2001_cryptopro_a extends ECDomainParametersImpl {
       h: BigInt.parse('1', radix: 16),
       seed: null) as ECCurve_gostr3410_2001_cryptopro_a;
 
-  static ECCurve_gostr3410_2001_cryptopro_a _make(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed) =>
+  static ECCurve_gostr3410_2001_cryptopro_a _make(String domainName,
+          ECCurve curve, ECPoint G, BigInt n, BigInt _h, List<int> seed) =>
       ECCurve_gostr3410_2001_cryptopro_a._super(
           domainName, curve, G, n, _h, seed);
 
-  ECCurve_gostr3410_2001_cryptopro_a._super(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed)
+  ECCurve_gostr3410_2001_cryptopro_a._super(String domainName, ECCurve curve,
+      ECPoint G, BigInt n, BigInt _h, List<int> seed)
       : super(domainName, curve, G, n, _h, seed);
 }

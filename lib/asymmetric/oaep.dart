@@ -450,9 +450,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   }
 
   // ignore: slash_for_doc_comments
-  /**
-  * int to octet string.
-  */
+  /// int to octet string.
   Uint8List _itoOSP(int i, Uint8List sp) {
     sp[0] = i >> 24;
     sp[1] = i >> 16;

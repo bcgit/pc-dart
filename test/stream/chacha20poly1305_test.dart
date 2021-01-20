@@ -30,7 +30,8 @@ void main() {
   runTest(K, P, A, N, C, T);
 }
 
-void runTest(Uint8List K, Uint8List P, Uint8List A, Uint8List N, Uint8List C, Uint8List T) {
+void runTest(Uint8List K, Uint8List P, Uint8List A, Uint8List N, Uint8List C,
+    Uint8List T) {
   var parameters = AEADParameters(KeyParameter(K), T.length * 8, N, A);
   var chaChaEngine = ChaCha20Poly1305(ChaCha7539Engine(), Poly1305())
     ..init(true, parameters);

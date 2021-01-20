@@ -253,6 +253,7 @@ abstract class KeccakEngine extends BaseDigest {
       i += partialBlock;
     }
   }
+
   void _padAndSwitchToSqueezingPhase() {
     _dataQueue[_bitsInQueue >> 3] |= (1 << (_bitsInQueue & 7));
     if (++_bitsInQueue == _rate) {

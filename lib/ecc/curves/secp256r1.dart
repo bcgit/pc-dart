@@ -14,8 +14,7 @@ class ECCurve_secp256r1 extends ECDomainParametersImpl {
 
   factory ECCurve_secp256r1() => constructFpStandardCurve(
       'secp256r1', ECCurve_secp256r1._make,
-      q: BigInt.parse(
-          'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
+      q: BigInt.parse('ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
           radix: 16),
       a: BigInt.parse(
           'ffffffff00000001000000000000000000000000fffffffffffffffffffffffc',
@@ -30,14 +29,14 @@ class ECCurve_secp256r1 extends ECDomainParametersImpl {
           'ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551',
           radix: 16),
       h: BigInt.parse('1', radix: 16),
-      seed:
-          BigInt.parse('c49d360886e704936a6678e1139d26b7819f7e90', radix: 16)) as ECCurve_secp256r1;
+      seed: BigInt.parse('c49d360886e704936a6678e1139d26b7819f7e90',
+          radix: 16)) as ECCurve_secp256r1;
 
   static ECCurve_secp256r1 _make(String domainName, ECCurve curve, ECPoint G,
           BigInt n, BigInt _h, List<int> seed) =>
       ECCurve_secp256r1._super(domainName, curve, G, n, _h, seed);
 
   ECCurve_secp256r1._super(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed)
+      BigInt n, BigInt _h, List<int> seed)
       : super(domainName, curve, G, n, _h, seed);
 }

@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.ecc.ecc_fp;
 
 import 'dart:typed_data';
@@ -118,7 +120,7 @@ class ECFieldElement extends ecc.ECFieldElementBase {
       BigInt? P;
       do {
         P = rand.nextBigInteger(q!.bitLength);
-      } while ((P! >= q!) ||
+      } while ((P>= q!) ||
           (((P * P) - fourQ).modPow(legendreExponent, q!) != qMinusOne));
 
       var result = _lucasSequence(q!, P, Q, k);
@@ -270,12 +272,13 @@ class ECPoint extends ecc.ECPointBase {
       return curve.infinity as ECPoint?;
     }
 
-    var gamma = (b.y! - y) / (b.x! - x);
+    var gamma = (b.y! - y!) / (b.x! - x!);
 
-    var x3 = (gamma.square() - x) - b.x;
-    var y3 = (gamma * (x! - x3)) - y;
+    var x3 = (gamma.square() - x!) - b.x!;
+    var y3 = (gamma * (x! - x3)) - y!;
 
-    return ECPoint(curve as ECCurve, x3 as ECFieldElement?, y3 as ECFieldElement?, isCompressed);
+    return ECPoint(curve as ECCurve, x3 as ECFieldElement?,
+        y3 as ECFieldElement?, isCompressed);
   }
 
   // B.3 pg 62
@@ -286,7 +289,7 @@ class ECPoint extends ecc.ECPointBase {
       return this;
     }
 
-    if (y!.toBigInteger() == 0) {
+    if (y!.toBigInteger() == BigInt.zero) {
       // if y1 == 0, then (x1, y1) == (x1, -y1)
       // and hence this = -this and thus 2(x1, y1) == infinity
       return curve.infinity as ECPoint?;
@@ -294,12 +297,13 @@ class ECPoint extends ecc.ECPointBase {
 
     var two = curve.fromBigInteger(BigInt.two);
     var three = curve.fromBigInteger(BigInt.from(3));
-    var gamma = ((x!.square() * three) + curve.a) / (y! * two);
+    var gamma = ((x!.square() * three) + curve.a!) / (y! * two);
 
     var x3 = gamma.square() - (x! * two);
-    var y3 = (gamma * (x! - x3)) - y;
+    var y3 = (gamma * (x! - x3)) - y!;
 
-    return ECPoint(curve as ECCurve, x3 as ECFieldElement?, y3 as ECFieldElement?, isCompressed);
+    return ECPoint(curve as ECCurve, x3 as ECFieldElement?,
+        y3 as ECFieldElement?, isCompressed);
   }
 
   // D.3.2 pg 102 (see Note:)
@@ -315,7 +319,8 @@ class ECPoint extends ecc.ECPointBase {
 
   @override
   ECPoint operator -() {
-    return ECPoint(curve as ECCurve, x as ECFieldElement?, -y! as ECFieldElement?, isCompressed);
+    return ECPoint(curve as ECCurve, x as ECFieldElement?,
+        -y! as ECFieldElement?, isCompressed);
   }
 }
 
@@ -388,16 +393,17 @@ class _WNafPreCompInfo implements PreCompInfo {
 
 /// Function implementing the WNAF (Window Non-Adjacent Form) multiplication algorithm. Multiplies [p]] by an integer [k] using
 /// the Window NAF method.
-ecc.ECPointBase? _wNafMultiplier(
-    ecc.ECPointBase p, BigInt k, PreCompInfo preCompInfo) {
+ecc.ECPointBase? _wNafMultiplier(ecc.ECPointBase p, BigInt? k, PreCompInfo? preCompInfo) {
   // Ignore empty PreCompInfo or PreCompInfo of incorrect type
-  _WNafPreCompInfo wnafPreCompInfo = preCompInfo as _WNafPreCompInfo;
+  var wnafPreCompInfo;
   if ((preCompInfo == null) && (preCompInfo is! _WNafPreCompInfo)) {
     wnafPreCompInfo = _WNafPreCompInfo();
+  } else {
+    wnafPreCompInfo = preCompInfo as _WNafPreCompInfo;
   }
 
   // floor(log2(k))
-  var m = k.bitLength;
+  var m = k!.bitLength;
 
   // width of the Window NAF
   int width;
@@ -462,7 +468,7 @@ ecc.ECPointBase? _wNafMultiplier(
     // Precomputation array must be made bigger, copy existing preComp
     // array into the larger preComp array
     var oldPreComp = preComp as List<ECPoint>;
-    preComp = List<ECPoint?>(reqPreCompLen);
+    preComp = List<ECPoint?>.filled(reqPreCompLen, null, growable: false);
     preComp.setAll(0, oldPreComp);
 
     for (var i = preCompLen; i < reqPreCompLen; i++) {
@@ -484,10 +490,10 @@ ecc.ECPointBase? _wNafMultiplier(
 
     if (wnaf[i] != 0) {
       if (wnaf[i]! > 0) {
-        q += preComp[(wnaf[i]! - 1) ~/ 2];
+        q = q! + preComp[(wnaf[i]! - 1) ~/ 2];
       } else {
         // wnaf[i] < 0
-        q -= preComp[(-wnaf[i]! - 1) ~/ 2]!;
+        q = q! - preComp[(-wnaf[i]! - 1) ~/ 2]!;
       }
     }
   }
@@ -517,7 +523,7 @@ List<int?> _windowNaf(int width, BigInt k) {
   // short or int. However, a width of more than 8 is not efficient for
   // m = log2(q) smaller than 2305 Bits. Note: Values for m larger than
   // 1000 Bits are currently not used in practice.
-  var wnaf = List<int?>(k.bitLength + 1);
+  var wnaf = List<int?>.filled(k.bitLength + 1, null, growable: false);
 
   // 2^width as short and BigInt
   var pow2wB = (1 << width);
@@ -543,7 +549,7 @@ List<int?> _windowNaf(int width, BigInt k) {
       }
 
       // convert to 'Java byte'
-      wnaf[i] %= 0x100;
+      wnaf[i] = wnaf[i]! % 0x100;
       if ((wnaf[i]! & 0x80) != 0) {
         wnaf[i] = wnaf[i]! - 256;
       }
@@ -564,7 +570,7 @@ List<int?> _windowNaf(int width, BigInt k) {
   length++;
 
   // Reduce the WNAF array to its actual length
-  var wnafShort = List<int?>(length);
+  var wnafShort = List<int?>.filled(length, null, growable: false);
   wnafShort.setAll(0, wnaf.sublist(0, length));
   return wnafShort;
 }
