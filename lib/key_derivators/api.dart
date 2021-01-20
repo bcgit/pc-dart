@@ -8,7 +8,7 @@ import 'package:pointycastle/api.dart';
 
 /// [CipherParameters] used by PBKDF2.
 class Pbkdf2Parameters extends CipherParameters {
-  final Uint8List? salt;
+  final Uint8List salt;
   final int iterationCount;
   final int desiredKeyLength;
 

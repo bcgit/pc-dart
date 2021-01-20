@@ -105,11 +105,11 @@ class HMac extends BaseMac {
   @override
   int doFinal(Uint8List out, int outOff) {
     _digest.doFinal(_outputBuf, _blockLength);
-    _digest.update(_outputBuf, 0, _outputBuf!.length);
+    _digest.update(_outputBuf, 0, _outputBuf.length);
 
     var len = _digest.doFinal(out, outOff);
-    _outputBuf!.fillRange(_blockLength!, _outputBuf!.length, 0);
-    _digest.update(_inputPad, 0, _inputPad!.length);
+    _outputBuf.fillRange(_blockLength, _outputBuf.length, 0);
+    _digest.update(_inputPad, 0, _inputPad.length);
 
     return len;
   }

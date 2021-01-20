@@ -2,6 +2,8 @@
 
 library impl.key_derivator.scrypt;
 
+// This file has been migrated.
+
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';

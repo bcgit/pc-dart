@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.key_derivator.pbkdf2;
 
 import 'dart:typed_data';
@@ -20,16 +22,16 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
       KeyDerivator,
       '/PBKDF2',
       (_, final Match match) => () {
-            var mac = Mac(match.group(1));
+            var mac = Mac(match.group(1)!);
             return PBKDF2KeyDerivator(mac);
           });
 
   late Pbkdf2Parameters _params;
   final Mac _mac;
-  Uint8List? _state;
+  late Uint8List _state;
 
   PBKDF2KeyDerivator(this._mac) {
-    _state = Uint8List(_mac.macSize!);
+    _state = Uint8List(_mac.macSize);
   }
 
   @override
@@ -40,7 +42,7 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
 
   void reset() {
     _mac.reset();
-    _state!.fillRange(0, _state!.length, 0);
+    _state.fillRange(0, _state.length, 0);
   }
 
   @override
@@ -51,7 +53,7 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
   @override
   int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     var dkLen = _params.desiredKeyLength;
-    var hLen = _mac.macSize!;
+    var hLen = _mac.macSize;
     var l = (dkLen + hLen - 1) ~/ hLen;
     var iBuf = Uint8List(4);
     var outBytes = Uint8List(l * hLen);
@@ -88,14 +90,14 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
     _mac.update(iBuf, 0, iBuf.length);
     _mac.doFinal(_state, 0);
 
-    out.setRange(outOff, outOff + _state!.length, _state!);
+    out.setRange(outOff, outOff + _state.length, _state);
 
     for (var count = 1; count < c; count++) {
-      _mac.update(_state, 0, _state!.length);
+      _mac.update(_state, 0, _state.length);
       _mac.doFinal(_state, 0);
 
-      for (var j = 0; j != _state!.length; j++) {
-        out[outOff + j] ^= _state![j];
+      for (var j = 0; j != _state.length; j++) {
+        out[outOff + j] ^= _state[j];
       }
     }
   }

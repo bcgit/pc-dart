@@ -189,7 +189,7 @@ class CMac extends BaseMac {
     _cipher.init(true, _params!);
 
     //initializes the L, Lu, Lu2 numbers
-    var L = Uint8List(_zeros!.length);
+    var L = Uint8List(_zeros.length);
     _cipher.processBlock(_zeros, 0, L, 0);
     _lu = _doubleLu(L);
     _lu2 = _doubleLu(_lu);
@@ -212,7 +212,7 @@ class CMac extends BaseMac {
   }
 
   @override
-  void update(Uint8List? inp, int inOff, int len) {
+  void update(Uint8List inp, int inOff, int len) {
     if (len < 0) {
       throw ArgumentError('Can\'t have a negative input length!');
     }
@@ -243,7 +243,7 @@ class CMac extends BaseMac {
   }
 
   @override
-  int doFinal(Uint8List? out, int outOff) {
+  int doFinal(Uint8List out, int outOff) {
     var blockSize = _cipher.blockSize;
 
     Uint8List? lu;
@@ -254,13 +254,13 @@ class CMac extends BaseMac {
       lu = _lu2;
     }
 
-    for (var i = 0; i < _mac!.length; i++) {
+    for (var i = 0; i < _mac.length; i++) {
       _buf[i] ^= lu[i];
     }
 
     _cipher.processBlock(_buf, 0, _mac, 0);
 
-    out!.setRange(outOff, outOff + _macSize, _mac!);
+    out!.setRange(outOff, outOff + _macSize, _mac);
 
     reset();
 
@@ -271,7 +271,7 @@ class CMac extends BaseMac {
   @override
   void reset() {
     // clean the buffer.
-    for (var i = 0; i < _buf!.length; i++) {
+    for (var i = 0; i < _buf.length; i++) {
       _buf[i] = 0;
     }
 
