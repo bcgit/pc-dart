@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library impl.padding.pkcs7;
 
 import 'dart:typed_data';

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library src.impl.digests.long_sha2_family_digest;
 
 import 'dart:typed_data';

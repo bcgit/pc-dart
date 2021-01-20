@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library src.impl.random.secure_random_base;
 
 import 'dart:typed_data';

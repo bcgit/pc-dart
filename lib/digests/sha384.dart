@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library impl.digest.sha384;
 
 import 'dart:typed_data';

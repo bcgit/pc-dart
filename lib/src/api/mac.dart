@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 part of api;
 
 /// The interface that a MAC (message authentication code) conforms to.

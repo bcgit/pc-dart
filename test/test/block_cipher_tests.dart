@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library test.test.block_cipher_tests;
 
 import 'dart:typed_data';

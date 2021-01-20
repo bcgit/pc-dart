@@ -6,8 +6,6 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
 
-// This file has been migrated.
-
 abstract class BaseAEADBlockCipher implements AEADBlockCipher {
   final BlockCipher _underlyingCipher;
 

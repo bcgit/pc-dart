@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library test.digests.sha3_test.dart;
 
 import 'dart:typed_data';

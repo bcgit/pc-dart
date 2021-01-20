@@ -1,7 +1,5 @@
 library impl.stream_cipher.chacha7539;
 
-// This file has been migrated.
-
 import 'dart:typed_data';
 
 import '../export.dart';

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library impl.ecc.ecc_base;
 //TODO I think this stuff might be moved to src/impl
 

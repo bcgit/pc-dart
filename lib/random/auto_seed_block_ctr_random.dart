@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library impl.secure_random.auto_seed_block_ctr_random;
 
 import 'dart:typed_data';

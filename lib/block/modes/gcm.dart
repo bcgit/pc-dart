@@ -1,7 +1,5 @@
 library impl.block_cipher.modes.gcm;
 
-// This file has been migrated.
-
 import 'dart:math' show min;
 import 'dart:typed_data';
 

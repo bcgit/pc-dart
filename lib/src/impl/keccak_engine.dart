@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library src.impl.digests.keccak_engine;
 
 import 'dart:math';

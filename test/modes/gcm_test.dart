@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library test.modes.gcm_test;
 
 import 'dart:typed_data';

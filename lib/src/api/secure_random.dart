@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 part of api;
 
 /// A synchronous secure random number generator (RNG).

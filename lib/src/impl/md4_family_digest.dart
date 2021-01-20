@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library src.impl.digests.md4_family_digest;
 
 import 'dart:typed_data';

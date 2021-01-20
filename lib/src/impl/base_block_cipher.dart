@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library src.impl.base_block_cipher;
 
 import 'dart:typed_data';

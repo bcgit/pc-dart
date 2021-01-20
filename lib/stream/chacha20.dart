@@ -9,8 +9,6 @@ import '../src/impl/base_stream_cipher.dart';
 import '../src/registry/registry.dart';
 import '../src/ufixnum.dart';
 
-// This file has been migrated.
-
 // ignore_for_file: omit_local_variable_types, prefer_single_quotes
 // ignore_for_file: non_constant_identifier_names, directives_ordering
 // ignore_for_file: prefer_typing_uninitialized_variables, camel_case_types

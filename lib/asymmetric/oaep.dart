@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library impl.asymmetric_block_cipher.oeap;
 
 import 'dart:math';

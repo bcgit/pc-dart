@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library impl.block_cipher.modes.cfb;
 
 import 'dart:typed_data';

@@ -1,7 +1,5 @@
 library impl.stream_cipher.chacha20poly1305;
 
-// This file has been migrated.
-
 import 'dart:math';
 import 'dart:typed_data';
 

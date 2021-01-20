@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 library impl.secure_random.fortuna_random;
 
 import 'dart:typed_data';

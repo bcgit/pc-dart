@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-// This file has been migrated.
-
 part of api;
 
 /// [CipherParameters] consisting of just a key of arbitrary length.
