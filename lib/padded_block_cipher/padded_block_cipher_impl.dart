@@ -46,7 +46,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   @override
   void init(bool forEncryption, covariant PaddedBlockCipherParameters params) {
     _encrypting = forEncryption;
-    cipher.init(forEncryption, params.underlyingCipherParameters!);
+    cipher.init(forEncryption, params.underlyingCipherParameters);
     padding.init(params.paddingCipherParameters);
   }
 
