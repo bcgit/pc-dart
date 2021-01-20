@@ -39,7 +39,7 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
           _diff = null;
         } else {
           _diff = concatUint8List([
-            XofUtils.leftEncode(rate~/ 8),
+            XofUtils.leftEncode(rate ~/ 8),
             _encodeString(N),
             _encodeString(S)
           ]);

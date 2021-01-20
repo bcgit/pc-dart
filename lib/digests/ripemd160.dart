@@ -85,8 +85,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     c = rotl32(c, 10);
 
     // right
-    aa = sum32(
-        crotl32(aa + _f5(bb, cc, dd) + buffer[5] + 0x50a28be6, 8), ee);
+    aa = sum32(crotl32(aa + _f5(bb, cc, dd) + buffer[5] + 0x50a28be6, 8), ee);
     cc = rotl32(cc, 10);
     ee = sum32(crotl32(ee + _f5(aa, bb, cc) + buffer[14] + 0x50a28be6, 9), dd);
     bb = rotl32(bb, 10);
@@ -98,8 +97,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     dd = rotl32(dd, 10);
     aa = sum32(crotl32(aa + _f5(bb, cc, dd) + buffer[2] + 0x50a28be6, 15), ee);
     cc = rotl32(cc, 10);
-    ee =
-        sum32(crotl32(ee + _f5(aa, bb, cc) + buffer[11] + 0x50a28be6, 15), dd);
+    ee = sum32(crotl32(ee + _f5(aa, bb, cc) + buffer[11] + 0x50a28be6, 15), dd);
     bb = rotl32(bb, 10);
     dd = sum32(crotl32(dd + _f5(ee, aa, bb) + buffer[4] + 0x50a28be6, 5), cc);
     aa = rotl32(aa, 10);
@@ -113,8 +111,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     bb = rotl32(bb, 10);
     dd = sum32(crotl32(dd + _f5(ee, aa, bb) + buffer[1] + 0x50a28be6, 14), cc);
     aa = rotl32(aa, 10);
-    cc =
-        sum32(crotl32(cc + _f5(dd, ee, aa) + buffer[10] + 0x50a28be6, 14), bb);
+    cc = sum32(crotl32(cc + _f5(dd, ee, aa) + buffer[10] + 0x50a28be6, 14), bb);
     ee = rotl32(ee, 10);
     bb = sum32(crotl32(bb + _f5(cc, dd, ee) + buffer[3] + 0x50a28be6, 12), aa);
     dd = rotl32(dd, 10);
@@ -159,8 +156,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     // right
     ee = sum32(crotl32(ee + _f4(aa, bb, cc) + buffer[6] + 0x5c4dd124, 9), dd);
     bb = rotl32(bb, 10);
-    dd =
-        sum32(crotl32(dd + _f4(ee, aa, bb) + buffer[11] + 0x5c4dd124, 13), cc);
+    dd = sum32(crotl32(dd + _f4(ee, aa, bb) + buffer[11] + 0x5c4dd124, 13), cc);
     aa = rotl32(aa, 10);
     cc = sum32(crotl32(cc + _f4(dd, ee, aa) + buffer[3] + 0x5c4dd124, 15), bb);
     ee = rotl32(ee, 10);
@@ -172,8 +168,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     bb = rotl32(bb, 10);
     dd = sum32(crotl32(dd + _f4(ee, aa, bb) + buffer[5] + 0x5c4dd124, 9), cc);
     aa = rotl32(aa, 10);
-    cc =
-        sum32(crotl32(cc + _f4(dd, ee, aa) + buffer[10] + 0x5c4dd124, 11), bb);
+    cc = sum32(crotl32(cc + _f4(dd, ee, aa) + buffer[10] + 0x5c4dd124, 11), bb);
     ee = rotl32(ee, 10);
     bb = sum32(crotl32(bb + _f4(cc, dd, ee) + buffer[14] + 0x5c4dd124, 7), aa);
     dd = rotl32(dd, 10);
@@ -244,8 +239,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     ee = rotl32(ee, 10);
     bb = sum32(crotl32(bb + _f3(cc, dd, ee) + buffer[9] + 0x6d703ef3, 14), aa);
     dd = rotl32(dd, 10);
-    aa =
-        sum32(crotl32(aa + _f3(bb, cc, dd) + buffer[11] + 0x6d703ef3, 12), ee);
+    aa = sum32(crotl32(aa + _f3(bb, cc, dd) + buffer[11] + 0x6d703ef3, 12), ee);
     cc = rotl32(cc, 10);
     ee = sum32(crotl32(ee + _f3(aa, bb, cc) + buffer[8] + 0x6d703ef3, 13), dd);
     bb = rotl32(bb, 10);
@@ -253,8 +247,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     aa = rotl32(aa, 10);
     cc = sum32(crotl32(cc + _f3(dd, ee, aa) + buffer[2] + 0x6d703ef3, 14), bb);
     ee = rotl32(ee, 10);
-    bb =
-        sum32(crotl32(bb + _f3(cc, dd, ee) + buffer[10] + 0x6d703ef3, 13), aa);
+    bb = sum32(crotl32(bb + _f3(cc, dd, ee) + buffer[10] + 0x6d703ef3, 13), aa);
     dd = rotl32(dd, 10);
     aa = sum32(crotl32(aa + _f3(bb, cc, dd) + buffer[0] + 0x6d703ef3, 13), ee);
     cc = rotl32(cc, 10);
@@ -309,8 +302,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     bb = rotl32(bb, 10);
     dd = sum32(crotl32(dd + _f2(ee, aa, bb) + buffer[3] + 0x7a6d76e9, 14), cc);
     aa = rotl32(aa, 10);
-    cc =
-        sum32(crotl32(cc + _f2(dd, ee, aa) + buffer[11] + 0x7a6d76e9, 14), bb);
+    cc = sum32(crotl32(cc + _f2(dd, ee, aa) + buffer[11] + 0x7a6d76e9, 14), bb);
     ee = rotl32(ee, 10);
     bb = sum32(crotl32(bb + _f2(cc, dd, ee) + buffer[15] + 0x7a6d76e9, 6), aa);
     dd = rotl32(dd, 10);
@@ -328,8 +320,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     cc = rotl32(cc, 10);
     ee = sum32(crotl32(ee + _f2(aa, bb, cc) + buffer[7] + 0x7a6d76e9, 5), dd);
     bb = rotl32(bb, 10);
-    dd =
-        sum32(crotl32(dd + _f2(ee, aa, bb) + buffer[10] + 0x7a6d76e9, 15), cc);
+    dd = sum32(crotl32(dd + _f2(ee, aa, bb) + buffer[10] + 0x7a6d76e9, 15), cc);
     aa = rotl32(aa, 10);
     cc = sum32(crotl32(cc + _f2(dd, ee, aa) + buffer[14] + 0x7a6d76e9, 8), bb);
     ee = rotl32(ee, 10);

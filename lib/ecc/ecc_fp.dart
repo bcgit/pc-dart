@@ -120,7 +120,7 @@ class ECFieldElement extends ecc.ECFieldElementBase {
       BigInt? P;
       do {
         P = rand.nextBigInteger(q!.bitLength);
-      } while ((P>= q!) ||
+      } while ((P >= q!) ||
           (((P * P) - fourQ).modPow(legendreExponent, q!) != qMinusOne));
 
       var result = _lucasSequence(q!, P, Q, k);
@@ -393,7 +393,8 @@ class _WNafPreCompInfo implements PreCompInfo {
 
 /// Function implementing the WNAF (Window Non-Adjacent Form) multiplication algorithm. Multiplies [p]] by an integer [k] using
 /// the Window NAF method.
-ecc.ECPointBase? _wNafMultiplier(ecc.ECPointBase p, BigInt? k, PreCompInfo? preCompInfo) {
+ecc.ECPointBase? _wNafMultiplier(
+    ecc.ECPointBase p, BigInt? k, PreCompInfo? preCompInfo) {
   // Ignore empty PreCompInfo or PreCompInfo of incorrect type
   var wnafPreCompInfo;
   if ((preCompInfo == null) && (preCompInfo is! _WNafPreCompInfo)) {
