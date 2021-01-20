@@ -546,11 +546,11 @@ class Vector {
   }
 
   RSAPublicKey getPublicKey() {
-    return RSAPublicKey(pubMod, pubExp);
+    return RSAPublicKey(pubMod!, pubExp!);
   }
 
   RSAPrivateKey getPrivateKey() {
-    return RSAPrivateKey(privMod, privExp, privP, privQ);
+    return RSAPrivateKey(privMod!, privExp, privP, privQ);
   }
 }
 
@@ -674,7 +674,7 @@ void rsaesOaepFromBC() {
       rsaesOaep.init(
           false, PrivateKeyParameter<RSAPrivateKey>(v.getPrivateKey()));
       final output = Uint8List(v.pt!.length);
-      final size = rsaesOaep.processBlock(v.ct, 0, v.ct!.length, output, 0);
+      final size = rsaesOaep.processBlock(v.ct!, 0, v.ct!.length, output, 0);
       expect(output, equals(v.pt, size));
     });
   });
@@ -690,7 +690,7 @@ void rsaesOaepFromBC() {
           ParametersWithRandom(
               PublicKeyParameter<RSAPublicKey>(v.getPublicKey()), rng));
       final output = Uint8List(v.ct!.length);
-      final size = rsaesOaep.processBlock(v.pt, 0, v.pt!.length, output, 0);
+      final size = rsaesOaep.processBlock(v.pt!, 0, v.pt!.length, output, 0);
       expect(output, equals(v.ct, size));
     });
   });

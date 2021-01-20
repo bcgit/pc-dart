@@ -174,7 +174,7 @@ class PSSSigner implements Signer {
     _contentDigest.doFinal(_mDash, _mDash.length - _hLen - _sLen);
 
     var b = _cipher.process(signature.bytes);
-    _block!.fillRange(0, _block.length - b.length, 0);
+    _block.fillRange(0, _block.length - b.length, 0);
     arrayCopy(b, 0, _block, _block.length - b.length, b.length);
 
     var firstByteMask = 0xFF >> ((_block.length * 8) - _emBits);
@@ -210,7 +210,7 @@ class PSSSigner implements Signer {
       arrayCopy(_salt, 0, _mDash, _mDash.length - _sLen, _sLen);
     } else {
       arrayCopy(_block, _block.length - _sLen - _hLen - 1, _mDash,
-          _mDash!.length - _sLen, _sLen);
+          _mDash.length - _sLen, _sLen);
     }
 
     _contentDigest.update(_mDash, 0, _mDash.length);

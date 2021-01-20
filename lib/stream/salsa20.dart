@@ -45,7 +45,7 @@ class Salsa20Engine extends BaseStreamCipher {
       bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 8) {
+    if (iv.length != 8) {
       throw ArgumentError('Salsa20 requires exactly 8 bytes of IV');
     }
 

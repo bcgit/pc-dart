@@ -59,7 +59,7 @@ class TigerDigest extends BaseDigest implements Digest {
     _finish();
 
     _a.pack(out, outOff, Endian.little);
-    _b.pack(out, outOff! + 8, Endian.little);
+    _b.pack(out, outOff + 8, Endian.little);
     _c.pack(out, outOff + 16, Endian.little);
 
     reset();

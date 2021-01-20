@@ -39,7 +39,7 @@ class ASN1Set extends ASN1Object {
   /// Throws an [UnsupportedAsn1EncodingRuleException] if the given [encodingRule] is not supported.
   ///
   @override
-  Uint8List? encode(
+  Uint8List encode(
       {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     if (encodingRule != ASN1EncodingRule.ENCODING_DER) {
       throw UnsupportedAsn1EncodingRuleException(encodingRule);
@@ -51,7 +51,7 @@ class ASN1Set extends ASN1Object {
       valueBytes = Uint8List(valueByteLength!);
       var i = 0;
       elements!.forEach((obj) {
-        var b = obj.encode()!;
+        var b = obj.encode();
         valueBytes!.setRange(i, i + b.length, b);
         i += b.length;
       });
@@ -65,7 +65,7 @@ class ASN1Set extends ASN1Object {
   int _childLength() {
     var l = 0;
     elements!.forEach((ASN1Object obj) {
-      l += obj.encode()!.length;
+      l += obj.encode().length;
     });
     return l;
   }

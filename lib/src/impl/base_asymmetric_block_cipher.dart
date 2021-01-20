@@ -13,7 +13,7 @@ abstract class BaseAsymmetricBlockCipher implements AsymmetricBlockCipher {
   @override
   Uint8List process(Uint8List data) {
     var out = Uint8List(outputBlockSize);
-    var len = processBlock(data, 0, data!.length, out, 0);
+    var len = processBlock(data, 0, data.length, out, 0);
     return out.sublist(0, len);
   }
 }

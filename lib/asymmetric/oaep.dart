@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.asymmetric_block_cipher.oeap;
 
 import 'dart:math';
@@ -37,7 +39,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
       AsymmetricBlockCipher,
       '/OAEP',
       (_, final Match match) => () {
-            var underlyingCipher = AsymmetricBlockCipher(match.group(1));
+            var underlyingCipher = AsymmetricBlockCipher(match.group(1)!);
             return OAEPEncoding(underlyingCipher);
           });
 
@@ -141,9 +143,9 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
   @override
   int processBlock(
-      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (_forEncryption) {
-      return _encodeBlock(inp!, inpOff, len, out, outOff);
+      return _encodeBlock(inp, inpOff, len, out, outOff);
     } else {
       return _decodeBlock(inp, inpOff, len, out, outOff);
     }
@@ -225,7 +227,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     //
     // The _seed_ is stored in [seed].
 
-    var seed = _random.nextBytes(defHash.length)!;
+    var seed = _random.nextBytes(defHash.length);
 
     // 7. Calculate _dbMask_ = MGF(seed, emLen - hLen)
     //
@@ -307,7 +309,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   /// It returns the message in [out] starting at offset [outOff].
 
   int _decodeBlock(
-      Uint8List? inp, int inpOff, int inpLen, Uint8List out, int outOff) {
+      Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
     // The numbered steps below correspond to the steps from section 7.1.2 of
     // [RFC 2437](https://tools.ietf.org/html/rfc2437#section-7.1.2).
     //

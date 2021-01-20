@@ -72,7 +72,7 @@ class GCTRBlockCipher extends BaseBlockCipher {
 
     if (params is ParametersWithIV) {
       var ivParam = params;
-      var iv = ivParam.iv!;
+      var iv = ivParam.iv;
 
       if (iv.length < _iv.length) {
         // prepend the supplied IV with zeros (per FIPS PUB 81)

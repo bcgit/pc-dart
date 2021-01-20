@@ -86,12 +86,12 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
     }
 
     // Validate key
-    if (KEY_SIZE != initKeyParam.key!.length) {
+    if (KEY_SIZE != initKeyParam.key.length) {
       throw ArgumentError('Key must be 256 bits');
     }
 
     // Validate nonce
-    if (null == initNonce || NONCE_SIZE != initNonce.length) {
+    if (NONCE_SIZE != initNonce.length) {
       throw ArgumentError('Nonce must be 96 bits');
     }
 
@@ -109,7 +109,7 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
   @override
   // ignore: missing_return
   int getOutputSize(int len) {
-    var total = max(0, len) + _bufPos!;
+    var total = max(0, len) + _bufPos;
 
     switch (_state) {
       case State.DEC_INIT:
@@ -181,7 +181,7 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
     switch (_state) {
       case State.DEC_DATA:
         {
-          _buf[_bufPos!] = inp;
+          _buf[_bufPos] = inp;
           if (++_bufPos == _buf.length) {
             poly1305.update(_buf, 0, BUF_SIZE);
             processData(_buf, 0, BUF_SIZE, out, outOff);
@@ -194,7 +194,7 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
         }
       case State.ENC_DATA:
         {
-          _buf[_bufPos!] = inp;
+          _buf[_bufPos] = inp;
           if (++_bufPos == BUF_SIZE) {
             processData(_buf, 0, BUF_SIZE, out, outOff);
             poly1305.update(out, outOff, BUF_SIZE);
@@ -324,7 +324,7 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
         }
       case State.ENC_DATA:
         {
-          resultLen = _bufPos! + MAC_SIZE;
+          resultLen = _bufPos + MAC_SIZE;
 
           // ignore: invariant_booleans
           if (outOff > (out.length - resultLen)) {
@@ -332,13 +332,13 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
           }
 
           if (_bufPos > 0) {
-            processData(_buf, 0, _bufPos!, out, outOff);
-            poly1305.update(out, outOff, _bufPos!);
+            processData(_buf, 0, _bufPos, out, outOff);
+            poly1305.update(out, outOff, _bufPos);
           }
 
           finishData(State.ENC_FINAL);
 
-          utils.arrayCopy(_mac, 0, out, outOff + _bufPos!, MAC_SIZE);
+          utils.arrayCopy(_mac, 0, out, outOff + _bufPos, MAC_SIZE);
           break;
         }
       default:

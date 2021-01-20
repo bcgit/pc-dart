@@ -316,7 +316,7 @@ BigInt generateProbablePrime(int bitLength, int certainty, SecureRandom? rnd) {
     return BigInt.one;
   }
 
-  var candidate = rnd!.nextBigInteger(bitLength)!;
+  var candidate = rnd!.nextBigInteger(bitLength);
 
   // force MSB set
   if (!_testBit(candidate, bitLength - 1)) {

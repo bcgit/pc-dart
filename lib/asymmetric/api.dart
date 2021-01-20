@@ -34,7 +34,7 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
   /// does not need to be provided.
 
   RSAPrivateKey(
-      BigInt? modulus,
+      BigInt modulus,
       BigInt privateExponent,
       this.p,
       this.q,
@@ -89,7 +89,7 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 /// Public keys in RSA
 class RSAPublicKey extends RSAAsymmetricKey implements PublicKey {
   /// Create an RSA public key for the given parameters.
-  RSAPublicKey(BigInt? modulus, BigInt? exponent) : super(modulus, exponent);
+  RSAPublicKey(BigInt modulus, BigInt exponent) : super(modulus, exponent);
 
   /// Get public exponent [e]
   @Deprecated('Use get publicExponent')
@@ -121,7 +121,6 @@ class RSASignature implements Signature {
   String toString() => bytes.toString();
   @override
   bool operator ==(other) {
-    if (other == null) return false;
     if (other is! RSASignature) return false;
     if (other.bytes.length != bytes.length) return false;
 

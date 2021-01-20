@@ -30,7 +30,7 @@ class StreamCipherAsBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) {
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     streamCipher.processBytes(inp, inpOff, blockSize, out, outOff);
     return blockSize;
   }

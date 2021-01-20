@@ -99,7 +99,7 @@ class ChaCha20Engine extends BaseStreamCipher {
       bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 8) {
+    if (iv.length != 8) {
       throw ArgumentError('ChaCha20 requires exactly 8 bytes of IV');
     }
 
@@ -132,12 +132,12 @@ class ChaCha20Engine extends BaseStreamCipher {
       throw StateError('ChaCha20 not initialized: please call init() first');
     }
 
-    if ((inpOff + len) > inp!.length) {
+    if ((inpOff + len) > inp.length) {
       throw ArgumentError(
           'Input buffer too short or requested length too long');
     }
 
-    if ((outOff + len) > out!.length) {
+    if ((outOff + len) > out.length) {
       throw ArgumentError(
           'Output buffer too short or requested length too long');
     }

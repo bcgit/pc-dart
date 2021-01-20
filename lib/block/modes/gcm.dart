@@ -87,7 +87,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
     _xor(o, _e);
     if (length < blockSize) o.fillRange(length, blockSize, 0);
 
-    out!.setRange(outOff, outOff + length, o);
+    out.setRange(outOff, outOff + length, o);
 
     var c = forEncryption ? o : i;
 

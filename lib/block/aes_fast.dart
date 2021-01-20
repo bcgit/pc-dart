@@ -42,7 +42,7 @@ class AESFastEngine extends BaseBlockCipher {
 
   @override
   void init(bool forEncryption, covariant KeyParameter params) {
-    var key = params.key!;
+    var key = params.key;
 
     var kc = (key.lengthInBytes / 4).floor(); // key length in words
     if (((kc != 4) && (kc != 6) && (kc != 8)) ||
@@ -60,7 +60,7 @@ class AESFastEngine extends BaseBlockCipher {
 
     // Copy the key into the round key array.
     var keyView = ByteData.view(
-        params.key!.buffer, params.key!.offsetInBytes, params.key!.length);
+        params.key.buffer, params.key.offsetInBytes, params.key.length);
     for (var i = 0, t = 0; i < key.lengthInBytes; i += 4, t++) {
       var value = unpack32(keyView, i, Endian.little);
       _workingKey![t >> 2][t & 3] = value;
@@ -69,21 +69,21 @@ class AESFastEngine extends BaseBlockCipher {
     // While not enough round key material calculated calculate values.
     var k = (_rounds + 1) << 2;
     for (var i = kc; i < k; i++) {
-      var temp = _workingKey![(i - 1) >> 2][(i - 1) & 3]!.toInt();
+      var temp = _workingKey![(i - 1) >> 2][(i - 1) & 3].toInt();
       if ((i % kc) == 0) {
         temp = _subWord(_shift(temp, 8)) ^ _rcon[((i / kc) - 1).floor()];
       } else if ((kc > 6) && ((i % kc) == 4)) {
         temp = _subWord(temp);
       }
 
-      var value = _workingKey![(i - kc) >> 2][(i - kc) & 3]! ^ temp;
+      var value = _workingKey![(i - kc) >> 2][(i - kc) & 3] ^ temp;
       _workingKey![i >> 2][i & 3] = value;
     }
 
     if (!forEncryption) {
       for (var j = 1; j < _rounds; j++) {
         for (var i = 0; i < 4; i++) {
-          var value = _invMcol(_workingKey![j][i]!.toInt());
+          var value = _invMcol(_workingKey![j][i].toInt());
           _workingKey![j][i] = value;
         }
       }

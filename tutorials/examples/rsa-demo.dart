@@ -127,15 +127,11 @@ AsymmetricBlockCipher _createBlockCipher(AsymBlockCipherToUse scheme) {
   switch (scheme) {
     case AsymBlockCipherToUse.rsa:
       return RSAEngine();
-      break;
     case AsymBlockCipherToUse.pkcs1:
       return PKCS1Encoding(RSAEngine());
-      break;
     case AsymBlockCipherToUse.oaep:
       return OAEPEncoding(RSAEngine());
-      break;
   }
-  throw StateError('should not get to here');
 }
 
 Uint8List rsaEncrypt(RSAPublicKey myPublic, Uint8List dataToEncrypt,
@@ -397,7 +393,6 @@ void main(List<String> args) {
       case '-h':
         print('Usage: rsa-demo [-l] [-v] [-h]');
         return;
-        break;
       case '--verbose':
       case '-v':
         verbose = true;

@@ -243,7 +243,7 @@ void main() {
         }
         pos = 0;
         for (var elem in map['mac'] as Uint8List) {
-          expect(elem, encrypter.mac![pos++]);
+          expect(elem, encrypter.mac[pos++]);
         }
 
         var decrypter = GCMBlockCipher(AESFastEngine())..init(false, params);

@@ -347,7 +347,7 @@ class _RFC6979KCalculator {
       var tOff = 0;
 
       while (tOff < t.length) {
-        _mac.update(_V, 0, _V!.length);
+        _mac.update(_V, 0, _V.length);
         _mac.doFinal(_V, 0);
 
         if ((t.length - tOff) < _V.length) {

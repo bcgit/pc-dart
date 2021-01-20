@@ -182,7 +182,7 @@ class CMac extends BaseMac {
 
   @override
   void init(covariant KeyParameter keyParams) {
-    final zeroIV = Uint8List(keyParams.key!.length);
+    final zeroIV = Uint8List(keyParams.key.length);
     _params = ParametersWithIV(keyParams, zeroIV);
 
     // Initialize before computing L, Lu, Lu2
@@ -221,7 +221,7 @@ class CMac extends BaseMac {
     var gapLen = blockSize - _bufOff;
 
     if (len > gapLen) {
-      _buf.setRange(_bufOff, _bufOff + gapLen, inp!.sublist(inOff));
+      _buf.setRange(_bufOff, _bufOff + gapLen, inp.sublist(inOff));
 
       _cipher.processBlock(_buf, 0, _mac, 0);
 
@@ -237,7 +237,7 @@ class CMac extends BaseMac {
       }
     }
 
-    _buf.setRange(_bufOff, _bufOff + len, inp!.sublist(inOff));
+    _buf.setRange(_bufOff, _bufOff + len, inp.sublist(inOff));
 
     _bufOff += len;
   }
@@ -260,7 +260,7 @@ class CMac extends BaseMac {
 
     _cipher.processBlock(_buf, 0, _mac, 0);
 
-    out!.setRange(outOff, outOff + _macSize, _mac);
+    out.setRange(outOff, outOff + _macSize, _mac);
 
     reset();
 

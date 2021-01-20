@@ -263,7 +263,7 @@ void exerciseKeccakMac(Digest digest, List<Uint8List> keys, List<String> data,
 
       mac.update(mData, 0, mData.length);
 
-      var macV = Uint8List(mac.macSize!);
+      var macV = Uint8List(mac.macSize);
 
       mac.doFinal(macV, 0);
 
@@ -277,7 +277,7 @@ void exerciseKeccakMac(Digest digest, List<Uint8List> keys, List<String> data,
 
     mac.update(_truncData, 0, _truncData.length);
 
-    var macV = Uint8List(mac.macSize!);
+    var macV = Uint8List(mac.macSize);
 
     mac.doFinal(macV, 0);
 

@@ -116,10 +116,6 @@ Uint8List encodeBigIntAsUnsigned(BigInt number) {
 }
 
 bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
-  if (expected == null || supplied == null) {
-    return false;
-  }
-
   if (expected == supplied) {
     return true;
   }
@@ -141,12 +137,6 @@ bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
 
 bool constantTimeAreEqualOffset(
     int len, Uint8List a, int aOff, Uint8List b, int bOff) {
-  if (null == a) {
-    throw ArgumentError('"a" cannot be null');
-  }
-  if (null == b) {
-    throw ArgumentError('"b" cannot be null');
-  }
   if (len < 0) {
     throw ArgumentError('"len" cannot be negative');
   }

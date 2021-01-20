@@ -35,7 +35,7 @@ class OperationBenchmark extends BenchmarkBase {
     var watch = Stopwatch()..start();
     while (watch.elapsedMilliseconds < _runLengthMillis) {
       run();
-      _iterations++;
+      _iterations = _iterations! + 1;
     }
   }
 }

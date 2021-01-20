@@ -80,7 +80,7 @@ class ASN1Object {
   ///
   /// **Important note**: Subclasses need to override this method and may call this method. If this method is called by a subclass, the subclass has to set the [valueBytes] before calling super.encode().
   ///
-  Uint8List? encode(
+  Uint8List encode(
       {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     if (encodedBytes == null) {
       // Encode the length
@@ -108,7 +108,7 @@ class ASN1Object {
       encodedBytes!.setRange(
           1 + lengthAsBytes.length, encodedBytes!.length, valueBytes!, 0);
     }
-    return encodedBytes;
+    return encodedBytes!;
   }
 
   ///

@@ -16,7 +16,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       AsymmetricBlockCipher,
       '/PKCS1',
       (_, final Match match) => () {
-            var underlyingCipher = AsymmetricBlockCipher(match.group(1));
+            var underlyingCipher = AsymmetricBlockCipher(match.group(1)!);
             return PKCS1Encoding(underlyingCipher);
           });
 
@@ -89,9 +89,9 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
   @override
   int processBlock(
-      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (_forEncryption) {
-      return _encodeBlock(inp!, inpOff, len, out, outOff);
+      return _encodeBlock(inp, inpOff, len, out, outOff);
     } else {
       return _decodeBlock(inp, inpOff, len, out, outOff);
     }
@@ -111,13 +111,13 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       block.fillRange(1, padLength, 0xFF);
     } else {
       block[0] = 0x02; // type code 2
-      block.setRange(1, padLength, _random.nextBytes(padLength - 1)!);
+      block.setRange(1, padLength, _random.nextBytes(padLength - 1));
 
       // a zero byte marks the end of the padding, so all
       // the pad bytes must be non-zero.
       for (var i = 1; i < padLength; i++) {
         while (block[i] == 0) {
-          block[i] = _random.nextUint8()!;
+          block[i] = _random.nextUint8();
         }
       }
     }
@@ -129,7 +129,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
   }
 
   int _decodeBlock(
-      Uint8List? inp, int inpOff, int inpLen, Uint8List out, int outOff) {
+      Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
     var block = Uint8List(_engine.inputBlockSize);
     var len = _engine.processBlock(inp, inpOff, inpLen, block, 0);
     block = block.sublist(0, len);
@@ -171,7 +171,6 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     }
 
     var rlen = (block.length - start);
-    var result = Uint8List(rlen);
     out.setRange(outOff, outOff + rlen, block.sublist(start));
     return rlen;
   }

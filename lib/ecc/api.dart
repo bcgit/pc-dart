@@ -125,7 +125,6 @@ class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
   ECPrivateKey(this.d, ECDomainParameters? parameters) : super(parameters);
   @override
   bool operator ==(other) {
-    if (other == null) return false;
     if (other is! ECPrivateKey) return false;
     return (other.parameters == parameters) && (other.d == d);
   }
@@ -145,7 +144,6 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
   ECPublicKey(this.Q, ECDomainParameters? parameters) : super(parameters);
   @override
   bool operator ==(other) {
-    if (other == null) return false;
     if (other is! ECPublicKey) return false;
     return (other.parameters == parameters) && (other.Q == Q);
   }
@@ -186,7 +184,6 @@ class ECSignature implements Signature {
   String toString() => '(${r.toString()},${s.toString()})';
   @override
   bool operator ==(other) {
-    if (other == null) return false;
     if (other is! ECSignature) return false;
     return (other.r == r) && (other.s == s);
   }

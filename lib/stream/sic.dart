@@ -46,7 +46,7 @@ class SICStreamCipher extends BaseStreamCipher {
   void reset() {
     underlyingCipher.reset();
     _counter.setAll(0, _iv);
-    _counterOut.fillRange(0, _counterOut!.length, 0);
+    _counterOut.fillRange(0, _counterOut.length, 0);
     _consumed = _counterOut.length;
   }
 

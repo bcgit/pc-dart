@@ -120,12 +120,12 @@ class _RegistryImpl implements FactoryRegistry {
 
     if (_staticFactories.containsKey(type) &&
         _staticFactories[type]!.containsKey(registrableName)) {
-      return _staticFactories[type]![registrableName!];
+      return _staticFactories[type]![registrableName];
     }
 
     if (_dynamicFactories.containsKey(type)) {
       for (var factory in _dynamicFactories[type]!) {
-        var constructor = factory.tryFactory(registrableName!);
+        var constructor = factory.tryFactory(registrableName);
         if (constructor != null) {
           return constructor;
         }

@@ -110,7 +110,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   /// Process [len] bytes from [inp] starting at [inpOff]
   void _processBytes(Uint8List inp, int inpOff, int len) {
     while (len > 0) {
-      updateByte(inp![inpOff]);
+      updateByte(inp[inpOff]);
 
       inpOff++;
       len--;

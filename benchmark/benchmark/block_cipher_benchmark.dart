@@ -34,7 +34,7 @@ class BlockCipherBenchmark extends RateBenchmark {
 
   @override
   void run() {
-    _blockCipher.process(_data);
+    _blockCipher.process(_data!);
     addSample(_data!.length);
   }
 }

@@ -63,7 +63,7 @@ class HMac extends BaseMac {
     _digest.reset();
 
     // reinitialize the digest.
-    _digest.update(_inputPad, 0, _inputPad!.length);
+    _digest.update(_inputPad, 0, _inputPad.length);
   }
 
   @override

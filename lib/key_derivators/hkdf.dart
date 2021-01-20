@@ -80,7 +80,7 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
     _info = _params.info;
 
     _generatedBytes = 0;
-    _currentT = Uint8List(_hashLen!);
+    _currentT = Uint8List(_hashLen);
   }
 
   @override
@@ -101,14 +101,14 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
             'Hash length doesn\'t equal MAC size of: ${_hMac.algorithmName}');
       }
 
-      _hMac.init(KeyParameter(Uint8List(_hashLen!)));
+      _hMac.init(KeyParameter(Uint8List(_hashLen)));
     } else {
       _hMac.init(KeyParameter(salt));
     }
 
     _hMac.update(ikm, 0, ikm.length);
 
-    var prk = Uint8List(_hashLen!);
+    var prk = Uint8List(_hashLen);
     _hMac.doFinal(prk, 0);
     return KeyParameter(prk);
   }

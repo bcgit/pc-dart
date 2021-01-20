@@ -29,8 +29,8 @@ class Poly1305 extends BaseMac {
     Mac,
     '/Poly1305',
     (_, final Match match) => () {
-      var cipher = BlockCipher(match.group(1));
-      return Poly1305.withCipher(cipher!);
+      var cipher = BlockCipher(match.group(1)!);
+      return Poly1305.withCipher(cipher);
     },
   );
 
@@ -78,17 +78,17 @@ class Poly1305 extends BaseMac {
 
   final Uint8List singleByte = Uint8List(1);
 
-  int r0, r1, r2, r3, r4;
+  late int r0, r1, r2, r3, r4;
 
-  int s1, s2, s3, s4;
+  late int s1, s2, s3, s4;
 
-  int k0, k1, k2, k3;
+  late int k0, k1, k2, k3;
 
   final Uint8List currentBlock = Uint8List(BLOCK_SIZE);
 
   int currentBlockOffset = 0;
 
-  int h0, h1, h2, h3, h4;
+  late int h0, h1, h2, h3, h4;
 
   @override
   void init(CipherParameters params) {
@@ -102,7 +102,7 @@ class Poly1305 extends BaseMac {
 
       var ivParams = params as ParametersWithIV;
       nonce = ivParams.iv;
-      params = ivParams.parameters;
+      params = ivParams.parameters!;
     }
 
     if (!(params is KeyParameter)) {
@@ -111,14 +111,14 @@ class Poly1305 extends BaseMac {
 
     var keyParams = params as KeyParameter;
 
-    if (!checkKey(keyParams.key!)) clamp(keyParams.key);
+    if (!checkKey(keyParams.key)) clamp(keyParams.key);
 
-    setKey(keyParams.key, nonce);
+    setKey(keyParams.key, nonce!);
 
     reset();
   }
 
-  void setKey(Uint8List key, Uint8List? nonce) {
+  void setKey(Uint8List key, Uint8List nonce) {
     if (key.length != 32) throw ArgumentError('Poly1305 key must be 256 bits.');
     if (cipher != null && (nonce == null || nonce.length != BLOCK_SIZE)) {
       throw ArgumentError('Poly1305-AES requires a 128 bit IV.');
@@ -150,8 +150,8 @@ class Poly1305 extends BaseMac {
       kBytes = Uint8List(BLOCK_SIZE);
       kOff = 0;
 
-      cipher.init(true, KeyParameter.offset(key, BLOCK_SIZE, BLOCK_SIZE));
-      cipher.processBlock(nonce, 0, kBytes, 0);
+      cipher!.init(true, KeyParameter.offset(key, BLOCK_SIZE, BLOCK_SIZE));
+      cipher!.processBlock(nonce, 0, kBytes, 0);
     }
 
     var kByteData =
@@ -169,7 +169,7 @@ class Poly1305 extends BaseMac {
   }
 
   @override
-  void update(final Uint8List? inp, final int inOff, final int len) {
+  void update(final Uint8List inp, final int inOff, final int len) {
     var copied = 0;
     while (len > copied) {
       if (currentBlockOffset == BLOCK_SIZE) {
@@ -231,7 +231,7 @@ class Poly1305 extends BaseMac {
   }
 
   @override
-  int doFinal(Uint8List? out, final int outOff) {
+  int doFinal(Uint8List out, final int outOff) {
     if (outOff + BLOCK_SIZE > out.length) {
       throw ArgumentError('Output buffer is too short.');
     }

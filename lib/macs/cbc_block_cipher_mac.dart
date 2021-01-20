@@ -158,7 +158,7 @@ class CBCBlockCipherMac extends BaseMac {
         inOff += blockSize;
       }
 
-      _buf.setRange(_bufOff, _bufOff + len, inp!.sublist(inOff));
+      _buf.setRange(_bufOff, _bufOff + len, inp.sublist(inOff));
 
       _bufOff += len;
     }

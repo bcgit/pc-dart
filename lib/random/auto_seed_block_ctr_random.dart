@@ -45,7 +45,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
       _autoReseedKeyLength = params.parameters!.key.length;
       _delegate.seed(params);
     } else if (params is KeyParameter) {
-      _autoReseedKeyLength = params.key!.length;
+      _autoReseedKeyLength = params.key.length;
       _delegate.seed(params);
     } else {
       throw ArgumentError(
@@ -97,7 +97,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
     CipherParameters params;
     if (_reseedIV) {
       params =
-          ParametersWithIV(keyParam, nextBytes(_delegate.cipher!.blockSize));
+          ParametersWithIV(keyParam, nextBytes(_delegate.cipher.blockSize));
     } else {
       params = keyParam;
     }

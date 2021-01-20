@@ -93,7 +93,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
       var param = params;
 
       newNonce = param.nonce;
-      _initialAssociatedText = param.associatedData ?? Uint8List(0);
+      _initialAssociatedText = param.associatedData;
 
       var macSizeBits = param.macSize;
       if (macSizeBits < 32 || macSizeBits > 256 || macSizeBits % 8 != 0) {
@@ -129,7 +129,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
 
   @override
   Uint8List process(Uint8List data) {
-    var out = Uint8List(_getOutputSize(data!.length));
+    var out = Uint8List(_getOutputSize(data.length));
 
     var len = processBytes(data, 0, data.length, out, 0);
 
@@ -173,7 +173,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
     }
 
     _lastMacSizeBytes!.setRange(_lastMacSizeBytesOff,
-        _lastMacSizeBytesOff + len - cipherLen, inp!.skip(inpOff + cipherLen));
+        _lastMacSizeBytesOff + len - cipherLen, inp.skip(inpOff + cipherLen));
     _lastMacSizeBytesOff += len - cipherLen;
 
     return resultLen;
@@ -188,7 +188,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
     if (_bufOff != 0) {
       // add to buffer until full
       var end = blockSize < _bufOff! + len ? blockSize : _bufOff! + len;
-      _bufBlock!.setRange(_bufOff!, end, inp!.skip(inpOff));
+      _bufBlock!.setRange(_bufOff!, end, inp.skip(inpOff));
       len -= end - _bufOff!;
       _bufOff = end;
 
@@ -210,7 +210,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
 
     // keep last block in buffer
     if (len > 0) {
-      _bufBlock!.setRange(0, len, inp!.skip(inpOff));
+      _bufBlock!.setRange(0, len, inp.skip(inpOff));
       _bufOff = len;
     }
 

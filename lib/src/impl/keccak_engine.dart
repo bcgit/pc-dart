@@ -139,7 +139,7 @@ abstract class KeccakEngine extends BaseDigest {
     if ((_bitsInQueue % 8) != 0) {
       throw StateError('attempt to absorb with odd length queue');
     }
-    if (squeezing!) {
+    if (squeezing) {
       throw StateError('attempt to absorb while squeezing');
     }
 
@@ -148,7 +148,7 @@ abstract class KeccakEngine extends BaseDigest {
 
     var available = rateBytes - bytesInQueue;
     if (len < available) {
-      _dataQueue.setRange(bytesInQueue, bytesInQueue + len, data!, off);
+      _dataQueue.setRange(bytesInQueue, bytesInQueue + len, data, off);
       _bitsInQueue += (len << 3);
       return;
     }
@@ -156,7 +156,7 @@ abstract class KeccakEngine extends BaseDigest {
     var count = 0;
     if (bytesInQueue > 0) {
       _dataQueue.setRange(
-          bytesInQueue, bytesInQueue + available, data!.sublist(off));
+          bytesInQueue, bytesInQueue + available, data.sublist(off));
       count += available;
       _keccakAbsorb(_dataQueue, 0);
     }
@@ -167,7 +167,7 @@ abstract class KeccakEngine extends BaseDigest {
       count += rateBytes;
     }
 
-    _dataQueue.setRange(0, remaining, data!, off + count);
+    _dataQueue.setRange(0, remaining, data, off + count);
     _bitsInQueue = remaining << 3;
   }
 

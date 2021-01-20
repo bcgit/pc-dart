@@ -48,7 +48,7 @@ class ASN1GeneralizedTime extends ASN1Object {
   /// Throws an [UnsupportedAsn1EncodingRuleException] if the given [encodingRule] is not supported.
   ///
   @override
-  Uint8List? encode(
+  Uint8List encode(
       {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     if (encodingRule != ASN1EncodingRule.ENCODING_DER) {
       throw UnsupportedAsn1EncodingRuleException(encodingRule);
