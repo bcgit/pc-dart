@@ -396,11 +396,11 @@ class _WNafPreCompInfo implements PreCompInfo {
 ecc.ECPointBase? _wNafMultiplier(
     ecc.ECPointBase p, BigInt? k, PreCompInfo? preCompInfo) {
   // Ignore empty PreCompInfo or PreCompInfo of incorrect type
-  var wnafPreCompInfo;
-  if ((preCompInfo == null) && (preCompInfo is! _WNafPreCompInfo)) {
+  _WNafPreCompInfo wnafPreCompInfo;
+  if (preCompInfo is! _WNafPreCompInfo) {
     wnafPreCompInfo = _WNafPreCompInfo();
   } else {
-    wnafPreCompInfo = preCompInfo as _WNafPreCompInfo;
+    wnafPreCompInfo = preCompInfo;
   }
 
   // floor(log2(k))
@@ -501,7 +501,7 @@ ecc.ECPointBase? _wNafMultiplier(
 
   // Set PreCompInfo in ECPoint, such that it is available for next
   // multiplication.
-  wnafPreCompInfo.preComp = preComp as List<ECPoint>?;
+  wnafPreCompInfo.preComp = preComp.map((e) => e as ECPoint).toList();
   wnafPreCompInfo.twiceP = twiceP;
   p.preCompInfo = wnafPreCompInfo;
   return q;

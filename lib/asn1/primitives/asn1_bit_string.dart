@@ -75,14 +75,14 @@ class ASN1BitString extends ASN1Object {
       case ASN1EncodingRule.ENCODING_BER_PADDED:
       case ASN1EncodingRule.ENCODING_DER:
       case ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM:
-        var b = <int?>[];
+        var b = <int>[];
         if (unusedbits != null) {
-          b.add(unusedbits);
+          b.add(unusedbits!);
         } else {
           b.add(0);
         }
         b.addAll(stringValues!);
-        valueBytes = Uint8List.fromList(b as List<int>);
+        valueBytes = Uint8List.fromList(b);
         break;
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH:
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED:
