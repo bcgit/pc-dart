@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.digest.md2;
 
 import 'dart:typed_data';
@@ -58,17 +60,17 @@ class MD2Digest extends BaseDigest {
   }
 
   @override
-  void update(Uint8List? inp, int inpOff, int? len) {
+  void update(Uint8List inp, int inpOff, int len) {
     // fill the current word
-    while ((_mOff != 0) && (len! > 0)) {
-      updateByte(inp![inpOff]);
+    while ((_mOff != 0) && (len > 0)) {
+      updateByte(inp[inpOff]);
       inpOff++;
       len--;
     }
 
     // process whole words.
-    while (len! > 16) {
-      _m.setRange(0, 16, inp!.sublist(inpOff));
+    while (len > 16) {
+      _m.setRange(0, 16, inp.sublist(inpOff));
       _processCheckSum(_m);
       _processBlock(_m);
       len -= 16;
@@ -76,8 +78,8 @@ class MD2Digest extends BaseDigest {
     }
 
     // load in the remainder.
-    while (len! > 0) {
-      updateByte(inp![inpOff]);
+    while (len > 0) {
+      updateByte(inp[inpOff]);
       inpOff++;
       len--;
     }

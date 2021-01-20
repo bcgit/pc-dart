@@ -55,7 +55,7 @@ class TigerDigest extends BaseDigest implements Digest {
   }
 
   @override
-  int doFinal(Uint8List? out, int? outOff) {
+  int doFinal(Uint8List out, int outOff) {
     _finish();
 
     _a.pack(out, outOff, Endian.little);

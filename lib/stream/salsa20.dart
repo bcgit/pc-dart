@@ -50,7 +50,7 @@ class Salsa20Engine extends BaseStreamCipher {
     }
 
     _workingIV = iv;
-    _workingKey = uparams.key;
+    _workingKey = uparams!.key;
 
     _setKey(_workingKey!, _workingIV);
   }

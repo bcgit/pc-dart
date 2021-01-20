@@ -72,7 +72,7 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
   }
 
   @override
-  int doFinal(Uint8List? out, int? outOff) {
+  int doFinal(Uint8List out, int outOff) {
     finish();
 
     var tmp = Uint8List(64);
@@ -87,7 +87,7 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
     h7.pack(view, 48, Endian.big);
     h8.pack(view, 56, Endian.big);
 
-    out!.setRange(outOff!, outOff + digestSize, tmp);
+    out.setRange(outOff, outOff + digestSize, tmp);
 
     reset();
 

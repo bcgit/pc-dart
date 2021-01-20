@@ -39,10 +39,10 @@ class SHA224Digest extends MD4FamilyDigest implements Digest {
   void processBlock() {
     // expand 16 word block into 64 word blocks.
     for (var t = 16; t < 64; t++) {
-      buffer[t] = clip32(_theta1(buffer[t - 2]!) +
-          buffer[t - 7]! +
-          _theta0(buffer[t - 15]!) +
-          buffer[t - 16]!);
+      buffer[t] = clip32(_theta1(buffer[t - 2]) +
+          buffer[t - 7] +
+          _theta0(buffer[t - 15]) +
+          buffer[t - 16]);
     }
 
     // set up working variables.
@@ -59,62 +59,62 @@ class SHA224Digest extends MD4FamilyDigest implements Digest {
 
     for (var i = 0; i < 8; i++) {
       // t = 8 * i
-      h = clip32(h! + _sum1(e!) + _ch(e, f!, g!) + _k[t] + buffer[t]!);
-      d = clip32(d! + h);
-      h = clip32(h + _sum0(a!) + _maj(a, b!, c!));
+      h = clip32(h + _sum1(e) + _ch(e, f, g) + _k[t] + buffer[t]);
+      d = clip32(d + h);
+      h = clip32(h + _sum0(a) + _maj(a, b, c));
       ++t;
 
       // t = 8 * i + 1
-      g = clip32(g + _sum1(d) + _ch(d, e, f) + _k[t] + buffer[t]!);
+      g = clip32(g + _sum1(d) + _ch(d, e, f) + _k[t] + buffer[t]);
       c = clip32(c + g);
       g = clip32(g + _sum0(h) + _maj(h, a, b));
       ++t;
 
       // t = 8 * i + 2
-      f = clip32(f + _sum1(c) + _ch(c, d, e) + _k[t] + buffer[t]!);
+      f = clip32(f + _sum1(c) + _ch(c, d, e) + _k[t] + buffer[t]);
       b = clip32(b + f);
       f = clip32(f + _sum0(g) + _maj(g, h, a));
       ++t;
 
       // t = 8 * i + 3
-      e = clip32(e + _sum1(b) + _ch(b, c, d) + _k[t] + buffer[t]!);
+      e = clip32(e + _sum1(b) + _ch(b, c, d) + _k[t] + buffer[t]);
       a = clip32(a + e);
       e = clip32(e + _sum0(f) + _maj(f, g, h));
       ++t;
 
       // t = 8 * i + 4
-      d = clip32(d + _sum1(a) + _ch(a, b, c) + _k[t] + buffer[t]!);
+      d = clip32(d + _sum1(a) + _ch(a, b, c) + _k[t] + buffer[t]);
       h = clip32(h + d);
       d = clip32(d + _sum0(e) + _maj(e, f, g));
       ++t;
 
       // t = 8 * i + 5
-      c = clip32(c + _sum1(h) + _ch(h, a, b) + _k[t] + buffer[t]!);
+      c = clip32(c + _sum1(h) + _ch(h, a, b) + _k[t] + buffer[t]);
       g = clip32(g + c);
       c = clip32(c + _sum0(d) + _maj(d, e, f));
       ++t;
 
       // t = 8 * i + 6
-      b = clip32(b + _sum1(g) + _ch(g, h, a) + _k[t] + buffer[t]!);
+      b = clip32(b + _sum1(g) + _ch(g, h, a) + _k[t] + buffer[t]);
       f = clip32(f + b);
       b = clip32(b + _sum0(c) + _maj(c, d, e));
       ++t;
 
       // t = 8 * i + 7
-      a = clip32(a + _sum1(f) + _ch(f, g, h) + _k[t] + buffer[t]!);
+      a = clip32(a + _sum1(f) + _ch(f, g, h) + _k[t] + buffer[t]);
       e = clip32(e + a);
       a = clip32(a + _sum0(b) + _maj(b, c, d));
       ++t;
     }
 
-    state[0] = clip32(state[0]! + a!);
-    state[1] = clip32(state[1]! + b!);
-    state[2] = clip32(state[2]! + c!);
-    state[3] = clip32(state[3]! + d!);
-    state[4] = clip32(state[4]! + e!);
-    state[5] = clip32(state[5]! + f!);
-    state[6] = clip32(state[6]! + g!);
-    state[7] = clip32(state[7]! + h!);
+    state[0] = clip32(state[0] + a);
+    state[1] = clip32(state[1] + b);
+    state[2] = clip32(state[2] + c);
+    state[3] = clip32(state[3] + d);
+    state[4] = clip32(state[4] + e);
+    state[5] = clip32(state[5] + f);
+    state[6] = clip32(state[6] + g);
+    state[7] = clip32(state[7] + h);
   }
 
   int _ch(int x, int y, int z) => ((x & y) ^ ((~x) & z));

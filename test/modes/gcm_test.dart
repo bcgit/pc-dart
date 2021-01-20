@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library test.modes.gcm_test;
 
 import 'dart:typed_data';
@@ -229,8 +231,8 @@ void main() {
     for (var map in paramList) {
       test(map['name'], () {
         var encrypter = GCMBlockCipher(AESFastEngine());
-        var params = AEADParameters(KeyParameter(map['key'] as Uint8List?),
-            16 * 8, map['iv'] as Uint8List?, map['aad'] as Uint8List?);
+        var params = AEADParameters(KeyParameter((map['key'] as Uint8List?)!),
+            16 * 8, (map['iv'] as Uint8List?)!, (map['aad'] as Uint8List?)!);
         encrypter.init(true, params);
         var result = encrypter
             .process(createUint8ListFromHexString(map['input'] as String));

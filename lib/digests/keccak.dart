@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.digest.keccak;
 
 import 'dart:typed_data';
@@ -41,7 +43,7 @@ class KeccakDigest extends KeccakEngine {
   String get algorithmName => 'Keccak/$fixedOutputLength';
 
   @override
-  int doFinal(Uint8List? out, int? outOff) {
+  int doFinal(Uint8List out, int outOff) {
     squeeze(out, outOff, fixedOutputLength);
     reset();
     return digestSize;

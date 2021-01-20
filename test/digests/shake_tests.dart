@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 import 'dart:typed_data';
 
 import 'package:pointycastle/digests/shake.dart';
@@ -95,10 +97,10 @@ void testAgainstCAVPVectors() {
         var partialBits = vector.bits % 8;
 
         if (partialBits == 0) {
-          dig.update(vector.msg, 0, vector.msg!.length);
+          dig.update(vector.msg!, 0, vector.msg!.length);
           dig.doFinalRange(result, 0, result.length);
         } else {
-          dig.update(vector.msg, 0, vector.msg!.length - 1);
+          dig.update(vector.msg!, 0, vector.msg!.length - 1);
           dig.doFinalPartial(result, 0, result.length,
               vector.msg![vector.msg!.length - 1], partialBits);
         }

@@ -42,7 +42,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
   @override
   void seed(CipherParameters params) {
     if (params is ParametersWithIV<KeyParameter>) {
-      _autoReseedKeyLength = params.parameters.key!.length;
+      _autoReseedKeyLength = params.parameters!.key.length;
       _delegate.seed(params);
     } else if (params is KeyParameter) {
       _autoReseedKeyLength = params.key!.length;

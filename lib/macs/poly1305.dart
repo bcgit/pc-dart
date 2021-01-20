@@ -74,7 +74,7 @@ class Poly1305 extends BaseMac {
 
   static const BLOCK_SIZE = 16;
 
-  BlockCipher cipher?;
+  BlockCipher? cipher;
 
   final Uint8List singleByte = Uint8List(1);
 

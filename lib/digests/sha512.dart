@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.digest.sha512;
 
 import 'dart:typed_data';
@@ -39,12 +41,12 @@ class SHA512Digest extends LongSHA2FamilyDigest implements Digest {
   }
 
   @override
-  int doFinal(Uint8List? out, int? outOff) {
+  int doFinal(Uint8List out, int outOff) {
     finish();
 
-    var view = ByteData.view(out!.buffer, out.offsetInBytes, out.length);
+    var view = ByteData.view(out.buffer, out.offsetInBytes, out.length);
     h1.pack(view, outOff, Endian.big);
-    h2.pack(view, outOff! + 8, Endian.big);
+    h2.pack(view, outOff + 8, Endian.big);
     h3.pack(view, outOff + 16, Endian.big);
     h4.pack(view, outOff + 24, Endian.big);
     h5.pack(view, outOff + 32, Endian.big);

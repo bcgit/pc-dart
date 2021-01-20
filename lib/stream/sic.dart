@@ -54,7 +54,7 @@ class SICStreamCipher extends BaseStreamCipher {
   void init(bool forEncryption, covariant ParametersWithIV params) {
     _iv.setAll(0, params.iv);
     reset();
-    underlyingCipher.init(true, params.parameters);
+    underlyingCipher.init(true, params.parameters!);
   }
 
   @override

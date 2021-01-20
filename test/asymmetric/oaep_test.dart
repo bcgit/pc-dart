@@ -682,7 +682,7 @@ void rsaesOaepFromBC() {
   test('RSAESOAEP encryption vectors from BC', () {
     vectors.forEach((Vector v) {
       var rng = _OAEPTestEntropySource();
-      rng.seed(KeyParameter(v.seed));
+      rng.seed(KeyParameter(v.seed!));
 
       var rsaesOaep = OAEPEncoding(RSAEngine());
       rsaesOaep.init(

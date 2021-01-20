@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.digest.cshake;
 
 import 'dart:typed_data';
@@ -37,7 +39,7 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
           _diff = null;
         } else {
           _diff = concatUint8List([
-            XofUtils.leftEncode(rate! ~/ 8),
+            XofUtils.leftEncode(rate~/ 8),
             _encodeString(N),
             _encodeString(S)
           ]);
@@ -54,9 +56,9 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
   @override
   String get algorithmName => 'CSHAKE-$fixedOutputLength';
   @override
-  int doOutput(Uint8List? out, int outOff, int outLen) {
+  int doOutput(Uint8List out, int outOff, int outLen) {
     if (_diff != null) {
-      if (!squeezing!) {
+      if (!squeezing) {
         absorbBits(0x00, 2);
       }
 
@@ -69,8 +71,8 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
   }
 
   @override
-  void update(Uint8List? inp, int inpOff, int? len) {
-    absorbRange(inp, inpOff, len!);
+  void update(Uint8List inp, int inpOff, int len) {
+    absorbRange(inp, inpOff, len);
   }
 
   @override
@@ -84,8 +86,8 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
 
   // bytepad in SP 800-185
   void _diffPadAndAbsorb() {
-    var blockSize = rate! ~/ 8;
-    absorbRange(_diff, 0, _diff!.length);
+    var blockSize = rate ~/ 8;
+    absorbRange(_diff!, 0, _diff!.length);
 
     var delta = _diff!.length % blockSize;
 

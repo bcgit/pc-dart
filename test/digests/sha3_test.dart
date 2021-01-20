@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library test.digests.sha3_test.dart;
 
 import 'dart:typed_data';
@@ -133,7 +135,7 @@ void testSHA3AgainstVectors() {
         Uint8List out;
 
         if (partialBits == 0) {
-          digest.update(vector.msg, 0, vector.msg!.length);
+          digest.update(vector.msg!, 0, vector.msg!.length);
           out = Uint8List(digest.digestSize);
           digest.doFinal(out, 0);
           expect(vector.digest, out);

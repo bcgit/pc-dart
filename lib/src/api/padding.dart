@@ -11,7 +11,7 @@ abstract class Padding extends Algorithm {
       registry.create<Padding>(algorithmName);
 
   /// Initialise the padder. Normally, paddings don't need any init params.
-  void init([CipherParameters params]);
+  void init([CipherParameters? params]);
 
   /// Process a whole block of [data] at once, returning the result in a byte array. If [pad] is
   /// true adds padding to the given block, otherwise, padding is removed.

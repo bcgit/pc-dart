@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.digest.sha3;
 
 import 'dart:typed_data';
@@ -38,7 +40,7 @@ class SHA3Digest extends KeccakEngine {
   String get algorithmName => 'SHA3-$fixedOutputLength';
 
   @override
-  int doFinal(Uint8List? out, int? outOff) {
+  int doFinal(Uint8List out, int outOff) {
     // FIPS 202 SHA3 https://github.com/PointyCastle/pointycastle/issues/128
     absorbBits(0x02, 2);
     squeeze(out, outOff, fixedOutputLength);

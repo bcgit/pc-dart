@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.digest.blake2b;
 
 import 'dart:typed_data';
@@ -103,7 +105,7 @@ class Blake2bDigest extends BaseDigest implements Digest {
   }
 
   void _initializeInternalState() {
-    _internalState.setRange(0, _chainValue!.length, _chainValue);
+    _internalState.setRange(0, _chainValue!.length, _chainValue!);
     _internalState.setRange(
         _chainValue!.length, _chainValue!.length + 4, _blake2bIV);
     _internalState[12]

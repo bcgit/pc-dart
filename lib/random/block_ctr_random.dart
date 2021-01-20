@@ -44,7 +44,7 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
     _used = _output.length;
     if (params is ParametersWithIV) {
       _input.setAll(0, params.iv);
-      cipher.init(true, params.parameters);
+      cipher.init(true, params.parameters!);
     } else {
       cipher.init(true, params);
     }
