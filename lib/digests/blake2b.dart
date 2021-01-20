@@ -139,13 +139,12 @@ class Blake2bDigest extends BaseDigest implements Digest {
   }
 
   @override
-  void update(Uint8List? inp, int inpOff, int? len) {
-    if (inp == null || len == 0) return;
-
+  void update(Uint8List inp, int inpOff, int len) {
+    if (len == 0) return;
     var remainingLength = 0;
     if (_bufferPos != 0) {
       remainingLength = _blockSize - _bufferPos;
-      if (remainingLength < len!) {
+      if (remainingLength < len) {
         _buffer!
             .setRange(_bufferPos, _bufferPos + remainingLength, inp, inpOff);
         _t0.sum(_blockSize);
@@ -161,7 +160,7 @@ class Blake2bDigest extends BaseDigest implements Digest {
     }
 
     int msgPos;
-    var blockWiseLastPos = inpOff + len! - _blockSize;
+    var blockWiseLastPos = inpOff + len - _blockSize;
     for (msgPos = inpOff + remainingLength;
         msgPos < blockWiseLastPos;
         msgPos += _blockSize) {
@@ -175,7 +174,7 @@ class Blake2bDigest extends BaseDigest implements Digest {
   }
 
   @override
-  int doFinal(Uint8List? out, int? outOff) {
+  int doFinal(Uint8List out, int outOff) {
     _f0.set(0xFFFFFFFF, 0xFFFFFFFF);
     _t0.sum(_bufferPos);
     if (_bufferPos > 0 && _t0.lo32 == 0 && _t0.hi32 == 0) _t1.sum(1);
@@ -188,11 +187,11 @@ class Blake2bDigest extends BaseDigest implements Digest {
     for (var i = 0; i < _chainValue!.length && (i * 8 < _digestLength); ++i) {
       _chainValue![i].pack(packedValueData, 0, Endian.little);
 
-      final start = outOff! + i * 8;
+      final start = outOff + i * 8;
       if (i * 8 < _digestLength - 8) {
-        out!.setRange(start, start + 8, packedValue);
+        out.setRange(start, start + 8, packedValue);
       } else {
-        out!.setRange(start, start + _digestLength - (i * 8), packedValue);
+        out.setRange(start, start + _digestLength - (i * 8), packedValue);
       }
     }
 

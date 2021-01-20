@@ -73,18 +73,18 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
   }
 
   @override
-  Uint8List process(Uint8List? data) {
+  Uint8List process(Uint8List data) {
     // Expand the output block size by an extra byte to handle cases where
     // the output is larger than expected.
     var out = Uint8List(outputBlockSize + 1);
-    var len = processBlock(data, 0, data!.length, out, 0);
+    var len = processBlock(data, 0, data.length, out, 0);
     return out.sublist(0, len);
   }
 
   @override
   int processBlock(
-      Uint8List? inp, int inpOff, int len, Uint8List out, int outOff) {
-    var input = _convertInput(inp!, inpOff, len);
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+    var input = _convertInput(inp, inpOff, len);
     var output = _processBigInteger(input);
     return _convertOutput(output, out, outOff);
   }

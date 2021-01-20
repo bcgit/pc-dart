@@ -91,16 +91,16 @@ class AESFastEngine extends BaseBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) {
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if (_workingKey == null) {
       throw StateError('AES engine not initialised');
     }
 
-    if ((inpOff + (32 / 2)) > inp!.lengthInBytes) {
+    if ((inpOff + (32 / 2)) > inp.lengthInBytes) {
       throw ArgumentError('Input buffer too short');
     }
 
-    if ((outOff + (32 / 2)) > out!.lengthInBytes) {
+    if ((outOff + (32 / 2)) > out.lengthInBytes) {
       throw ArgumentError('Output buffer too short');
     }
 

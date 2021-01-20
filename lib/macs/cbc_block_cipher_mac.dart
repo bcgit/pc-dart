@@ -35,7 +35,7 @@ class CBCBlockCipherMac extends BaseMac {
 
   final int _macSize;
 
-  late ParametersWithIV _params;
+  ParametersWithIV? _params;
 
   ///
   /// create a standard MAC based on a CBC block cipher. This will produce an
@@ -132,7 +132,7 @@ class CBCBlockCipherMac extends BaseMac {
   }
 
   @override
-  void update(Uint8List? inp, int inOff, int len) {
+  void update(Uint8List inp, int inOff, int len) {
     if (len < 0) {
       throw ArgumentError('Can\'t have a negative input length!');
     }
@@ -141,7 +141,7 @@ class CBCBlockCipherMac extends BaseMac {
     var gapLen = blockSize - _bufOff;
 
     if (len > gapLen) {
-      _buf.setRange(_bufOff, _bufOff + gapLen, inp!.sublist(inOff));
+      _buf.setRange(_bufOff, _bufOff + gapLen, inp.sublist(inOff));
 
       _cipher.processBlock(_buf, 0, _mac, 0);
 
@@ -176,6 +176,10 @@ class CBCBlockCipherMac extends BaseMac {
     _cipher.reset();
 
     _cipher.init(true, _params);
+
+    if (_params != null) {
+      _cipher.init(true, _params);
+    }
   }
 
   @override

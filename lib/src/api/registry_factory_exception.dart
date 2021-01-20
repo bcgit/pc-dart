@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-
-
 part of api;
 
 /// This kind of exception is thrown when a user tries to create an algorithm

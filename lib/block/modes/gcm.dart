@@ -193,12 +193,12 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
   Uint8List get mac => _x;
 
   @override
-  void processAADBytes(Uint8List? inp, int inpOff, int len) {
+  void processAADBytes(Uint8List inp, int inpOff, int len) {
     var block = Uint8List(16);
     for (var i = 0; i < len; i += 16) {
       block.fillRange(0, 16, 0);
       block.setAll(
-          0, inp!.sublist(inpOff + i, inpOff + min(i + 16, len) as int));
+          0, inp.sublist(inpOff + i, inpOff + min(i + 16, len) as int));
       _gHASHBlock(_x, block);
     }
   }

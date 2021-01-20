@@ -218,8 +218,6 @@ int unpack32(dynamic inp, int offset, Endian endian) {
 // 64 bit operations
 //
 class Register64 {
-  static final Register64 _maxValue = Register64(0xFFFFFFFF, 0xFFFFFFFF);
-
   late int _hi32;
   late int _lo32;
 
