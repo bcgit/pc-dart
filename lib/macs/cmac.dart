@@ -32,23 +32,23 @@ class CMac extends BaseMac {
     Mac,
     '/CMAC',
     (_, final Match match) => () {
-      var cipher = BlockCipher(match.group(1));
+      var cipher = BlockCipher(match.group(1)!);
       return CMac.fromCipher(cipher);
     },
   );
 
   late Uint8List _poly;
-  Uint8List? _zeros;
+  late Uint8List _zeros;
 
-  Uint8List? _mac;
+  late Uint8List _mac;
 
-  Uint8List? _buf;
-  int? _bufOff;
+  late Uint8List _buf;
+  late int _bufOff;
   final BlockCipher _cipher;
 
   final int _macSize;
 
-  Uint8List? _lu, _lu2;
+  late Uint8List _lu, _lu2;
 
   ParametersWithIV? _params;
 
@@ -186,13 +186,13 @@ class CMac extends BaseMac {
     _params = ParametersWithIV(keyParams, zeroIV);
 
     // Initialize before computing L, Lu, Lu2
-    _cipher.init(true, _params);
+    _cipher.init(true, _params!);
 
     //initializes the L, Lu, Lu2 numbers
     var L = Uint8List(_zeros!.length);
     _cipher.processBlock(_zeros, 0, L, 0);
     _lu = _doubleLu(L);
-    _lu2 = _doubleLu(_lu!);
+    _lu2 = _doubleLu(_lu);
 
     // Reset _buf/_cipher state after computing L, Lu, Lu2
     reset();
@@ -203,12 +203,12 @@ class CMac extends BaseMac {
 
   @override
   void updateByte(int inp) {
-    if (_bufOff == _buf!.length) {
+    if (_bufOff == _buf.length) {
       _cipher.processBlock(_buf, 0, _mac, 0);
       _bufOff = 0;
     }
 
-    _buf![_bufOff++!] = inp;
+    _buf[_bufOff++] = inp;
   }
 
   @override
@@ -218,10 +218,10 @@ class CMac extends BaseMac {
     }
 
     var blockSize = _cipher.blockSize;
-    var gapLen = blockSize - _bufOff!;
+    var gapLen = blockSize - _bufOff;
 
     if (len > gapLen) {
-      _buf!.setRange(_bufOff!, _bufOff! + gapLen, inp!.sublist(inOff));
+      _buf.setRange(_bufOff, _bufOff + gapLen, inp!.sublist(inOff));
 
       _cipher.processBlock(_buf, 0, _mac, 0);
 
@@ -237,7 +237,7 @@ class CMac extends BaseMac {
       }
     }
 
-    _buf!.setRange(_bufOff!, _bufOff! + len, inp!.sublist(inOff));
+    _buf.setRange(_bufOff, _bufOff + len, inp!.sublist(inOff));
 
     _bufOff += len;
   }
@@ -255,7 +255,7 @@ class CMac extends BaseMac {
     }
 
     for (var i = 0; i < _mac!.length; i++) {
-      _buf![i] ^= lu![i];
+      _buf[i] ^= lu[i];
     }
 
     _cipher.processBlock(_buf, 0, _mac, 0);
@@ -272,7 +272,7 @@ class CMac extends BaseMac {
   void reset() {
     // clean the buffer.
     for (var i = 0; i < _buf!.length; i++) {
-      _buf![i] = 0;
+      _buf[i] = 0;
     }
 
     _bufOff = 0;
@@ -281,7 +281,7 @@ class CMac extends BaseMac {
     _cipher.reset();
 
     if (_params != null) {
-      _cipher.init(true, _params);
+      _cipher.init(true, _params!);
     }
   }
 }

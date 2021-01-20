@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.mac.cbc_block_cipher_mac;
 
 import 'dart:typed_data';
@@ -15,27 +17,28 @@ class CBCBlockCipherMac extends BaseMac {
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.regex(
     Mac,
     r'^(.+)/CBC_CMAC(/(.+))?$',
-    (_, final Match match) => () {
-      var cipher = BlockCipher(match.group(1));
+        (_, final Match match) =>
+        () {
+      var cipher = BlockCipher(match.group(1)!);
       var padding = match.groupCount >= 3 &&
-              match.group(3) != null &&
-              match.group(3)!.isNotEmpty
-          ? Padding(match.group(3))
+          match.group(3) != null &&
+          match.group(3)!.isNotEmpty
+          ? Padding(match.group(3)!)
           : null;
       return CBCBlockCipherMac.fromCipherAndPadding(cipher, padding);
     },
   );
 
-  Uint8List? _mac;
+  late Uint8List _mac;
 
-  Uint8List? _buf;
-  int? _bufOff;
+  late Uint8List _buf;
+  late int _bufOff;
   final BlockCipher _cipher;
   final Padding? _padding;
 
   final int _macSize;
 
-  ParametersWithIV? _params;
+  late ParametersWithIV _params;
 
   ///
   /// create a standard MAC based on a CBC block cipher. This will produce an
@@ -109,7 +112,7 @@ class CBCBlockCipherMac extends BaseMac {
     if (params is ParametersWithIV) {
       _params = params;
     } else if (params is KeyParameter) {
-      final zeroIV = Uint8List(params.key!.length);
+      final zeroIV = Uint8List(params.key.length);
       _params = ParametersWithIV(params, zeroIV);
     }
 
@@ -123,12 +126,12 @@ class CBCBlockCipherMac extends BaseMac {
 
   @override
   void updateByte(int inp) {
-    if (_bufOff == _buf!.length) {
+    if (_bufOff == _buf.length) {
       _cipher.processBlock(_buf, 0, _mac, 0);
       _bufOff = 0;
     }
 
-    _buf![_bufOff++!] = inp;
+    _buf[_bufOff++] = inp;
   }
 
   @override
@@ -138,10 +141,10 @@ class CBCBlockCipherMac extends BaseMac {
     }
 
     var blockSize = _cipher.blockSize;
-    var gapLen = blockSize - _bufOff!;
+    var gapLen = blockSize - _bufOff;
 
     if (len > gapLen) {
-      _buf!.setRange(_bufOff!, _bufOff! + gapLen, inp!.sublist(inOff));
+      _buf.setRange(_bufOff, _bufOff + gapLen, inp!.sublist(inOff));
 
       _cipher.processBlock(_buf, 0, _mac, 0);
 
@@ -155,23 +158,39 @@ class CBCBlockCipherMac extends BaseMac {
         len -= blockSize;
         inOff += blockSize;
       }
+
+      _buf.setRange(_bufOff, _bufOff + len, inp!.sublist(inOff));
+
+      _bufOff += len;
+    }
+  }
+
+  /// Reset the mac generator.
+  @override
+  void reset() {
+    // clean the buffer.
+    for (var i = 0; i < _buf.length; i++) {
+      _buf[i] = 0;
     }
 
-    _buf!.setRange(_bufOff!, _bufOff! + len, inp!.sublist(inOff));
+    _bufOff = 0;
 
-    _bufOff += len;
+    // reset the underlying cipher.
+    _cipher.reset();
+
+    _cipher.init(true, _params);
   }
 
   @override
-  int doFinal(Uint8List? out, int outOff) {
+  int doFinal(Uint8List out, int outOff) {
     var blockSize = _cipher.blockSize;
 
     if (_padding == null) {
       //
       // pad with zeroes
       //
-      while (_bufOff! < blockSize) {
-        _buf![_bufOff!] = 0;
+      while (_bufOff < blockSize) {
+        _buf[_bufOff] = 0;
         _bufOff++;
       }
     } else {
@@ -185,28 +204,10 @@ class CBCBlockCipherMac extends BaseMac {
 
     _cipher.processBlock(_buf, 0, _mac, 0);
 
-    out!.setRange(outOff, outOff + _macSize, _mac!);
+    out.setRange(outOff, outOff + _macSize, _mac);
 
     reset();
 
     return _macSize;
-  }
-
-  /// Reset the mac generator.
-  @override
-  void reset() {
-    // clean the buffer.
-    for (var i = 0; i < _buf!.length; i++) {
-      _buf![i] = 0;
-    }
-
-    _bufOff = 0;
-
-    // reset the underlying cipher.
-    _cipher.reset();
-
-    if (_params != null) {
-      _cipher.init(true, _params);
-    }
   }
 }

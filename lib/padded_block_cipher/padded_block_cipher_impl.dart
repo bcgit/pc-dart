@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.padded_block_cipher.padded_block_cipher_impl;
 
 import 'dart:typed_data';
@@ -14,8 +16,8 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
       PaddedBlockCipher,
       r'^(.+)/([^/]+)$',
       (_, final Match match) => () {
-            var padding = Padding(match.group(2));
-            var underlyingCipher = BlockCipher(match.group(1));
+            var padding = Padding(match.group(2)!);
+            var underlyingCipher = BlockCipher(match.group(1)!);
             return PaddedBlockCipherImpl(padding, underlyingCipher);
           });
 
@@ -77,14 +79,14 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) {
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     return cipher.processBlock(inp, inpOff, out, outOff);
   }
 
   @override
-  int doFinal(Uint8List? inp, int inpOff, Uint8List out, int outOff) {
+  int doFinal(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if (_encrypting!) {
-      var lastInputBlock = Uint8List(blockSize)..setAll(0, inp!.sublist(inpOff));
+      var lastInputBlock = Uint8List(blockSize)..setAll(0, inp.sublist(inpOff));
 
       var remainder = inp.length - inpOff;
 

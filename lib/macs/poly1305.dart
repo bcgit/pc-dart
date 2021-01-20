@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.mac.poly1305;
 
 import 'dart:typed_data';
@@ -28,7 +30,7 @@ class Poly1305 extends BaseMac {
     '/Poly1305',
     (_, final Match match) => () {
       var cipher = BlockCipher(match.group(1));
-      return Poly1305.withCipher(cipher);
+      return Poly1305.withCipher(cipher!);
     },
   );
 
@@ -72,7 +74,7 @@ class Poly1305 extends BaseMac {
 
   static const BLOCK_SIZE = 16;
 
-  BlockCipher? cipher;
+  BlockCipher cipher?;
 
   final Uint8List singleByte = Uint8List(1);
 
