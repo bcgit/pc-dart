@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.block_cipher.modes.cfb;
 
 import 'dart:typed_data';
@@ -15,7 +17,7 @@ class CFBBlockCipher extends BaseBlockCipher {
       BlockCipher,
       r'^(.+)/CFB-([0-9]+)$',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             var blockSizeInBits = int.parse(match.group(2)!);
             if ((blockSizeInBits % 8) != 0) {
               throw RegistryFactoryException.invalid(
@@ -65,7 +67,7 @@ class CFBBlockCipher extends BaseBlockCipher {
 
     if (params is ParametersWithIV) {
       var ivParam = params;
-      var iv = ivParam.iv!;
+      var iv = ivParam.iv;
 
       if (iv.length < _iv.length) {
         // prepend the supplied IV with zeros (per FIPS PUB 81)
@@ -100,10 +102,10 @@ class CFBBlockCipher extends BaseBlockCipher {
   /// @exception IllegalStateException if the cipher isn't initialised.
   /// @return the number of bytes processed and produced.
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) =>
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) =>
       _encrypting
-          ? _encryptBlock(inp!, inpOff, out!, outOff)
-          : _decryptBlock(inp!, inpOff, out!, outOff);
+          ? _encryptBlock(inp, inpOff, out, outOff)
+          : _decryptBlock(inp, inpOff, out, outOff);
 
   /// Do the appropriate processing for CFB mode encryption.
   ///
@@ -124,7 +126,7 @@ class CFBBlockCipher extends BaseBlockCipher {
       throw ArgumentError('Output buffer too short');
     }
 
-    _underlyingCipher.processBlock(_cfbV, 0, _cfbOutV, 0);
+    _underlyingCipher.processBlock(_cfbV!, 0, _cfbOutV!, 0);
 
     // XOR the cfbV with the plaintext producing the ciphertext
     for (var i = 0; i < blockSize; i++) {
@@ -158,7 +160,7 @@ class CFBBlockCipher extends BaseBlockCipher {
       throw ArgumentError('Output buffer too short');
     }
 
-    _underlyingCipher.processBlock(_cfbV, 0, _cfbOutV, 0);
+    _underlyingCipher.processBlock(_cfbV!, 0, _cfbOutV!, 0);
 
     // change over the input block.
     var offset = _cfbV!.length - blockSize;

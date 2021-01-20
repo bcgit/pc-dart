@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.block_cipher.modes.ecb;
 
 import 'dart:typed_data';
@@ -15,7 +17,7 @@ class ECBBlockCipher extends BaseBlockCipher {
       BlockCipher,
       '/ECB',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return ECBBlockCipher(underlying);
           });
 
@@ -38,6 +40,6 @@ class ECBBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) =>
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) =>
       _underlyingCipher.processBlock(inp, inpOff, out, outOff);
 }

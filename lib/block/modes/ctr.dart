@@ -13,7 +13,7 @@ class CTRBlockCipher extends StreamCipherAsBlockCipher {
       BlockCipher,
       '/CTR',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return CTRBlockCipher(
                 underlying.blockSize, CTRStreamCipher(underlying));
           });

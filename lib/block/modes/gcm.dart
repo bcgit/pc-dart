@@ -16,7 +16,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
       BlockCipher,
       '/GCM',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return GCMBlockCipher(underlying);
           });
 

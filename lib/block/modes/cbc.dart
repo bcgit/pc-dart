@@ -1,4 +1,7 @@
 // See file LICENSE for more information.
+
+// This file has been migrated.
+
 library impl.block_cipher.modes.cbc;
 
 import 'dart:typed_data';
@@ -14,7 +17,7 @@ class CBCBlockCipher extends BaseBlockCipher {
       BlockCipher,
       '/CBC',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return CBCBlockCipher(underlying);
           });
 
@@ -47,13 +50,13 @@ class CBCBlockCipher extends BaseBlockCipher {
 
   @override
   void init(bool forEncryption, covariant ParametersWithIV params) {
-    if (params.iv!.length != blockSize) {
+    if (params.iv.length != blockSize) {
       throw ArgumentError(
           'Initialization vector must be the same length as block size');
     }
 
     _encrypting = forEncryption;
-    _iv.setAll(0, params.iv!);
+    _iv.setAll(0, params.iv);
 
     reset();
 
@@ -61,10 +64,10 @@ class CBCBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) =>
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) =>
       _encrypting
-          ? _encryptBlock(inp!, inpOff, out!, outOff)
-          : _decryptBlock(inp!, inpOff, out, outOff);
+          ? _encryptBlock(inp, inpOff, out, outOff)
+          : _decryptBlock(inp, inpOff, out, outOff);
 
   int _encryptBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if ((inpOff + blockSize) > inp.length) {
@@ -76,7 +79,7 @@ class CBCBlockCipher extends BaseBlockCipher {
       _cbcV![i] ^= inp[inpOff + i];
     }
 
-    var length = _underlyingCipher.processBlock(_cbcV, 0, out, outOff);
+    var length = _underlyingCipher.processBlock(_cbcV!, 0, out, outOff);
 
     // copy ciphertext to cbcV
     _cbcV!.setRange(0, blockSize,
@@ -85,7 +88,7 @@ class CBCBlockCipher extends BaseBlockCipher {
     return length;
   }
 
-  int _decryptBlock(Uint8List inp, int inpOff, Uint8List? out, int outOff) {
+  int _decryptBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if ((inpOff + blockSize) > inp.length) {
       throw ArgumentError('Input buffer too short');
     }
@@ -97,7 +100,7 @@ class CBCBlockCipher extends BaseBlockCipher {
 
     // XOR the cbcV and the output
     for (var i = 0; i < blockSize; i++) {
-      out![outOff + i] ^= _cbcV![i];
+      out[outOff + i] ^= _cbcV![i];
     }
 
     // swap the back up buffer into next position

@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.block_cipher.modes.ofb;
 
 import 'dart:typed_data';
@@ -15,7 +17,7 @@ class OFBBlockCipher extends BaseBlockCipher {
       BlockCipher,
       r'^(.+)/OFB-([0-9]+)$',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             var blockSizeInBits = int.parse(match.group(2)!);
             if ((blockSizeInBits % 8) != 0) {
               throw RegistryFactoryException.invalid(
@@ -55,7 +57,7 @@ class OFBBlockCipher extends BaseBlockCipher {
   void init(bool forEncryption, CipherParameters? params) {
     if (params is ParametersWithIV) {
       var ivParam = params;
-      var iv = ivParam.iv!;
+      var iv = ivParam.iv;
 
       if (iv.length < _iv.length) {
         // prepend the supplied IV with zeros (per FIPS PUB 81)
@@ -78,16 +80,16 @@ class OFBBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) {
-    if ((inpOff + blockSize) > inp!.length) {
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
+    if ((inpOff + blockSize) > inp.length) {
       throw ArgumentError('Input buffer too short');
     }
 
-    if ((outOff + blockSize) > out!.length) {
+    if ((outOff + blockSize) > out.length) {
       throw ArgumentError('Output buffer too short');
     }
 
-    _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
+    _underlyingCipher.processBlock(_ofbV!, 0, _ofbOutV!, 0);
 
     // XOR the ofbV with the plaintext producing the cipher text (and the next input block).
     for (var i = 0; i < blockSize; i++) {

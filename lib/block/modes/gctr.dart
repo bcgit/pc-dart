@@ -1,5 +1,7 @@
 // See file LICENSE for more information.
 
+// This file has been migrated.
+
 library impl.block_cipher.modes.gctr;
 
 import 'dart:typed_data';
@@ -16,7 +18,7 @@ class GCTRBlockCipher extends BaseBlockCipher {
       BlockCipher,
       '/GCTR',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return GCTRBlockCipher(underlying);
           });
 
@@ -99,18 +101,18 @@ class GCTRBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List? inp, int inpOff, Uint8List? out, int outOff) {
-    if ((inpOff + blockSize) > inp!.length) {
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
+    if ((inpOff + blockSize) > inp.length) {
       throw ArgumentError('Input buffer too short');
     }
 
-    if ((outOff + blockSize) > out!.length) {
+    if ((outOff + blockSize) > out.length) {
       throw ArgumentError('Output buffer too short');
     }
 
     if (_firstStep) {
       _firstStep = false;
-      _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
+      _underlyingCipher.processBlock(_ofbV!, 0, _ofbOutV!, 0);
       _n3 = _bytesToint(_ofbOutV, 0);
       _n4 = _bytesToint(_ofbOutV, 4);
     }
@@ -119,7 +121,7 @@ class GCTRBlockCipher extends BaseBlockCipher {
     _intTobytes(_n3, _ofbV, 0);
     _intTobytes(_n4, _ofbV, 4);
 
-    _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
+    _underlyingCipher.processBlock(_ofbV!, 0, _ofbOutV!, 0);
 
     // XOR the ofbV with the plaintext producing the cipher text (and the next input block).
     for (var i = 0; i < blockSize; i++) {
