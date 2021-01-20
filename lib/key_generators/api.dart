@@ -7,14 +7,13 @@ import 'package:pointycastle/ecc/api.dart';
 
 /// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGeneratorParameters extends KeyGeneratorParameters {
-  ECDomainParameters? _domainParameters;
+  final ECDomainParameters _domainParameters;
 
   ECKeyGeneratorParameters(ECDomainParameters domainParameters)
-      : super(domainParameters.n.bitLength) {
-    _domainParameters = domainParameters;
-  }
+      : _domainParameters = domainParameters,
+        super(domainParameters.n.bitLength);
 
-  ECDomainParameters? get domainParameters => _domainParameters;
+  ECDomainParameters get domainParameters => _domainParameters;
 }
 
 /// Abstract [CipherParameters] to init an RSA key generator.

@@ -15,7 +15,7 @@ class RSAKeyGenerator implements KeyGenerator {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(KeyGenerator, 'RSA', () => RSAKeyGenerator());
 
-  SecureRandom? _random;
+  late SecureRandom _random;
   late RSAKeyGeneratorParameters _params;
 
   @override
@@ -298,13 +298,15 @@ bool _isProbablePrime(BigInt b, int t) {
   while (i < _lowprimes.length) {
     BigInt? m = _lowprimes[i], j = i + 1;
     while (j! < (_lowprimes.length as BigInt) && m! < _lplim) {
-      m *= _lowprimes[j++ as int];
+      m *= _lowprimes[j+BigInt.one as int];
+      j = j + BigInt.one;
     }
     m = x % m!;
-    while (i < j)
+    while (i < j) {
       if (m % _lowprimes[i++] == 0) {
         return false;
       }
+    }
   }
   return _millerRabin(x, t);
 }

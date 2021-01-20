@@ -12,7 +12,7 @@ class ECKeyGenerator implements KeyGenerator {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(KeyGenerator, 'EC', () => ECKeyGenerator());
 
-  ECDomainParameters? _params;
+  late ECDomainParameters _params;
   late SecureRandom _random;
 
   @override
@@ -35,15 +35,15 @@ class ECKeyGenerator implements KeyGenerator {
 
   @override
   AsymmetricKeyPair generateKeyPair() {
-    var n = _params!.n;
+    var n = _params.n;
     var nBitLength = n.bitLength;
     BigInt? d;
 
     do {
       d = _random.nextBigInteger(nBitLength);
-    } while (d == BigInt.zero || (d! >= n));
+    } while (d == BigInt.zero || (d >= n));
 
-    var Q = _params!.G * d;
+    var Q = _params.G * d;
 
     return AsymmetricKeyPair(ECPublicKey(Q, _params), ECPrivateKey(d, _params));
   }
