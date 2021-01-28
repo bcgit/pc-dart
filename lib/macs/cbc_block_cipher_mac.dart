@@ -155,11 +155,11 @@ class CBCBlockCipherMac extends BaseMac {
         len -= blockSize;
         inOff += blockSize;
       }
-
-      _buf.setRange(_bufOff, _bufOff + len, inp.sublist(inOff));
-
-      _bufOff += len;
     }
+
+    _buf.setRange(_bufOff, _bufOff + len, inp.sublist(inOff));
+
+    _bufOff += len;
   }
 
   /// Reset the mac generator.
