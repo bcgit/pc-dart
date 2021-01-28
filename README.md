@@ -15,15 +15,31 @@ and also from standards, and matched against the results got from Pointy Castle.
 This library was adopted from the original project at https://github.com/PointyCastle/pointycastle at the request of the
  authors to help support ongoing development. A list of major contributors is provided at contributors.md
 
+This library is now ported to non-nullable-by-default, a breaking language feature released by the Dart team! See
+https://dart.dev/null-safety and https://dart.dev/null-safety/migration-guide for more details. Please note that both
+null-safe and non-null-safe versions are available (v3.x.x-nullsafety for null-safe, v2.x.x for non-null-safe). However
+only the null-safe version of this library will be actively maintained. 
+
 ## Algorithms
 
-In this release, the following algorithms are implemented. Algorithms must be instantiated and then initialized with
-their parameters.
+Pointycastle implements a large set of algorithms. They must be instantiated and then initialized with
+their parameters. Different algorithms have different parameter classes, which represent the
+arguments to that algorithm. The relevant parameter type is provided for all the algorithms. To initialize an algorithm, 
+call the init method:
+```dart
+var algorithmVar = /* instantiate algorithm using registry here */ ;
+var parameter = /* instantiate relevant parameter class here */ ;
+algorithmVar.init(parameter);
+```
+Some algorithms will ask for more than just a parameter object in the initialization step. Once you have identified the
+classes you intend to use in your project, it is recommended that you view the API docs at 
+https://pub.dev/documentation/pointycastle/latest/ to find the specifics of the methods from the 
+class you want to use.
 
-(Most of the below can be used directly with the registry, which is an easy way to instantiate classes in PointyCastle. See "Using the Registry" for more).
+In this release, the following algorithms are implemented:
 
-(The relevant parameter type is provided for all the algorithms. To initialize an algorithm, call 
-`algorithm.init(parameter)`.)
+(Most of the below are keywords for algorithms which can be used directly with the registry. The registry is an easy way
+to instantiate classes in PointyCastle. See "Using the Registry" for more).
 
 **AEAD ciphers:** To use with the registry, instantiate like this `AEADCipher('ChaCha20-Poly1305')`. Ciphers use `AEADParameters` to initialize.
   * 'ChaCha20-Poly1305'
