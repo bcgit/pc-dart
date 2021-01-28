@@ -56,7 +56,7 @@ class RSAKeyGenerator implements KeyGenerator {
     // (then p-1 and q-1 will not consist of only small factors - see "Pollard's algorithm")
 
     // generate p, prime and (p-1) relatively prime to e
-    for (;;) {
+    while (true) {
       p = generateProbablePrime(pbitlength, 1, _random);
 
       if (p % e == BigInt.one) {
@@ -73,9 +73,9 @@ class RSAKeyGenerator implements KeyGenerator {
     }
 
     // generate a modulus of the required length
-    for (;;) {
+    while (true) {
       // generate q, prime and (q-1) relatively prime to e, and not equal to p
-      for (;;) {
+      while (true) {
         q = generateProbablePrime(qbitlength, 1, _random);
 
         if ((q - p).abs().bitLength < mindiffbits) {
@@ -296,27 +296,27 @@ bool _isProbablePrime(BigInt b, int t) {
   if (x.isEven) return false;
   i = 1;
   while (i < _lowprimes.length) {
-    var m = _lowprimes[i], j = BigInt.from(i + 1);
-    while (j < (BigInt.from(_lowprimes.length)) && m < _lplim) {
-      m *= _lowprimes[(j + BigInt.one).toInt()];
-      j = j + BigInt.one;
+    var m = _lowprimes[i], j = i + 1;
+    while (j < _lowprimes.length && m < _lplim) {
+      m *= _lowprimes[j++];
     }
     m = x % m;
-    while (BigInt.from(i) < j) {
+    while (i < j) {
       if (m % _lowprimes[i++] == BigInt.zero) {
         return false;
       }
     }
+
   }
   return _millerRabin(x, t);
 }
 
-BigInt generateProbablePrime(int bitLength, int certainty, SecureRandom? rnd) {
+BigInt generateProbablePrime(int bitLength, int certainty, SecureRandom rnd) {
   if (bitLength < 2) {
     return BigInt.one;
   }
 
-  var candidate = rnd!.nextBigInteger(bitLength);
+  var candidate = rnd.nextBigInteger(bitLength);
 
   // force MSB set
   if (!_testBit(candidate, bitLength - 1)) {
