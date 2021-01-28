@@ -1,7 +1,7 @@
 Changelog
 =========
 
-#### Version 2.1.0 (DATE TBD)
+#### Version 3.0.0 (DATE TBD)
 * Ports this library to non-nullable-by-default, a new feature in the Dart language
 * This is a breaking change: client code (libraries and apps) will have to migrate as 
   well to use new releases of this library.

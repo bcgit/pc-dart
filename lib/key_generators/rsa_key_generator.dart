@@ -306,7 +306,6 @@ bool _isProbablePrime(BigInt b, int t) {
         return false;
       }
     }
-
   }
   return _millerRabin(x, t);
 }
