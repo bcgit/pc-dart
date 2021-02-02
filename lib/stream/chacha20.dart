@@ -16,12 +16,11 @@ import '../src/ufixnum.dart';
 
 /// Implementation of Daniel J. Bernstein's ChaCha20 stream cipher, Snuffle 2005.
 class ChaCha20Engine extends BaseStreamCipher {
-  // ignore: non_constant_identifier_names
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.prefix(
       StreamCipher,
       'ChaCha20/',
       (_, final Match match) => () {
-            var rounds = int.parse(match.group(1));
+            var rounds = int.parse(match.group(1)!);
             return ChaCha20Engine.fromRounds(rounds);
           });
 
@@ -66,11 +65,11 @@ class ChaCha20Engine extends BaseStreamCipher {
     107
   ]);
 
-  Uint8List _workingKey;
-  Uint8List _workingIV;
+  Uint8List? _workingKey;
+  late Uint8List _workingIV;
 
-  final _state = List<int>(STATE_SIZE);
-  final _buffer = List<int>(STATE_SIZE);
+  final _state = List<int>.filled(STATE_SIZE, 0, growable: false);
+  final _buffer = List<int>.filled(STATE_SIZE, 0, growable: false);
 
   final _keyStream = Uint8List(STATE_SIZE * 4);
   var _keyStreamOffset = 0;
@@ -89,7 +88,7 @@ class ChaCha20Engine extends BaseStreamCipher {
   @override
   void reset() {
     if (_workingKey != null) {
-      _setKey(_workingKey, _workingIV);
+      _setKey(_workingKey!, _workingIV);
     }
   }
 
@@ -98,14 +97,14 @@ class ChaCha20Engine extends BaseStreamCipher {
       bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 8) {
+    if (iv.length != 8) {
       throw ArgumentError('ChaCha20 requires exactly 8 bytes of IV');
     }
 
     _workingIV = iv;
-    _workingKey = uparams.key;
+    _workingKey = uparams!.key;
 
-    _setKey(_workingKey, _workingIV);
+    _setKey(_workingKey!, _workingIV);
   }
 
   @override
@@ -169,7 +168,7 @@ class ChaCha20Engine extends BaseStreamCipher {
     _state[6] = unpack32(_workingKey, 8, Endian.little);
     _state[7] = unpack32(_workingKey, 12, Endian.little);
 
-    if (_workingKey.length == 32) {
+    if (_workingKey!.length == 32) {
       constants = _sigma;
       offset = 16;
     } else {

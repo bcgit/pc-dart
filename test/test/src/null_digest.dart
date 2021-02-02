@@ -25,10 +25,14 @@ class NullDigest extends BaseDigest {
   @override
   void updateByte(int inp) {}
   @override
-  void update(Uint8List inp, int inpOff, int len) {}
+  void update(Uint8List? inp, int inpOff, int? len) {}
   @override
-  int doFinal(Uint8List out, int outOff) {
-    out.fillRange(0, digestSize, 0);
+  int doFinal(Uint8List? out, int? outOff) {
+    out!.fillRange(0, digestSize, 0);
     return digestSize;
   }
+
+  @override
+  // TODO: implement byteLength
+  int get byteLength => throw UnimplementedError();
 }

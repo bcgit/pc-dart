@@ -42,10 +42,10 @@ void main() {
     ]);
     var parser = ASN1Parser(bytes);
     var sequence = parser.nextObject() as ASN1Sequence;
-    expect(sequence.encodedBytes.length, sequence.totalEncodedByteLength);
-    expect(sequence.elements.length, 2);
-    expect(sequence.elements.elementAt(0) is ASN1ObjectIdentifier, true);
-    expect(sequence.elements.elementAt(1) is ASN1Null, true);
+    expect(sequence.encodedBytes!.length, sequence.totalEncodedByteLength);
+    expect(sequence.elements!.length, 2);
+    expect(sequence.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(sequence.elements!.elementAt(1) is ASN1Null, true);
   });
 
   ///
@@ -172,62 +172,62 @@ void main() {
     var parser = ASN1Parser(bytes);
     var sequence = parser.nextObject() as ASN1Sequence;
 
-    expect(sequence.encodedBytes.length, sequence.totalEncodedByteLength);
-    expect(sequence.elements.length, 4);
-    expect(sequence.elements.elementAt(0) is ASN1Set, true);
-    expect(sequence.elements.elementAt(1) is ASN1Set, true);
-    expect(sequence.elements.elementAt(2) is ASN1Set, true);
-    expect(sequence.elements.elementAt(3) is ASN1Set, true);
+    expect(sequence.encodedBytes!.length, sequence.totalEncodedByteLength);
+    expect(sequence.elements!.length, 4);
+    expect(sequence.elements!.elementAt(0) is ASN1Set, true);
+    expect(sequence.elements!.elementAt(1) is ASN1Set, true);
+    expect(sequence.elements!.elementAt(2) is ASN1Set, true);
+    expect(sequence.elements!.elementAt(3) is ASN1Set, true);
 
-    var set1 = sequence.elements.elementAt(0) as ASN1Set;
-    expect(set1.elements.length, 1);
-    expect(set1.elements.elementAt(0) is ASN1Sequence, true);
+    var set1 = sequence.elements!.elementAt(0) as ASN1Set;
+    expect(set1.elements!.length, 1);
+    expect(set1.elements!.elementAt(0) is ASN1Sequence, true);
 
-    var seq1 = set1.elements.elementAt(0) as ASN1Sequence;
-    expect(seq1.elements.length, 2);
-    expect(seq1.elements.elementAt(0) is ASN1ObjectIdentifier, true);
-    expect(seq1.elements.elementAt(1) is ASN1PrintableString, true);
-    var oi1 = seq1.elements.elementAt(0) as ASN1ObjectIdentifier;
-    var string1 = seq1.elements.elementAt(1) as ASN1PrintableString;
+    var seq1 = set1.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq1.elements!.length, 2);
+    expect(seq1.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(seq1.elements!.elementAt(1) is ASN1PrintableString, true);
+    var oi1 = seq1.elements!.elementAt(0) as ASN1ObjectIdentifier;
+    var string1 = seq1.elements!.elementAt(1) as ASN1PrintableString;
     expect(oi1.objectIdentifierAsString, '2.5.4.6');
     expect(string1.stringValue, 'US');
 
-    var set2 = sequence.elements.elementAt(1) as ASN1Set;
-    expect(set2.elements.length, 1);
-    expect(set2.elements.elementAt(0) is ASN1Sequence, true);
+    var set2 = sequence.elements!.elementAt(1) as ASN1Set;
+    expect(set2.elements!.length, 1);
+    expect(set2.elements!.elementAt(0) is ASN1Sequence, true);
 
-    var seq2 = set2.elements.elementAt(0) as ASN1Sequence;
-    expect(seq2.elements.length, 2);
-    expect(seq2.elements.elementAt(0) is ASN1ObjectIdentifier, true);
-    expect(seq2.elements.elementAt(1) is ASN1PrintableString, true);
-    var oi2 = seq2.elements.elementAt(0) as ASN1ObjectIdentifier;
-    var string2 = seq2.elements.elementAt(1) as ASN1PrintableString;
+    var seq2 = set2.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq2.elements!.length, 2);
+    expect(seq2.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(seq2.elements!.elementAt(1) is ASN1PrintableString, true);
+    var oi2 = seq2.elements!.elementAt(0) as ASN1ObjectIdentifier;
+    var string2 = seq2.elements!.elementAt(1) as ASN1PrintableString;
     expect(oi2.objectIdentifierAsString, '2.5.4.10');
     expect(string2.stringValue, 'DigiCert Inc');
 
-    var set3 = sequence.elements.elementAt(2) as ASN1Set;
-    expect(set3.elements.length, 1);
-    expect(set3.elements.elementAt(0) is ASN1Sequence, true);
+    var set3 = sequence.elements!.elementAt(2) as ASN1Set;
+    expect(set3.elements!.length, 1);
+    expect(set3.elements!.elementAt(0) is ASN1Sequence, true);
 
-    var seq3 = set3.elements.elementAt(0) as ASN1Sequence;
-    expect(seq3.elements.length, 2);
-    expect(seq3.elements.elementAt(0) is ASN1ObjectIdentifier, true);
-    expect(seq3.elements.elementAt(1) is ASN1PrintableString, true);
-    var oi3 = seq3.elements.elementAt(0) as ASN1ObjectIdentifier;
-    var string3 = seq3.elements.elementAt(1) as ASN1PrintableString;
+    var seq3 = set3.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq3.elements!.length, 2);
+    expect(seq3.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(seq3.elements!.elementAt(1) is ASN1PrintableString, true);
+    var oi3 = seq3.elements!.elementAt(0) as ASN1ObjectIdentifier;
+    var string3 = seq3.elements!.elementAt(1) as ASN1PrintableString;
     expect(oi3.objectIdentifierAsString, '2.5.4.11');
     expect(string3.stringValue, 'www.digicert.com');
 
-    var set4 = sequence.elements.elementAt(3) as ASN1Set;
-    expect(set4.elements.length, 1);
-    expect(set4.elements.elementAt(0) is ASN1Sequence, true);
+    var set4 = sequence.elements!.elementAt(3) as ASN1Set;
+    expect(set4.elements!.length, 1);
+    expect(set4.elements!.elementAt(0) is ASN1Sequence, true);
 
-    var seq4 = set4.elements.elementAt(0) as ASN1Sequence;
-    expect(seq4.elements.length, 2);
-    expect(seq4.elements.elementAt(0) is ASN1ObjectIdentifier, true);
-    expect(seq4.elements.elementAt(1) is ASN1PrintableString, true);
-    var oi4 = seq4.elements.elementAt(0) as ASN1ObjectIdentifier;
-    var string4 = seq4.elements.elementAt(1) as ASN1PrintableString;
+    var seq4 = set4.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq4.elements!.length, 2);
+    expect(seq4.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(seq4.elements!.elementAt(1) is ASN1PrintableString, true);
+    var oi4 = seq4.elements!.elementAt(0) as ASN1ObjectIdentifier;
+    var string4 = seq4.elements!.elementAt(1) as ASN1PrintableString;
     expect(oi4.objectIdentifierAsString, '2.5.4.3');
     expect(string4.stringValue, 'Thawte RSA CA 2018');
   });
@@ -281,30 +281,30 @@ RVTxIJddHhpHfW5c2lX+ERf3Ni0fcJqcCZBPyGHUDSYqNrDwRLQ6dyVxz1Jl0oAc
     var asn1Parser = ASN1Parser(bytes);
     var topLevelSeq = asn1Parser.nextObject() as ASN1Sequence;
 
-    expect(topLevelSeq.elements.length, 3);
+    expect(topLevelSeq.elements!.length, 3);
     expect(topLevelSeq.totalEncodedByteLength, 1724);
     expect(topLevelSeq.valueByteLength, 1720);
-    expect(topLevelSeq.elements.elementAt(0) is ASN1Sequence, true);
-    expect(topLevelSeq.elements.elementAt(1) is ASN1Sequence, true);
-    expect(topLevelSeq.elements.elementAt(2) is ASN1BitString, true);
+    expect(topLevelSeq.elements!.elementAt(0) is ASN1Sequence, true);
+    expect(topLevelSeq.elements!.elementAt(1) is ASN1Sequence, true);
+    expect(topLevelSeq.elements!.elementAt(2) is ASN1BitString, true);
 
-    var e1 = topLevelSeq.elements.elementAt(0) as ASN1Sequence;
-    var e2 = topLevelSeq.elements.elementAt(1) as ASN1Sequence;
-    var e3 = topLevelSeq.elements.elementAt(2) as ASN1BitString;
+    var e1 = topLevelSeq.elements!.elementAt(0) as ASN1Sequence;
+    var e2 = topLevelSeq.elements!.elementAt(1) as ASN1Sequence;
+    var e3 = topLevelSeq.elements!.elementAt(2) as ASN1BitString;
 
-    expect(e1.elements.length, 8);
+    expect(e1.elements!.length, 8);
     expect(e1.totalEncodedByteLength, 1444);
     expect(e1.valueByteLength, 1440);
-    expect(e1.elements.elementAt(0) is ASN1Object, true); // 0xA0
-    expect(e1.elements.elementAt(1) is ASN1Integer, true);
-    expect(e1.elements.elementAt(2) is ASN1Sequence, true);
-    expect(e1.elements.elementAt(3) is ASN1Sequence, true);
-    expect(e1.elements.elementAt(4) is ASN1Sequence, true);
-    expect(e1.elements.elementAt(5) is ASN1Sequence, true);
-    expect(e1.elements.elementAt(6) is ASN1Sequence, true);
-    expect(e1.elements.elementAt(7) is ASN1Object, true); // 0xA3
+    expect(e1.elements!.elementAt(0) is ASN1Object, true); // 0xA0
+    expect(e1.elements!.elementAt(1) is ASN1Integer, true);
+    expect(e1.elements!.elementAt(2) is ASN1Sequence, true);
+    expect(e1.elements!.elementAt(3) is ASN1Sequence, true);
+    expect(e1.elements!.elementAt(4) is ASN1Sequence, true);
+    expect(e1.elements!.elementAt(5) is ASN1Sequence, true);
+    expect(e1.elements!.elementAt(6) is ASN1Sequence, true);
+    expect(e1.elements!.elementAt(7) is ASN1Object, true); // 0xA3
 
-    var asn1Object = e1.elements.elementAt(0);
+    var asn1Object = e1.elements!.elementAt(0);
 
     var integer1 =
         ASN1Parser(asn1Object.valueBytes).nextObject() as ASN1Integer;
@@ -313,22 +313,22 @@ RVTxIJddHhpHfW5c2lX+ERf3Ni0fcJqcCZBPyGHUDSYqNrDwRLQ6dyVxz1Jl0oAc
     expect(integer1.valueByteLength, 1);
     expect(integer1.integer.toString(), '2');
 
-    var integer2 = e1.elements.elementAt(1) as ASN1Integer;
+    var integer2 = e1.elements!.elementAt(1) as ASN1Integer;
     expect(integer2.totalEncodedByteLength, 18);
     expect(integer2.valueByteLength, 16);
     expect(
         integer2.integer.toString(), '49732821766751726239505489314635506967');
 
-    expect(e2.elements.length, 2);
+    expect(e2.elements!.length, 2);
     expect(e2.totalEncodedByteLength, 15);
     expect(e2.valueByteLength, 13);
-    expect(e2.elements.elementAt(0) is ASN1ObjectIdentifier, true);
-    expect(e2.elements.elementAt(1) is ASN1Null, true);
+    expect(e2.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(e2.elements!.elementAt(1) is ASN1Null, true);
 
     expect(e3.elements, null);
     expect(e3.isConstructed, false);
-    expect(e3.encodedBytes.length, 261);
+    expect(e3.encodedBytes!.length, 261);
     expect(e3.valueByteLength, 257);
-    expect(e3.stringValues.length, 256);
+    expect(e3.stringValues!.length, 256);
   });
 }

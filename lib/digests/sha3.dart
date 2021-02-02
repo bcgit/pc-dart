@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.digest.sha3;
 
 import 'dart:typed_data';
@@ -16,17 +18,17 @@ class SHA3Digest extends KeccakEngine {
       Digest,
       _sha3REGEX,
       (_, final Match match) => () {
-            var bitLength = int.parse(match.group(1));
+            var bitLength = int.parse(match.group(1)!);
             return SHA3Digest(bitLength);
           });
 
-  SHA3Digest([int bitLength = 288]) {
+  SHA3Digest([int? bitLength = 288]) {
     switch (bitLength) {
       case 224:
       case 256:
       case 384:
       case 512:
-        init(bitLength);
+        init(bitLength!);
         break;
       default:
         throw StateError(

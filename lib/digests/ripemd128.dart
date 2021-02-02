@@ -34,10 +34,10 @@ class RIPEMD128Digest extends MD4FamilyDigest implements Digest {
 
   @override
   void processBlock() {
-    int a, aa;
-    int b, bb;
-    int c, cc;
-    int d, dd;
+    int? a, aa;
+    int? b, bb;
+    int? c, cc;
+    int? d, dd;
 
     a = aa = state[0];
     b = bb = state[1];

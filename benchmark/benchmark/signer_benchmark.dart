@@ -16,7 +16,7 @@ class SignerBenchmark extends RateBenchmark {
   final CipherParametersFactory _cipherParametersFactory;
   final bool _forSigning;
 
-  Signer _signer;
+  late Signer _signer;
 
   SignerBenchmark(
       String signerName, bool forSigning, this._cipherParametersFactory,

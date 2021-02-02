@@ -14,7 +14,7 @@ class SICBlockCipher extends StreamCipherAsBlockCipher {
       BlockCipher,
       '/SIC',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return SICBlockCipher(
                 underlying.blockSize, SICStreamCipher(underlying));
           });

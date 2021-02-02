@@ -18,7 +18,7 @@ class PSSSigner implements Signer {
     final digestName = match.group(1);
     return () => PSSSigner(
           RSAEngine(),
-          Digest(digestName),
+          Digest(digestName!),
           Digest(digestName),
         );
   });
@@ -32,16 +32,16 @@ class PSSSigner implements Signer {
   final int _mgfhLen;
   final int _trailer;
 
-  bool _sSet;
-  int _sLen;
-  Uint8List _salt;
-  SecureRandom _random;
+  late bool _sSet;
+  late int _sLen;
+  late Uint8List _salt;
+  late SecureRandom _random;
 
-  int _emBits;
-  Uint8List _block;
-  Uint8List _mDash;
+  late int _emBits;
+  late Uint8List _block;
+  late Uint8List _mDash;
 
-  bool _forSigning;
+  late bool _forSigning;
 
   PSSSigner(this._cipher, this._contentDigest, this._mgfDigest,
       {int trailer = TRAILER_IMPLICIT})
@@ -58,16 +58,16 @@ class PSSSigner implements Signer {
 
     AsymmetricKeyParameter akparams;
     if (params is ParametersWithSaltConfiguration) {
-      akparams = params.parameters;
+      akparams = params.parameters as AsymmetricKeyParameter<AsymmetricKey>;
       _random = params.random;
       _sSet = false;
       _sLen = params.saltLength;
       _salt = Uint8List(_sLen);
     } else if (params is ParametersWithSalt) {
-      akparams = params.parameters;
+      akparams = params.parameters as AsymmetricKeyParameter<AsymmetricKey>;
       _sSet = true;
       _salt = params.salt;
-      _sLen = _salt?.length ?? 0;
+      _sLen = _salt.length;
     } else {
       throw ArgumentError(
           'Unsupported parameters type ${params.runtimeType}: should be ParametersWithSaltConfiguration or ParametersWithSalt');
@@ -87,7 +87,7 @@ class PSSSigner implements Signer {
       throw ArgumentError('Verification requires salt');
     }
 
-    _emBits = k.modulus.bitLength - 1;
+    _emBits = k.modulus!.bitLength - 1;
 
     if (_emBits < (8 * _hLen + 8 * _sLen + 9)) {
       throw ArgumentError('Key too small for specified hash and salt lengths');

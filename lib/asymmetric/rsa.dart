@@ -14,11 +14,11 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(AsymmetricBlockCipher, 'RSA', () => RSAEngine());
 
-  bool _forEncryption;
-  RSAAsymmetricKey _key;
-  BigInt _dP;
-  BigInt _dQ;
-  BigInt _qInv;
+  late bool _forEncryption;
+  RSAAsymmetricKey? _key;
+  late BigInt _dP;
+  late BigInt _dQ;
+  late BigInt _qInv;
 
   @override
   String get algorithmName => 'RSA';
@@ -30,7 +30,7 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
           'Input block size cannot be calculated until init() called');
     }
 
-    var bitSize = _key.modulus.bitLength;
+    var bitSize = _key!.modulus!.bitLength;
     if (_forEncryption) {
       return ((bitSize + 7) ~/ 8) - 1;
     } else {
@@ -45,7 +45,7 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
           'Output block size cannot be calculated until init() called');
     }
 
-    var bitSize = _key.modulus.bitLength;
+    var bitSize = _key!.modulus!.bitLength;
     if (_forEncryption) {
       return (bitSize + 7) ~/ 8;
     } else {
@@ -64,11 +64,11 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
 
     if (_key is RSAPrivateKey) {
       var privKey = (_key as RSAPrivateKey);
-      var pSub1 = (privKey.p - BigInt.one);
-      var qSub1 = (privKey.q - BigInt.one);
-      _dP = privKey.privateExponent.remainder(pSub1);
-      _dQ = privKey.privateExponent.remainder(qSub1);
-      _qInv = privKey.q.modInverse(privKey.p);
+      var pSub1 = (privKey.p! - BigInt.one);
+      var qSub1 = (privKey.q! - BigInt.one);
+      _dP = privKey.privateExponent!.remainder(pSub1);
+      _dQ = privKey.privateExponent!.remainder(qSub1);
+      _qInv = privKey.q!.modInverse(privKey.p!);
     }
   }
 
@@ -103,7 +103,7 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
     }
 
     var res = utils.decodeBigIntWithSign(1, inp.sublist(inpOff, inpOff + len));
-    if (res >= _key.modulus) {
+    if (res >= _key!.modulus!) {
       throw ArgumentError('Input block too large for RSA key size');
     }
 
@@ -144,20 +144,20 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
       var privKey = (_key as RSAPrivateKey);
       BigInt mP, mQ, h, m;
 
-      mP = (input.remainder(privKey.p)).modPow(_dP, privKey.p);
+      mP = (input.remainder(privKey.p!)).modPow(_dP, privKey.p!);
 
-      mQ = (input.remainder(privKey.q)).modPow(_dQ, privKey.q);
+      mQ = (input.remainder(privKey.q!)).modPow(_dQ, privKey.q!);
 
       h = mP - mQ;
       h = h * _qInv;
-      h = h % privKey.p;
+      h = h % privKey.p!;
 
-      m = h * privKey.q;
+      m = h * privKey.q!;
       m = m + mQ;
 
       return m;
     } else {
-      return input.modPow(_key.exponent, _key.modulus);
+      return input.modPow(_key!.exponent!, _key!.modulus!);
     }
   }
 }

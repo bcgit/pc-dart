@@ -15,18 +15,18 @@ class ASN1BitString extends ASN1Object {
   ///
   /// The decoded string value
   ///
-  List<int> stringValues;
+  List<int>? stringValues;
 
   ///
   /// The unused bits
   ///
-  int unusedbits;
+  int? unusedbits;
 
   ///
   /// A list of elements. Only set if this ASN1IA5String is constructed, otherwhise null.
   ///
   ///
-  List<ASN1Object> elements;
+  List<ASN1Object>? elements;
 
   ///
   /// Create an [ASN1BitString] entity with the given [stringValues].
@@ -39,18 +39,18 @@ class ASN1BitString extends ASN1Object {
   /// Creates an [ASN1BitString] entity from the given [encodedBytes].
   ///
   ASN1BitString.fromBytes(Uint8List bytes) : super.fromBytes(bytes) {
-    if (ASN1Utils.isConstructed(encodedBytes.elementAt(0))) {
+    if (ASN1Utils.isConstructed(encodedBytes!.elementAt(0))) {
       elements = [];
       var parser = ASN1Parser(valueBytes);
       stringValues = [];
       while (parser.hasNext()) {
         var bitString = parser.nextObject() as ASN1BitString;
-        stringValues.addAll(bitString.stringValues);
-        elements.add(bitString);
+        stringValues!.addAll(bitString.stringValues!);
+        elements!.add(bitString);
       }
     } else {
-      unusedbits = valueBytes[0];
-      stringValues = valueBytes.sublist(1);
+      unusedbits = valueBytes![0];
+      stringValues = valueBytes!.sublist(1);
     }
   }
 
@@ -77,11 +77,11 @@ class ASN1BitString extends ASN1Object {
       case ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM:
         var b = <int>[];
         if (unusedbits != null) {
-          b.add(unusedbits);
+          b.add(unusedbits!);
         } else {
           b.add(0);
         }
-        b.addAll(stringValues);
+        b.addAll(stringValues!);
         valueBytes = Uint8List.fromList(b);
         break;
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH:
@@ -89,16 +89,16 @@ class ASN1BitString extends ASN1Object {
         valueByteLength = 0;
         if (elements == null) {
           elements = <ASN1Object>[];
-          elements.add(ASN1BitString(stringValues: stringValues));
+          elements!.add(ASN1BitString(stringValues: stringValues));
         }
         valueByteLength = _childLength(
             isIndefinite: encodingRule ==
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH);
-        valueBytes = Uint8List(valueByteLength);
+        valueBytes = Uint8List(valueByteLength!);
         var i = 0;
-        elements.forEach((obj) {
+        elements!.forEach((obj) {
           var b = obj.encode();
-          valueBytes.setRange(i, i + b.length, b);
+          valueBytes!.setRange(i, i + b.length, b);
           i += b.length;
         });
         break;
@@ -112,7 +112,7 @@ class ASN1BitString extends ASN1Object {
   ///
   int _childLength({bool isIndefinite = false}) {
     var l = 0;
-    elements.forEach((ASN1Object obj) {
+    elements!.forEach((ASN1Object obj) {
       l += obj.encode().length;
     });
     if (isIndefinite) {
@@ -127,21 +127,21 @@ class ASN1BitString extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    if (isConstructed) {
-      sb.write('BIT STRING (${elements.length} elem)');
-      for (var e in elements) {
+    if (isConstructed!) {
+      sb.write('BIT STRING (${elements!.length} elem)');
+      for (var e in elements!) {
         var dump = e.dump(spaces: spaces + dumpIndent);
         sb.write('\n$dump');
       }
     } else {
-      if (ASN1Utils.isASN1Tag(stringValues.elementAt(0))) {
-        var parser = ASN1Parser(stringValues);
+      if (ASN1Utils.isASN1Tag(stringValues!.elementAt(0))) {
+        var parser = ASN1Parser(stringValues as Uint8List?);
         var next = parser.nextObject();
         var dump = next.dump(spaces: spaces + dumpIndent);
         sb.write('BIT STRING\n$dump');
       } else {
         sb.write(
-            'BIT STRING ${ascii.decode(stringValues, allowInvalid: true)}');
+            'BIT STRING ${ascii.decode(stringValues!, allowInvalid: true)}');
       }
     }
     return sb.toString();

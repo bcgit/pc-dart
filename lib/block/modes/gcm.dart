@@ -14,16 +14,16 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
       BlockCipher,
       '/GCM',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return GCMBlockCipher(underlying);
           });
 
-  Uint8List _h;
-  Uint8List _counter;
-  Uint8List _e;
-  Uint8List _e0;
-  Uint8List _x;
-  int _processedBytes;
+  late Uint8List _h;
+  late Uint8List _counter;
+  late Uint8List _e;
+  late Uint8List _e0;
+  late Uint8List _x;
+  late int _processedBytes;
 
   GCMBlockCipher(BlockCipher cipher) : super(cipher);
 
@@ -140,9 +140,9 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
     x.setAll(0, z);
   }
 
-  void _xor(Uint8List x, Uint8List y) {
+  void _xor(Uint8List x, Uint8List? y) {
     for (var i = 0; i < x.length; i++) {
-      x[i] ^= y[i];
+      x[i] ^= y![i];
     }
   }
 

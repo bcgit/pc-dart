@@ -45,7 +45,7 @@ void main() {
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.valueByteLength, 13);
     expect(asn1Object.valueStartPosition, 2);
-    expect(asn1Object.time.toIso8601String(), '2020-07-10T00:00:00.000Z');
+    expect(asn1Object.time!.toIso8601String(), '2020-07-10T00:00:00.000Z');
     expect(asn1Object.valueBytes, valueBytes);
   });
 

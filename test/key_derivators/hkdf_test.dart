@@ -54,23 +54,23 @@ void main() {
 
       test('Test Case 2 - Test with SHA-256 and longer inputs/outputs', () {
         var ikm =
-            createUint8ListFromHexString('000102030405060708090a0b0c0d0e0f'
-                '101112131415161718191a1b1c1d1e1f'
-                '202122232425262728292a2b2c2d2e2f'
-                '303132333435363738393a3b3c3d3e3f'
-                '404142434445464748494a4b4c4d4e4f');
+        createUint8ListFromHexString('000102030405060708090a0b0c0d0e0f'
+            '101112131415161718191a1b1c1d1e1f'
+            '202122232425262728292a2b2c2d2e2f'
+            '303132333435363738393a3b3c3d3e3f'
+            '404142434445464748494a4b4c4d4e4f');
         var salt =
-            createUint8ListFromHexString('606162636465666768696a6b6c6d6e6f'
-                '707172737475767778797a7b7c7d7e7f'
-                '808182838485868788898a8b8c8d8e8f'
-                '909192939495969798999a9b9c9d9e9f'
-                'a0a1a2a3a4a5a6a7a8a9aaabacadaeaf');
+        createUint8ListFromHexString('606162636465666768696a6b6c6d6e6f'
+            '707172737475767778797a7b7c7d7e7f'
+            '808182838485868788898a8b8c8d8e8f'
+            '909192939495969798999a9b9c9d9e9f'
+            'a0a1a2a3a4a5a6a7a8a9aaabacadaeaf');
         var info =
-            createUint8ListFromHexString('b0b1b2b3b4b5b6b7b8b9babbbcbdbebf'
-                'c0c1c2c3c4c5c6c7c8c9cacbcccdcecf'
-                'd0d1d2d3d4d5d6d7d8d9dadbdcdddedf'
-                'e0e1e2e3e4e5e6e7e8e9eaebecedeeef'
-                'f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff');
+        createUint8ListFromHexString('b0b1b2b3b4b5b6b7b8b9babbbcbdbebf'
+            'c0c1c2c3c4c5c6c7c8c9cacbcccdcecf'
+            'd0d1d2d3d4d5d6d7d8d9dadbdcdddedf'
+            'e0e1e2e3e4e5e6e7e8e9eaebecedeeef'
+            'f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff');
         var l = 82;
         var okm = Uint8List(l);
 
@@ -98,11 +98,10 @@ void main() {
         var ikm = createUint8ListFromHexString(
             '0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b');
         var salt = Uint8List(0);
-        Uint8List info;
         var l = 42;
         var okm = Uint8List(l);
 
-        var params = HkdfParameters(ikm, l, salt, info);
+        var params = HkdfParameters(ikm, l, salt, null);
 
         var hkdf = HKDFKeyDerivator(SHA256Digest());
         hkdf.init(params);
@@ -161,12 +160,11 @@ void main() {
       test('Test Case 6 - Test with SHA-1 and zero-length salt/info', () {
         var ikm = createUint8ListFromHexString(
             '0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b');
-        Uint8List salt;
         var info = Uint8List(0);
         var l = 42;
         var okm = Uint8List(l);
 
-        var params = HkdfParameters(ikm, l, salt, info);
+        var params = HkdfParameters(ikm, l, null, info);
 
         var hkdf = HKDFKeyDerivator(SHA1Digest());
         hkdf.init(params);
@@ -180,48 +178,47 @@ void main() {
 
       // this test is identical to test 6 in all ways bar the IKM value
       test('Test Case 7 - Test with SHA-1, salt not provided, zero-length info',
-          () {
-        var ikm = createUint8ListFromHexString(
-            '0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c');
-        Uint8List salt;
-        var info = Uint8List(0);
-        var l = 42;
-        var okm = Uint8List(l);
+              () {
+            var ikm = createUint8ListFromHexString(
+                '0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c');
+            var info = Uint8List(0);
+            var l = 42;
+            var okm = Uint8List(l);
 
-        var params = HkdfParameters(ikm, l, salt, info);
+            var params = HkdfParameters(ikm, l, null, info);
 
-        var hkdf = HKDFKeyDerivator(SHA1Digest());
-        hkdf.init(params);
-        hkdf.deriveKey(null, 0, okm, 0);
+            var hkdf = HKDFKeyDerivator(SHA1Digest());
+            hkdf.init(params);
+            hkdf.deriveKey(null, 0, okm, 0);
 
-        var actual = formatBytesAsHexString(okm);
-        var expected =
-            '2c91117204d745f3500d636a62f64f0ab3bae548aa53d423b0d1f27ebba6f5e5673a081d70cce7acfc48';
-        expect(actual, equals(expected));
-      });
+            var actual = formatBytesAsHexString(okm);
+            var expected =
+                '2c91117204d745f3500d636a62f64f0ab3bae548aa53d423b0d1f27ebba6f5e5673a081d70cce7acfc48';
+            expect(actual, equals(expected));
+          });
 
       // this test is identical to test 7 in all ways bar the IKM value
       // which is set to the PRK value
       test(
           'Additional Test Case - Test with SHA-1, skipping extract zero-length info',
-          () {
-        var ikm = createUint8ListFromHexString(
-            '2adccada18779e7c2077ad2eb19d3f3e731385dd');
-        var info = Uint8List(0);
-        var l = 42;
-        var okm = Uint8List(l);
+              () {
+            var ikm = createUint8ListFromHexString(
+                '2adccada18779e7c2077ad2eb19d3f3e731385dd');
+            var info = Uint8List(0);
+            var l = 42;
+            var okm = Uint8List(l);
 
-        var params = HkdfParameters(ikm, l, null, info, true);
+            var params = HkdfParameters(ikm, l, null, info, true);
 
-        var hkdf = HKDFKeyDerivator(SHA1Digest());
-        hkdf.init(params);
-        hkdf.deriveKey(null, 0, okm, 0);
+            var hkdf = HKDFKeyDerivator(SHA1Digest());
+            hkdf.init(params);
+            hkdf.deriveKey(null, 0, okm, 0);
 
-        var actual = formatBytesAsHexString(okm);
-        var expected =
-            '2c91117204d745f3500d636a62f64f0ab3bae548aa53d423b0d1f27ebba6f5e5673a081d70cce7acfc48';
-        expect(actual, equals(expected));
-      });
+            var actual = formatBytesAsHexString(okm);
+            var expected =
+                '2c91117204d745f3500d636a62f64f0ab3bae548aa53d423b0d1f27ebba6f5e5673a081d70cce7acfc48';
+            expect(actual, equals(expected));
+          });
 
       // this test is identical to test 7 in all ways bar the IKM value
       test('Additional Test Case - Test with SHA-1, maximum output', () {

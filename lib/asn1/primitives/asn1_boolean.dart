@@ -9,7 +9,7 @@ import 'package:pointycastle/asn1/unsupported_asn1_encoding_rule_exception.dart'
 /// An ASN1 Boolean object
 ///
 class ASN1Boolean extends ASN1Object {
-  bool boolValue;
+  bool? boolValue;
 
   ///
   /// The byte to use for the TRUE value
@@ -31,7 +31,7 @@ class ASN1Boolean extends ASN1Object {
   ///
   ASN1Boolean.fromBytes(Uint8List encodedBytes)
       : super.fromBytes(encodedBytes) {
-    boolValue = (valueBytes[0] == BOOLEAN_TRUE_VALUE);
+    boolValue = (valueBytes![0] == BOOLEAN_TRUE_VALUE);
   }
 
   ///

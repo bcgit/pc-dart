@@ -20,7 +20,7 @@ abstract class BlockCipher extends Algorithm {
   ///
   /// Use the argument [forEncryption] to tell the cipher if you want to encrypt
   /// or decrypt data.
-  void init(bool forEncryption, CipherParameters params);
+  void init(bool forEncryption, CipherParameters? params);
 
   /// Process a whole block of [blockSize] bytes stored in [data] at once, returning the result in a
   /// byte array.

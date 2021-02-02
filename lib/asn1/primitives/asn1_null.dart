@@ -33,9 +33,9 @@ class ASN1Null extends ASN1Object {
       {ASN1EncodingRule encodingRule = ASN1EncodingRule.ENCODING_DER}) {
     switch (encodingRule) {
       case ASN1EncodingRule.ENCODING_DER:
-        return Uint8List.fromList([tag, 0x00]);
+        return Uint8List.fromList([tag!, 0x00]);
       case ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM:
-        return Uint8List.fromList([tag, 0x81, 0x00]);
+        return Uint8List.fromList([tag!, 0x81, 0x00]);
       default:
         throw UnsupportedAsn1EncodingRuleException(encodingRule);
     }

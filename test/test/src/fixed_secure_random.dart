@@ -33,7 +33,7 @@ class FixedSecureRandom extends SecureRandomBase {
 
   var _next = 0;
   // ignore: prefer_typing_uninitialized_variables
-  Uint8List _values;
+  Uint8List? _values;
 
   @override
   String get algorithmName => 'Fixed';
@@ -48,11 +48,11 @@ class FixedSecureRandom extends SecureRandomBase {
 
   @override
   int nextUint8() {
-    if (_values != null && _values.isNotEmpty) {
-      if (_next >= _values.length) {
+    if (_values != null && _values!.isNotEmpty) {
+      if (_next >= _values!.length) {
         throw StateError('fixed secure random unexpectedly exhausted');
       }
-      return _values[_next++];
+      return _values![_next++];
     } else {
       throw StateError('fixed secure random has no values');
     }

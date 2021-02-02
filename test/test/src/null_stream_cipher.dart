@@ -18,11 +18,11 @@ class NullStreamCipher extends BaseStreamCipher {
   @override
   void reset() {}
   @override
-  void init(bool forEncryption, CipherParameters params) {}
+  void init(bool forEncryption, CipherParameters? params) {}
   @override
   void processBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
-    out.setRange(outOff, outOff + len, inp.sublist(inpOff));
+      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff) {
+    out!.setRange(outOff, outOff + len, inp!.sublist(inpOff));
   }
 
   @override

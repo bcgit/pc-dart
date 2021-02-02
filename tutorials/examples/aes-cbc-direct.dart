@@ -88,7 +88,7 @@ Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {
 /// representing each byte. Otherwise, all the hexadecimal characters are
 /// simply concatenated together.
 
-String bin2hex(Uint8List bytes, {String separator, int wrap}) {
+String bin2hex(Uint8List bytes, {String? separator, int? wrap}) {
   var len = 0;
   final buf = StringBuffer();
   for (final b in bytes) {
@@ -157,7 +157,7 @@ Uint8List unpad(Uint8List padded) =>
 /// AES-128, AES-192, or AES-256 will be used. It must be one of those values.
 
 Uint8List passphraseToKey(String passPhrase,
-    {String salt = '', int iterations = 30000, int bitLength}) {
+    {String salt = '', int iterations = 30000, required int bitLength}) {
   if (![128, 192, 256].contains(bitLength)) {
     throw ArgumentError.value(bitLength, 'bitLength', 'invalid for AES');
   }
@@ -173,7 +173,7 @@ Uint8List passphraseToKey(String passPhrase,
 //----------------------------------------------------------------
 /// Generate random bytes to use as the Initialization Vector (IV).
 
-Uint8List generateRandomBytes(int numBytes) {
+Uint8List? generateRandomBytes(int numBytes) {
   if (_secureRandom == null) {
     // First invocation: create _secureRandom and seed it
 
@@ -184,16 +184,16 @@ Uint8List generateRandomBytes(int numBytes) {
     for (var i = 0; i < 32; i++) {
       seeds.add(seedSource.nextInt(255));
     }
-    _secureRandom.seed(KeyParameter(Uint8List.fromList(seeds)));
+    _secureRandom!.seed(KeyParameter(Uint8List.fromList(seeds)));
   }
 
   // Use it to generate the random bytes
 
-  final iv = _secureRandom.nextBytes(numBytes);
+  final iv = _secureRandom!.nextBytes(numBytes);
   return iv;
 }
 
-FortunaRandom _secureRandom;
+FortunaRandom? _secureRandom;
 
 //----------------------------------------------------------------
 /// Run some of the test vectors from the NIST reference test vectors in the
@@ -319,10 +319,10 @@ in culpa qui officia deserunt mollit anim id est laborum.
 ''';
   const passphrase = 'p@ssw0rd';
 
-  final randomSalt = latin1.decode(generateRandomBytes(32));
+  final randomSalt = latin1.decode(generateRandomBytes(32)!);
 
   // IV for both encrypt and decrypt (must ALWAYS be 128 bits for AES)
-  final iv = generateRandomBytes(128 ~/ 8);
+  final iv = generateRandomBytes(128 ~/ 8)!;
 
   // Encrypt (note must ALWAYS pad to 128-bit block size for AES)
 

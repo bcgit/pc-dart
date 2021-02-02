@@ -6,8 +6,11 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/stream/chacha20.dart';
+import 'package:test/test.dart';
 
 import '../test/src/helpers.dart';
+
+int i = 0;
 
 void main() {
   var set1v00 =
@@ -104,44 +107,46 @@ void main() {
 
 void chachaTest1(int rounds, CipherParameters params, String v0, String v192,
     String v256, String v448) {
-  StreamCipher chaCha = ChaCha20Engine.fromRounds(rounds);
-  var buf = Uint8List(64);
+  test('ChaCha Test #${++i}', () {
+    StreamCipher chaCha = ChaCha20Engine.fromRounds(rounds);
+    var buf = Uint8List(64);
 
-  chaCha.init(true, params);
+    chaCha.init(true, params);
 
-  var zeroes = createUint8ListFromHexString(
-      '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
+    var zeroes = createUint8ListFromHexString(
+        '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
 
-  for (var i = 0; i != 7; i++) {
-    chaCha.processBytes(zeroes, 0, 64, buf, 0);
-    switch (i) {
-      case 0:
-        if (!areEqual(buf, createUint8ListFromHexString(v0))) {
-          throw ArgumentError();
-        }
-        break;
-      case 3:
-        if (!areEqual(buf, createUint8ListFromHexString(v192))) {
-          throw ArgumentError();
-        }
-        break;
-      case 4:
-        if (!areEqual(buf, createUint8ListFromHexString(v256))) {
-          throw ArgumentError();
-        }
-        break;
-      default:
-      // ignore
+    for (var i = 0; i != 7; i++) {
+      chaCha.processBytes(zeroes, 0, 64, buf, 0);
+      switch (i) {
+        case 0:
+          if (!areEqual(buf, createUint8ListFromHexString(v0))) {
+            throw ArgumentError();
+          }
+          break;
+        case 3:
+          if (!areEqual(buf, createUint8ListFromHexString(v192))) {
+            throw ArgumentError();
+          }
+          break;
+        case 4:
+          if (!areEqual(buf, createUint8ListFromHexString(v256))) {
+            throw ArgumentError();
+          }
+          break;
+        default:
+        // ignore
+      }
     }
-  }
 
-  for (var i = 0; i != 64; i++) {
-    buf[i] = chaCha.returnByte(zeroes[i]);
-  }
+    for (var i = 0; i != 64; i++) {
+      buf[i] = chaCha.returnByte(zeroes[i]);
+    }
 
-  if (!areEqual(buf, createUint8ListFromHexString(v448))) {
-    throw ArgumentError();
-  }
+    if (!areEqual(buf, createUint8ListFromHexString(v448))) {
+      throw ArgumentError();
+    }
+  });
 }
 
 bool areEqual(Uint8List a, Uint8List b) {

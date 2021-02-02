@@ -35,7 +35,7 @@ abstract class RateBenchmark extends BenchmarkBase {
 }
 
 class RateEmitter implements ScoreEmitter {
-  RateBenchmark benchmark;
+  late RateBenchmark benchmark;
 
   int get totalData => benchmark._totalData;
   int get iterations => benchmark._iterations;

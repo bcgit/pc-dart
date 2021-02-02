@@ -16,9 +16,9 @@ class StreamCipherBenchmark extends RateBenchmark {
   final CipherParametersFactory _cipherParametersFactory;
   final Uint8List _data;
 
-  StreamCipher _streamCipher;
+  late StreamCipher _streamCipher;
 
-  StreamCipherBenchmark(String streamCipherName, String streamCipherVariant,
+  StreamCipherBenchmark(String streamCipherName, String? streamCipherVariant,
       bool forEncryption, this._cipherParametersFactory,
       [int dataLength = 1024 * 1024])
       : _streamCipherName = streamCipherName,
@@ -41,7 +41,7 @@ class StreamCipherBenchmark extends RateBenchmark {
   }
 }
 
-String _formatVariant(String streamCipherVariant) {
+String _formatVariant(String? streamCipherVariant) {
   if (streamCipherVariant == null) {
     return '';
   } else {

@@ -21,15 +21,15 @@ class SICStreamCipher extends BaseStreamCipher {
       '/SIC',
       (_, final Match match) => () {
             var digestName = match.group(1);
-            return SICStreamCipher(BlockCipher(digestName));
+            return SICStreamCipher(BlockCipher(digestName!));
           });
 
   final BlockCipher underlyingCipher;
 
-  Uint8List _iv;
-  Uint8List _counter;
-  Uint8List _counterOut;
-  int _consumed;
+  late Uint8List _iv;
+  late Uint8List _counter;
+  late Uint8List _counterOut;
+  late int _consumed;
 
   SICStreamCipher(this.underlyingCipher) {
     _iv = Uint8List(underlyingCipher.blockSize);
@@ -57,9 +57,9 @@ class SICStreamCipher extends BaseStreamCipher {
 
   @override
   void processBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff) {
     for (var i = 0; i < len; i++) {
-      out[outOff + i] = returnByte(inp[inpOff + i]);
+      out![outOff + i] = returnByte(inp![inpOff + i]);
     }
   }
 
@@ -77,11 +77,9 @@ class SICStreamCipher extends BaseStreamCipher {
   }
 
   // ignore: slash_for_doc_comments
-  /**
-   * Fills [_counterOut] with a value got from encrypting [_counter] with
-   * the _underlyingCipher, resets [_consumed] to 0 and increments the
-   * [_counter].
-   */
+  /// Fills [_counterOut] with a value got from encrypting [_counter] with
+  /// the _underlyingCipher, resets [_consumed] to 0 and increments the
+  /// [_counter].
   void _feedCounter() {
     underlyingCipher.processBlock(_counter, 0, _counterOut, 0);
     _incrementCounter();

@@ -20,13 +20,13 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
       KeyDerivator,
       '/PBKDF2',
       (_, final Match match) => () {
-            var mac = Mac(match.group(1));
+            var mac = Mac(match.group(1)!);
             return PBKDF2KeyDerivator(mac);
           });
 
-  Pbkdf2Parameters _params;
+  late Pbkdf2Parameters _params;
   final Mac _mac;
-  Uint8List _state;
+  late Uint8List _state;
 
   PBKDF2KeyDerivator(this._mac) {
     _state = Uint8List(_mac.macSize);
@@ -76,7 +76,7 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
     return keySize;
   }
 
-  void _f(Uint8List S, int c, Uint8List iBuf, Uint8List out, int outOff) {
+  void _f(Uint8List? S, int c, Uint8List iBuf, Uint8List out, int outOff) {
     if (c <= 0) {
       throw ArgumentError('Iteration count must be at least 1.');
     }

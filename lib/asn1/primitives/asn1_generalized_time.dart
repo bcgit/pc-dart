@@ -8,7 +8,7 @@ import 'package:pointycastle/asn1/unsupported_asn1_encoding_rule_exception.dart'
 
 class ASN1GeneralizedTime extends ASN1Object {
   // The decoded date value
-  DateTime dateTimeValue;
+  DateTime? dateTimeValue;
 
   ///
   /// Create an [ASN1GeneralizedTime] entity with the given BigInt [dateTimeValue].
@@ -20,7 +20,7 @@ class ASN1GeneralizedTime extends ASN1Object {
   /// Creates an [ASN1GeneralizedTime] entity from the given [encodedBytes].
   ///
   ASN1GeneralizedTime.fromBytes(Uint8List bytes) : super.fromBytes(bytes) {
-    var octets = valueBytes;
+    var octets = valueBytes!;
     var stringValue = ascii.decode(octets);
     var year = stringValue.substring(0, 4);
     var month = stringValue.substring(4, 6);
@@ -53,7 +53,7 @@ class ASN1GeneralizedTime extends ASN1Object {
     if (encodingRule != ASN1EncodingRule.ENCODING_DER) {
       throw UnsupportedAsn1EncodingRuleException(encodingRule);
     }
-    var utc = dateTimeValue.toUtc();
+    var utc = dateTimeValue!.toUtc();
     var year = utc.year.toString();
     var month = utc.month.toString();
     var day = utc.day.toString();
@@ -63,7 +63,7 @@ class ASN1GeneralizedTime extends ASN1Object {
     // Encode string to YYMMDDhhmm[ss]Z
     var utcString = '$year$month$day$hour$minute${second}Z';
     valueBytes = ascii.encode(utcString);
-    valueByteLength = valueBytes.length;
+    valueByteLength = valueBytes!.length;
     return super.encode();
   }
 
@@ -73,7 +73,7 @@ class ASN1GeneralizedTime extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    sb.write('UTCTime ${dateTimeValue.toIso8601String()}');
+    sb.write('UTCTime ${dateTimeValue!.toIso8601String()}');
     return sb.toString();
   }
 }

@@ -4,10 +4,10 @@ library src.utils;
 
 import 'dart:typed_data';
 
-void arrayCopy(
-    Uint8List sourceArr, int sourcePos, Uint8List outArr, int outPos, int len) {
+void arrayCopy(Uint8List? sourceArr, int sourcePos, Uint8List? outArr,
+    int outPos, int len) {
   for (var i = 0; i < len; i++) {
-    outArr[outPos + i] = sourceArr[sourcePos + i];
+    outArr![outPos + i] = sourceArr![sourcePos + i];
   }
 }
 
@@ -31,7 +31,9 @@ BigInt decodeBigInt(List<int> bytes) {
     }
   }
   return result != BigInt.zero
-      ? negative ? result.toSigned(result.bitLength) : result
+      ? negative
+          ? result.toSigned(result.bitLength)
+          : result
       : BigInt.zero;
 }
 
@@ -73,7 +75,7 @@ final negativeFlag = BigInt.from(0x80);
 /// Encode a BigInt into bytes using big-endian encoding.
 /// It encodes the integer to a minimal twos-compliment integer as defined by
 /// ASN.1
-Uint8List encodeBigInt(BigInt number) {
+Uint8List encodeBigInt(BigInt? number) {
   if (number == BigInt.zero) {
     return Uint8List.fromList([0]);
   }
@@ -81,7 +83,7 @@ Uint8List encodeBigInt(BigInt number) {
   int needsPaddingByte;
   int rawSize;
 
-  if (number > BigInt.zero) {
+  if (number! > BigInt.zero) {
     rawSize = (number.bitLength + 7) >> 3;
     needsPaddingByte =
         ((number >> (rawSize - 1) * 8) & negativeFlag) == negativeFlag ? 1 : 0;
@@ -93,7 +95,7 @@ Uint8List encodeBigInt(BigInt number) {
   final size = rawSize + needsPaddingByte;
   var result = Uint8List(size);
   for (var i = 0; i < rawSize; i++) {
-    result[size - i - 1] = (number & _byteMask).toInt();
+    result[size - i - 1] = (number! & _byteMask).toInt();
     number = number >> 8;
   }
   return result;
@@ -114,10 +116,6 @@ Uint8List encodeBigIntAsUnsigned(BigInt number) {
 }
 
 bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
-  if (expected == null || supplied == null) {
-    return false;
-  }
-
   if (expected == supplied) {
     return true;
   }
@@ -139,12 +137,6 @@ bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
 
 bool constantTimeAreEqualOffset(
     int len, Uint8List a, int aOff, Uint8List b, int bOff) {
-  if (null == a) {
-    throw ArgumentError('"a" cannot be null');
-  }
-  if (null == b) {
-    throw ArgumentError('"b" cannot be null');
-  }
   if (len < 0) {
     throw ArgumentError('"len" cannot be negative');
   }

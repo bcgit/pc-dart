@@ -26,7 +26,7 @@ class ASN1Parser {
   ///
   /// The bytes to parse
   ///
-  final Uint8List bytes;
+  final Uint8List? bytes;
 
   ///
   /// The current position in the byte array.
@@ -41,7 +41,7 @@ class ASN1Parser {
   /// Returns true if there is still an object to parse. Otherwise false.
   ///
   bool hasNext() {
-    return _position < bytes.length;
+    return _position < bytes!.length;
   }
 
   ///
@@ -49,22 +49,22 @@ class ASN1Parser {
   ///
   ASN1Object nextObject() {
     // Get the current tag in the list bytes
-    var tag = bytes[_position];
+    var tag = bytes![_position];
 
     // Get the length of the value bytes for the current object
-    var length = ASN1Utils.decodeLength(bytes.sublist(_position));
+    var length = ASN1Utils.decodeLength(bytes!.sublist(_position));
 
     var valueStartPosition =
-        ASN1Utils.calculateValueStartPosition(bytes.sublist(_position));
+        ASN1Utils.calculateValueStartPosition(bytes!.sublist(_position));
     if (_position < length + valueStartPosition) {
       length = length + valueStartPosition;
     } else {
-      length = bytes.length - _position;
+      length = bytes!.length - _position;
     }
 
     // Create new view from the bytes
-    var offset = _position + bytes.offsetInBytes;
-    var subBytes = Uint8List.view(bytes.buffer, offset, length);
+    var offset = _position + bytes!.offsetInBytes;
+    var subBytes = Uint8List.view(bytes!.buffer, offset, length);
 
     // Parse the view and the tag to an ASN1Object
     var isConstructed = ASN1Utils.isConstructed(tag);

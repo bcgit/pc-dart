@@ -6,8 +6,6 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/pointycastle.dart';
-import 'package:pointycastle/src/registry/registry.dart';
-import 'package:test/test.dart';
 
 import '../test/mac_tests.dart';
 import '../test/src/helpers.dart';

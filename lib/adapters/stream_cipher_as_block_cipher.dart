@@ -25,7 +25,7 @@ class StreamCipherAsBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  void init(bool forEncryption, CipherParameters params) {
+  void init(bool forEncryption, CipherParameters? params) {
     streamCipher.init(forEncryption, params);
   }
 

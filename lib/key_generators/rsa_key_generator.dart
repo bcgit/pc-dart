@@ -15,8 +15,8 @@ class RSAKeyGenerator implements KeyGenerator {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(KeyGenerator, 'RSA', () => RSAKeyGenerator());
 
-  SecureRandom _random;
-  RSAKeyGeneratorParameters _params;
+  late SecureRandom _random;
+  late RSAKeyGeneratorParameters _params;
 
   @override
   String get algorithmName => 'RSA';
@@ -25,10 +25,10 @@ class RSAKeyGenerator implements KeyGenerator {
   void init(CipherParameters params) {
     if (params is ParametersWithRandom) {
       _random = params.random;
-      _params = params.parameters;
+      _params = params.parameters as RSAKeyGeneratorParameters;
     } else {
       _random = SecureRandom();
-      _params = params;
+      _params = params as RSAKeyGeneratorParameters;
     }
 
     if (_params.bitStrength < 12) {
@@ -56,7 +56,7 @@ class RSAKeyGenerator implements KeyGenerator {
     // (then p-1 and q-1 will not consist of only small factors - see "Pollard's algorithm")
 
     // generate p, prime and (p-1) relatively prime to e
-    for (;;) {
+    while (true) {
       p = generateProbablePrime(pbitlength, 1, _random);
 
       if (p % e == BigInt.one) {
@@ -73,9 +73,9 @@ class RSAKeyGenerator implements KeyGenerator {
     }
 
     // generate a modulus of the required length
-    for (;;) {
+    while (true) {
       // generate q, prime and (q-1) relatively prime to e, and not equal to p
-      for (;;) {
+      while (true) {
         q = generateProbablePrime(qbitlength, 1, _random);
 
         if ((q - p).abs().bitLength < mindiffbits) {
@@ -301,10 +301,11 @@ bool _isProbablePrime(BigInt b, int t) {
       m *= _lowprimes[j++];
     }
     m = x % m;
-    while (i < j)
-      if (m % _lowprimes[i++] == 0) {
+    while (i < j) {
+      if (m % _lowprimes[i++] == BigInt.zero) {
         return false;
       }
+    }
   }
   return _millerRabin(x, t);
 }

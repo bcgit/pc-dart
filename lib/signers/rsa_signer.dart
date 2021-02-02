@@ -16,7 +16,7 @@ class RSASigner implements Signer {
   static final FactoryConfig factoryConfig =
       DynamicFactoryConfig.suffix(Signer, '/RSA', (_, Match match) {
     final digestName = match.group(1);
-    final digestIdentifierHex = _digestIdentifierHexes[digestName];
+    final digestIdentifierHex = _digestIdentifierHexes[digestName!];
     if (digestIdentifierHex == null) {
       throw RegistryFactoryException(
           'RSA signing with digest $digestName is not supported');
@@ -40,8 +40,9 @@ class RSASigner implements Signer {
 
   final AsymmetricBlockCipher _rsa = PKCS1Encoding(RSAEngine());
   final Digest _digest;
-  Uint8List _digestIdentifier; // DER encoded with trailing tag (06)+length byte
-  bool _forSigning;
+  late Uint8List
+      _digestIdentifier; // DER encoded with trailing tag (06)+length byte
+  late bool _forSigning;
 
   RSASigner(this._digest, String digestIdentifierHex) {
     _digestIdentifier = _hexStringToBytes(digestIdentifierHex);

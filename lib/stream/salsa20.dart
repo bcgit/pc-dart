@@ -19,11 +19,11 @@ class Salsa20Engine extends BaseStreamCipher {
   static final _sigma = Uint8List.fromList('expand 32-byte k'.codeUnits);
   static final _tau = Uint8List.fromList('expand 16-byte k'.codeUnits);
 
-  Uint8List _workingKey;
-  Uint8List _workingIV;
+  Uint8List? _workingKey;
+  late Uint8List _workingIV;
 
-  final _state = List<int>(_STATE_SIZE);
-  final _buffer = List<int>(_STATE_SIZE);
+  final _state = List<int>.filled(_STATE_SIZE, 0, growable: false);
+  final _buffer = List<int>.filled(_STATE_SIZE, 0, growable: false);
 
   final _keyStream = Uint8List(_STATE_SIZE * 4);
   var _keyStreamOffset = 0;
@@ -36,7 +36,7 @@ class Salsa20Engine extends BaseStreamCipher {
   @override
   void reset() {
     if (_workingKey != null) {
-      _setKey(_workingKey, _workingIV);
+      _setKey(_workingKey!, _workingIV);
     }
   }
 
@@ -45,14 +45,14 @@ class Salsa20Engine extends BaseStreamCipher {
       bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 8) {
+    if (iv.length != 8) {
       throw ArgumentError('Salsa20 requires exactly 8 bytes of IV');
     }
 
     _workingIV = iv;
-    _workingKey = uparams.key;
+    _workingKey = uparams!.key;
 
-    _setKey(_workingKey, _workingIV);
+    _setKey(_workingKey!, _workingIV);
   }
 
   @override
@@ -73,17 +73,17 @@ class Salsa20Engine extends BaseStreamCipher {
 
   @override
   void processBytes(
-      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+      Uint8List? inp, int inpOff, int len, Uint8List? out, int outOff) {
     if (!_initialised) {
       throw StateError('Salsa20 not initialized: please call init() first');
     }
 
-    if ((inpOff + len) > inp.length) {
+    if ((inpOff + len) > inp!.length) {
       throw ArgumentError(
           'Input buffer too short or requested length too long');
     }
 
-    if ((outOff + len) > out.length) {
+    if ((outOff + len) > out!.length) {
       throw ArgumentError(
           'Output buffer too short or requested length too long');
     }
@@ -116,7 +116,7 @@ class Salsa20Engine extends BaseStreamCipher {
     _state[3] = unpack32(_workingKey, 8, Endian.little);
     _state[4] = unpack32(_workingKey, 12, Endian.little);
 
-    if (_workingKey.length == 32) {
+    if (_workingKey!.length == 32) {
       constants = _sigma;
       offset = 16;
     } else {
