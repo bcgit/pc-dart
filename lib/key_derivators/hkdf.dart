@@ -85,10 +85,19 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
   int deriveKey(Uint8List? inp, int inpOff, Uint8List out, int outOff) {
     // append input to the 'info' part for key derivation
     if (inp != null) {
-      _info = Uint8List.fromList(_info! + inp);
+      // TODO: find better way to concatenate Uint8Lists with null elements
+      _info = combineLists(_info!, inp);
     }
 
     return _generate(out, outOff, keySize);
+  }
+
+  Uint8List combineLists (Uint8List a, Uint8List b) {
+    var length = a.length + b.length;
+    var holder = Uint8List(length);
+    holder.setRange(0, a.length, a);
+    holder.setRange(a.length, length, b);
+    return holder;
   }
 
   /// Performs the extract part of the key derivation function.

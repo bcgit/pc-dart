@@ -17,8 +17,8 @@ This library was adopted from the original project at https://github.com/PointyC
 
 This library is now ported to non-nullable-by-default, a breaking language feature released by the Dart team! See
 https://dart.dev/null-safety and https://dart.dev/null-safety/migration-guide for more details. Please note that both
-null-safe and non-null-safe versions are available (v3.x.x-nullsafety for null-safe, v2.x.x for non-null-safe). However
-only the null-safe version of this library will be actively maintained. 
+null-safe and non-null-safe versions are available (v3.x.x-nullsafety for null-safe, v2.x.x for non-null-safe). However,
+once null-safety comes out of beta, only the null-safe version of this library will be actively maintained. 
 
 ## Algorithms
 
