@@ -1,14 +1,19 @@
 Changelog
 =========
 
-#### Version 3.0.0-nullsafety.0 (2021-02-04)
+#### Version 3.0.0-nullsafety.1 (2021-02-04)
+
 * Ports this library to non-nullable-by-default, a new feature in the Dart language
-* This is a breaking change: client code (libraries and apps) will have to migrate as 
-  well to use new releases of this library.
-* This library should not have changed functionally from Version 2.0.1; any such change 
-  should be reported at https://github.com/bcgit/pc-dart/issues
+* This is a breaking change: client code (libraries and apps) will have to migrate as well to use new releases of this
+  library.
+* This library should not have changed functionally from Version 2.0.1; any such change should be reported
+  at https://github.com/bcgit/pc-dart/issues
 * More info about migration: https://dart.dev/null-safety/migration-guide
 * More info about null safety: https://dart.dev/null-safety
+
+#### Version 3.0.0-nullsafety.0
+
+* not published
 
 #### Version 2.0.1 (2021-01-16)
 
