@@ -40,6 +40,7 @@ import 'modes/cfb_test.dart' as cfb_test;
 import 'modes/ecb_test.dart' as ecb_test;
 import 'modes/gcm_test.dart' as gcm_test;
 import 'modes/gctr_test.dart' as gctr_test;
+import 'modes/ige_test.dart' as ige_test;
 import 'modes/ofb_test.dart' as ofb_test;
 import 'modes/sic_test.dart' as sic_test;
 import 'paddings/iso7816d4_test.dart' as iso7816d4_test;
@@ -94,6 +95,7 @@ void main() {
   poly1305_test.main();
   cbc_block_cipher_mac_test.main();
   cbc_test.main();
+  ige_test.main();
   cfb_test.main();
   ecb_test.main();
   gctr_test.main();
