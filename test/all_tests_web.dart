@@ -39,6 +39,7 @@ import 'modes/cbc_test.dart' as cbc_test;
 import 'modes/cfb_test.dart' as cfb_test;
 import 'modes/ecb_test.dart' as ecb_test;
 import 'modes/gcm_test.dart' as gcm_test;
+import 'modes/ccm_test.dart' as ccm_test;
 import 'modes/gctr_test.dart' as gctr_test;
 import 'modes/ige_test.dart' as ige_test;
 import 'modes/ofb_test.dart' as ofb_test;
@@ -62,6 +63,7 @@ import 'stream/salsa20_test.dart' as salsa20_test;
 
 void main() {
   stream_cipher_as_block_cipher_test.main();
+  ccm_test.main();
   pkcs1_test.main();
   oaep_test.main();
   rsa_test.main();

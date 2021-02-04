@@ -25,6 +25,7 @@ export 'package:pointycastle/block/modes/ecb.dart';
 export 'package:pointycastle/block/modes/gctr.dart';
 export 'package:pointycastle/block/modes/ofb.dart';
 export 'package:pointycastle/block/modes/gcm.dart';
+export 'package:pointycastle/block/modes/ccm.dart';
 export 'package:pointycastle/block/modes/sic.dart';
 export 'package:pointycastle/block/modes/ige.dart';
 
