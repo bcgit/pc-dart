@@ -170,7 +170,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
         : 0;
 
     var len = Uint8List.view((Uint64List(2)
-          ..[1] = aad.length * 8
+          ..[1] = aad!.length * 8
           ..[0] = _processedBytes * 8)
         .buffer);
     len = Uint8List.fromList(len.reversed.toList());

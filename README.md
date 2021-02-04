@@ -56,8 +56,10 @@ or like this `StreamCipher('AES/SomeStreamModeHere')`. See sections below for mo
   * 'GCTR' (GOST 28147 OFB counter mode, using blocks)
   * 'OFB-64' (Output FeedBack mode, using blocks)
   * 'CTR'/'SIC' (Counter mode, using blocks)
+  * 'IGE' (Infinite Garble Extension)
   * **Authenticated block modes of operation**
      - 'GCM' (Galois-Counter mode)
+     - 'CCM' (counter with CBC-MAC)
      
 **Stream modes of operation:** All modes use `ParametersWithIV` to initialize.
   * 'CTR'/'SIC' (Counter mode, as a traditional stream)

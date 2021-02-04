@@ -37,7 +37,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
   Uint8List get nonce => _nonce;
 
   /// The additional authenticated data as set by the initialization
-  Uint8List get aad => _initialAssociatedText;
+  Uint8List? get aad => _initialAssociatedText;
 
   /// Any remaining input yet to be processed
   Uint8List get remainingInput =>
@@ -127,7 +127,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
 
   @override
   Uint8List process(Uint8List data) {
-    var out = Uint8List(_getOutputSize(data.length));
+    var out = Uint8List(getOutputSize(data.length));
 
     var len = processBytes(data, 0, data.length, out, 0);
 
@@ -226,7 +226,7 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
     processAADBytes(_initialAssociatedText, 0, _initialAssociatedText.length);
   }
 
-  int _getOutputSize(int length) =>
+  int getOutputSize(int length) =>
       (length + (forEncryption ? macSize : -macSize) + blockSize - 1) ~/
       blockSize *
       blockSize;
