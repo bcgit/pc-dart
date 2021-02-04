@@ -41,7 +41,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
     _h = Uint8List(blockSize);
     underlyingCipher.processBlock(_h, 0, _h, 0);
 
-    _counter = _computeInitialCounter(nonce!);
+    _counter = _computeInitialCounter(nonce);
 
     _e0 = Uint8List(16);
     _computeE(_counter, _e0);

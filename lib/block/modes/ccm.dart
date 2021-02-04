@@ -196,8 +196,14 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
 
       _calculateMac(out, outOff, outputLen, calculatedMacBlock);
 
-      if (!(_macBlock.buffer == calculatedMacBlock.buffer)) {
-        throw InvalidCipherTextException('mac check in CCM failed');
+      if (!(_macBlock.length == calculatedMacBlock.length)) {
+        throw StateError('mac check in CCM failed');
+      } else {
+        for (var i = 0; i < _macBlock.length; i++) {
+          if (_macBlock[i] != calculatedMacBlock[i]) {
+            throw StateError('mac check in CCM failed');
+          }
+        }
       }
     }
 
