@@ -59,6 +59,7 @@ or like this `StreamCipher('AES/SomeStreamModeHere')`. See sections below for mo
   * 'IGE' (Infinite Garble Extension)
   * **Authenticated block modes of operation**
      - 'GCM' (Galois-Counter mode)
+     - 'CCM' (counter with CBC-MAC)
      
 **Stream modes of operation:** All modes use `ParametersWithIV` to initialize.
   * 'CTR'/'SIC' (Counter mode, as a traditional stream)

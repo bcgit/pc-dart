@@ -5,8 +5,9 @@ Changelog
 * Ports this library to non-nullable-by-default, a new feature in the Dart language
 * This is a breaking change: client code (libraries and apps) will have to migrate as 
   well to use new releases of this library.
-* This library should not have changed functionally from Version 2.0.1; any such change 
+* This library's existing APIs should not have changed functionally from Version 2.0.1; any such change 
   should be reported at https://github.com/bcgit/pc-dart/issues
+* The block cipher modes IGE and CCM were also added in this update.
 * More info about migration: https://dart.dev/null-safety/migration-guide
 * More info about null safety: https://dart.dev/null-safety
 
