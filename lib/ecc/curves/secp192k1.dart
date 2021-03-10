@@ -27,10 +27,10 @@ class ECCurve_secp192k1 extends ECDomainParametersImpl {
       seed: null) as ECCurve_secp192k1;
 
   static ECCurve_secp192k1 _make(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed) =>
+          BigInt n, BigInt _h, List<int>? seed) =>
       ECCurve_secp192k1._super(domainName, curve, G, n, _h, seed);
 
   ECCurve_secp192k1._super(String domainName, ECCurve curve, ECPoint G,
-      BigInt n, BigInt _h, List<int> seed)
+      BigInt n, BigInt _h, List<int>? seed)
       : super(domainName, curve, G, n, _h, seed);
 }
