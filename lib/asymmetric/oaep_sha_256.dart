@@ -37,7 +37,7 @@ class OAEPSha256Encoding extends BaseAsymmetricBlockCipher {
       AsymmetricBlockCipher,
       '/OAEP',
       (_, final Match match) => () {
-            var underlyingCipher = AsymmetricBlockCipher(match.group(1));
+            var underlyingCipher = AsymmetricBlockCipher(match.group(1)!);
             return OAEPSha256Encoding(underlyingCipher);
           });
 
@@ -45,7 +45,7 @@ class OAEPSha256Encoding extends BaseAsymmetricBlockCipher {
   Digest hash = SHA256Digest();
 
   /// Hash function used by the MGF1 Mask Generation Function.
-  Digest mgf1Hash;
+  late Digest mgf1Hash;
 
   /// Hash of the encoding parameters.
   ///
@@ -54,8 +54,8 @@ class OAEPSha256Encoding extends BaseAsymmetricBlockCipher {
   Uint8List defHash = Uint8List(SHA256Digest().digestSize);
 
   final AsymmetricBlockCipher _engine;
-  SecureRandom _random;
-  bool _forEncryption;
+  late SecureRandom _random;
+  late bool _forEncryption;
 
   OAEPSha256Encoding(this._engine) {
     SHA256Digest().doFinal(defHash, 0);
@@ -91,11 +91,11 @@ class OAEPSha256Encoding extends BaseAsymmetricBlockCipher {
     if (params is ParametersWithRandom) {
       var paramswr = params;
       _random = paramswr.random;
-      akparams = paramswr.parameters;
+      akparams = paramswr.parameters as AsymmetricKeyParameter<AsymmetricKey>;
     } else {
       _random = FortunaRandom();
       _random.seed(KeyParameter(_seed()));
-      akparams = params;
+      akparams = params as AsymmetricKeyParameter<AsymmetricKey>;
     }
     _engine.init(forEncryption, akparams);
     _forEncryption = forEncryption;
