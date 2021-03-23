@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.0.0 (2021-03-24)
+
+First non-nullable-by-default release
+
 #### Version 3.0.0-nullsafety.2 (2021-02-05)
 
 * Ports this library to non-nullable-by-default, a new feature in the Dart language
