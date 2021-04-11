@@ -29,7 +29,7 @@ class ASN1Integer extends ASN1Object {
   ///
   ASN1Integer.fromBytes(Uint8List encodedBytes)
       : super.fromBytes(encodedBytes) {
-    integer = decodeBigInt(valueBytes!);
+    integer = decodeBigIntWithSign(1, valueBytes!);
   }
 
   ///
