@@ -14,6 +14,7 @@ export 'package:pointycastle/adapters/stream_cipher_as_block_cipher.dart';
 export 'package:pointycastle/asymmetric/pkcs1.dart';
 export 'package:pointycastle/asymmetric/rsa.dart';
 export 'package:pointycastle/asymmetric/oaep.dart';
+export 'package:pointycastle/asymmetric/oaep_sha_256.dart';
 
 // block
 export 'package:pointycastle/block/aes_fast.dart';
