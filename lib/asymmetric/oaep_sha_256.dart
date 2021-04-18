@@ -11,7 +11,7 @@ import 'package:pointycastle/src/registry/registry.dart';
 import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
 
-/// RSAES-OAEP v2.0
+/// RSAES-OAEP v2.0 (using SHA-256 encoding)
 ///
 /// This implementation is based on the RSAES-OAEP (RSA Encryption Scheme -
 /// Optimal Asymmetric Encryption Padding) as specified in section 7.1 of
@@ -27,7 +27,7 @@ import 'package:pointycastle/random/fortuna_random.dart';
 ///
 /// Currently, this implementation has the following restrictions:
 ///
-/// - the hash function is hard-coded to be SHA-1;
+/// - the hash function is hard-coded to be SHA-256;
 /// - the mask generation function is hard-coded to MGF1; and
 /// - it cannot accept any _encoding parameters_ (that is, _P_ is always empty)
 
@@ -35,7 +35,7 @@ class OAEPSha256Encoding extends BaseAsymmetricBlockCipher {
   /// Intended for internal use.
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.suffix(
       AsymmetricBlockCipher,
-      '/OAEP',
+      '/OAEP-SHA256',
       (_, final Match match) => () {
             var underlyingCipher = AsymmetricBlockCipher(match.group(1)!);
             return OAEPSha256Encoding(underlyingCipher);
@@ -62,7 +62,7 @@ class OAEPSha256Encoding extends BaseAsymmetricBlockCipher {
   }
 
   @override
-  String get algorithmName => '${_engine.algorithmName}/OAEP';
+  String get algorithmName => '${_engine.algorithmName}/OAEP-SHA256';
 
   @override
   void reset() {}
