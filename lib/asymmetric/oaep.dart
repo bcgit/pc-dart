@@ -12,6 +12,8 @@ import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:pointycastle/digests/sha1.dart';
 import 'package:pointycastle/digests/sha256.dart';
 
+typedef DigestFactory = Digest Function();
+
 /// RSAES-OAEP v2.0
 ///
 /// This implementation is based on the RSAES-OAEP (RSA Encryption Scheme -
@@ -58,7 +60,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   late SecureRandom _random;
   late bool _forEncryption;
 
-  OAEPEncoding._(Digest Function() digestFactory, this._engine)
+  OAEPEncoding._(DigestFactory digestFactory, this._engine)
       : hash = digestFactory(),
         defHash = Uint8List(digestFactory().digestSize) {
     digestFactory().doFinal(defHash, 0);
@@ -72,6 +74,10 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
   factory OAEPEncoding.withSHA256(AsymmetricBlockCipher engine) =>
       OAEPEncoding._(() => SHA256Digest(), engine);
+
+  factory OAEPEncoding.withCustomDigest(
+          DigestFactory digestFactory, AsymmetricBlockCipher engine) =>
+      OAEPEncoding._(digestFactory, engine);
 
   @override
   String get algorithmName => '${_engine.algorithmName}/OAEP';
