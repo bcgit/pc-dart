@@ -18,7 +18,7 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
       Digest,
       _nameRegex,
       (_, final Match match) => () {
-            var bitLength = int.parse(match.group(1));
+            var bitLength = int.parse(match.group(1)!);
             if ((bitLength % 8) != 0) {
               throw RegistryFactoryException(
                   'Digest length for SHA-512/t is not a multiple of 8: $bitLength');

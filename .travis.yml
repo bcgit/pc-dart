@@ -3,5 +3,7 @@ dart:
   - stable
 script:
   - dart test/all_tests_web.dart
+  - dart test
+  - pub run test
   - pub global activate pana
   - pana .

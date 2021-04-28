@@ -10,7 +10,7 @@ class ASN1Sequence extends ASN1Object {
   ///
   /// The decoded string value
   ///
-  List<ASN1Object> elements = [];
+  List<ASN1Object>? elements = [];
 
   ///
   /// Create an [ASN1Sequence] entity with the given [elements].
@@ -25,7 +25,7 @@ class ASN1Sequence extends ASN1Object {
     elements = [];
     var parser = ASN1Parser(valueBytes);
     while (parser.hasNext()) {
-      elements.add(parser.nextObject());
+      elements!.add(parser.nextObject());
     }
   }
 
@@ -49,11 +49,11 @@ class ASN1Sequence extends ASN1Object {
     valueByteLength = 0;
     if (elements != null) {
       valueByteLength = _childLength();
-      valueBytes = Uint8List(valueByteLength);
+      valueBytes = Uint8List(valueByteLength!);
       var i = 0;
-      elements.forEach((obj) {
+      elements!.forEach((obj) {
         var b = obj.encode();
-        valueBytes.setRange(i, i + b.length, b);
+        valueBytes!.setRange(i, i + b.length, b);
         i += b.length;
       });
     }
@@ -65,7 +65,7 @@ class ASN1Sequence extends ASN1Object {
   ///
   int _childLength() {
     var l = 0;
-    elements.forEach((ASN1Object obj) {
+    elements!.forEach((ASN1Object obj) {
       l += obj.encode().length;
     });
     return l;
@@ -76,7 +76,7 @@ class ASN1Sequence extends ASN1Object {
   ///
   void add(ASN1Object obj) {
     elements ??= [];
-    elements.add(obj);
+    elements!.add(obj);
   }
 
   @override
@@ -85,8 +85,8 @@ class ASN1Sequence extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    sb.write('SEQUENCE (${elements.length} elem)');
-    for (var e in elements) {
+    sb.write('SEQUENCE (${elements!.length} elem)');
+    for (var e in elements!) {
       var dump = e.dump(spaces: spaces + dumpIndent);
       sb.write('\n$dump');
     }

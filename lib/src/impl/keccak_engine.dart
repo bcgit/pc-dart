@@ -69,10 +69,10 @@ abstract class KeccakEngine extends BaseDigest {
   final _state = Uint8List(200);
   final _dataQueue = Uint8List(192);
 
-  int _rate;
-  int fixedOutputLength;
-  int _bitsInQueue;
-  bool _squeezing;
+  late int _rate;
+  late int fixedOutputLength;
+  late int _bitsInQueue;
+  late bool _squeezing;
 
   /// dataQueue intended for use by subclasses only.
   Uint8List get dataQueue => _dataQueue;
@@ -209,10 +209,10 @@ abstract class KeccakEngine extends BaseDigest {
     }
   }
 
-  void _keccakAbsorb(Uint8List data, int off) {
+  void _keccakAbsorb(Uint8List? data, int off) {
     var count = _rate >> 3;
     for (var i = 0; i < count; ++i) {
-      _state[i] ^= data[off + i];
+      _state[i] ^= data![off + i];
     }
     _keccakPermutation();
   }
@@ -224,7 +224,7 @@ abstract class KeccakEngine extends BaseDigest {
     _bitsInQueue = _rate;
   }
 
-  void squeeze(Uint8List output, int offset, int outputLength) {
+  void squeeze(Uint8List? output, int? offset, int outputLength) {
     if (!squeezing) {
       _padAndSwitchToSqueezingPhase();
     }
@@ -241,8 +241,8 @@ abstract class KeccakEngine extends BaseDigest {
 
       var partialBlock = min(_bitsInQueue, outputLength - i);
 
-      output.setRange(
-          offset + (i ~/ 8),
+      output!.setRange(
+          offset! + (i ~/ 8),
           offset + (i ~/ 8) + (partialBlock ~/ 8),
           dataQueue.sublist((_rate - _bitsInQueue) ~/ 8));
 

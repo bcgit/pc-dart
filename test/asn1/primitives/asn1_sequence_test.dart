@@ -54,9 +54,9 @@ void main() {
     expect(asn1Object.valueByteLength, 13);
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.valueBytes, valueBytes);
-    expect(asn1Object.elements.length, 2);
-    expect(asn1Object.elements.elementAt(0) is ASN1ObjectIdentifier, true);
-    expect(asn1Object.elements.elementAt(1) is ASN1Null, true);
+    expect(asn1Object.elements!.length, 2);
+    expect(asn1Object.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
+    expect(asn1Object.elements!.elementAt(1) is ASN1Null, true);
   });
 
   test('Test encode', () {

@@ -5,6 +5,7 @@ library impl.key_derivator.hkdf;
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/key_derivators/api.dart';
@@ -18,7 +19,7 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
   static final FactoryConfig factoryConfig =
       DynamicFactoryConfig.suffix(KeyDerivator, '/HKDF', (_, Match match) {
     final digestName = match.group(1);
-    final digest = Digest(digestName);
+    final digest = Digest(digestName!);
     return () {
       return HKDFKeyDerivator(digest);
     };
@@ -40,15 +41,15 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
     'Whirlpool': 64,
   };
 
-  HkdfParameters _params;
+  late HkdfParameters _params;
 
-  HMac _hMac;
-  int _hashLen;
+  late HMac _hMac;
+  late int _hashLen;
 
-  Uint8List _info;
-  Uint8List _currentT;
+  Uint8List? _info;
+  late Uint8List _currentT;
 
-  int _generatedBytes;
+  late int _generatedBytes;
 
   HKDFKeyDerivator(Digest digest) {
     ArgumentError.checkNotNull(digest);
@@ -81,17 +82,26 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
   }
 
   @override
-  int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
+  int deriveKey(Uint8List? inp, int inpOff, Uint8List out, int outOff) {
     // append input to the 'info' part for key derivation
     if (inp != null) {
-      _info = Uint8List.fromList(_info + inp);
+      // TODO: find better way to concatenate Uint8Lists with null elements
+      _info = combineLists(_info!, inp);
     }
 
     return _generate(out, outOff, keySize);
   }
 
+  Uint8List combineLists (Uint8List a, Uint8List b) {
+    var length = a.length + b.length;
+    var holder = Uint8List(length);
+    holder.setRange(0, a.length, a);
+    holder.setRange(a.length, length, b);
+    return holder;
+  }
+
   /// Performs the extract part of the key derivation function.
-  KeyParameter extract(Uint8List salt, Uint8List ikm) {
+  KeyParameter extract(Uint8List? salt, Uint8List ikm) {
     if (salt == null || salt.isEmpty) {
       if (_hashLen != _hMac.macSize) {
         throw ArgumentError(
@@ -124,7 +134,7 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
       _hMac.update(_currentT, 0, _hashLen);
     }
 
-    _hMac.update(_info, 0, _info.length);
+    _hMac.update(_info!, 0, _info!.length);
     _hMac.updateByte(n);
     _hMac.doFinal(_currentT, 0);
   }
@@ -163,13 +173,9 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
 
   static int _getBlockLengthFromDigest(String digestName) {
     var blockLength = _digestBlockLength.entries
-        .firstWhere((map) => map.key.toLowerCase() == digestName.toLowerCase(),
-            orElse: () => null)
-        .value;
-    if (blockLength == null) {
-      throw ArgumentError('Invalid block length for digest: $digestName');
-    }
-
-    return blockLength;
+        .firstWhereOrNull(
+            (map) => map.key.toLowerCase() == digestName.toLowerCase())
+        ?.value;
+    return blockLength!;
   }
 }

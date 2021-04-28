@@ -7,8 +7,11 @@ import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/utils.dart';
 import 'package:pointycastle/stream/chacha20poly1305.dart';
 import 'package:pointycastle/stream/chacha7539.dart';
+import 'package:test/test.dart';
 
 import '../test/src/helpers.dart';
+
+int i = 0;
 
 void main() {
   //Test from BC
@@ -30,54 +33,58 @@ void main() {
   runTest(K, P, A, N, C, T);
 }
 
-void runTest(Uint8List K, Uint8List P, Uint8List A, Uint8List N, Uint8List C, Uint8List T) {
-  var parameters = AEADParameters(KeyParameter(K), T.length * 8, N, A);
-  var chaChaEngine = ChaCha20Poly1305(ChaCha7539Engine(), Poly1305())
-    ..init(true, parameters);
-  var chaChaEngineDecrypt = ChaCha20Poly1305(ChaCha7539Engine(), Poly1305())
-    ..init(false, parameters);
-  var enc = Uint8List(chaChaEngine.getOutputSize(P.length));
-  var len = chaChaEngine.processBytes(P, 0, P.length, enc, 0);
-  len += chaChaEngine.doFinal(enc, len);
-  if (enc.length != len) {
-    throw StateError('');
-  }
-
-  var mac = chaChaEngine.mac;
-  var data = Uint8List(P.length);
-  arrayCopy(enc, 0, data, 0, data.length);
-  var tail = Uint8List(enc.length - P.length);
-  arrayCopy(enc, P.length, tail, 0, tail.length);
-
-  for (var i = 0; i < data.length; i++) {
-    if (data[i] != C[i]) {
+void runTest(Uint8List K, Uint8List P, Uint8List A, Uint8List N, Uint8List C,
+    Uint8List T) {
+  test('ChaChaPoly1305 Test #${++i}', ()
+  {
+    var parameters = AEADParameters(KeyParameter(K), T.length * 8, N, A);
+    var chaChaEngine = ChaCha20Poly1305(ChaCha7539Engine(), Poly1305())
+      ..init(true, parameters);
+    var chaChaEngineDecrypt = ChaCha20Poly1305(ChaCha7539Engine(), Poly1305())
+      ..init(false, parameters);
+    var enc = Uint8List(chaChaEngine.getOutputSize(P.length));
+    var len = chaChaEngine.processBytes(P, 0, P.length, enc, 0);
+    len += chaChaEngine.doFinal(enc, len);
+    if (enc.length != len) {
       throw StateError('');
     }
-  }
 
-  for (var i = 0; i < mac.length; i++) {
-    if (T[i] != mac[i]) {
-      throw StateError('');
+    var mac = chaChaEngine.mac;
+    var data = Uint8List(P.length);
+    arrayCopy(enc, 0, data, 0, data.length);
+    var tail = Uint8List(enc.length - P.length);
+    arrayCopy(enc, P.length, tail, 0, tail.length);
+
+    for (var i = 0; i < data.length; i++) {
+      if (data[i] != C[i]) {
+        throw StateError('');
+      }
     }
-  }
 
-  for (var i = 0; i < tail.length; i++) {
-    if (T[i] != tail[i]) {
-      throw StateError('');
+    for (var i = 0; i < mac.length; i++) {
+      if (T[i] != mac[i]) {
+        throw StateError('');
+      }
     }
-  }
 
-  var dec = Uint8List(chaChaEngineDecrypt.getOutputSize(enc.length));
-  len = chaChaEngineDecrypt.processBytes(enc, 0, enc.length, dec, 0);
-  len += chaChaEngineDecrypt.doFinal(dec, len);
-  mac = chaChaEngineDecrypt.mac;
-
-  data = Uint8List(C.length);
-  arrayCopy(dec, 0, data, 0, data.length);
-
-  for (var i = 0; i < data.length; i++) {
-    if (P[i] != data[i]) {
-      throw StateError('');
+    for (var i = 0; i < tail.length; i++) {
+      if (T[i] != tail[i]) {
+        throw StateError('');
+      }
     }
-  }
+
+    var dec = Uint8List(chaChaEngineDecrypt.getOutputSize(enc.length));
+    len = chaChaEngineDecrypt.processBytes(enc, 0, enc.length, dec, 0);
+    len += chaChaEngineDecrypt.doFinal(dec, len);
+    mac = chaChaEngineDecrypt.mac;
+
+    data = Uint8List(C.length);
+    arrayCopy(dec, 0, data, 0, data.length);
+
+    for (var i = 0; i < data.length; i++) {
+      if (P[i] != data[i]) {
+        throw StateError('');
+      }
+    }
+  });
 }

@@ -18,7 +18,7 @@ class ASN1UtcTime extends ASN1Object {
   ///
   /// The decoded DateTime value
   ///
-  DateTime time;
+  DateTime? time;
 
   ///
   /// Creates an [ASN1UtcTime] entity with the given [time].
@@ -30,7 +30,7 @@ class ASN1UtcTime extends ASN1Object {
   ///
   ASN1UtcTime.fromBytes(Uint8List encodedBytes)
       : super.fromBytes(encodedBytes) {
-    var stringValue = ascii.decode(valueBytes);
+    var stringValue = ascii.decode(valueBytes!);
     var formatedStringValue = _format(stringValue);
     time = DateTime.parse(formatedStringValue);
   }
@@ -51,7 +51,7 @@ class ASN1UtcTime extends ASN1Object {
     if (encodingRule != ASN1EncodingRule.ENCODING_DER) {
       throw UnsupportedAsn1EncodingRuleException(encodingRule);
     }
-    var utc = time.toUtc();
+    var utc = time!.toUtc();
     var year = utc.year.toString().substring(2).padLeft(2, '0');
     var month = utc.month.toString().padLeft(2, '0');
     var day = utc.day.toString().padLeft(2, '0');
@@ -61,7 +61,7 @@ class ASN1UtcTime extends ASN1Object {
     // Encode string to YYMMDDhhmm[ss]Z
     var utcString = '$year$month$day$hour$minute${second}Z';
     valueBytes = ascii.encode(utcString);
-    valueByteLength = valueBytes.length;
+    valueByteLength = valueBytes!.length;
     return super.encode();
   }
 
@@ -89,7 +89,7 @@ class ASN1UtcTime extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    sb.write('UTCTime ${time.toIso8601String()}');
+    sb.write('UTCTime ${time!.toIso8601String()}');
     return sb.toString();
   }
 }

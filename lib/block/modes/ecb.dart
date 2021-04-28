@@ -15,7 +15,7 @@ class ECBBlockCipher extends BaseBlockCipher {
       BlockCipher,
       '/ECB',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return ECBBlockCipher(underlying);
           });
 
@@ -33,7 +33,7 @@ class ECBBlockCipher extends BaseBlockCipher {
   }
 
   @override
-  void init(bool forEncryption, CipherParameters params) {
+  void init(bool forEncryption, CipherParameters? params) {
     _underlyingCipher.init(forEncryption, params);
   }
 

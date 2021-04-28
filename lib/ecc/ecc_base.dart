@@ -15,48 +15,59 @@ class ECDomainParametersImpl implements ECDomainParameters {
   @override
   final ECCurve curve;
   @override
-  final List<int> seed;
+  final List<int>? seed;
   @override
   final ECPoint G;
   @override
   final BigInt n;
-  BigInt _h;
+  BigInt? _h;
 
   ECDomainParametersImpl(this.domainName, this.curve, this.G, this.n,
       [this._h, this.seed]) {
     _h ??= BigInt.one;
   }
 
-  BigInt get h => _h;
+  BigInt? get h => _h;
 }
 
 /// Base implementation for [ECFieldElement]
 abstract class ECFieldElementBase implements ECFieldElement {
   @override
-  BigInt toBigInteger();
+  BigInt? toBigInteger();
+
   @override
   String get fieldName;
+
   @override
   int get fieldSize;
+
   @override
   int get byteLength => ((fieldSize + 7) ~/ 8);
 
   @override
   ECFieldElementBase operator +(covariant ECFieldElementBase b);
+
   @override
   ECFieldElementBase operator -(covariant ECFieldElementBase b);
+
   @override
   ECFieldElementBase operator *(covariant ECFieldElementBase b);
+
   @override
   ECFieldElementBase operator /(covariant ECFieldElementBase b);
+
   @override
   ECFieldElementBase operator -();
+
   @override
   ECFieldElementBase invert();
+
   @override
   ECFieldElementBase square();
+
   @override
-  ECFieldElementBase sqrt();
+  ECFieldElementBase? sqrt();
+
   @override
   String toString() => toBigInteger().toString();
 }
@@ -66,17 +77,18 @@ abstract class ECPointBase implements ECPoint {
   @override
   final ECCurveBase curve;
   @override
-  final ECFieldElementBase x;
+  final ECFieldElementBase? x;
   @override
-  final ECFieldElementBase y;
+  final ECFieldElementBase? y;
   @override
   final bool isCompressed;
   final ECMultiplier _multiplier;
 
-  PreCompInfo _preCompInfo;
+  PreCompInfo? _preCompInfo;
 
   ECPointBase(this.curve, this.x, this.y, this.isCompressed,
       [this._multiplier = _fpNafMultiplier]);
+
   @override
   bool get isInfinity => (x == null && y == null);
 
@@ -97,6 +109,7 @@ abstract class ECPointBase implements ECPoint {
 
   @override
   String toString() => '($x,$y)';
+
   @override
   int get hashCode {
     if (isInfinity) {
@@ -107,21 +120,25 @@ abstract class ECPointBase implements ECPoint {
 
   @override
   Uint8List getEncoded([bool compressed = true]);
+
   @override
-  ECPointBase operator +(covariant ECPointBase b);
+  ECPointBase? operator +(covariant ECPointBase? b);
+
   @override
-  ECPointBase operator -(covariant ECPointBase b);
+  ECPointBase? operator -(covariant ECPointBase b);
+
   @override
   ECPointBase operator -();
+
   @override
-  ECPointBase twice();
+  ECPointBase? twice();
 
   /// Multiplies this <code>ECPoint</code> by the given number.
   /// @param k The multiplicator.
   /// @return <code>k * this</code>.
   @override
-  ECPointBase operator *(BigInt k) {
-    if (k.sign < 0) {
+  ECPointBase? operator *(BigInt? k) {
+    if (k!.sign < 0) {
       throw ArgumentError('The multiplicator cannot be negative');
     }
 
@@ -139,25 +156,32 @@ abstract class ECPointBase implements ECPoint {
 
 /// Base implementation for [ECCurve]
 abstract class ECCurveBase implements ECCurve {
-  ECFieldElementBase _a;
-  ECFieldElementBase _b;
+  ECFieldElementBase? _a;
+  ECFieldElementBase? _b;
 
-  ECCurveBase(BigInt a, BigInt b) {
+  ECCurveBase(BigInt? a, BigInt? b) {
     _a = fromBigInteger(a);
     _b = fromBigInteger(b);
   }
+
   @override
-  ECFieldElementBase get a => _a;
+  ECFieldElementBase? get a => _a;
+
   @override
-  ECFieldElementBase get b => _b;
+  ECFieldElementBase? get b => _b;
+
   @override
   int get fieldSize;
+
   @override
-  ECPointBase get infinity;
+  ECPointBase? get infinity;
+
   @override
-  ECFieldElementBase fromBigInteger(BigInt x);
+  ECFieldElementBase fromBigInteger(BigInt? x);
+
   @override
   ECPointBase createPoint(BigInt x, BigInt y, [bool withCompression = false]);
+
   @override
   ECPointBase decompressPoint(int yTilde, BigInt x1);
 
@@ -166,8 +190,8 @@ abstract class ECCurveBase implements ECCurve {
   /// <code>F<sub>p</sub></code> (X9.62 s 4.2.1 pg 17).
   /// @return The decoded point.
   @override
-  ECPointBase decodePoint(List<int> encoded) {
-    ECPointBase p;
+  ECPointBase? decodePoint(List<int> encoded) {
+    ECPointBase? p;
     var expectedLength = (fieldSize + 7) ~/ 8;
 
     switch (encoded[0]) {
@@ -223,31 +247,32 @@ abstract class PreCompInfo {}
 
 /// Interface for functions encapsulating a point multiplication algorithm for [ECPointBase]. Multiplies [p] by [k], i.e. [p] is
 /// added [k] times to itself.
-typedef ECMultiplier = ECPointBase Function(
-    ECPointBase p, BigInt k, PreCompInfo preCompInfo);
+typedef ECMultiplier = ECPointBase? Function(
+    ECPointBase p, BigInt? k, PreCompInfo? preCompInfo);
 
 bool _testBit(BigInt i, int n) {
   return i & (BigInt.one << n) != BigInt.zero;
 }
 
 /// Function implementing the NAF (Non-Adjacent Form) multiplication algorithm.
-ECPointBase _fpNafMultiplier(ECPointBase p, BigInt k, PreCompInfo preCompInfo) {
+ECPointBase? _fpNafMultiplier(
+    ECPointBase p, BigInt? k, PreCompInfo? preCompInfo) {
   // TODO Probably should try to add this
   // BigInt e = k.mod(n); // n == order of p
   var e = k;
-  var h = e * BigInt.from(3);
+  var h = e! * BigInt.from(3);
 
   var neg = -p;
-  var R = p;
+  ECPointBase? R = p;
 
   for (var i = h.bitLength - 2; i > 0; --i) {
-    R = R.twice();
+    R = R!.twice();
 
     var hBit = _testBit(h, i);
     var eBit = _testBit(e, i);
 
     if (hBit != eBit) {
-      R += (hBit ? p : neg);
+      R = R! + (hBit ? p : neg);
     }
   }
 

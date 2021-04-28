@@ -18,7 +18,7 @@ class PKCS7Padding extends BasePadding {
   String get algorithmName => 'PKCS7';
 
   @override
-  void init([CipherParameters params]) {
+  void init([CipherParameters? params]) {
     // nothing to do.
   }
 

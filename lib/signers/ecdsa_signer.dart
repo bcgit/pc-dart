@@ -20,21 +20,21 @@ class ECDSASigner implements Signer {
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.regex(
       Signer, r'^(.+)/(DET-)?ECDSA$', (_, final Match match) {
     // ignore: omit_local_variable_types
-    final String digestName = match.group(1);
+    final String? digestName = match.group(1);
     // ignore: omit_local_variable_types
     final bool withMac = match.group(2) != null;
     return () {
-      var underlyingDigest = Digest(digestName);
+      var underlyingDigest = Digest(digestName!);
       var mac = withMac ? Mac('$digestName/HMAC') : null;
       return ECDSASigner(underlyingDigest, mac);
     };
   });
 
-  ECPublicKey _pbkey;
-  ECPrivateKey _pvkey;
-  SecureRandom _random;
-  final Digest _digest;
-  final Mac _kMac;
+  ECPublicKey? _pbkey;
+  ECPrivateKey? _pvkey;
+  SecureRandom? _random;
+  final Digest? _digest;
+  final Mac? _kMac;
 
   /// If [_digest] is not null it is used to hash the message before signing and verifying, otherwise, the message needs to be
   /// hashed by the user of this [ECDSASigner] object.
@@ -44,7 +44,7 @@ class ECDSASigner implements Signer {
 
   @override
   String get algorithmName =>
-      '${_digest.algorithmName}/${_kMac == null ? '' : 'DET-'}ECDSA';
+      '${_digest!.algorithmName}/${_kMac == null ? '' : 'DET-'}ECDSA';
 
   @override
   void reset() {}
@@ -92,38 +92,38 @@ class ECDSASigner implements Signer {
   Signature generateSignature(Uint8List message) {
     message = _hashMessageIfNeeded(message);
 
-    var n = _pvkey.parameters.n;
+    var n = _pvkey!.parameters!.n;
     var e = _calculateE(n, message);
     BigInt r;
     BigInt s;
 
     dynamic kCalculator;
     if (_kMac != null) {
-      kCalculator = _RFC6979KCalculator(_kMac, n, _pvkey.d, message);
+      kCalculator = _RFC6979KCalculator(_kMac!, n, _pvkey!.d!, message);
     } else {
-      kCalculator = _RandomKCalculator(n, _random);
+      kCalculator = _RandomKCalculator(n, _random!);
     }
 
     // 5.3.2
     do {
       // generate s
-      BigInt k;
+      BigInt? k;
 
       do {
         // generate r
-        k = kCalculator.nextK() as BigInt;
+        k = kCalculator.nextK() as BigInt?;
 
-        var p = _pvkey.parameters.G * k;
+        var p = (_pvkey!.parameters!.G * k)!;
 
         // 5.3.3
-        var x = p.x.toBigInteger();
+        var x = p.x!.toBigInteger()!;
 
         r = x % n;
       } while (r == BigInt.zero);
 
-      var d = _pvkey.d;
+      var d = _pvkey!.d!;
 
-      s = (k.modInverse(n) * (e + (d * r))) % n;
+      s = (k!.modInverse(n) * (e + (d * r))) % n;
     } while (s == BigInt.zero);
 
     return ECSignature(r, s);
@@ -133,7 +133,7 @@ class ECDSASigner implements Signer {
   bool verifySignature(Uint8List message, covariant ECSignature signature) {
     message = _hashMessageIfNeeded(message);
 
-    var n = _pbkey.parameters.n;
+    var n = _pbkey!.parameters!.n;
     var e = _calculateE(n, message);
 
     var r = signature.r;
@@ -154,25 +154,25 @@ class ECDSASigner implements Signer {
     var u1 = (e * c) % n;
     var u2 = (r * c) % n;
 
-    var G = _pbkey.parameters.G;
-    var Q = _pbkey.Q;
+    var G = _pbkey!.parameters!.G;
+    var Q = _pbkey!.Q!;
 
-    var point = _sumOfTwoMultiplies(G, u1, Q, u2);
+    var point = _sumOfTwoMultiplies(G, u1, Q, u2)!;
 
     // components must be bogus.
     if (point.isInfinity) {
       return false;
     }
 
-    var v = point.x.toBigInteger() % n;
+    var v = point.x!.toBigInteger()! % n;
 
     return v == r;
   }
 
   Uint8List _hashMessageIfNeeded(Uint8List message) {
     if (_digest != null) {
-      _digest.reset();
-      return _digest.process(message);
+      _digest!.reset();
+      return _digest!.process(message);
     } else {
       return message;
     }
@@ -193,7 +193,7 @@ class ECDSASigner implements Signer {
     }
   }
 
-  ECPoint _sumOfTwoMultiplies(ECPoint P, BigInt a, ECPoint Q, BigInt b) {
+  ECPoint? _sumOfTwoMultiplies(ECPoint P, BigInt a, ECPoint Q, BigInt b) {
     var c = P.curve;
 
     if (c != Q.curve) {
@@ -214,24 +214,24 @@ class ECDSASigner implements Signer {
     return _implShamirsTrick(P, a, Q, b);
   }
 
-  ECPoint _implShamirsTrick(ECPoint P, BigInt k, ECPoint Q, BigInt l) {
+  ECPoint? _implShamirsTrick(ECPoint P, BigInt k, ECPoint Q, BigInt l) {
     var m = max(k.bitLength, l.bitLength);
 
     var Z = P + Q;
     var R = P.curve.infinity;
 
     for (var i = m - 1; i >= 0; --i) {
-      R = R.twice();
+      R = R!.twice();
 
       if (_testBit(k, i)) {
         if (_testBit(l, i)) {
-          R = R + Z;
+          R = R! + Z;
         } else {
-          R = R + P;
+          R = R! + P;
         }
       } else {
         if (_testBit(l, i)) {
-          R = R + Q;
+          R = R! + Q;
         }
       }
     }
@@ -256,7 +256,7 @@ class NormalizedECDSASigner implements Signer {
   @override
   Signature generateSignature(Uint8List message) {
     return (signer.generateSignature(message) as ECSignature)
-        .normalize(signer._pvkey.parameters);
+        .normalize(signer._pvkey!.parameters!);
   }
 
   @override
@@ -272,8 +272,8 @@ class NormalizedECDSASigner implements Signer {
   @override
   bool verifySignature(Uint8List message, Signature signature) {
     var isNormalized =
-        (signature as ECSignature).isNormalized(signer._pbkey.parameters);
-    var isVerified = signer.verifySignature(message, signature as ECSignature);
+        (signature as ECSignature).isNormalized(signer._pbkey!.parameters!);
+    var isVerified = signer.verifySignature(message, signature);
 
     // Constant time.
     return (isNormalized | !enforceNormalized) & isVerified;
@@ -283,9 +283,9 @@ class NormalizedECDSASigner implements Signer {
 class _RFC6979KCalculator {
   final Mac _mac;
   // ignore: non_constant_identifier_names
-  Uint8List _K;
+  late Uint8List _K;
   // ignore: non_constant_identifier_names
-  Uint8List _V;
+  late Uint8List _V;
   final BigInt _n;
 
   _RFC6979KCalculator(this._mac, this._n, BigInt d, Uint8List message) {

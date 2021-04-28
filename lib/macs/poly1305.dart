@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.mac.poly1305;
 
 import 'dart:typed_data';
@@ -17,7 +19,7 @@ class Poly1305 extends BaseMac {
   }
 
   Poly1305.withCipher(final this.cipher) {
-    if (cipher.blockSize != BLOCK_SIZE) {
+    if (cipher!.blockSize != BLOCK_SIZE) {
       throw ArgumentError('Poly1305 requires a 128 bit block cipher.');
     }
   }
@@ -27,7 +29,7 @@ class Poly1305 extends BaseMac {
     Mac,
     '/Poly1305',
     (_, final Match match) => () {
-      var cipher = BlockCipher(match.group(1));
+      var cipher = BlockCipher(match.group(1)!);
       return Poly1305.withCipher(cipher);
     },
   );
@@ -65,32 +67,32 @@ class Poly1305 extends BaseMac {
 
   @override
   String get algorithmName =>
-      cipher == null ? 'Poly1305' : cipher.algorithmName + '/Poly1305';
+      cipher == null ? 'Poly1305' : cipher!.algorithmName + '/Poly1305';
 
   @override
   int get macSize => BLOCK_SIZE;
 
   static const BLOCK_SIZE = 16;
 
-  BlockCipher cipher;
+  BlockCipher? cipher;
 
   final Uint8List singleByte = Uint8List(1);
 
-  int r0, r1, r2, r3, r4;
+  late int r0, r1, r2, r3, r4;
 
-  int s1, s2, s3, s4;
+  late int s1, s2, s3, s4;
 
-  int k0, k1, k2, k3;
+  late int k0, k1, k2, k3;
 
   final Uint8List currentBlock = Uint8List(BLOCK_SIZE);
 
   int currentBlockOffset = 0;
 
-  int h0, h1, h2, h3, h4;
+  late int h0, h1, h2, h3, h4;
 
   @override
   void init(CipherParameters params) {
-    Uint8List nonce;
+    Uint8List? nonce;
 
     if (cipher != null) {
       if (!(params is ParametersWithIV)) {
@@ -100,7 +102,7 @@ class Poly1305 extends BaseMac {
 
       var ivParams = params as ParametersWithIV;
       nonce = ivParams.iv;
-      params = ivParams.parameters;
+      params = ivParams.parameters!;
     }
 
     if (!(params is KeyParameter)) {
@@ -116,7 +118,7 @@ class Poly1305 extends BaseMac {
     reset();
   }
 
-  void setKey(Uint8List key, Uint8List nonce) {
+  void setKey(Uint8List key, Uint8List? nonce) {
     if (key.length != 32) throw ArgumentError('Poly1305 key must be 256 bits.');
     if (cipher != null && (nonce == null || nonce.length != BLOCK_SIZE)) {
       throw ArgumentError('Poly1305-AES requires a 128 bit IV.');
@@ -148,8 +150,8 @@ class Poly1305 extends BaseMac {
       kBytes = Uint8List(BLOCK_SIZE);
       kOff = 0;
 
-      cipher.init(true, KeyParameter.offset(key, BLOCK_SIZE, BLOCK_SIZE));
-      cipher.processBlock(nonce, 0, kBytes, 0);
+      cipher!.init(true, KeyParameter.offset(key, BLOCK_SIZE, BLOCK_SIZE));
+      cipher!.processBlock(nonce!, 0, kBytes, 0);
     }
 
     var kByteData =

@@ -66,8 +66,8 @@ class DynamicFactoryConfig extends FactoryConfig {
       : this.regex(type, '^(.+)${_escapeRegExp(suffix)}\$', factory);
 
   /// Invokes the factory when it matches. Else returns null.
-  RegistrableConstructor tryFactory(String algorithmName) {
-    Match match = regExp.firstMatch(algorithmName);
+  RegistrableConstructor? tryFactory(String algorithmName) {
+    Match? match = regExp.firstMatch(algorithmName);
     if (match == null) {
       return null;
     }
@@ -106,22 +106,23 @@ class _RegistryImpl implements FactoryRegistry {
       if (_constructorCache.length > _CONSTRUCTOR_CACHE_SIZE) {
         _constructorCache.clear();
       }
-      _constructorCache['$type.$registrableName'] = constructor;
+      _constructorCache['$type.$registrableName'] = constructor!;
     }
     return constructor;
   }
 
-  RegistrableConstructor _createConstructor(Type type, String registrableName) {
+  RegistrableConstructor? _createConstructor(
+      Type type, String registrableName) {
     // Init lazily
     _checkInit();
 
     if (_staticFactories.containsKey(type) &&
-        _staticFactories[type].containsKey(registrableName)) {
-      return _staticFactories[type][registrableName];
+        _staticFactories[type]!.containsKey(registrableName)) {
+      return _staticFactories[type]![registrableName];
     }
 
     if (_dynamicFactories.containsKey(type)) {
-      for (var factory in _dynamicFactories[type]) {
+      for (var factory in _dynamicFactories[type]!) {
         var constructor = factory.tryFactory(registrableName);
         if (constructor != null) {
           return constructor;
@@ -156,9 +157,7 @@ class _RegistryImpl implements FactoryRegistry {
 
   void _addDynamicFactoryConfig(DynamicFactoryConfig config) {
     Set factories = _dynamicFactories.putIfAbsent(
-        config.type,
-        () => Set<DynamicFactoryConfig>.of(
-            [])); // ignore: prefer_collection_literals
+        config.type, () => <DynamicFactoryConfig>{});
     factories.add(config);
   }
 

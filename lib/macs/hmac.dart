@@ -18,7 +18,7 @@ class HMac extends BaseMac {
     (_, Match match) {
       final digestName = match.group(1);
       return () {
-        return HMac.withDigest(Digest(digestName));
+        return HMac.withDigest(Digest(digestName!));
       };
     },
   );
@@ -29,11 +29,11 @@ class HMac extends BaseMac {
   static final _opad = 0x5C;
 
   final Digest _digest;
-  int _digestSize;
-  int _blockLength;
+  late int _digestSize;
+  late int _blockLength;
 
-  Uint8List _inputPad;
-  Uint8List _outputBuf;
+  late Uint8List _inputPad;
+  late Uint8List _outputBuf;
 
   HMac(this._digest, this._blockLength) {
     _digestSize = _digest.digestSize;
@@ -43,10 +43,6 @@ class HMac extends BaseMac {
 
   HMac.withDigest(this._digest) {
     _blockLength = _digest.byteLength;
-    if (_blockLength == null) {
-      throw ArgumentError(
-          'Digest, ${_digest.algorithmName} does not implement ExtendedDigest or is not listed in the _DIGEST_BLOCK_LENGTH map');
-    }
 
     _digestSize = _digest.digestSize;
     _inputPad = Uint8List(_blockLength);

@@ -14,14 +14,13 @@ class FortunaRandom implements SecureRandom {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(SecureRandom, 'Fortuna', () => FortunaRandom());
 
-  AESFastEngine _aes;
-  AutoSeedBlockCtrRandom _prng;
+  final AESFastEngine _aes;
+  late AutoSeedBlockCtrRandom _prng;
 
   @override
   String get algorithmName => 'Fortuna';
 
-  FortunaRandom() {
-    _aes = AESFastEngine();
+  FortunaRandom() : _aes = AESFastEngine() {
     _prng = AutoSeedBlockCtrRandom(_aes, false);
   }
 

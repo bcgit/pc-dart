@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.digest.cshake;
 
 import 'dart:typed_data';
@@ -21,14 +23,14 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
       Digest,
       _cshakeREGEX,
       (_, final Match match) => () {
-            var bitLength = int.parse(match.group(1));
+            var bitLength = int.parse(match.group(1)!);
             return CSHAKEDigest(bitLength);
           });
 
-  Uint8List _diff;
+  Uint8List? _diff;
   final _padding = Uint8List(100);
 
-  CSHAKEDigest([int bitLength = 256, Uint8List N, Uint8List S]) {
+  CSHAKEDigest([int bitLength = 256, Uint8List? N, Uint8List? S]) {
     switch (bitLength) {
       case 128:
       case 256:
@@ -85,9 +87,9 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
   // bytepad in SP 800-185
   void _diffPadAndAbsorb() {
     var blockSize = rate ~/ 8;
-    absorbRange(_diff, 0, _diff.length);
+    absorbRange(_diff!, 0, _diff!.length);
 
-    var delta = _diff.length % blockSize;
+    var delta = _diff!.length % blockSize;
 
     // only add padding if needed
     if (delta != 0) {
@@ -102,7 +104,7 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
     }
   }
 
-  Uint8List _encodeString(Uint8List str) {
+  Uint8List _encodeString(Uint8List? str) {
     if (str == null || str.isEmpty) {
       return XofUtils.leftEncode(0);
     }

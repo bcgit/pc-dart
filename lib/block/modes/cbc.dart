@@ -1,4 +1,5 @@
 // See file LICENSE for more information.
+
 library impl.block_cipher.modes.cbc;
 
 import 'dart:typed_data';
@@ -14,17 +15,17 @@ class CBCBlockCipher extends BaseBlockCipher {
       BlockCipher,
       '/CBC',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return CBCBlockCipher(underlying);
           });
 
   final BlockCipher _underlyingCipher;
 
-  Uint8List _iv;
-  Uint8List _cbcV;
-  Uint8List _cbcNextV;
+  late Uint8List _iv;
+  Uint8List? _cbcV;
+  Uint8List? _cbcNextV;
 
-  bool _encrypting;
+  late bool _encrypting;
 
   CBCBlockCipher(this._underlyingCipher) {
     _iv = Uint8List(blockSize);
@@ -39,8 +40,8 @@ class CBCBlockCipher extends BaseBlockCipher {
 
   @override
   void reset() {
-    _cbcV.setAll(0, _iv);
-    _cbcNextV.fillRange(0, _cbcNextV.length, 0);
+    _cbcV!.setAll(0, _iv);
+    _cbcNextV!.fillRange(0, _cbcNextV!.length, 0);
 
     _underlyingCipher.reset();
   }
@@ -73,13 +74,13 @@ class CBCBlockCipher extends BaseBlockCipher {
 
     // XOR the cbcV and the input, then encrypt the cbcV
     for (var i = 0; i < blockSize; i++) {
-      _cbcV[i] ^= inp[inpOff + i];
+      _cbcV![i] ^= inp[inpOff + i];
     }
 
-    var length = _underlyingCipher.processBlock(_cbcV, 0, out, outOff);
+    var length = _underlyingCipher.processBlock(_cbcV!, 0, out, outOff);
 
     // copy ciphertext to cbcV
-    _cbcV.setRange(0, blockSize,
+    _cbcV!.setRange(0, blockSize,
         Uint8List.view(out.buffer, out.offsetInBytes + outOff, blockSize));
 
     return length;
@@ -90,18 +91,18 @@ class CBCBlockCipher extends BaseBlockCipher {
       throw ArgumentError('Input buffer too short');
     }
 
-    _cbcNextV.setRange(0, blockSize,
+    _cbcNextV!.setRange(0, blockSize,
         Uint8List.view(inp.buffer, inp.offsetInBytes + inpOff, blockSize));
 
     var length = _underlyingCipher.processBlock(inp, inpOff, out, outOff);
 
     // XOR the cbcV and the output
     for (var i = 0; i < blockSize; i++) {
-      out[outOff + i] ^= _cbcV[i];
+      out[outOff + i] ^= _cbcV![i];
     }
 
     // swap the back up buffer into next position
-    Uint8List tmp;
+    Uint8List? tmp;
 
     tmp = _cbcV;
     _cbcV = _cbcNextV;

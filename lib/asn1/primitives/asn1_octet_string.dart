@@ -15,12 +15,12 @@ class ASN1OctetString extends ASN1Object {
   ///
   /// The decoded string value
   ///
-  Uint8List octets;
+  Uint8List? octets;
 
   ///
   /// A list of elements. Only set if this ASN1OctetString is constructed, otherwhise null.
   ///
-  List<ASN1Object> elements;
+  List<ASN1Object>? elements;
 
   ///
   /// Create an [ASN1OctetString] entity with the given [octets].
@@ -39,8 +39,8 @@ class ASN1OctetString extends ASN1Object {
       var bytes = <int>[];
       while (parser.hasNext()) {
         var octetString = parser.nextObject() as ASN1OctetString;
-        bytes.addAll(octetString.octets);
-        elements.add(octetString);
+        bytes.addAll(octetString.octets!);
+        elements!.add(octetString);
       }
       octets = Uint8List.fromList(bytes);
     } else {
@@ -67,26 +67,25 @@ class ASN1OctetString extends ASN1Object {
     switch (encodingRule) {
       case ASN1EncodingRule.ENCODING_DER:
       case ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM:
-        valueByteLength = octets.length;
+        valueByteLength = octets!.length;
         valueBytes = octets;
         break;
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED:
       case ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH:
         valueByteLength = 0;
         if (elements == null) {
-          elements.add(ASN1OctetString(octets: octets));
+          elements!.add(ASN1OctetString(octets: octets));
         }
         valueByteLength = _childLength(
             isIndefinite: encodingRule ==
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH);
-        valueBytes = Uint8List(valueByteLength);
+        valueBytes = Uint8List(valueByteLength!);
         var i = 0;
-        elements.forEach((obj) {
+        elements!.forEach((obj) {
           var b = obj.encode();
-          valueBytes.setRange(i, i + b.length, b);
+          valueBytes!.setRange(i, i + b.length, b);
           i += b.length;
         });
-        break;
         break;
       case ASN1EncodingRule.ENCODING_BER_PADDED:
         throw UnsupportedAsn1EncodingRuleException(encodingRule);
@@ -99,7 +98,7 @@ class ASN1OctetString extends ASN1Object {
   ///
   int _childLength({bool isIndefinite = false}) {
     var l = 0;
-    elements.forEach((ASN1Object obj) {
+    elements!.forEach((ASN1Object obj) {
       l += obj.encode().length;
     });
     if (isIndefinite) {
@@ -114,20 +113,20 @@ class ASN1OctetString extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    if (isConstructed) {
-      sb.write('OCTET STRING (${elements.length} elem)');
-      for (var e in elements) {
+    if (isConstructed!) {
+      sb.write('OCTET STRING (${elements!.length} elem)');
+      for (var e in elements!) {
         var dump = e.dump(spaces: spaces + dumpIndent);
         sb.write('\n $dump');
       }
     } else {
-      if (ASN1Utils.isASN1Tag(octets.elementAt(0))) {
+      if (ASN1Utils.isASN1Tag(octets!.elementAt(0))) {
         var parser = ASN1Parser(octets);
         var next = parser.nextObject();
         var dump = next.dump(spaces: spaces + dumpIndent);
         sb.write('OCTET STRING\n$dump');
       } else {
-        sb.write('OCTET STRING ${ascii.decode(octets, allowInvalid: true)}');
+        sb.write('OCTET STRING ${ascii.decode(octets!, allowInvalid: true)}');
       }
     }
     return sb.toString();

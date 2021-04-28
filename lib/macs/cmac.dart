@@ -32,25 +32,25 @@ class CMac extends BaseMac {
     Mac,
     '/CMAC',
     (_, final Match match) => () {
-      var cipher = BlockCipher(match.group(1));
+      var cipher = BlockCipher(match.group(1)!);
       return CMac.fromCipher(cipher);
     },
   );
 
-  Uint8List _poly;
-  Uint8List _zeros;
+  late Uint8List _poly;
+  late Uint8List _zeros;
 
-  Uint8List _mac;
+  late Uint8List _mac;
 
-  Uint8List _buf;
-  int _bufOff;
+  late Uint8List _buf;
+  late int _bufOff;
   final BlockCipher _cipher;
 
   final int _macSize;
 
-  Uint8List _lu, _lu2;
+  late Uint8List _lu, _lu2;
 
-  ParametersWithIV _params;
+  ParametersWithIV? _params;
 
   ///
   /// create a standard MAC based on a CBC block cipher (64 or 128 bit block).
@@ -186,7 +186,7 @@ class CMac extends BaseMac {
     _params = ParametersWithIV(keyParams, zeroIV);
 
     // Initialize before computing L, Lu, Lu2
-    _cipher.init(true, _params);
+    _cipher.init(true, _params!);
 
     //initializes the L, Lu, Lu2 numbers
     var L = Uint8List(_zeros.length);
@@ -246,7 +246,7 @@ class CMac extends BaseMac {
   int doFinal(Uint8List out, int outOff) {
     var blockSize = _cipher.blockSize;
 
-    Uint8List lu;
+    Uint8List? lu;
     if (_bufOff == blockSize) {
       lu = _lu;
     } else {
@@ -281,7 +281,7 @@ class CMac extends BaseMac {
     _cipher.reset();
 
     if (_params != null) {
-      _cipher.init(true, _params);
+      _cipher.init(true, _params!);
     }
   }
 }

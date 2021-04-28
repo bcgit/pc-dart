@@ -16,7 +16,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       AsymmetricBlockCipher,
       '/PKCS1',
       (_, final Match match) => () {
-            var underlyingCipher = AsymmetricBlockCipher(match.group(1));
+            var underlyingCipher = AsymmetricBlockCipher(match.group(1)!);
             return PKCS1Encoding(underlyingCipher);
           });
 
@@ -24,9 +24,9 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
   final AsymmetricBlockCipher _engine;
 
-  SecureRandom _random;
-  bool _forEncryption;
-  bool _forPrivateKey;
+  late SecureRandom _random;
+  late bool _forEncryption;
+  late bool _forPrivateKey;
 
   PKCS1Encoding(this._engine);
 
@@ -52,11 +52,11 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       var paramswr = params;
 
       _random = paramswr.random;
-      akparams = paramswr.parameters;
+      akparams = paramswr.parameters as AsymmetricKeyParameter<AsymmetricKey>;
     } else {
       _random = FortunaRandom();
       _random.seed(KeyParameter(_seed()));
-      akparams = params;
+      akparams = params as AsymmetricKeyParameter<AsymmetricKey>;
     }
 
     _engine.init(forEncryption, akparams);
@@ -171,7 +171,6 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     }
 
     var rlen = (block.length - start);
-    var result = Uint8List(rlen);
     out.setRange(outOff, outOff + rlen, block.sublist(start));
     return rlen;
   }

@@ -11,17 +11,17 @@ class ASN1ObjectIdentifier extends ASN1Object {
   ///
   /// The object identifier integer values
   ///
-  List<int> objectIdentifier;
+  List<int>? objectIdentifier;
 
   ///
   /// The String representation of the [objectIdentifier]
   ///
-  String objectIdentifierAsString;
+  String? objectIdentifierAsString;
 
   ///
   /// The readable representation of the [objectIdentifier]
   ///
-  String readableName;
+  String? readableName;
 
   ///
   /// Create an [ASN1ObjectIdentifier] entity with the given [objectIdentifier].
@@ -29,7 +29,7 @@ class ASN1ObjectIdentifier extends ASN1Object {
   ASN1ObjectIdentifier(this.objectIdentifier,
       {int tag = ASN1Tags.OBJECT_IDENTIFIER})
       : super(tag: tag) {
-    objectIdentifierAsString = objectIdentifier.join('.');
+    objectIdentifierAsString = objectIdentifier!.join('.');
   }
 
   ///
@@ -39,10 +39,10 @@ class ASN1ObjectIdentifier extends ASN1Object {
       : super.fromBytes(encodedBytes) {
     var value = 0;
     var first = true;
-    BigInt bigValue;
+    BigInt? bigValue;
     var list = <int>[];
     var sb = StringBuffer();
-    valueBytes.forEach((element) {
+    valueBytes!.forEach((element) {
       var b = element & 0xff;
       if (value < 0x80000000000000) {
         value = value * 128 + (b & 0x7f);
@@ -66,8 +66,8 @@ class ASN1ObjectIdentifier extends ASN1Object {
         }
       } else {
         bigValue ??= BigInt.from(value);
-        bigValue = bigValue << (7);
-        bigValue = bigValue | BigInt.from(b & 0x7f);
+        bigValue = bigValue! << (7);
+        bigValue = bigValue! | BigInt.from(b & 0x7f);
         if ((b & 0x80) == 0) {
           sb.write('.$bigValue');
           bigValue = null;
@@ -80,7 +80,7 @@ class ASN1ObjectIdentifier extends ASN1Object {
     var identifier =
         ObjectIdentifiers.getIdentifierByIdentifier(objectIdentifierAsString);
     if (identifier != null) {
-      readableName = identifier['readableName'] as String;
+      readableName = identifier['readableName'] as String?;
     }
   }
 
@@ -100,9 +100,9 @@ class ASN1ObjectIdentifier extends ASN1Object {
     if (identifier == null) {
       throw UnsupportedObjectIdentifierException(name);
     }
-    objectIdentifierAsString = identifier['identifierString'] as String;
-    readableName = identifier['readableName'] as String;
-    objectIdentifier = identifier['identifier'] as List<int>;
+    objectIdentifierAsString = identifier['identifierString'] as String?;
+    readableName = identifier['readableName'] as String?;
+    objectIdentifier = identifier['identifier'] as List<int>?;
   }
 
   ///
@@ -123,9 +123,9 @@ class ASN1ObjectIdentifier extends ASN1Object {
     if (identifier == null) {
       throw UnsupportedObjectIdentifierException(objectIdentifierAsString);
     }
-    objectIdentifierAsString = identifier['identifierString'] as String;
-    readableName = identifier['readableName'] as String;
-    objectIdentifier = identifier['identifier'] as List<int>;
+    objectIdentifierAsString = identifier['identifierString'] as String?;
+    readableName = identifier['readableName'] as String?;
+    objectIdentifier = identifier['identifier'] as List<int>?;
   }
 
   ///
@@ -145,11 +145,11 @@ class ASN1ObjectIdentifier extends ASN1Object {
       throw UnsupportedAsn1EncodingRuleException(encodingRule);
     }
     var oi = <int>[];
-    oi.add(objectIdentifier[0] * 40 + objectIdentifier[1]);
+    oi.add(objectIdentifier![0] * 40 + objectIdentifier![1]);
 
-    for (var ci = 2; ci < objectIdentifier.length; ci++) {
+    for (var ci = 2; ci < objectIdentifier!.length; ci++) {
       var position = oi.length;
-      var v = objectIdentifier[ci];
+      var v = objectIdentifier![ci];
       assert(v > 0);
 
       var first = true;

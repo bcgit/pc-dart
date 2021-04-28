@@ -17,8 +17,8 @@ class _Sha3Vector {
 
   String algo;
   int bits;
-  Uint8List msg;
-  Uint8List digest;
+  Uint8List? msg;
+  Uint8List? digest;
 }
 
 void main() {
@@ -133,7 +133,7 @@ void testSHA3AgainstVectors() {
         Uint8List out;
 
         if (partialBits == 0) {
-          digest.update(vector.msg, 0, vector.msg.length);
+          digest.update(vector.msg!, 0, vector.msg!.length);
           out = Uint8List(digest.digestSize);
           digest.doFinal(out, 0);
           expect(vector.digest, out);
@@ -141,11 +141,11 @@ void testSHA3AgainstVectors() {
           //
           // Vandalise message, if zero len message skip.
           //
-          if (vector.msg.isNotEmpty) {
-            var vandalized = Uint8List.fromList(vector.msg);
+          if (vector.msg!.isNotEmpty) {
+            var vandalized = Uint8List.fromList(vector.msg!);
             vandalized[0] ^= 1;
 
-            digest.update(vandalized, 0, vector.msg.length);
+            digest.update(vandalized, 0, vector.msg!.length);
             out = Uint8List(digest.digestSize);
             digest.doFinal(out, 0);
             expect(vector.digest, isNot(out),

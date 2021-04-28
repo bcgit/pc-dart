@@ -16,7 +16,7 @@ class GCTRBlockCipher extends BaseBlockCipher {
       BlockCipher,
       '/GCTR',
       (_, final Match match) => () {
-            var underlying = BlockCipher(match.group(1));
+            var underlying = BlockCipher(match.group(1)!);
             return GCTRBlockCipher(underlying);
           });
 
@@ -25,13 +25,13 @@ class GCTRBlockCipher extends BaseBlockCipher {
 
   final BlockCipher _underlyingCipher;
 
-  Uint8List _iv;
-  Uint8List _ofbV;
-  Uint8List _ofbOutV;
+  late Uint8List _iv;
+  Uint8List? _ofbV;
+  Uint8List? _ofbOutV;
 
   bool _firstStep = true;
-  int _n3;
-  int _n4;
+  late int _n3;
+  late int _n4;
 
   GCTRBlockCipher(this._underlyingCipher) {
     if (blockSize != 8) {
@@ -49,7 +49,7 @@ class GCTRBlockCipher extends BaseBlockCipher {
   String get algorithmName => '${_underlyingCipher.algorithmName}/GCTR';
   @override
   void reset() {
-    _ofbV.setRange(0, _iv.length, _iv);
+    _ofbV!.setRange(0, _iv.length, _iv);
     _underlyingCipher.reset();
   }
 
@@ -63,7 +63,7 @@ class GCTRBlockCipher extends BaseBlockCipher {
   /// @exception IllegalArgumentException if the params argument is
   /// inappropriate.
   @override
-  void init(bool encrypting, CipherParameters params) {
+  void init(bool encrypting, CipherParameters? params) {
     _firstStep = true;
     _n3 = 0;
     _n4 = 0;
@@ -110,7 +110,7 @@ class GCTRBlockCipher extends BaseBlockCipher {
 
     if (_firstStep) {
       _firstStep = false;
-      _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
+      _underlyingCipher.processBlock(_ofbV!, 0, _ofbOutV!, 0);
       _n3 = _bytesToint(_ofbOutV, 0);
       _n4 = _bytesToint(_ofbOutV, 4);
     }
@@ -119,26 +119,26 @@ class GCTRBlockCipher extends BaseBlockCipher {
     _intTobytes(_n3, _ofbV, 0);
     _intTobytes(_n4, _ofbV, 4);
 
-    _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
+    _underlyingCipher.processBlock(_ofbV!, 0, _ofbOutV!, 0);
 
     // XOR the ofbV with the plaintext producing the cipher text (and the next input block).
     for (var i = 0; i < blockSize; i++) {
-      out[outOff + i] = _ofbOutV[i] ^ inp[inpOff + i];
+      out[outOff + i] = _ofbOutV![i] ^ inp[inpOff + i];
     }
 
     // change over the input block.
-    var offset = _ofbV.length - blockSize;
-    _ofbV.setRange(0, offset, _ofbV.sublist(blockSize));
-    _ofbV.setRange(offset, _ofbV.length, _ofbOutV);
+    var offset = _ofbV!.length - blockSize;
+    _ofbV!.setRange(0, offset, _ofbV!.sublist(blockSize));
+    _ofbV!.setRange(offset, _ofbV!.length, _ofbOutV!);
 
     return blockSize;
   }
 
-  int _bytesToint(Uint8List inp, int inpOff) {
+  int _bytesToint(Uint8List? inp, int inpOff) {
     return unpack32(inp, inpOff, Endian.little);
   }
 
-  void _intTobytes(int num, Uint8List out, int outOff) {
+  void _intTobytes(int num, Uint8List? out, int outOff) {
     pack32(num, out, outOff, Endian.little);
   }
 }

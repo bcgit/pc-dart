@@ -18,15 +18,15 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
       r'^(.*)/CTR/PRNG$',
       (_, final Match match) => () {
             var blockCipherName = match.group(1);
-            var blockCipher = BlockCipher(blockCipherName);
+            var blockCipher = BlockCipher(blockCipherName!);
             return BlockCtrRandom(blockCipher);
           });
 
   final BlockCipher cipher;
 
-  Uint8List _input;
-  Uint8List _output;
-  int _used;
+  late Uint8List _input;
+  late Uint8List _output;
+  late int _used;
 
   BlockCtrRandom(this.cipher) {
     _input = Uint8List(cipher.blockSize);
@@ -42,7 +42,7 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
     _used = _output.length;
     if (params is ParametersWithIV) {
       _input.setAll(0, params.iv);
-      cipher.init(true, params.parameters);
+      cipher.init(true, params.parameters!);
     } else {
       cipher.init(true, params);
     }

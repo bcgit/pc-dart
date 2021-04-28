@@ -18,7 +18,7 @@ class ISO7816d4Padding extends BasePadding {
   String get algorithmName => 'ISO7816-4';
 
   @override
-  void init([CipherParameters params]) {
+  void init([CipherParameters? params]) {
     // nothing to do.
   }
 

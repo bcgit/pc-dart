@@ -57,20 +57,26 @@ void rsaOaepStandardTests() {
           'ce 33 52 52 4d 04 16 a5 a4 41 e7 00 af 46 15 03'));
 
   // dP , p’s exponent:
-  final dP = decodeBigIntWithSign(1, createUint8ListFromHexString(
-      '54 49 4c a6 3e ba 03 37 e4 e2 40 23 fc d6 9a 5a eb 07 dd dc 01 83 a4 d0'
+  final dP = decodeBigIntWithSign(
+      1,
+      createUint8ListFromHexString(
+          '54 49 4c a6 3e ba 03 37 e4 e2 40 23 fc d6 9a 5a eb 07 dd dc 01 83 a4 d0'
           'ac 9b 54 b0 51 f2 b1 3e d9 49 09 75 ea b7 74 14 ff 59 c1 f7 69 2e 9a 2e'
           '20 2b 38 fc 91 0a 47 41 74 ad c9 3c 1f 67 c9 81'));
 
   // dQ, q’s exponent:
-  final dQ = decodeBigIntWithSign(1, createUint8ListFromHexString(
-      '47 1e 02 90 ff 0a f0 75 03 51 b7 f8 78 86 4c a9 61 ad bd 3a 8a 7e 99 1c'
+  final dQ = decodeBigIntWithSign(
+      1,
+      createUint8ListFromHexString(
+          '47 1e 02 90 ff 0a f0 75 03 51 b7 f8 78 86 4c a9 61 ad bd 3a 8a 7e 99 1c'
           '5c 05 56 a9 4c 31 46 a7 f9 80 3f 8f 6f 8a e3 42 e9 31 fd 8a e4 7a 22 0d'
           '1b 99 a4 95 84 98 07 fe 39 f9 24 5a 98 36 da 3d'));
 
   // qInv, the CRT coefficient:
-  final qInv = decodeBigIntWithSign(1, createUint8ListFromHexString(
-      'b0 6c 4f da bb 63 01 19 8d 26 5b db ae 94 23 b3 80 f2 71 f7 34 53 88 50'
+  final qInv = decodeBigIntWithSign(
+      1,
+      createUint8ListFromHexString(
+          'b0 6c 4f da bb 63 01 19 8d 26 5b db ae 94 23 b3 80 f2 71 f7 34 53 88 50'
           '93 07 7f cd 39 e2 11 9f c9 86 32 15 4f 58 83 b1 67 a9 67 bf 40 2b 4e 9e'
           '2e 0f 96 56 e6 98 ea 36 66 ed fb 25 79 80 39 f7'));
 
@@ -83,7 +89,7 @@ void rsaOaepStandardTests() {
 
   // P , encoding parameters: NULL
   // ignore: unused_local_variable
-  final params = null;
+  final dynamic params = null;
 
   // pHash = Hash(P ):
   // ignore: unused_local_variable
@@ -400,7 +406,7 @@ void rsaOaepStandardTests() {
     // This test could be done with any key pair, but since we already have a
     // key pair from the above tests, use it.
 
-    final keySizeInBytes = publicKey.modulus.bitLength ~/ 8;
+    final keySizeInBytes = publicKey.modulus!.bitLength ~/ 8;
 
     final numNulls = List<int>.filled(keySizeInBytes, 0); // tracks test cases
 
@@ -501,18 +507,18 @@ void rsaOaepStandardTests() {
 }
 
 class Vector {
-  BigInt pubExp;
-  BigInt pubMod;
-  BigInt privExp;
-  BigInt privMod;
-  BigInt privP;
-  BigInt privQ;
-  BigInt privDP;
-  BigInt privDQ;
-  BigInt privQInv;
-  Uint8List pt;
-  Uint8List ct;
-  Uint8List seed;
+  BigInt? pubExp;
+  BigInt? pubMod;
+  late BigInt privExp;
+  BigInt? privMod;
+  BigInt? privP;
+  BigInt? privQ;
+  BigInt? privDP;
+  BigInt? privDQ;
+  BigInt? privQInv;
+  Uint8List? pt;
+  Uint8List? ct;
+  Uint8List? seed;
 
   bool success = false;
 
@@ -540,11 +546,11 @@ class Vector {
   }
 
   RSAPublicKey getPublicKey() {
-    return RSAPublicKey(pubMod, pubExp);
+    return RSAPublicKey(pubMod!, pubExp!);
   }
 
   RSAPrivateKey getPrivateKey() {
-    return RSAPrivateKey(privMod, privExp, privP, privQ);
+    return RSAPrivateKey(privMod!, privExp, privP, privQ);
   }
 }
 
@@ -667,8 +673,8 @@ void rsaesOaepFromBC() {
       var rsaesOaep = OAEPEncoding(RSAEngine());
       rsaesOaep.init(
           false, PrivateKeyParameter<RSAPrivateKey>(v.getPrivateKey()));
-      final output = Uint8List(v.pt.length);
-      final size = rsaesOaep.processBlock(v.ct, 0, v.ct.length, output, 0);
+      final output = Uint8List(v.pt!.length);
+      final size = rsaesOaep.processBlock(v.ct!, 0, v.ct!.length, output, 0);
       expect(output, equals(v.pt, size));
     });
   });
@@ -676,15 +682,15 @@ void rsaesOaepFromBC() {
   test('RSAESOAEP encryption vectors from BC', () {
     vectors.forEach((Vector v) {
       var rng = _OAEPTestEntropySource();
-      rng.seed(KeyParameter(v.seed));
+      rng.seed(KeyParameter(v.seed!));
 
       var rsaesOaep = OAEPEncoding(RSAEngine());
       rsaesOaep.init(
           true,
           ParametersWithRandom(
               PublicKeyParameter<RSAPublicKey>(v.getPublicKey()), rng));
-      final output = Uint8List(v.ct.length);
-      final size = rsaesOaep.processBlock(v.pt, 0, v.pt.length, output, 0);
+      final output = Uint8List(v.ct!.length);
+      final size = rsaesOaep.processBlock(v.pt!, 0, v.pt!.length, output, 0);
       expect(output, equals(v.ct, size));
     });
   });
@@ -699,7 +705,7 @@ void rsaesOaepFromBC() {
 ///
 class _OAEPTestEntropySource extends SecureRandomBase {
   var _next = 0;
-  Uint8List _values;
+  Uint8List? _values;
 
   static final FactoryConfig factoryConfig = StaticFactoryConfig(
       SecureRandom, '_oaep_rand', () => _OAEPTestEntropySource());
@@ -714,11 +720,11 @@ class _OAEPTestEntropySource extends SecureRandomBase {
 
   @override
   int nextUint8() {
-    if (_values != null && _values.isNotEmpty) {
-      if (_next >= _values.length) {
+    if (_values != null && _values!.isNotEmpty) {
+      if (_next >= _values!.length) {
         _next = 0;
       }
-      return _values[_next++];
+      return _values![_next++];
     } else {
       return 0;
     }

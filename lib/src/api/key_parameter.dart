@@ -4,7 +4,7 @@ part of api;
 
 /// [CipherParameters] consisting of just a key of arbitrary length.
 class KeyParameter extends CipherParameters {
-  Uint8List key;
+  late Uint8List key;
 
   KeyParameter(this.key);
 

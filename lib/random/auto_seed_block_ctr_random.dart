@@ -19,15 +19,15 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
       r'^(.*)/CTR/AUTO-SEED-PRNG$',
       (_, final Match match) => () {
             var blockCipherName = match.group(1);
-            var blockCipher = BlockCipher(blockCipherName);
+            var blockCipher = BlockCipher(blockCipherName!);
             return AutoSeedBlockCtrRandom(blockCipher);
           });
 
-  BlockCtrRandom _delegate;
+  late BlockCtrRandom _delegate;
   final bool _reseedIV;
 
   var _inAutoReseed = false;
-  int _autoReseedKeyLength;
+  late int _autoReseedKeyLength;
 
   @override
   String get algorithmName =>
@@ -40,7 +40,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
   @override
   void seed(CipherParameters params) {
     if (params is ParametersWithIV<KeyParameter>) {
-      _autoReseedKeyLength = params.parameters.key.length;
+      _autoReseedKeyLength = params.parameters!.key.length;
       _delegate.seed(params);
     } else if (params is KeyParameter) {
       _autoReseedKeyLength = params.key.length;

@@ -12,7 +12,7 @@ class OperationBenchmark extends BenchmarkBase {
   final Operation _operation;
   final int _runLengthMillis;
 
-  int _iterations;
+  int? _iterations;
 
   OperationBenchmark(String name, this._operation,
       [this._runLengthMillis = _RUN_LENGTH_MILLIS])
@@ -35,22 +35,22 @@ class OperationBenchmark extends BenchmarkBase {
     var watch = Stopwatch()..start();
     while (watch.elapsedMilliseconds < _runLengthMillis) {
       run();
-      _iterations++;
+      _iterations = _iterations! + 1;
     }
   }
 }
 
 class OperationEmitter implements ScoreEmitter {
-  OperationBenchmark benchmark;
+  late OperationBenchmark benchmark;
 
-  int get iterations => benchmark._iterations;
+  int? get iterations => benchmark._iterations;
 
   @override
   void emit(String testName, double value) {
     var ms = value / 1000;
     var s = ms / 1000;
     print('| $testName | '
-        '${_formatOperations(iterations / s)}/s | '
+        '${_formatOperations(iterations! / s)}/s | '
         '$iterations iterations | '
         '${ms.toInt()} ms |');
   }

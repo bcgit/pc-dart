@@ -79,17 +79,17 @@ class TigerDigest extends BaseDigest implements Digest {
   }
 
   @override
-  void update(Uint8List inp, int inpOff, int len) {
+  void update(Uint8List? inp, int inpOff, int? len) {
     // fill the current word
-    while ((_wordBufferOffset != 0) && (len > 0)) {
-      updateByte(inp[inpOff]);
+    while ((_wordBufferOffset != 0) && (len! > 0)) {
+      updateByte(inp![inpOff]);
 
       inpOff++;
       len--;
     }
 
     // process whole words.
-    while (len > 8) {
+    while (len! > 8) {
       _processWord(inp, inpOff);
 
       inpOff += 8;
@@ -98,15 +98,15 @@ class TigerDigest extends BaseDigest implements Digest {
     }
 
     // load in the remainder.
-    while (len > 0) {
-      updateByte(inp[inpOff]);
+    while (len! > 0) {
+      updateByte(inp![inpOff]);
 
       inpOff++;
       len--;
     }
   }
 
-  void _processWord(Uint8List b, int off) {
+  void _processWord(Uint8List? b, int off) {
     _buffer[_bufferOffset++].unpack(b, off, Endian.little);
 
     if (_bufferOffset == _buffer.length) {

@@ -33,7 +33,7 @@ void main() {
     // ignore: deprecated_member_use_from_same_package
     expect(
         () => RSAPrivateKey(modulus, privateExponent, p, q, BigInt.zero),
-        throwsA(predicate((e) =>
+        throwsA(predicate((dynamic e) =>
             e is ArgumentError &&
             e.message ==
                 'public exponent inconsistent with RSA private exponent, p and q')));

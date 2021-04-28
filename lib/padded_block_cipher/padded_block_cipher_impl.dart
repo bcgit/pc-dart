@@ -14,8 +14,8 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
       PaddedBlockCipher,
       r'^(.+)/([^/]+)$',
       (_, final Match match) => () {
-            var padding = Padding(match.group(2));
-            var underlyingCipher = BlockCipher(match.group(1));
+            var padding = Padding(match.group(2)!);
+            var underlyingCipher = BlockCipher(match.group(1)!);
             return PaddedBlockCipherImpl(padding, underlyingCipher);
           });
 
@@ -24,7 +24,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   @override
   final BlockCipher cipher;
 
-  bool _encrypting;
+  bool? _encrypting;
 
   PaddedBlockCipherImpl(this.padding, this.cipher);
 
@@ -49,11 +49,11 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   }
 
   @override
-  Uint8List process(Uint8List data) {
-    var inputBlocks = (data.length + blockSize - 1) ~/ blockSize;
+  Uint8List process(Uint8List? data) {
+    var inputBlocks = (data!.length + blockSize - 1) ~/ blockSize;
 
     int outputBlocks;
-    if (_encrypting) {
+    if (_encrypting!) {
       outputBlocks = (data.length + blockSize) ~/ blockSize;
     } else {
       if ((data.length % blockSize) != 0) {
@@ -83,7 +83,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   @override
   int doFinal(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    if (_encrypting) {
+    if (_encrypting!) {
       var lastInputBlock = Uint8List(blockSize)..setAll(0, inp.sublist(inpOff));
 
       var remainder = inp.length - inpOff;

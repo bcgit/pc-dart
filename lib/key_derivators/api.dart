@@ -30,9 +30,9 @@ class ScryptParameters implements CipherParameters {
 class HkdfParameters extends CipherParameters {
   final Uint8List ikm; // the input keying material or seed
   final int desiredKeyLength;
-  final Uint8List
+  final Uint8List?
       salt; // the salt to use, may be null for a salt for hashLen zeros
-  final Uint8List
+  final Uint8List?
       info; // the info to use, may be null for an info field of zero bytes
   final bool skipExtract;
 

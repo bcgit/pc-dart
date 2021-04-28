@@ -177,7 +177,7 @@ void main() {
     expect(asn1Object.tag, 54);
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.isConstructed, true);
-    expect(asn1Object.elements.length, 3);
+    expect(asn1Object.elements!.length, 3);
     expect(asn1Object.valueByteLength, 19);
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.stringValue, 'test1@rsa.com');
@@ -237,7 +237,7 @@ void main() {
     expect(asn1Object.tag, 54);
     expect(asn1Object.encodedBytes, bytes);
     expect(asn1Object.isConstructed, true);
-    expect(asn1Object.elements.length, 3);
+    expect(asn1Object.elements!.length, 3);
     expect(asn1Object.valueByteLength, 19);
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.stringValue, 'test1@rsa.com');

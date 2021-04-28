@@ -16,16 +16,17 @@ import '../src/ufixnum.dart';
 /// RFC version of Daniel J. Bernstein's ChaCha20. This uses a 12 byte IV, among
 /// other changes.
 class ChaCha7539Engine extends BaseStreamCipher {
-  // ignore: non_constant_identifier_names
   static final FactoryConfig factoryConfig = DynamicFactoryConfig.prefix(
       StreamCipher,
       'ChaCha7539/',
-          (_, final Match match) => () {
-        var rounds = int.parse(match.group(1));
-        return ChaCha7539Engine.fromRounds(rounds);
-      });
+      (_, final Match match) => () {
+            var rounds = int.parse(match.group(1)!);
+            return ChaCha7539Engine.fromRounds(rounds);
+          });
 
-  ChaCha7539Engine () {rounds = 20;}
+  ChaCha7539Engine() {
+    rounds = 20;
+  }
 
   ChaCha7539Engine.fromRounds(this.rounds);
 
@@ -70,11 +71,11 @@ class ChaCha7539Engine extends BaseStreamCipher {
     107
   ]);
 
-  Uint8List _workingKey;
-  Uint8List _workingIV;
+  Uint8List? _workingKey;
+  late Uint8List _workingIV;
 
-  final _state = List<int>(STATE_SIZE);
-  final _buffer = List<int>(STATE_SIZE);
+  final _state = List<int>.filled(STATE_SIZE, 0, growable: false);
+  final _buffer = List<int>.filled(STATE_SIZE, 0, growable: false);
 
   final _keyStream = Uint8List(STATE_SIZE * 4);
   var _keyStreamOffset = 0;
@@ -88,7 +89,7 @@ class ChaCha7539Engine extends BaseStreamCipher {
   void reset() {
     _state[12] = 0;
     if (_workingKey != null) {
-      _setKey(_workingKey, _workingIV);
+      _setKey(_workingKey!, _workingIV);
     }
   }
 
@@ -97,14 +98,14 @@ class ChaCha7539Engine extends BaseStreamCipher {
       bool forEncryption, covariant ParametersWithIV<KeyParameter> params) {
     var uparams = params.parameters;
     var iv = params.iv;
-    if (iv == null || iv.length != 12) {
+    if (iv.length != 12) {
       throw ArgumentError('ChaCha20-7539 requires exactly 12 bytes of IV');
     }
 
     _workingIV = iv;
-    _workingKey = uparams.key;
+    _workingKey = uparams!.key;
 
-    _setKey(_workingKey, _workingIV);
+    _setKey(_workingKey!, _workingIV);
   }
 
   @override
@@ -159,7 +160,7 @@ class ChaCha7539Engine extends BaseStreamCipher {
     _keyStreamOffset = 0;
     Uint8List constants;
 
-    if (_workingKey.length == 32) {
+    if (_workingKey!.length == 32) {
       constants = _sigma;
     } else {
       constants = _tau;

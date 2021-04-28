@@ -17,11 +17,11 @@ void main() {
     expect(asn1Object.valueByteLength, 3);
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.valueBytes, valueBytes);
-    expect(asn1Object.objectIdentifier.length, 4);
-    expect(asn1Object.objectIdentifier.elementAt(0), 2);
-    expect(asn1Object.objectIdentifier.elementAt(1), 5);
-    expect(asn1Object.objectIdentifier.elementAt(2), 4);
-    expect(asn1Object.objectIdentifier.elementAt(3), 3);
+    expect(asn1Object.objectIdentifier!.length, 4);
+    expect(asn1Object.objectIdentifier!.elementAt(0), 2);
+    expect(asn1Object.objectIdentifier!.elementAt(1), 5);
+    expect(asn1Object.objectIdentifier!.elementAt(2), 4);
+    expect(asn1Object.objectIdentifier!.elementAt(3), 3);
     expect(asn1Object.objectIdentifierAsString, '2.5.4.3');
   });
 
@@ -61,11 +61,11 @@ void main() {
     expect(asn1Object.valueByteLength, 3);
     expect(asn1Object.valueStartPosition, 2);
     expect(asn1Object.valueBytes, valueBytes);
-    expect(asn1Object.objectIdentifier.length, 4);
-    expect(asn1Object.objectIdentifier.elementAt(0), 2);
-    expect(asn1Object.objectIdentifier.elementAt(1), 5);
-    expect(asn1Object.objectIdentifier.elementAt(2), 4);
-    expect(asn1Object.objectIdentifier.elementAt(3), 3);
+    expect(asn1Object.objectIdentifier!.length, 4);
+    expect(asn1Object.objectIdentifier!.elementAt(0), 2);
+    expect(asn1Object.objectIdentifier!.elementAt(1), 5);
+    expect(asn1Object.objectIdentifier!.elementAt(2), 4);
+    expect(asn1Object.objectIdentifier!.elementAt(3), 3);
     expect(asn1Object.objectIdentifierAsString, '2.5.4.3');
   });
 }

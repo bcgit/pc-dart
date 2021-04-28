@@ -12,7 +12,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   final _byteCount = Register64(0);
 
   final _wordBuffer = Uint8List(4);
-  int _wordBufferOffset;
+  late int _wordBufferOffset;
 
   final Endian _endian;
   final int _packedStateSize;
@@ -20,14 +20,14 @@ abstract class MD4FamilyDigest extends BaseDigest {
   final List<int> state;
 
   final List<int> buffer;
-  int bufferOffset;
+  late int bufferOffset;
 
   MD4FamilyDigest(this._endian, int stateSize, int bufferSize,
-      [int packedStateSize])
+      [int? packedStateSize])
       : _packedStateSize =
             (packedStateSize == null) ? stateSize : packedStateSize,
-        state = List<int>(stateSize),
-        buffer = List<int>(bufferSize) {
+        state = List<int>.filled(stateSize, 0, growable: false),
+        buffer = List<int>.filled(bufferSize, 0, growable: false) {
     reset();
   }
 

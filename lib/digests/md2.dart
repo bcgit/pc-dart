@@ -84,7 +84,7 @@ class MD2Digest extends BaseDigest {
   }
 
   @override
-  int doFinal(Uint8List out, int outOff) {
+  int doFinal(Uint8List? out, int? outOff) {
     // add padding
     var paddingByte = _m.length - _mOff;
     for (var i = _mOff; i < _m.length; i++) {
@@ -99,7 +99,7 @@ class MD2Digest extends BaseDigest {
 
     _processBlock(_c);
 
-    out.setRange(outOff, outOff + 16, _x.sublist(_xOff));
+    out!.setRange(outOff!, outOff + 16, _x.sublist(_xOff));
 
     reset();
 

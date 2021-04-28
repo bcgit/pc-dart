@@ -44,11 +44,11 @@ bool _testBit(BigInt i, int n) {
 }
 
 class ECFieldElement extends ecc.ECFieldElementBase {
-  final BigInt q;
-  final BigInt x;
+  final BigInt? q;
+  final BigInt? x;
 
   ECFieldElement(this.q, this.x) {
-    if (x >= q) {
+    if (x! >= q!) {
       throw ArgumentError('Value x must be smaller than q');
     }
   }
@@ -56,79 +56,79 @@ class ECFieldElement extends ecc.ECFieldElementBase {
   @override
   String get fieldName => 'Fp';
   @override
-  int get fieldSize => q.bitLength;
+  int get fieldSize => q!.bitLength;
 
   @override
-  BigInt toBigInteger() => x;
+  BigInt? toBigInteger() => x;
 
   @override
   ECFieldElement operator +(ECFieldElement b) =>
-      ECFieldElement(q, (x + b.toBigInteger()) % q);
+      ECFieldElement(q, (x! + b.toBigInteger()!) % q!);
   @override
   ECFieldElement operator -(ECFieldElement b) =>
-      ECFieldElement(q, (x - b.toBigInteger()) % q);
+      ECFieldElement(q, (x! - b.toBigInteger()!) % q!);
   @override
   ECFieldElement operator *(ECFieldElement b) =>
-      ECFieldElement(q, (x * b.toBigInteger()) % q);
+      ECFieldElement(q, (x! * b.toBigInteger()!) % q!);
   @override
   ECFieldElement operator /(ECFieldElement b) =>
-      ECFieldElement(q, (x * b.toBigInteger().modInverse(q)) % q);
+      ECFieldElement(q, (x! * b.toBigInteger()!.modInverse(q!)) % q!);
 
   @override
-  ECFieldElement operator -() => ECFieldElement(q, -x % q);
+  ECFieldElement operator -() => ECFieldElement(q, -x! % q!);
 
   @override
-  ECFieldElement invert() => ECFieldElement(q, x.modInverse(q));
+  ECFieldElement invert() => ECFieldElement(q, x!.modInverse(q!));
   @override
-  ECFieldElement square() => ECFieldElement(q, x.modPow(BigInt.two, q));
+  ECFieldElement square() => ECFieldElement(q, x!.modPow(BigInt.two, q!));
 
   // D.1.4 91
   /// return a sqrt root - the routine verifies that the calculation
   /// returns the right value - if none exists it returns null.
   @override
-  ECFieldElement sqrt() {
-    if (!_testBit(q, 0)) {
+  ECFieldElement? sqrt() {
+    if (!_testBit(q!, 0)) {
       throw UnimplementedError('Not implemented yet');
     }
 
     // p % 4 == 3
-    if (_testBit(q, 1)) {
+    if (_testBit(q!, 1)) {
       // z = g^(u+1) + p, p = 4u + 3
-      var z = ECFieldElement(q, x.modPow((q >> 2) + BigInt.one, q));
+      var z = ECFieldElement(q, x!.modPow((q! >> 2) + BigInt.one, q!));
       return z.square() == this ? z : null;
     }
 
     // p % 4 == 1
-    var qMinusOne = q - BigInt.one;
+    var qMinusOne = q! - BigInt.one;
 
     var legendreExponent = qMinusOne >> 1;
-    if (x.modPow(legendreExponent, q) != BigInt.one) {
+    if (x!.modPow(legendreExponent, q!) != BigInt.one) {
       return null;
     }
 
     var u = qMinusOne >> 2;
     var k = (u << 1) + BigInt.one;
 
-    var Q = x;
-    var fourQ = (Q >> 2) % q;
+    var Q = x!;
+    var fourQ = (Q >> 2) % q!;
 
     BigInt U, V;
     var rand = SecureRandom();
     do {
-      BigInt P;
+      BigInt? P;
       do {
-        P = rand.nextBigInteger(q.bitLength);
-      } while ((P >= q) ||
-          (((P * P) - fourQ).modPow(legendreExponent, q) != qMinusOne));
+        P = rand.nextBigInteger(q!.bitLength);
+      } while ((P >= q!) ||
+          (((P * P) - fourQ).modPow(legendreExponent, q!) != qMinusOne));
 
-      var result = _lucasSequence(q, P, Q, k);
+      var result = _lucasSequence(q!, P, Q, k);
       U = result[0];
       V = result[1];
 
-      if (((V * V) % q) == fourQ) {
+      if (((V * V) % q!) == fourQ) {
         // Integer division by 2, mod q
         if (_testBit(V, 0)) {
-          V = V + q;
+          V = V + q!;
         }
 
         V = (V >> 1);
@@ -203,7 +203,7 @@ class ECPoint extends ecc.ECPointBase {
   /// @param x affine x co-ordinate
   /// @param y affine y co-ordinate
   /// @param withCompression if true encode with point compression
-  ECPoint(ECCurve curve, ECFieldElement x, ECFieldElement y,
+  ECPoint(ECCurve curve, ECFieldElement? x, ECFieldElement? y,
       [bool withCompression = false])
       : super(curve, x, y, withCompression, _wNafMultiplier) {
     if ((x != null && y == null) || (x == null && y != null)) {
@@ -218,17 +218,17 @@ class ECPoint extends ecc.ECPointBase {
       return Uint8List.fromList([1]);
     }
 
-    var qLength = x.byteLength;
+    var qLength = x!.byteLength;
     if (compressed) {
       int pc;
 
-      if (_testBit(y.toBigInteger(), 0)) {
+      if (_testBit(y!.toBigInteger()!, 0)) {
         pc = 0x03;
       } else {
         pc = 0x02;
       }
 
-      var X = _x9IntegerToBytes(x.toBigInteger(), qLength);
+      var X = _x9IntegerToBytes(x!.toBigInteger(), qLength);
       var po = Uint8List(X.length + 1);
 
       po[0] = pc.toInt();
@@ -236,8 +236,8 @@ class ECPoint extends ecc.ECPointBase {
 
       return po;
     } else {
-      var X = _x9IntegerToBytes(x.toBigInteger(), qLength);
-      var Y = _x9IntegerToBytes(y.toBigInteger(), qLength);
+      var X = _x9IntegerToBytes(x!.toBigInteger(), qLength);
+      var Y = _x9IntegerToBytes(y!.toBigInteger(), qLength);
       var po = Uint8List(X.length + Y.length + 1);
 
       po[0] = 0x04;
@@ -250,12 +250,12 @@ class ECPoint extends ecc.ECPointBase {
 
   // B.3 pg 62
   @override
-  ECPoint operator +(ECPoint b) {
+  ECPoint? operator +(ECPoint? b) {
     if (isInfinity) {
       return b;
     }
 
-    if (b.isInfinity) {
+    if (b!.isInfinity) {
       return this;
     }
 
@@ -267,44 +267,46 @@ class ECPoint extends ecc.ECPointBase {
       }
 
       // this = -b, i.e. the result is the point at infinity
-      return curve.infinity;
+      return curve.infinity as ECPoint?;
     }
 
-    var gamma = (b.y - y) / (b.x - x);
+    var gamma = (b.y! - y!) / (b.x! - x!);
 
-    var x3 = (gamma.square() - x) - b.x;
-    var y3 = (gamma * (x - x3)) - y;
+    var x3 = (gamma.square() - x!) - b.x!;
+    var y3 = (gamma * (x! - x3)) - y!;
 
-    return ECPoint(curve, x3, y3, isCompressed);
+    return ECPoint(curve as ECCurve, x3 as ECFieldElement?,
+        y3 as ECFieldElement?, isCompressed);
   }
 
   // B.3 pg 62
   @override
-  ECPoint twice() {
+  ECPoint? twice() {
     if (isInfinity) {
       // Twice identity element (point at infinity) is identity
       return this;
     }
 
-    if (y.toBigInteger() == 0) {
+    if (y!.toBigInteger() == BigInt.zero) {
       // if y1 == 0, then (x1, y1) == (x1, -y1)
       // and hence this = -this and thus 2(x1, y1) == infinity
-      return curve.infinity;
+      return curve.infinity as ECPoint?;
     }
 
     var two = curve.fromBigInteger(BigInt.two);
     var three = curve.fromBigInteger(BigInt.from(3));
-    var gamma = ((x.square() * three) + curve.a) / (y * two);
+    var gamma = ((x!.square() * three) + curve.a!) / (y! * two);
 
-    var x3 = gamma.square() - (x * two);
-    var y3 = (gamma * (x - x3)) - y;
+    var x3 = gamma.square() - (x! * two);
+    var y3 = (gamma * (x! - x3)) - y!;
 
-    return ECPoint(curve, x3, y3, isCompressed);
+    return ECPoint(curve as ECCurve, x3 as ECFieldElement?,
+        y3 as ECFieldElement?, isCompressed);
   }
 
   // D.3.2 pg 102 (see Note:)
   @override
-  ECPoint operator -(ECPoint b) {
+  ECPoint? operator -(ECPoint b) {
     if (b.isInfinity) {
       return this;
     }
@@ -315,26 +317,27 @@ class ECPoint extends ecc.ECPointBase {
 
   @override
   ECPoint operator -() {
-    return ECPoint(curve, x, -y, isCompressed);
+    return ECPoint(curve as ECCurve, x as ECFieldElement?,
+        -y! as ECFieldElement?, isCompressed);
   }
 }
 
 /// Elliptic curve over Fp
 class ECCurve extends ecc.ECCurveBase {
-  final BigInt q;
-  ECPoint _infinity;
+  final BigInt? q;
+  ECPoint? _infinity;
 
-  ECCurve(this.q, BigInt a, BigInt b) : super(a, b) {
+  ECCurve(this.q, BigInt? a, BigInt? b) : super(a, b) {
     _infinity = ECPoint(this, null, null);
   }
 
   @override
-  int get fieldSize => q.bitLength;
+  int get fieldSize => q!.bitLength;
   @override
-  ECPoint get infinity => _infinity;
+  ECPoint? get infinity => _infinity;
 
   @override
-  ECFieldElement fromBigInteger(BigInt x) => ECFieldElement(q, x);
+  ECFieldElement fromBigInteger(BigInt? x) => ECFieldElement(q, x);
   @override
   ECPoint createPoint(BigInt x, BigInt y, [bool withCompression = false]) =>
       ECPoint(this, fromBigInteger(x), fromBigInteger(y), withCompression);
@@ -342,7 +345,7 @@ class ECCurve extends ecc.ECCurveBase {
   @override
   ECPoint decompressPoint(int yTilde, BigInt x1) {
     var x = fromBigInteger(x1);
-    var alpha = (x * ((x * x) + a)) + b;
+    var alpha = (x * ((x * x) + (a as ECFieldElement))) + (b as ECFieldElement);
     var beta = alpha.sqrt();
 
     //
@@ -353,12 +356,12 @@ class ECCurve extends ecc.ECCurveBase {
       throw ArgumentError('Invalid point compression');
     }
 
-    var betaValue = beta.toBigInteger();
+    var betaValue = beta.toBigInteger()!;
     var bit0 = _testBit(betaValue, 0) ? 1 : 0;
 
     if (bit0 != yTilde) {
       // Use the other root
-      beta = fromBigInteger(q - betaValue);
+      beta = fromBigInteger(q! - betaValue);
     }
 
     return ECPoint(this, x, beta, true);
@@ -380,24 +383,26 @@ class ECCurve extends ecc.ECCurveBase {
 /// algorithm.
 class _WNafPreCompInfo implements PreCompInfo {
   /// Array holding the precomputed [ECPoint]s used for the Window NAF multiplication.
-  List<ECPoint> preComp;
+  List<ECPoint>? preComp;
 
   /// Holds an [ECPoint] representing twice(this). Used for the Window NAF multiplication.
-  ECPoint twiceP;
+  ECPoint? twiceP;
 }
 
 /// Function implementing the WNAF (Window Non-Adjacent Form) multiplication algorithm. Multiplies [p]] by an integer [k] using
 /// the Window NAF method.
-ecc.ECPointBase _wNafMultiplier(
-    ecc.ECPointBase p, BigInt k, PreCompInfo preCompInfo) {
+ecc.ECPointBase? _wNafMultiplier(
+    ecc.ECPointBase p, BigInt? k, PreCompInfo? preCompInfo) {
   // Ignore empty PreCompInfo or PreCompInfo of incorrect type
-  _WNafPreCompInfo wnafPreCompInfo = preCompInfo;
-  if ((preCompInfo == null) && (preCompInfo is! _WNafPreCompInfo)) {
+  _WNafPreCompInfo wnafPreCompInfo;
+  if (preCompInfo is! _WNafPreCompInfo) {
     wnafPreCompInfo = _WNafPreCompInfo();
+  } else {
+    wnafPreCompInfo = preCompInfo;
   }
 
   // floor(log2(k))
-  var m = k.bitLength;
+  var m = k!.bitLength;
 
   // width of the Window NAF
   int width;
@@ -443,33 +448,33 @@ ecc.ECPointBase _wNafMultiplier(
   // The length of the precomputation array
   var preCompLen = 1;
 
-  var preComp = wnafPreCompInfo.preComp;
+  List<ECPoint?>? preComp = wnafPreCompInfo.preComp;
   var twiceP = wnafPreCompInfo.twiceP;
 
   // Check if the precomputed ECPoints already exist
   if (preComp == null) {
     // Precomputation must be performed from scratch, create an empty
     // precomputation array of desired length
-    preComp = List<ECPoint>.filled(1, p);
+    preComp = List<ECPoint>.filled(1, p as ECPoint);
   } else {
     // Take the already precomputed ECPoints to start with
     preCompLen = preComp.length;
   }
 
-  twiceP ??= p.twice();
+  twiceP ??= p.twice() as ECPoint?;
 
   if (preCompLen < reqPreCompLen) {
     // Precomputation array must be made bigger, copy existing preComp
     // array into the larger preComp array
-    var oldPreComp = preComp;
-    preComp = List<ECPoint>(reqPreCompLen);
+    var oldPreComp = preComp as List<ECPoint>;
+    preComp = List<ECPoint?>.filled(reqPreCompLen, null, growable: false);
     preComp.setAll(0, oldPreComp);
 
     for (var i = preCompLen; i < reqPreCompLen; i++) {
       // Compute the ECPoints for the precomputation array.
       // The values 1, 3, 5, ..., 2^(width-1)-1 times p are
       // computed
-      preComp[i] = twiceP + (preComp[i - 1]);
+      preComp[i] = twiceP! + (preComp[i - 1]);
     }
   }
 
@@ -480,21 +485,21 @@ ecc.ECPointBase _wNafMultiplier(
   // Apply the Window NAF to p using the precomputed ECPoint values.
   var q = p.curve.infinity;
   for (var i = l - 1; i >= 0; i--) {
-    q = q.twice();
+    q = q!.twice();
 
     if (wnaf[i] != 0) {
-      if (wnaf[i] > 0) {
-        q += preComp[(wnaf[i] - 1) ~/ 2];
+      if (wnaf[i]! > 0) {
+        q = q! + preComp[(wnaf[i]! - 1) ~/ 2];
       } else {
         // wnaf[i] < 0
-        q -= preComp[(-wnaf[i] - 1) ~/ 2];
+        q = q! - preComp[(-wnaf[i]! - 1) ~/ 2]!;
       }
     }
   }
 
   // Set PreCompInfo in ECPoint, such that it is available for next
   // multiplication.
-  wnafPreCompInfo.preComp = preComp;
+  wnafPreCompInfo.preComp = preComp.map((e) => e as ECPoint).toList();
   wnafPreCompInfo.twiceP = twiceP;
   p.preCompInfo = wnafPreCompInfo;
   return q;
@@ -510,14 +515,14 @@ ecc.ECPointBase _wNafMultiplier(
 /// <code>k = &sum;<sub>i=0</sub><sup>l-1</sup> k<sub>i</sub>2<sup>i</sup>
 /// </code>, where the <code>k<sub>i</sub></code> denote the elements of the
 /// returned <code>byte[]</code>.
-List<int> _windowNaf(int width, BigInt k) {
+List<int?> _windowNaf(int width, BigInt k) {
   // The window NAF is at most 1 element longer than the binary
   // representation of the integer k. byte can be used instead of short or
   // int unless the window width is larger than 8. For larger width use
   // short or int. However, a width of more than 8 is not efficient for
   // m = log2(q) smaller than 2305 Bits. Note: Values for m larger than
   // 1000 Bits are currently not used in practice.
-  var wnaf = List<int>(k.bitLength + 1);
+  var wnaf = List<int?>.filled(k.bitLength + 1, null, growable: false);
 
   // 2^width as short and BigInt
   var pow2wB = (1 << width);
@@ -543,14 +548,14 @@ List<int> _windowNaf(int width, BigInt k) {
       }
 
       // convert to 'Java byte'
-      wnaf[i] %= 0x100;
-      if ((wnaf[i] & 0x80) != 0) {
-        wnaf[i] = wnaf[i] - 256;
+      wnaf[i] = wnaf[i]! % 0x100;
+      if ((wnaf[i]! & 0x80) != 0) {
+        wnaf[i] = wnaf[i]! - 256;
       }
 
       // wnaf[i] is now in [-2^(width-1), 2^(width-1)-1]
 
-      k = k - BigInt.from(wnaf[i]);
+      k = k - BigInt.from(wnaf[i]!);
       length = i;
     } else {
       wnaf[i] = 0;
@@ -564,12 +569,12 @@ List<int> _windowNaf(int width, BigInt k) {
   length++;
 
   // Reduce the WNAF array to its actual length
-  var wnafShort = List<int>(length);
+  var wnafShort = List<int?>.filled(length, null, growable: false);
   wnafShort.setAll(0, wnaf.sublist(0, length));
   return wnafShort;
 }
 
-Uint8List _x9IntegerToBytes(BigInt s, int qLength) {
+Uint8List _x9IntegerToBytes(BigInt? s, int qLength) {
   var bytes = Uint8List.fromList(utils.encodeBigInt(s));
 
   if (qLength < bytes.length) {

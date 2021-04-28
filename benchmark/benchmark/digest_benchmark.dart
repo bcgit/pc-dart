@@ -12,7 +12,7 @@ class DigestBenchmark extends RateBenchmark {
   final String _digestName;
   final Uint8List _data;
 
-  Digest _digest;
+  late Digest _digest;
 
   DigestBenchmark(String digestName, [int dataLength = 1024 * 1024])
       : _digestName = digestName,

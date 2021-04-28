@@ -1,3 +1,5 @@
+// This file has been migrated.
+
 library impl.digest.shake;
 
 import 'dart:typed_data';
@@ -19,7 +21,7 @@ class SHAKEDigest extends KeccakEngine implements Xof {
       Digest,
       _shakeREGEX,
       (_, final Match match) => () {
-            var bitLength = int.parse(match.group(1));
+            var bitLength = int.parse(match.group(1)!);
             return SHAKEDigest(bitLength);
           });
 
