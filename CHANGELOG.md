@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.1.0 (2021-05-31)
+
+* SRP support
+* Readme correction
+
 #### Version 3.0.1 (2021-03-24)
 
 First non-nullable-by-default release
