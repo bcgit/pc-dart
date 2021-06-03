@@ -1,10 +1,15 @@
 Changelog
 =========
 
+#### Version 3.1.1 (2021-06-04)
+
+* Updated pubspec
+
 #### Version 3.1.0 (2021-05-31)
 
 * SRP support
 * Readme correction
+* not published
 
 #### Version 3.0.1 (2021-03-24)
 
