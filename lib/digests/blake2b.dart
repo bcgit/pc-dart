@@ -149,7 +149,7 @@ class Blake2bDigest extends BaseDigest implements Digest {
             .setRange(_bufferPos, _bufferPos + remainingLength, inp, inpOff);
         _t0.sum(_blockSize);
         if (_t0.lo32 == 0 && _t0.hi32 == 0) _t1.sum(1);
-        _compress(inp, 0);
+        _compress(_buffer, 0);
         _bufferPos = 0;
         _buffer!.fillRange(0, _buffer!.length, 0); // clear buffer
       } else {
