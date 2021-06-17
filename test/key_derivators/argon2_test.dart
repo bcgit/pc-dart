@@ -9,6 +9,12 @@ import '../test/src/helpers.dart';
 
 const int DEFAULT_OUTPUTLEN = 32;
 
+/// First ported to Dart by Graciliano M. Passos:
+/// - https://pub.dev/packages/argon2
+/// - https://github.com/gmpassos/argon2
+///
+/// The linked project was adapted for the purposes of this project, since it
+/// is a 1:1 port of BouncyCastle's Java implementation.
 void main() {
   group('Argon2BytesGenerator', () {
     test('Hash Tests', () {
