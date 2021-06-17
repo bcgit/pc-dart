@@ -1,6 +1,20 @@
 Changelog
 =========
 
+#### Version 3.1.1 (2021-06-04)
+
+* Updated pubspec
+
+#### Version 3.1.0 (2021-05-31)
+
+* SRP support
+* Readme correction
+* not published
+
+#### Version 3.0.1 (2021-03-24)
+
+First non-nullable-by-default release
+
 #### Version 3.0.0-nullsafety.2 (2021-02-05)
 
 * Ports this library to non-nullable-by-default, a new feature in the Dart language
