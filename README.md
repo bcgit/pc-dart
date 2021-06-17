@@ -18,7 +18,7 @@ This library was adopted from the original project at https://github.com/PointyC
 This library is now ported to non-nullable-by-default, a breaking language feature released by the Dart team! See
 https://dart.dev/null-safety and https://dart.dev/null-safety/migration-guide for more details. Please note that both
 null-safe and non-null-safe versions are available (v3.x.x-nullsafety for null-safe, v2.x.x for non-null-safe). However,
-once null-safety comes out of beta, only the null-safe version of this library will be actively maintained. 
+only the null-safe version of this library is actively maintained. 
 
 ## Algorithms
 
@@ -104,9 +104,12 @@ or like this `StreamCipher('AES/SomeStreamModeHere')`. See sections below for mo
   * '(DET-)ECDSA'
   * 'RSA'
 
-**Password based key derivators:** Instantiation using registry like this `KeyDerivator('SomeDigestHere/HMAC/PBKDF2')` or `KeyDerivator('scrypt')`. To initialize, you'll need a `Pbkdf2Parameters` or `ScryptParameters`.
+**Password based key derivators:** Instantiation using registry like this `KeyDerivator('SomeDigestHere/HMAC/PBKDF2')` 
+or `KeyDerivator('scrypt/argon2')`. To initialize, you'll need a `Pbkdf2Parameters`, `ScryptParameters`, or 
+`Argon2Parameters`.
   * 'PBKDF2'
   * 'scrypt'
+  * 'argon2'
 
 **HMAC based key derivators:** Instantiate using registry like this `KeyDerivator('SomeDigestHere/HKDF')`. To initialize, use an `HkdfParameters`.
   * 'HKDF'
