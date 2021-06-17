@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.1.2 (2021-06-17)
+
+* Critical fixed to Blake2b and additional test vectors see https://github.com/bcgit/pc-dart/pull/108
+
 #### Version 3.1.1 (2021-06-04)
 
 * Updated pubspec
