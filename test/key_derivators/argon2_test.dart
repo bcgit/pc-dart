@@ -106,8 +106,6 @@ void _hashTest(int version, int iterations, int memoryPowerOf2, String password,
     memoryPowerOf2: memoryPowerOf2,
   );
 
-  print('_hashTest> $parameters');
-
   var gen = Argon2BytesGenerator();
   gen.init(parameters);
 
@@ -115,8 +113,6 @@ void _hashTest(int version, int iterations, int memoryPowerOf2, String password,
 
   var result = gen.process(passwordBytes);
 
-  print(result);
-  print(createUint8ListFromHexString(passwordRef));
   expect(result, createUint8ListFromHexString(passwordRef));
 
   // Should be able to re-use generator after successful use

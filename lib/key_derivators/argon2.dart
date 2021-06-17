@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/src/impl/base_key_derivator.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 import 'api.dart';
 import 'package:pointycastle/digests/blake2b.dart';
 import 'package:pointycastle/src/utils.dart';
@@ -37,6 +38,9 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
   late int _segmentLength;
   late int _laneLength;
 
+  static final FactoryConfig factoryConfig =
+    StaticFactoryConfig(KeyDerivator, 'argon2', () => Argon2BytesGenerator());
+
   Argon2BytesGenerator();
 
   Argon2Parameters get parameters => _parameters;
@@ -70,10 +74,11 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
     _doInit(parameters);
   }
 
+  @override
   int deriveKey(Uint8List inp, int inpOff, Uint8List out,
       int outOff) {
     inp = inp.sublist(inpOff);
-    var outLen = out.length - outOff;
+    var outLen = parameters.desiredKeyLength;
 
     if (outLen < MIN_OUTLEN) {
       throw ArgumentError.value(outLen, 'outLen',
@@ -260,7 +265,7 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
       /* Can not reference other lanes yet */
       refLane = position.lane;
     }
-    return refLane as int;
+    return refLane;
   }
 
   int _getRefColumn(
@@ -292,8 +297,8 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
 
     var relativePosition = pseudoRandom & 0xFFFFFFFF;
     relativePosition = unsignedShiftRight64(relativePosition * relativePosition, 32);
-    relativePosition = unsignedShiftRight64(referenceAreaSize -
-        1 - (referenceAreaSize * relativePosition), 32);
+    relativePosition = referenceAreaSize -
+        1 - unsignedShiftRight64(referenceAreaSize * relativePosition, 32);
 
     return (startPosition + relativePosition) % _laneLength;
   }

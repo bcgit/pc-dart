@@ -31,6 +31,10 @@ export 'package:pointycastle/block/modes/ige.dart';
 
 // digests
 export 'package:pointycastle/digests/blake2b.dart';
+export 'package:pointycastle/digests/keccak.dart';
+export 'package:pointycastle/digests/sha3.dart';
+export 'package:pointycastle/digests/shake.dart';
+export 'package:pointycastle/digests/cshake.dart';
 export 'package:pointycastle/digests/md2.dart';
 export 'package:pointycastle/digests/md4.dart';
 export 'package:pointycastle/digests/md5.dart';
@@ -58,6 +62,7 @@ export 'package:pointycastle/key_derivators/api.dart';
 export 'package:pointycastle/key_derivators/hkdf.dart';
 export 'package:pointycastle/key_derivators/pbkdf2.dart';
 export 'package:pointycastle/key_derivators/scrypt.dart';
+export 'package:pointycastle/key_derivators/argon2.dart';
 
 // key_generators
 export 'package:pointycastle/key_generators/api.dart';
