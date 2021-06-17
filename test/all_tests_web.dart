@@ -29,6 +29,7 @@ import 'impl_test.dart' as impl_test;
 import 'key_derivators/hkdf_test.dart' as hkdf_test;
 import 'key_derivators/pbkdf2_test.dart' as pbkdf2_test;
 import 'key_derivators/scrypt_test.dart' as scrypt_test;
+import 'key_derivators/argon2_test.dart' as argon2_test;
 import 'key_generators/ec_key_generator_test.dart' as ec_key_generator_test;
 import 'key_generators/rsa_key_generator_test.dart' as rsa_key_generator_test;
 import 'macs/cbc_block_cipher_mac_test.dart' as cbc_block_cipher_mac_test;
@@ -90,6 +91,7 @@ void main() {
   tiger_test.main();
   whirlpool_test.main();
   pbkdf2_test.main();
+  argon2_test.main();
   scrypt_test.main();
   ec_key_generator_test.main();
   rsa_key_generator_test.main();
