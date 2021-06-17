@@ -7,7 +7,17 @@ import 'api.dart';
 import 'package:pointycastle/digests/blake2b.dart';
 import 'package:pointycastle/src/utils.dart';
 
-/// Argon2 PBKDF.
+/// Argon2 PBKDF, the winner of the 2015 Password Hashing Competition.
+/// Read more:
+/// - https://password-hashing.net/
+/// - https://www.ietf.org/archive/id/draft-irtf-cfrg-argon2-03.txt
+///
+/// First ported to Dart by Graciliano M. Passos:
+/// - https://pub.dev/packages/argon2
+/// - https://github.com/gmpassos/argon2
+///
+/// The linked project was adapted for the purposes of this project, since it
+/// is a 1:1 port of BouncyCastle's Java implementation.
 class Argon2BytesGenerator extends BaseKeyDerivator {
   static const int ARGON2_BLOCK_SIZE = 1024;
   static const int ARGON2_QWORDS_IN_BLOCK = ARGON2_BLOCK_SIZE ~/ 8;
