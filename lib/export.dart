@@ -79,6 +79,7 @@ export 'package:pointycastle/paddings/iso7816d4.dart';
 export 'package:pointycastle/random/auto_seed_block_ctr_random.dart';
 export 'package:pointycastle/random/block_ctr_random.dart';
 export 'package:pointycastle/random/fortuna_random.dart';
+export 'package:pointycastle/random/dart_secure_random.dart';
 
 // signers
 export 'package:pointycastle/signers/ecdsa_signer.dart';

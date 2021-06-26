@@ -51,6 +51,7 @@ import 'random/auto_seed_block_ctr_random_test.dart'
     as auto_seed_block_ctr_random_test;
 import 'random/block_ctr_random_test.dart' as block_ctr_random_test;
 import 'random/fortuna_random_test.dart' as fortuna_random_test;
+import 'random/dart_secure_random_test.dart' as dart_secure_random_test;
 import 'random/fixed_rng_test.dart' as fixed_rng_test;
 import 'signers/ecdsa_signer_test.dart' as ecdsa_signer_test;
 import 'signers/pss_signer_test.dart' as pss_signer_test;
@@ -110,6 +111,7 @@ void main() {
   auto_seed_block_ctr_random_test.main();
   block_ctr_random_test.main();
   fortuna_random_test.main();
+  dart_secure_random_test.main();
   fixed_rng_test.main();
   ecdsa_signer_test.main();
   rsa_signer_test.main();
