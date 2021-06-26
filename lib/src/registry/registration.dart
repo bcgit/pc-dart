@@ -91,6 +91,7 @@ import 'package:pointycastle/paddings/pkcs7.dart';
 import 'package:pointycastle/random/auto_seed_block_ctr_random.dart';
 import 'package:pointycastle/random/block_ctr_random.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
+import 'package:pointycastle/random/dart_secure_random.dart';
 import 'package:pointycastle/signers/ecdsa_signer.dart';
 import 'package:pointycastle/signers/rsa_signer.dart';
 import 'package:pointycastle/src/registry/registry.dart';
@@ -239,6 +240,7 @@ void _registerRandoms(FactoryRegistry registry) {
   registry.register(AutoSeedBlockCtrRandom.factoryConfig);
   registry.register(BlockCtrRandom.factoryConfig);
   registry.register(FortunaRandom.factoryConfig);
+  registry.register(DartSecureRandom.factoryConfig);
 }
 
 void _registerSigners(FactoryRegistry registry) {
