@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1.dart';
 import 'package:pointycastle/asn1/asn1_object.dart';
 import 'package:pointycastle/asn1/asn1_parser.dart';
 import 'package:pointycastle/asn1/primitives/asn1_bit_string.dart';
@@ -12,7 +13,41 @@ import 'package:pointycastle/asn1/primitives/asn1_sequence.dart';
 import 'package:pointycastle/asn1/primitives/asn1_set.dart';
 import 'package:test/test.dart';
 
+import '../test/src/helpers.dart';
+
 void main() {
+  test('data offset regression PR #111', () {
+    /*
+   both vectors are OCTET STRINGS generate using bc-java
+
+     byte[] z = new byte[127];
+        for (int t=0; t<z.length; t++) {
+            z[t] = (byte)t;
+        }
+        System.out.println(Hex.toHexString(new DEROctetString(z).getEncoded()));
+
+        z = new byte[128];
+        for (int t=0; t<z.length; t++) {
+            z[t] = (byte)t;
+        }
+        System.out.println( Hex.toHexString(new DEROctetString(z).getEncoded()));
+
+   */
+
+    var octetString127Len = createUint8ListFromHexString(
+        '047f000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e');
+    var octetString128Len = createUint8ListFromHexString(
+        '048180000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f');
+
+    var offset127 = ASN1Utils.calculateValueStartPosition(octetString127Len);
+    expect(offset127, equals(2));
+    expect(octetString127Len[offset127], equals(00));
+
+    var offset128 = ASN1Utils.calculateValueStartPosition(octetString128Len);
+    expect(offset128, equals(3));
+    expect(octetString128Len[offset128], equals(00));
+  });
+
   ///
   /// Test simple structur
   ///
@@ -307,7 +342,7 @@ RVTxIJddHhpHfW5c2lX+ERf3Ni0fcJqcCZBPyGHUDSYqNrDwRLQ6dyVxz1Jl0oAc
     var asn1Object = e1.elements!.elementAt(0);
 
     var integer1 =
-        ASN1Parser(asn1Object.valueBytes).nextObject() as ASN1Integer;
+    ASN1Parser(asn1Object.valueBytes).nextObject() as ASN1Integer;
 
     expect(integer1.totalEncodedByteLength, 3);
     expect(integer1.valueByteLength, 1);

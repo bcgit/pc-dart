@@ -9,12 +9,13 @@ class ASN1Utils {
   ///
   /// Calculates the start position of the value bytes for the given [encodedBytes].
   ///
-  /// It will return 2 if the **length byte** is less than 127 or the length calculate on the **length byte** value.
+  /// It will return 2 if the **length byte** is less than or equal 127 or the length calculate on the **length byte** value.
   /// This will throw a [RangeError] if the given [encodedBytes] has length < 2.
   ///
   static int calculateValueStartPosition(Uint8List encodedBytes) {
+    // TODO tag length can be >1
     var length = encodedBytes[1];
-    if (length < 0x7F) {
+    if (length <= 0x7F) {
       return 2;
     } else {
       return 2 + (length & 0x7F);
