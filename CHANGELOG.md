@@ -1,9 +1,10 @@
 Changelog
 =========
 
-#### Version 3.1.3 (TBA)
+#### Version 3.1.3 (2021-06-29)
 
 * Add Argon2
+* Fix to ASN1 parsing, calculation of start position.
 
 #### Version 3.1.2 (2021-06-17)
 
