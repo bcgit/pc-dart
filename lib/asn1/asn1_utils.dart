@@ -14,7 +14,7 @@ class ASN1Utils {
   ///
   static int calculateValueStartPosition(Uint8List encodedBytes) {
     var length = encodedBytes[1];
-    if (length < 0x7F) {
+    if (length <= 0x7F) {
       return 2;
     } else {
       return 2 + (length & 0x7F);
