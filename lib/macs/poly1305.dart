@@ -4,6 +4,8 @@ library impl.mac.poly1305;
 
 import 'dart:typed_data';
 
+import 'package:pointycastle/src/platform_check/platform_check.dart';
+
 import '../api.dart';
 import '../src/impl/base_mac.dart';
 import '../src/registry/registry.dart';
@@ -15,10 +17,12 @@ class Poly1305 extends BaseMac {
   static const R_MASK_HIGH_4 = 0x0F;
 
   Poly1305() {
+    Platform.instance.assertFullWidthInteger();
     cipher = null;
   }
 
   Poly1305.withCipher(final this.cipher) {
+    Platform.instance.assertFullWidthInteger();
     if (cipher!.blockSize != BLOCK_SIZE) {
       throw ArgumentError('Poly1305 requires a 128 bit block cipher.');
     }
@@ -187,6 +191,7 @@ class Poly1305 extends BaseMac {
   }
 
   void processBlock() {
+    // TODO Calculation varied between web and native.
     if (currentBlockOffset < BLOCK_SIZE) {
       currentBlock[currentBlockOffset] = 1;
       for (var i = currentBlockOffset + 1; i < BLOCK_SIZE; i++) {

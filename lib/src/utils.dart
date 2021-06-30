@@ -169,6 +169,13 @@ abstract class Pack {
     }
   }
 
+  static void littleEndianToInt32AtList(Uint8List bs, int off, Uint32List ns) {
+    for (var i = 0; i < ns.length; ++i) {
+      ns[i] = littleEndianToInt(bs, off);
+      off += 4;
+    }
+  }
+
   static Uint8List longToLittleEndianList(int n) {
     var bs = Uint8List(8);
     longToLittleEndianAtList(n, bs, 0);
@@ -301,6 +308,8 @@ abstract class Longs {
   static int toInt32(int n) => (n & 0xFFFFFFFF);
 }
 
+const mask64 = (0xFFFFFFFF << 32) + 0xFFFFFFFF;
+
 int unsignedShiftRight64(int n, int count) {
   if (Platform.instance.isNative) {
     return (n >> count) & ~(-1 << (64 - count));
@@ -309,8 +318,7 @@ int unsignedShiftRight64(int n, int count) {
     if (n >= 0) {
       return (n >> count);
     } else {
-      return (n >> count) ^
-      ((0xFFFFFFFFFFFFFFFF) ^ ((1 << (64 - count)) - 1));
+      return (n >> count) ^ ((mask64) ^ ((1 << (64 - count)) - 1));
     }
   }
 }

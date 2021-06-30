@@ -7,7 +7,7 @@ import 'dart:typed_data';
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import './src/helpers.dart';
+import '../src/helpers.dart';
 
 void runDigestTests(Digest digest, List<String> plainDigestTextPairs) {
   group('${digest.algorithmName}:', () {

@@ -9,7 +9,7 @@ import 'package:pointycastle/key_derivators/hkdf.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
 
-import '../test/key_derivators_tests.dart';
+import '../test/runners/key_derivators.dart';
 import '../test/src/helpers.dart';
 
 void main() {

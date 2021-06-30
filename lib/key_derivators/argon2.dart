@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
-import 'package:pointycastle/src/impl/base_key_derivator.dart';
-import 'package:pointycastle/src/registry/registry.dart';
-import 'api.dart';
 import 'package:pointycastle/digests/blake2b.dart';
+import 'package:pointycastle/src/impl/base_key_derivator.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 import 'package:pointycastle/src/utils.dart';
+
+import 'api.dart';
 
 /// Argon2 PBKDF, the winner of the 2015 Password Hashing Competition.
 /// Read more:
@@ -39,7 +41,9 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
   /// Minimum and maximum number of passes.
   static const int MIN_ITERATIONS = 1;
 
-  static const int M32L = 0xFFFFFFFFFFFFFFFF;
+  //static const int M32L = 0xFFFFFFFFFFFFFFFF;
+
+  static const int M32L = (0xFFFFFFFF << 32) + 0xFFFFFFFF;
 
   static final Uint8List _ZERO_BYTES = Uint8List(4);
 
@@ -49,9 +53,11 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
   late int _laneLength;
 
   static final FactoryConfig factoryConfig =
-    StaticFactoryConfig(KeyDerivator, 'argon2', () => Argon2BytesGenerator());
+      StaticFactoryConfig(KeyDerivator, 'argon2', () => Argon2BytesGenerator());
 
-  Argon2BytesGenerator();
+  Argon2BytesGenerator() {
+    Platform.instance.assertFullWidthInteger();
+  }
 
   Argon2Parameters get parameters => _parameters;
 
@@ -85,14 +91,13 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
   }
 
   @override
-  int deriveKey(Uint8List inp, int inpOff, Uint8List out,
-      int outOff) {
+  int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     inp = inp.sublist(inpOff);
     var outLen = parameters.desiredKeyLength;
 
     if (outLen < MIN_OUTLEN) {
-      throw ArgumentError.value(outLen, 'outLen',
-          'output length less than $MIN_OUTLEN');
+      throw ArgumentError.value(
+          outLen, 'outLen', 'output length less than $MIN_OUTLEN');
     }
 
     var tmpBlockBytes = Uint8List(ARGON2_BLOCK_SIZE);
@@ -119,19 +124,15 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
     /* Minimum memoryBlocks = 8L blocks, where L is the number of lanes */
     var memoryBlocks = parameters.memory;
 
-    if (memoryBlocks <
-        2 * ARGON2_SYNC_POINTS * parameters.lanes) {
-      memoryBlocks =
-          2 * ARGON2_SYNC_POINTS * parameters.lanes;
+    if (memoryBlocks < 2 * ARGON2_SYNC_POINTS * parameters.lanes) {
+      memoryBlocks = 2 * ARGON2_SYNC_POINTS * parameters.lanes;
     }
 
-    _segmentLength = memoryBlocks ~/
-        (parameters.lanes * ARGON2_SYNC_POINTS);
+    _segmentLength = memoryBlocks ~/ (parameters.lanes * ARGON2_SYNC_POINTS);
     _laneLength = _segmentLength * ARGON2_SYNC_POINTS;
 
     /* Ensure that all segments have equal length */
-    memoryBlocks = _segmentLength *
-        (parameters.lanes * ARGON2_SYNC_POINTS);
+    memoryBlocks = _segmentLength * (parameters.lanes * ARGON2_SYNC_POINTS);
 
     _initMemory(memoryBlocks);
   }
@@ -306,9 +307,11 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
     }
 
     var relativePosition = pseudoRandom & 0xFFFFFFFF;
-    relativePosition = unsignedShiftRight64(relativePosition * relativePosition, 32);
+    relativePosition =
+        unsignedShiftRight64(relativePosition * relativePosition, 32);
     relativePosition = referenceAreaSize -
-        1 - unsignedShiftRight64(referenceAreaSize * relativePosition, 32);
+        1 -
+        unsignedShiftRight64(referenceAreaSize * relativePosition, 32);
 
     return (startPosition + relativePosition) % _laneLength;
   }
@@ -444,8 +447,6 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
   }
 
   static int _intToLong(int x) => (x & M32L);
-
-
 }
 
 class _FillBlock {

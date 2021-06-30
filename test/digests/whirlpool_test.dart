@@ -4,7 +4,7 @@ library test.digests.whirlpool_test;
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/digest_tests.dart';
+import '../test/runners/digest.dart';
 
 void main() {
   runDigestTests(Digest('Whirlpool'), [

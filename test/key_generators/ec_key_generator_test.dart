@@ -3,7 +3,7 @@
 library test.key_generators.ec_key_generator_test;
 
 import 'package:pointycastle/pointycastle.dart';
-import '../test/key_generators_tests.dart';
+import '../test/runners/key_generators.dart';
 import '../test/src/null_secure_random.dart';
 
 void main() {

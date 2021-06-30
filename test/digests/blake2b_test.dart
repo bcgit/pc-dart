@@ -8,7 +8,7 @@ import 'package:pointycastle/digests/blake2b.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
 
-import '../test/digest_tests.dart';
+import '../test/runners/digest.dart';
 import '../test/src/helpers.dart';
 
 void main() {

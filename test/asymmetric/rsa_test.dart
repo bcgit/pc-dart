@@ -5,7 +5,7 @@ library test.asymmetric.rsa_test;
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/asymmetric_block_cipher_tests.dart';
+import '../test/runners/asymmetric_block_cipher.dart';
 
 void main() {
   var modulus = BigInt.parse(

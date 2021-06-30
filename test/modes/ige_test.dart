@@ -4,7 +4,7 @@ library test.modes.ige_test;
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/block_cipher_tests.dart';
+import '../test/runners/block_cipher.dart';
 import '../test/src/helpers.dart';
 
 void main() {

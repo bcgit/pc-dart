@@ -1,3 +1,4 @@
+@TestOn('vm')
 library test.stream.chacha20poly1305_test;
 
 import 'dart:typed_data';
@@ -35,8 +36,7 @@ void main() {
 
 void runTest(Uint8List K, Uint8List P, Uint8List A, Uint8List N, Uint8List C,
     Uint8List T) {
-  test('ChaChaPoly1305 Test #${++i}', ()
-  {
+  test('ChaChaPoly1305 Test #${++i}', () {
     var parameters = AEADParameters(KeyParameter(K), T.length * 8, N, A);
     var chaChaEngine = ChaCha20Poly1305(ChaCha7539Engine(), Poly1305())
       ..init(true, parameters);

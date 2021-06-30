@@ -4,7 +4,7 @@ library test.key_derivators.scrypt_test;
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/key_derivators_tests.dart';
+import '../test/runners/key_derivators.dart';
 import '../test/src/helpers.dart';
 
 /// NOTE: the expected results for these tests are taken from the Java library found at

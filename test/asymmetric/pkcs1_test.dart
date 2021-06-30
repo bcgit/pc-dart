@@ -5,7 +5,7 @@ library test.asymmetric.pkcs1_test;
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 
-import '../test/asymmetric_block_cipher_tests.dart';
+import '../test/runners/asymmetric_block_cipher.dart';
 import '../test/src/null_asymmetric_block_cipher.dart';
 import '../test/src/null_secure_random.dart';
 

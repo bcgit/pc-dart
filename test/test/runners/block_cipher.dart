@@ -7,7 +7,7 @@ import 'dart:typed_data';
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import './src/helpers.dart';
+import '../src/helpers.dart';
 
 void runBlockCipherTests(BlockCipher cipher, CipherParameters? params,
     List<String> plainCipherTextPairs) {

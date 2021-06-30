@@ -4,7 +4,7 @@ library test.macs.cbc_block_cipher_mac_test;
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/mac_tests.dart';
+import '../test/runners/mac.dart';
 import '../test/src/helpers.dart';
 
 void main() {

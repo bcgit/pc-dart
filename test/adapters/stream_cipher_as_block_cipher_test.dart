@@ -5,7 +5,7 @@ library test.adapters.stream_cipher_as_block_cipher_test;
 import 'package:test/test.dart';
 import 'package:pointycastle/adapters/stream_cipher_as_block_cipher.dart';
 
-import '../test/block_cipher_tests.dart';
+import '../test/runners/block_cipher.dart';
 import '../test/src/helpers.dart';
 import '../test/src/null_stream_cipher.dart';
 

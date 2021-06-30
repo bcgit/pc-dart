@@ -7,7 +7,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import './src/helpers.dart';
+import '../src/helpers.dart';
 
 void runPaddingTest(Padding pad, CipherParameters? params, Uint8List unpadData,
     int padLength, String padData) {

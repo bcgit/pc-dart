@@ -5,7 +5,7 @@ library test.test.signer_tests;
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import './src/helpers.dart';
+import '../src/helpers.dart';
 
 void runSignerTests(Signer signer, CipherParameters Function() signParams,
     CipherParameters Function() verifyParams, List messageSignaturePairs) {

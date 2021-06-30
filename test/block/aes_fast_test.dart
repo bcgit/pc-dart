@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/block_cipher_tests.dart';
+import '../test/runners/block_cipher.dart';
 
 void main() {
   final key = Uint8List.fromList([

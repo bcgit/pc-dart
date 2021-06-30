@@ -7,7 +7,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import './src/helpers.dart';
+import '../src/helpers.dart';
 
 class PlainTextDigestPair {
   PlainTextDigestPair(this.plainText, this.hexDigestText);

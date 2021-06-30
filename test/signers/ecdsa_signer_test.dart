@@ -5,7 +5,7 @@ library test.paddings.ecdsa_signer_test;
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/signers/ecdsa_signer.dart';
 
-import '../test/signer_tests.dart';
+import '../test/runners/signer.dart';
 import '../test/src/null_secure_random.dart';
 
 void main() {

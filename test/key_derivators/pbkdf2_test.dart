@@ -4,7 +4,7 @@ library test.key_derivators.pbkdf2_test;
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/key_derivators_tests.dart';
+import '../test/runners/key_derivators.dart';
 import '../test/src/helpers.dart';
 
 void main() {

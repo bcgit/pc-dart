@@ -8,7 +8,7 @@ import 'dart:typed_data';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
 
-import '../test/key_generators_tests.dart';
+import '../test/runners/key_generators.dart';
 import '../test/src/fixed_secure_random.dart';
 import '../test/src/helpers.dart';
 

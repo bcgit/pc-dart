@@ -5,6 +5,15 @@ library src.utils_test;
 import 'package:pointycastle/src/utils.dart';
 import 'package:test/test.dart';
 
+void main() {
+  group('BigInt utility functions ', () {
+    testUnsignedEncoding();
+    testArbitrarySignDecoding();
+    testTwosComplimentBigIntEncoding();
+    testTwosComplimentBigIntOverRange();
+  });
+}
+
 void testTwosComplimentBigIntEncoding() {
   test('twos compliment encoding', () {
     var bi1 = BigInt.zero - BigInt.from(128);
@@ -71,14 +80,5 @@ void testArbitrarySignDecoding() {
 
     expect(decodeBigIntWithSign(-1, [0]), BigInt.from(0));
     expect(decodeBigIntWithSign(1, [0]), BigInt.from(0));
-  });
-}
-
-void main() {
-  group('BigInt utility functions ', () {
-    testUnsignedEncoding();
-    testArbitrarySignDecoding();
-    testTwosComplimentBigIntEncoding();
-    testTwosComplimentBigIntOverRange();
   });
 }

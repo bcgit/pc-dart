@@ -14,6 +14,13 @@ import '../test/src/helpers.dart';
 import '../test/src/null_asymmetric_block_cipher.dart';
 
 //================================================================
+
+void main() {
+  rsaesOaepFromBC();
+  rsaOaepStandardTests();
+}
+
+//================================================================
 /// Tests for RSA-OAEP with a known-correct test vector.
 ///
 /// Test RSA-OAEP using the test vector from 'RSAES-OAEP Encryption Scheme:
@@ -737,10 +744,3 @@ class _OAEPTestEntropySource extends SecureRandomBase {
   }
 }
 
-//================================================================
-
-void main() {
-  rsaesOaepFromBC();
-
-  rsaOaepStandardTests();
-}

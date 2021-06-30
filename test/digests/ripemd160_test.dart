@@ -4,7 +4,7 @@ library test.digests.ripemd160_test;
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/digest_tests.dart';
+import '../test/runners/digest.dart';
 
 /// NOTE: abc and empty string test vectors were taken from
 /// [http://homes.esat.kuleuven.be/~bosselae/ripemd160.html].

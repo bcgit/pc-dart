@@ -7,13 +7,50 @@ import 'dart:typed_data';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/mac_tests.dart';
+import '../test/runners/mac.dart';
 import '../test/src/helpers.dart';
+
+void main() {
+  final mac = Mac('SHA-1/HMAC');
+  final key = Uint8List.fromList([
+    0x00,
+    0x11,
+    0x22,
+    0x33,
+    0x44,
+    0x55,
+    0x66,
+    0x77,
+    0x88,
+    0x99,
+    0xAA,
+    0xBB,
+    0xCC,
+    0xDD,
+    0xEE,
+    0xFF
+  ]);
+  final keyParam = KeyParameter(key);
+
+  mac.init(keyParam);
+
+  runMacTests(mac, [
+    PlainTextDigestPair(
+        createUint8ListFromString(
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit...'),
+        'a646990cca06cb7550a91bdd9ae481c6472f06bc'),
+    PlainTextDigestPair(
+        createUint8ListFromString(
+            'En un lugar de La Mancha, de cuyo nombre no quiero acordarme...'),
+        '1d710be3529ecee6ddd2f1ad4c3c12d6f467243f'),
+  ]);
+
+  testWithRfc4231();
+}
 
 /// Testing HMAC with using the test vectors from
 /// [RFC 4231](https://tools.ietf.org/html/rfc4231) _Identifiers and Test
 /// Vectors for HMAC-SHA-224, HMAC-SHA-256, HMAC-SHA-384, and HMAC-SHA-512_.
-
 void testWithRfc4231() {
   // THe RFC has seven test cases, with data that is replicated here.
 
@@ -186,40 +223,3 @@ void testWithRfc4231() {
   ]);
 }
 
-void main() {
-  final mac = Mac('SHA-1/HMAC');
-  final key = Uint8List.fromList([
-    0x00,
-    0x11,
-    0x22,
-    0x33,
-    0x44,
-    0x55,
-    0x66,
-    0x77,
-    0x88,
-    0x99,
-    0xAA,
-    0xBB,
-    0xCC,
-    0xDD,
-    0xEE,
-    0xFF
-  ]);
-  final keyParam = KeyParameter(key);
-
-  mac.init(keyParam);
-
-  runMacTests(mac, [
-    PlainTextDigestPair(
-        createUint8ListFromString(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit...'),
-        'a646990cca06cb7550a91bdd9ae481c6472f06bc'),
-    PlainTextDigestPair(
-        createUint8ListFromString(
-            'En un lugar de La Mancha, de cuyo nombre no quiero acordarme...'),
-        '1d710be3529ecee6ddd2f1ad4c3c12d6f467243f'),
-  ]);
-
-  testWithRfc4231();
-}

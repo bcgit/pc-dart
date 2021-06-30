@@ -5,7 +5,7 @@ library test.test.key_derivators_tests;
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
-import './src/helpers.dart';
+import '../src/helpers.dart';
 
 void runKeyDerivatorTests(
     KeyDerivator keyDerivator, List<dynamic> paramsPasswordKeyTuples) {

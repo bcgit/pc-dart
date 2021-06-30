@@ -1,5 +1,5 @@
 // See file LICENSE for more information.
-
+@TestOn('vm')
 library test.modes.gcm_test;
 
 import 'dart:typed_data';

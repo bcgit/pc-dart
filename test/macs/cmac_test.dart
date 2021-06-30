@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/mac_tests.dart';
+import '../test/runners/mac.dart';
 
 void main() {
   final mac = Mac('AES/CMAC');

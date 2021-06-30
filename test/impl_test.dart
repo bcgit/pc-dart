@@ -2,9 +2,9 @@
 
 library test.impl_test;
 
+import 'package:pointycastle/src/platform_check/platform_check.dart';
 import 'package:test/test.dart';
-
-import './test/registry_tests.dart';
+import 'test/runners/registry.dart';
 
 void main() {
   group('impl:', () {
@@ -65,19 +65,39 @@ void main() {
       testKeyGenerator('RSA');
     });
 
-    test('Mac returns valid implementations', () {
-      testMac('SHA-1/HMAC');
-      testMac('SHA-256/HMAC');
-      testMac('SHA3-256/HMAC');
-      testMac('RIPEMD-160/HMAC');
-      testMac('AES/Poly1305');
-      testMac('AES/CMAC');
-      testMac('AES/CBC_CMAC');
-      testMac('AES/CBC_CMAC/PKCS7');
-      testMac('SHAKE-128/HMAC');
-      testMac('CSHAKE-128/HMAC');
-      testMac('SHA3-256/HMAC');
-    });
+    if (Platform.instance.fullWidthInteger) {
+      test(
+          'Mac returns valid implementations on platforms with full width integer',
+          () {
+        testMac('SHA-1/HMAC');
+        testMac('SHA-256/HMAC');
+        testMac('SHA3-256/HMAC');
+        testMac('RIPEMD-160/HMAC');
+        testMac('AES/Poly1305');
+        testMac('AES/CMAC');
+        testMac('AES/CBC_CMAC');
+        testMac('AES/CBC_CMAC/PKCS7');
+        testMac('SHAKE-128/HMAC');
+        testMac('CSHAKE-128/HMAC');
+        testMac('SHA3-256/HMAC');
+      });
+    } else {
+      test(
+          'Mac returns valid implementations on platforms without full width integer',
+          () {
+        testMac('SHA-1/HMAC');
+        testMac('SHA-256/HMAC');
+        testMac('SHA3-256/HMAC');
+        testMac('RIPEMD-160/HMAC');
+        // testMac('AES/Poly1305');
+        testMac('AES/CMAC');
+        testMac('AES/CBC_CMAC');
+        testMac('AES/CBC_CMAC/PKCS7');
+        testMac('SHAKE-128/HMAC');
+        testMac('CSHAKE-128/HMAC');
+        testMac('SHA3-256/HMAC');
+      });
+    }
 
     test('BlockCipher returns valid implementations for modes of operation',
         () {
@@ -121,13 +141,28 @@ void main() {
       testSigner('SHA-512/RSA');
     });
 
-    test('StreamCipher returns valid implementations', () {
-      testStreamCipher('Salsa20');
-      testStreamCipher('AES/SIC');
-      testStreamCipher('AES/CTR');
-      testStreamCipher('ChaCha20/20');
-      testStreamCipher('ChaCha7539/20');
-      testAEADCipher('ChaCha20-Poly1305');
-    });
+    if (Platform.instance.fullWidthInteger) {
+      test(
+          'StreamCipher returns valid implementations full width integer platforms',
+          () {
+        testStreamCipher('Salsa20');
+        testStreamCipher('AES/SIC');
+        testStreamCipher('AES/CTR');
+        testStreamCipher('ChaCha20/20');
+        testStreamCipher('ChaCha7539/20');
+        testAEADCipher('ChaCha20-Poly1305');
+      });
+    } else {
+      test(
+          'StreamCipher returns valid implementations on platforms without full width integer',
+          () {
+        testStreamCipher('Salsa20');
+        testStreamCipher('AES/SIC');
+        testStreamCipher('AES/CTR');
+        testStreamCipher('ChaCha20/20');
+        testStreamCipher('ChaCha7539/20');
+        //testAEADCipher('ChaCha20-Poly1305');
+      });
+    }
   });
 }

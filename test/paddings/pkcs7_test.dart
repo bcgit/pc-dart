@@ -6,7 +6,7 @@ import 'dart:typed_data' show Uint8List;
 
 import 'package:pointycastle/pointycastle.dart';
 
-import '../test/padding_tests.dart';
+import '../test/runners/padding.dart';
 import '../test/src/helpers.dart';
 
 void main() {

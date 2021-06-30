@@ -8,9 +8,9 @@ import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 import 'package:test/test.dart';
 
-import '../test/block_cipher_tests.dart';
+import '../test/runners/block_cipher.dart';
 import '../test/src/null_block_cipher.dart';
-import '../test/stream_cipher_tests.dart';
+import '../test/runners/stream_cipher.dart';
 
 void main() {
   final iv = Uint8List.fromList([
