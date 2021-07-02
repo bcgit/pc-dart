@@ -9,14 +9,22 @@ library api;
 
 import 'dart:typed_data';
 
+import 'package:pointycastle/src/impl/entropy.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
+
 import 'src/registry/registry.dart';
 import 'src/utils.dart';
 
 part 'src/api/aead_cipher.dart';
+
 part 'src/api/aead_parameters.dart';
+
 part 'src/api/algorithm.dart';
+
 part 'src/api/asymmetric_block_cipher.dart';
+
 part 'src/api/asymmetric_key.dart';
+
 part 'src/api/asymmetric_key_pair.dart';
 part 'src/api/asymmetric_key_parameter.dart';
 part 'src/api/block_cipher.dart';

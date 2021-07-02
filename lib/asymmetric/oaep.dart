@@ -2,14 +2,14 @@
 
 library impl.asymmetric_block_cipher.oeap;
 
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
-import 'package:pointycastle/src/registry/registry.dart';
-import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
-import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:pointycastle/digests/sha1.dart';
+import 'package:pointycastle/random/fortuna_random.dart';
+import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 /// RSAES-OAEP v2.0
 ///
@@ -68,12 +68,8 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   void reset() {}
 
   Uint8List _seed() {
-    var random = Random.secure();
-    var seeds = <int>[];
-    for (var i = 0; i < 32; i++) {
-      seeds.add(random.nextInt(255));
-    }
-    return Uint8List.fromList(seeds);
+    var seed = Platform.instance.platformEntropySource().getBytes(32);
+    return seed;
   }
 
   // for compat cleaner translation from java source

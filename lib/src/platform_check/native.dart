@@ -1,4 +1,8 @@
 import 'dart:io' as io;
+import 'dart:math';
+import 'dart:typed_data';
+
+import 'package:pointycastle/src/impl/entropy.dart';
 
 import 'platform_check.dart';
 
@@ -21,6 +25,21 @@ class PlatformIO extends Platform {
 
   @override
   bool get isNative => true;
+
+  @override
+  EntropySource platformEntropySource() {
+    return _NativeRngProvider();
+  }
+}
+
+class _NativeRngProvider implements EntropySource {
+  final _src = Random.secure();
+
+  @override
+  Uint8List getBytes(int len) {
+    return Uint8List.fromList(
+        List<int>.generate(len, (i) => _src.nextInt(256)));
+  }
 }
 
 Platform getPlatform() => PlatformIO.instance;

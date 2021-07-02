@@ -1,3 +1,5 @@
+import 'package:pointycastle/src/impl/entropy.dart';
+
 import 'abstract.dart'
     if (dart.library.io) 'native.dart'
     if (dart.library.js) 'web.dart';
@@ -20,6 +22,9 @@ abstract class Platform {
           'full width integer not supported on this platform');
     }
   }
+
+  /// Platform dependent entropy source.
+  EntropySource platformEntropySource();
 }
 
 class PlatformException implements Exception {

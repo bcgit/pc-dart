@@ -6,6 +6,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
 import 'package:test/test.dart';
 
 import '../test/runners/key_generators.dart';
@@ -109,8 +110,8 @@ void _generationTests() {
         // Create an RSA key generator using a random number generator
 
         final rnd = SecureRandom('Fortuna')
-          ..seed(KeyParameter(Uint8List.fromList(
-              List.generate(32, (n) => Random.secure().nextInt(255)))));
+          ..seed(KeyParameter(
+              Platform.instance.platformEntropySource().getBytes(32)));
 
         var keyGenerator = KeyGenerator('RSA')
           ..init(ParametersWithRandom(
