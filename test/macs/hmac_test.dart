@@ -222,4 +222,3 @@ void testWithRfc4231() {
             '134676fb6de0446065c97440fa8c6a58')
   ]);
 }
-

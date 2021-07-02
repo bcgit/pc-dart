@@ -92,7 +92,7 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
     return _generate(out, outOff, keySize);
   }
 
-  Uint8List combineLists (Uint8List a, Uint8List b) {
+  Uint8List combineLists(Uint8List a, Uint8List b) {
     var length = a.length + b.length;
     var holder = Uint8List(length);
     holder.setRange(0, a.length, a);

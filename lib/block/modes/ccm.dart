@@ -87,7 +87,8 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
   String get algorithmName => '${underlyingCipher.algorithmName}/CCM';
 
   @override
-  int processBytes(Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+  int processBytes(
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     data.write(inp, inpOff, len);
     return 0;
   }
@@ -107,7 +108,8 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
   }
 
   @override
-  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) => processBytes(inp, inpOff, inp.length, out, outOff);
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) =>
+      processBytes(inp, inpOff, inp.length, out, outOff);
 
   int _processPacket(
       Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
@@ -287,11 +289,13 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
     return cMac.doFinal(macBlock, 0);
   }
 
-  int _getMacSize(bool forEncryption, int requestedMacBits)
-  {
-    if (forEncryption && (requestedMacBits < 32 || requestedMacBits > 128 || 0 != (requestedMacBits & 15)))
-    {
-      throw ArgumentError('tag length in octets must be one of {4,6,8,10,12,14,16}');
+  int _getMacSize(bool forEncryption, int requestedMacBits) {
+    if (forEncryption &&
+        (requestedMacBits < 32 ||
+            requestedMacBits > 128 ||
+            0 != (requestedMacBits & 15))) {
+      throw ArgumentError(
+          'tag length in octets must be one of {4,6,8,10,12,14,16}');
     }
 
     return cshiftr32(requestedMacBits, 3);
@@ -336,7 +340,7 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
 }
 
 extension WriteLen on BytesBuilder {
-  void write (Uint8List b, int off, int len) {
+  void write(Uint8List b, int off, int len) {
     add(b.sublist(off, off + len));
   }
 }

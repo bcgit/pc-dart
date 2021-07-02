@@ -14,7 +14,6 @@ import 'package:pointycastle/asn1/primitives/asn1_set.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   ///
   /// Test simple structur
   ///
@@ -309,7 +308,7 @@ RVTxIJddHhpHfW5c2lX+ERf3Ni0fcJqcCZBPyGHUDSYqNrDwRLQ6dyVxz1Jl0oAc
     var asn1Object = e1.elements!.elementAt(0);
 
     var integer1 =
-    ASN1Parser(asn1Object.valueBytes).nextObject() as ASN1Integer;
+        ASN1Parser(asn1Object.valueBytes).nextObject() as ASN1Integer;
 
     expect(integer1.totalEncodedByteLength, 3);
     expect(integer1.valueByteLength, 1);

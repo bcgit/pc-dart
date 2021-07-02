@@ -82,21 +82,20 @@ class Argon2Parameters extends CipherParameters {
 
   final int version;
 
-
   Argon2Parameters(
-      this.type,
-      this._salt, {
-        required this.desiredKeyLength,
-        Uint8List? secret,
-        Uint8List? additional,
-        this.iterations = DEFAULT_ITERATIONS,
-        int? memoryPowerOf2,
-        int? memory,
-        this.lanes = DEFAULT_LANES,
-        this.version = DEFAULT_VERSION,
-      })  : memory = memoryPowerOf2 != null
-      ? 1 << memoryPowerOf2
-      : (memory ?? (1 << DEFAULT_MEMORY_COST)),
+    this.type,
+    this._salt, {
+    required this.desiredKeyLength,
+    Uint8List? secret,
+    Uint8List? additional,
+    this.iterations = DEFAULT_ITERATIONS,
+    int? memoryPowerOf2,
+    int? memory,
+    this.lanes = DEFAULT_LANES,
+    this.version = DEFAULT_VERSION,
+  })  : memory = memoryPowerOf2 != null
+            ? 1 << memoryPowerOf2
+            : (memory ?? (1 << DEFAULT_MEMORY_COST)),
         _secret = secret,
         _additional = additional;
 
@@ -117,4 +116,3 @@ class Argon2Parameters extends CipherParameters {
     return 'Argon2Parameters{ type: $type, iterations: $iterations, memory: $memory, lanes: $lanes, version: $version }';
   }
 }
-

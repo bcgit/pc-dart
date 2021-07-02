@@ -16,8 +16,10 @@ void runKeyDerivatorTests(
         var password = paramsPasswordKeyTuples[i + 1];
         var key = paramsPasswordKeyTuples[i + 2];
 
-        test('${formatAsTruncated(password as String)}',
-                () => _runKeyDerivatorTest(keyDerivator, params as CipherParameters, password, key as String));
+        test(
+            '${formatAsTruncated(password as String)}',
+            () => _runKeyDerivatorTest(keyDerivator, params as CipherParameters,
+                password, key as String));
       }
     });
   });
