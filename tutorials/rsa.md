@@ -30,7 +30,7 @@ This is a function to generate an RSA key pair:
 ```dart
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:pointycastle/src/platform_check/platform_check.dart';
 import "package:pointycastle/export.dart";
 
 AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
@@ -56,15 +56,10 @@ AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
 }
 
 SecureRandom exampleSecureRandom() {
-  final secureRandom = FortunaRandom();
 
-  final seedSource = Random.secure();
-  final seeds = <int>[];
-  for (int i = 0; i < 32; i++) {
-    seeds.add(seedSource.nextInt(255));
-  }
-  secureRandom.seed(KeyParameter(Uint8List.fromList(seeds)));
-
+  final secureRandom = SecureRandom('Fortuna')
+    ..seed(KeyParameter(
+        Platform.instance.platformEntropySource().getBytes(32)));
   return secureRandom;
 }
 

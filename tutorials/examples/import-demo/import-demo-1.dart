@@ -23,6 +23,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
 
 void main() {
   useRegistry();
@@ -45,8 +46,7 @@ void useRegistry() {
   //final kd = KeyDerivator('SHA-256/HMAC/PBKDF2');
 
   final _sGen = Random.secure();
-  final _seed =
-      Uint8List.fromList(List.generate(32, (n) => _sGen.nextInt(255)));
+  final _seed = Platform.instance.platformEntropySource().getBytes(32);
   final secRnd = SecureRandom('Fortuna')..seed(KeyParameter(_seed));
 
   // AES-CBC encryption
@@ -128,7 +128,7 @@ void useConstructors() {
 
   final _sGen = Random.secure();
   final _seed =
-      Uint8List.fromList(List.generate(32, (n) => _sGen.nextInt(255)));
+      _KeyParameter(Platform.instance.platformEntropySource().getBytes(32);
   final secRnd = FortunaRandom()..seed(KeyParameter(_seed));
 
   // AES-CBC encryption

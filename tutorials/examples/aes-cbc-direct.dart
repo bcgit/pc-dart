@@ -7,6 +7,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
 
 // Code convention: variable names starting with underscores are examples only,
 // and should be implementated according to the needs of the program.
@@ -178,13 +179,8 @@ Uint8List? generateRandomBytes(int numBytes) {
     // First invocation: create _secureRandom and seed it
 
     _secureRandom = FortunaRandom();
-
-    final seedSource = Random.secure();
-    final seeds = <int>[];
-    for (var i = 0; i < 32; i++) {
-      seeds.add(seedSource.nextInt(255));
-    }
-    _secureRandom!.seed(KeyParameter(Uint8List.fromList(seeds)));
+    _secureRandom!.seed(
+        KeyParameter(Platform.instance.platformEntropySource().getBytes(32)));
   }
 
   // Use it to generate the random bytes

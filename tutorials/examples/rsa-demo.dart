@@ -16,6 +16,7 @@ import 'dart:typed_data';
 
 // When not using the registry:
 import 'package:pointycastle/export.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
 
 //================================================================
 // Test data
@@ -200,12 +201,8 @@ SecureRandom getSecureRandom() {
 //final result = SecureRandom('Fortuna'); // Get using registry
   final secureRandom = FortunaRandom(); // Get directly
 
-  final seedSource = Random.secure();
-  final seeds = <int>[];
-  for (var i = 0; i < 32; i++) {
-    seeds.add(seedSource.nextInt(255));
-  }
-  secureRandom.seed(KeyParameter(Uint8List.fromList(seeds)));
+  secureRandom.seed(
+      KeyParameter(Platform.instance.platformEntropySource().getBytes(32)));
 
   return secureRandom;
 }
