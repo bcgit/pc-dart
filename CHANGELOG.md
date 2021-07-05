@@ -1,6 +1,17 @@
 Changelog
 =========
 
+#### Version 3.2.0-rc0 (2021-07-05)
+
+* Extended platform detection to supply entropy source, this works on nodejs.
+* Critical fix to the examples:
+
+  Where, ```xxx.nextInt(255)``` is used.
+
+  Must be replaced with either ```.nextInt(256)``` or alternatively use:
+
+  ```Platform.instance.platformEntropySource().getBytes(_how many_)``` to provide the seed.
+
 #### Version 3.1.3 (2021-06-29)
 
 * Add Argon2
