@@ -408,4 +408,42 @@ void main() {
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH),
         bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''IA5String https://www.digicert.com/CPS''';
+    var bytes = Uint8List.fromList([
+      0x16,
+      0x1C,
+      0x68,
+      0x74,
+      0x74,
+      0x70,
+      0x73,
+      0x3A,
+      0x2F,
+      0x2F,
+      0x77,
+      0x77,
+      0x77,
+      0x2E,
+      0x64,
+      0x69,
+      0x67,
+      0x69,
+      0x63,
+      0x65,
+      0x72,
+      0x74,
+      0x2E,
+      0x63,
+      0x6F,
+      0x6D,
+      0x2F,
+      0x43,
+      0x50,
+      0x53
+    ]);
+    var asn1Object = ASN1IA5String.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

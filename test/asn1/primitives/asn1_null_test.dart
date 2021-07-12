@@ -49,4 +49,12 @@ void main() {
             encodingRule: ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM),
         bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''NULL''';
+    var bytes = Uint8List.fromList([0x05, 0x00]);
+
+    var asn1Object = ASN1Null.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

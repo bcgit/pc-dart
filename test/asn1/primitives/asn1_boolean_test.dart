@@ -25,4 +25,12 @@ void main() {
 
     expect(asn1Boolean.encode(), bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''BOOLEAN true''';
+    var bytes = Uint8List.fromList([0x01, 0x01, 0xFF]);
+
+    var asn1Object = ASN1Boolean.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

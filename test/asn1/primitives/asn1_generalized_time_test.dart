@@ -80,4 +80,30 @@ void main() {
 
     expect(utf8String.encode(), bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''GENERALIZEDTIME 2010-10-30T10:10:30.000Z''';
+    var bytes = Uint8List.fromList([
+      0x18,
+      0x0F,
+      0x32,
+      0x30,
+      0x31,
+      0x30,
+      0x31,
+      0x30,
+      0x33,
+      0x30,
+      0x31,
+      0x30,
+      0x31,
+      0x30,
+      0x33,
+      0x30,
+      0x5A
+    ]);
+
+    var asn1Object = ASN1GeneralizedTime.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

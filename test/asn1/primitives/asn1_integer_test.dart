@@ -83,4 +83,31 @@ void main() {
 
     expect(utf8String.encode(), bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''INTEGER 21173761728093306653035526320543534926''';
+    var bytes = Uint8List.fromList([
+      0x02,
+      0x10,
+      0x0F,
+      0xED,
+      0xEB,
+      0x0D,
+      0x80,
+      0x08,
+      0x13,
+      0x40,
+      0xC6,
+      0x44,
+      0xE4,
+      0xB7,
+      0xA6,
+      0x80,
+      0x8F,
+      0x4E
+    ]);
+
+    var asn1Object = ASN1Integer.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

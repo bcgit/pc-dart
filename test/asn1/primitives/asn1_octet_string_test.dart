@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
@@ -234,5 +235,13 @@ void main() {
             encodingRule:
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH),
         bytes);
+  });
+
+  test('Test dump', () {
+    var expected = '''OCTET STRING
+  BIT STRING (3 bit) 101''';
+    var bytes = Uint8List.fromList([0x04, 0x04, 0x03, 0x02, 0x05, 0xA0]);
+    var asn1Object = ASN1OctetString.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
   });
 }

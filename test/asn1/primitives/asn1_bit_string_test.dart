@@ -202,4 +202,44 @@ void main() {
         asn1Object.encode(encodingRule: ASN1EncodingRule.ENCODING_BER_PADDED),
         bytes);
   });
+
+  test('Test dump', () {
+    var expected1 = '''BIT STRING (152 bit)
+  SEQUENCE (1 elem)
+    INTEGER 277839652448501959441742896570862388342''';
+    var bytes = Uint8List.fromList([
+      0x03,
+      0x16,
+      0x00,
+      0x30,
+      0x13,
+      0x02,
+      0x11,
+      0x00,
+      0xD1,
+      0x05,
+      0xF8,
+      0x7B,
+      0xCA,
+      0x00,
+      0x2A,
+      0x90,
+      0xFD,
+      0xD5,
+      0xE2,
+      0x8A,
+      0x2C,
+      0xBF,
+      0xC4,
+      0x76
+    ]);
+
+    var asn1Object = ASN1BitString.fromBytes(bytes);
+    expect(asn1Object.dump(), expected1);
+
+    var expected2 = '''BIT STRING (3 bit) 101''';
+    bytes = Uint8List.fromList([0x03, 0x02, 0x05, 0xA0]);
+    asn1Object = ASN1BitString.fromBytes(bytes);
+    expect(asn1Object.dump(), expected2);
+  });
 }

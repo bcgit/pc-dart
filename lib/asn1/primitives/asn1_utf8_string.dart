@@ -117,13 +117,13 @@ class ASN1UTF8String extends ASN1Object {
       sb.write(' ');
     }
     if (isConstructed!) {
-      sb.write('UTF8String (${elements!.length} elem)');
+      sb.write('UTF8STRING (${elements!.length} elem)');
       for (var e in elements!) {
         var dump = e.dump(spaces: spaces + dumpIndent);
         sb.write('\n$dump');
       }
     } else {
-      sb.write('UTF8String $utf8StringValue');
+      sb.write('UTF8STRING $utf8StringValue');
     }
     return sb.toString();
   }

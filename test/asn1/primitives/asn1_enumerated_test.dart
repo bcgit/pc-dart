@@ -26,4 +26,12 @@ void main() {
 
     expect(utf8String.encode(), bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''INTEGER 2''';
+    var bytes = Uint8List.fromList([0x0a, 0x01, 0x02]);
+
+    var asn1Object = ASN1Enumerated.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

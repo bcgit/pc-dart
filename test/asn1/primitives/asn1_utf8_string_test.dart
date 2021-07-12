@@ -287,4 +287,26 @@ void main() {
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH),
         bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''UTF8STRING Hello World''';
+    var bytes = Uint8List.fromList([
+      0x0C,
+      0x0B,
+      0x48,
+      0x65,
+      0x6C,
+      0x6C,
+      0x6F,
+      0x20,
+      0x57,
+      0x6F,
+      0x72,
+      0x6C,
+      0x64
+    ]);
+
+    var asn1Object = ASN1UTF8String.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

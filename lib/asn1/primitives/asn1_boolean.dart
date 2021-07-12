@@ -63,7 +63,7 @@ class ASN1Boolean extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    sb.write('Boolean $boolValue');
+    sb.write('BOOLEAN $boolValue');
     return sb.toString();
   }
 }

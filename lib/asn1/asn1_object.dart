@@ -129,11 +129,14 @@ class ASN1Object {
     if (tag == 0xA0 || tag == 0xA3) {
       sb.write('[$tag]');
       var parser = ASN1Parser(valueBytes);
-      var next = parser.nextObject();
-      var dump = next.dump(spaces: spaces + dumpIndent);
-      sb.write('\n$dump');
+      if (parser.hasNext()) {
+        var next = parser.nextObject();
+        var dump = next.dump(spaces: spaces + dumpIndent);
+        sb.write('\n$dump');
+      } else {
+        sb.write(' (0 elem)');
+      }
     }
-    sb.write('UNKNOWN');
     return sb.toString();
   }
 }

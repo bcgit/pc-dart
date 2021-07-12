@@ -68,4 +68,12 @@ void main() {
     expect(asn1Object.objectIdentifier!.elementAt(3), 3);
     expect(asn1Object.objectIdentifierAsString, '2.5.4.3');
   });
+
+  test('Test dump', () {
+    var expected = '''OBJECT IDENTIFIER 2.5.4.3 commonName''';
+    var bytes = Uint8List.fromList([0x06, 0x03, 0x55, 0x04, 0x03]);
+
+    var asn1Object = ASN1ObjectIdentifier.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

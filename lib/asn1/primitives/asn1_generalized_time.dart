@@ -73,7 +73,7 @@ class ASN1GeneralizedTime extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    sb.write('UTCTime ${dateTimeValue!.toIso8601String()}');
+    sb.write('GENERALIZEDTIME ${dateTimeValue!.toIso8601String()}');
     return sb.toString();
   }
 }
