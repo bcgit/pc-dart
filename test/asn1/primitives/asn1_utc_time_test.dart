@@ -74,4 +74,28 @@ void main() {
 
     expect(asn1Object.encode(), bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''UTCTIME 2020-07-10T00:00:00.000Z''';
+    var bytes = Uint8List.fromList([
+      0x17,
+      0x0D,
+      0x32,
+      0x30,
+      0x30,
+      0x37,
+      0x31,
+      0x30,
+      0x30,
+      0x30,
+      0x30,
+      0x30,
+      0x30,
+      0x30,
+      0x5A
+    ]);
+
+    var asn1Object = ASN1UtcTime.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }

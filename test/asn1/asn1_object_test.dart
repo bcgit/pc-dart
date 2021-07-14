@@ -88,4 +88,14 @@ void main() {
 
     expect(asn1Object.encode(), bytes);
   });
+
+  test('Test dump', () {
+    var bytes = Uint8List.fromList([
+      0xA0,
+      0x00,
+    ]);
+
+    var asn1Object = ASN1Object.fromBytes(bytes);
+    expect('[160] (0 elem)', asn1Object.dump());
+  });
 }

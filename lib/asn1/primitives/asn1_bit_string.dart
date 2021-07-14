@@ -135,13 +135,31 @@ class ASN1BitString extends ASN1Object {
       }
     } else {
       if (ASN1Utils.isASN1Tag(stringValues!.elementAt(0))) {
+        var sb2 = StringBuffer();
+        for (var v in stringValues!) {
+          var s = v.toRadixString(2);
+          sb2.write(s);
+        }
+        var bits = sb2.toString();
+        if (unusedbits != null) {
+          bits = bits.substring(0, bits.length - unusedbits!);
+        }
         var parser = ASN1Parser(stringValues as Uint8List?);
         var next = parser.nextObject();
         var dump = next.dump(spaces: spaces + dumpIndent);
-        sb.write('BIT STRING\n$dump');
+        sb.write('BIT STRING (${(bits.length)} bit)\n$dump');
       } else {
-        sb.write(
-            'BIT STRING ${ascii.decode(stringValues!, allowInvalid: true)}');
+        var sb2 = StringBuffer();
+        for (var v in stringValues!) {
+          var s = v.toRadixString(2);
+          sb2.write(s);
+        }
+        var bits = sb2.toString();
+        if (unusedbits != null) {
+          bits = bits.substring(0, bits.length - unusedbits!);
+        }
+        sb.write('BIT STRING (${(bits.length)} bit) ');
+        sb.write(bits);
       }
     }
     return sb.toString();

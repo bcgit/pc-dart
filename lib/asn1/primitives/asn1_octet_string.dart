@@ -120,13 +120,13 @@ class ASN1OctetString extends ASN1Object {
         sb.write('\n $dump');
       }
     } else {
-      if (ASN1Utils.isASN1Tag(octets!.elementAt(0))) {
-        var parser = ASN1Parser(octets);
-        var next = parser.nextObject();
-        var dump = next.dump(spaces: spaces + dumpIndent);
-        sb.write('OCTET STRING\n$dump');
-      } else {
-        sb.write('OCTET STRING ${ascii.decode(octets!, allowInvalid: true)}');
+      sb.write('OCTET STRING (${octets!.length} byte) ');
+      for (var o in octets!) {
+        var s = o.toRadixString(16).toUpperCase();
+        if (s.length == 1) {
+          s = '0$s';
+        }
+        sb.write(s);
       }
     }
     return sb.toString();

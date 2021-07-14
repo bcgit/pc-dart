@@ -261,6 +261,21 @@ class ObjectIdentifiers {
       'readableName': 'secp384r1',
       'identifier': [1, 3, 132, 0, 34],
     },
+    {
+      'identifierString': '2.5.29.15',
+      'readableName': 'keyUsage',
+      'identifier': [2, 5, 29, 15]
+    },
+    {
+      'identifierString': '2.5.29.19',
+      'readableName': 'basicConstraints',
+      'identifier': [2, 5, 29, 19]
+    },
+    {
+      'identifierString': '2.5.29.14',
+      'readableName': 'subjectKeyIdentifier',
+      'identifier': [2, 5, 29, 14]
+    },
   ];
 
   ///

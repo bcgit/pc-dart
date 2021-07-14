@@ -117,13 +117,13 @@ class ASN1TeletextString extends ASN1Object {
       sb.write(' ');
     }
     if (isConstructed!) {
-      sb.write('T61String (${elements!.length} elem)');
+      sb.write('T61STRING (${elements!.length} elem)');
       for (var e in elements!) {
         var dump = e.dump(spaces: spaces + dumpIndent);
         sb.write('\n $dump');
       }
     } else {
-      sb.write('T61String $stringValue');
+      sb.write('T61STRING $stringValue');
     }
     return sb.toString();
   }

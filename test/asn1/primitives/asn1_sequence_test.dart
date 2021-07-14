@@ -121,4 +121,30 @@ void main() {
 
     expect(asn1Object.encode(), bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''SEQUENCE (2 elem)
+  OBJECT IDENTIFIER 1.2.840.113549.1.1.11 sha256WithRSAEncryption
+  NULL''';
+    var bytes = Uint8List.fromList([
+      0x30,
+      0x0D,
+      0x06,
+      0x09,
+      0x2A,
+      0x86,
+      0x48,
+      0x86,
+      0xF7,
+      0x0D,
+      0x01,
+      0x01,
+      0x0B,
+      0x05,
+      0x00
+    ]);
+
+    var asn1Object = ASN1Sequence.fromBytes(bytes);
+    expect(expected, asn1Object.dump());
+  });
 }

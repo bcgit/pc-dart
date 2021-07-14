@@ -117,13 +117,13 @@ class ASN1PrintableString extends ASN1Object {
       sb.write(' ');
     }
     if (isConstructed!) {
-      sb.write('PrintableString (${elements!.length} elem)');
+      sb.write('PRINTABLE STRING (${elements!.length} elem)');
       for (var e in elements!) {
         var dump = e.dump(spaces: spaces + dumpIndent);
         sb.write('\n$dump');
       }
     } else {
-      sb.write('PrintableString $stringValue');
+      sb.write('PRINTABLE STRING $stringValue');
     }
     return sb.toString();
   }

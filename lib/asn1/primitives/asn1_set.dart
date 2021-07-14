@@ -84,7 +84,7 @@ class ASN1Set extends ASN1Object {
     for (var i = 0; i < spaces; i++) {
       sb.write(' ');
     }
-    sb.write('SEQUENCE (${elements!.length} elem)');
+    sb.write('SET (${elements!.length} elem)');
     for (var e in elements!) {
       var dump = e.dump(spaces: spaces + dumpIndent);
       sb.write('\n$dump');

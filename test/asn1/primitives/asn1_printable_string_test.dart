@@ -270,4 +270,17 @@ void main() {
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH),
         bytes);
   });
+
+  test('Test dump', () {
+    var expected = '''PRINTABLE STRING US''';
+    var bytes = Uint8List.fromList([
+      0x13,
+      0x02,
+      0x55,
+      0x53,
+    ]);
+
+    var asn1Object = ASN1PrintableString.fromBytes(bytes);
+    expect(asn1Object.dump(), expected);
+  });
 }
