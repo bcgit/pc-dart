@@ -238,9 +238,32 @@ void main() {
   });
 
   test('Test dump', () {
-    var expected = '''OCTET STRING
-  BIT STRING (3 bit) 101''';
-    var bytes = Uint8List.fromList([0x04, 0x04, 0x03, 0x02, 0x05, 0xA0]);
+    var expected =
+        '''OCTET STRING (20 byte) 03DE503556D14CBB66F0A3E21B1BC397B23DD155''';
+    var bytes = Uint8List.fromList([
+      0x04,
+      0x14,
+      0x03,
+      0xDE,
+      0x50,
+      0x35,
+      0x56,
+      0xD1,
+      0x4C,
+      0xBB,
+      0x66,
+      0xF0,
+      0xA3,
+      0xE2,
+      0x1B,
+      0x1B,
+      0xC3,
+      0x97,
+      0xB2,
+      0x3D,
+      0xD1,
+      0x55
+    ]);
     var asn1Object = ASN1OctetString.fromBytes(bytes);
     expect(asn1Object.dump(), expected);
   });

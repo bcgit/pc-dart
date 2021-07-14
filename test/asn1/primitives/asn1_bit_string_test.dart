@@ -204,7 +204,7 @@ void main() {
   });
 
   test('Test dump', () {
-    var expected1 = '''BIT STRING (152 bit)
+    var expected1 = '''BIT STRING (129 bit)
   SEQUENCE (1 elem)
     INTEGER 277839652448501959441742896570862388342''';
     var bytes = Uint8List.fromList([

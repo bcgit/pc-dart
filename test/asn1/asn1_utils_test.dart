@@ -68,6 +68,32 @@ void main() {
           0x67
         ])),
         11);
+    expect(
+        ASN1Utils.decodeLength(Uint8List.fromList([
+          0x04,
+          0x14,
+          0x03,
+          0xDE,
+          0x50,
+          0x35,
+          0x56,
+          0xD1,
+          0x4C,
+          0xBB,
+          0x66,
+          0xF0,
+          0xA3,
+          0xE2,
+          0x1B,
+          0x1B,
+          0xC3,
+          0x97,
+          0xB2,
+          0x3D,
+          0xD1,
+          0x55
+        ])),
+        20);
   });
 
   test('Test encodeLength', () {
