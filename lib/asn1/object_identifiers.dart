@@ -262,6 +262,11 @@ class ObjectIdentifiers {
       'identifier': [1, 3, 132, 0, 34],
     },
     {
+      'identifierString': '1.3.132.0.10',
+      'readableName': 'secp256k1',
+      'identifier': [1, 3, 132, 0, 10],
+    },
+    {
       'identifierString': '2.5.29.15',
       'readableName': 'keyUsage',
       'identifier': [2, 5, 29, 15]
