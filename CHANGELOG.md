@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.2.0-rc1 (TBA)
+
+* Better ASN1 Dump
+* New OIDs
+
 #### Version 3.2.0-rc0 (2021-07-05)
 
 * Extended platform detection to supply entropy source, this works on nodejs.
