@@ -193,3 +193,36 @@ class ECSignature implements Signature {
     return r.hashCode + s.hashCode;
   }
 }
+
+/// A pair of [ECPoint]s.
+class ECPair {
+  final ECPoint x;
+  final ECPoint y;
+
+  const ECPair(this.x, this.y);
+
+  @override
+  bool operator ==(other) {
+    if (other is! ECPair) return false;
+    return (other.x == x) && (other.y == y);
+  }
+
+  @override
+  int get hashCode => x.hashCode + y.hashCode * 37;
+}
+
+/// The encryptor using Elliptic Curve
+abstract class ECEncryptor {
+  ECPair encrypt(ECPoint point);
+
+  /// Initialize the encryptor.
+  void init(CipherParameters params);
+}
+
+/// The decryptor using Elliptic Curve
+abstract class ECDecryptor {
+  ECPoint decrypt(ECPair pair);
+
+  /// Initialize the decryptor.
+  void init(CipherParameters params);
+}

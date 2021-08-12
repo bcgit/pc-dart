@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.3.0 (2021-08-12)
+
+* ECElGamal Encryptor and Decryptor
+
 #### Version 3.2.0 (2021-07-29)
 
 * Better ASN1 Dump
