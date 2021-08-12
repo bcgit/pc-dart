@@ -56,7 +56,7 @@ void main() {
     secureRandom,
   );
 
-  test('ECElgamal ecrypt and decrypt test: first', () {
+  test('ECElgamal encrypt and decrypt test: first', () {
     var value = BigInt.from(123);
     var data = (priKey.parameters!.G * value)!;
     var encryptor = ECElGamalEncryptor();
@@ -68,7 +68,7 @@ void main() {
     expect(data, equals(result));
   });
 
-  test('ECElgamal ecrypt and decrypt test: second', () {
+  test('ECElgamal encrypt and decrypt test: second', () {
     var value =
         _newSecureRandom().nextBigInteger(pubKey.parameters!.n.bitLength - 1);
     var data = (priKey.parameters!.G * value)!;

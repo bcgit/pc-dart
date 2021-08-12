@@ -197,7 +197,7 @@ class ECFieldElement extends ecc.ECFieldElementBase {
 
 /// Elliptic curve points over Fp
 class ECPoint extends ecc.ECPointBase {
-  /// Create a point that encodes with or without point compresion.
+  /// Create a point that encodes with or without point compression.
   ///
   /// @param curve the curve to use
   /// @param x affine x co-ordinate
