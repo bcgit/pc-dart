@@ -281,6 +281,11 @@ class ObjectIdentifiers {
       'readableName': 'subjectKeyIdentifier',
       'identifier': [2, 5, 29, 14]
     },
+    {
+      'identifierString': '1.3.14.3.2.26',
+      'readableName': 'SHA1',
+      'identifier': [1, 3, 14, 3, 2, 26]
+    },
   ];
 
   ///
