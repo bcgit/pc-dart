@@ -286,25 +286,62 @@ class Register64 {
   }
 
   void mul(dynamic y) {
+    // Grab 16-bit chunks.
+    final a0 = _lo32 & _MASK_16;
+    final a1 = (_lo32 >> 16) & _MASK_16;
+    final a2 = (_hi32 & _MASK_16);
+    final a3 = (_hi32 >> 16) & _MASK_16;
+
+    late int b0, b1, b2, b3;
     if (y is int) {
-      final lo32 = _lo32 * y;
-      final carry = (lo32 ~/
-          0x100000000); // TODO: use shift right when bug 17715 is fixed
-      final hi32 = clip32(_hi32 * y) + carry;
-
-      _hi32 = clip32(hi32);
-      _lo32 = clip32(lo32);
-    } else {
-      final lo32 = _lo32 * y._lo32;
-      final carry = (lo32 ~/
-          0x100000000); // TODO: use shift right when bug 17715 is fixed
-      final hi32 = clip32(_hi32 * y._lo32 as int) +
-          clip32(_lo32 * y._hi32 as int) +
-          carry;
-
-      _hi32 = clip32(hi32);
-      _lo32 = clip32(lo32 as int);
+      // Assume it is a 32-bit integer.
+      y &= _MASK_32;
+      b0 = y & _MASK_16;
+      b1 = (y >> 16) & _MASK_16;
+      b2 = b3 = 0;
+    } else /* if (y is Register64) */ {
+      b0 = y._lo32 & _MASK_16;
+      b1 = (y._lo32 >> 16) & _MASK_16;
+      b2 = y._hi32 & _MASK_16;
+      b3 = (y._hi32 >> 16) & _MASK_16;
     }
+    // Compute partial products.
+    // Optimization: if b is small, avoid multiplying by parts that are 0.
+    var p0 = a0 * b0; // << 0
+    var p1 = a1 * b0; // << 16
+    var p2 = a2 * b0; // << 32
+    var p3 = a3 * b0; // << 48
+
+    if (b1 != 0) {
+      p1 += a0 * b1;
+      p2 += a1 * b1;
+      p3 += a2 * b1;
+    }
+    if (b2 != 0) {
+      p2 += a0 * b2;
+      p3 += a1 * b2;
+    }
+    if (b3 != 0) {
+      p3 += a0 * b3;
+    }
+
+    // Accumulate into 32-bit chunks:
+    // |................................|................................|
+    // |................................|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx| p0
+    // |................................|................................|
+    // |................................|................................|
+    // |................xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx................| p1
+    // |................................|................................|
+    // |................................|................................|
+    // |xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|................................| p2
+    // |................................|................................|
+    // |................................|................................|
+    // |xxxxxxxxxxxxxxxx................|................................| p3
+    var slo32 = p0 + ((p1 & _MASK_16) << 16);
+    _lo32 = (slo32 & _MASK_32);
+    var carry = ((slo32 != _lo32) ? 1 : 0);
+    var shi32 = (p1 >> 16) + p2 + ((p3 & _MASK_16) << 16) + carry;
+    _hi32 = (shi32 & _MASK_32);
   }
 
   void neg() {
@@ -463,7 +500,6 @@ class Register64 {
   }
 
   @override
-  // TODO: implement hashCode
   int get hashCode => super.hashCode;
 }
 
