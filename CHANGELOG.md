@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.3.1 (2021-08-18)
+
+* Update to Register64 mul(...)
+* New OID
+
 #### Version 3.3.0 (2021-08-12)
 
 * ECElGamal Encryptor and Decryptor

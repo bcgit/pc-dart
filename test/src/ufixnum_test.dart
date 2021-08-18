@@ -4,8 +4,8 @@ library src.ufixnum_test;
 
 import 'dart:typed_data';
 
-import 'package:test/test.dart';
 import 'package:pointycastle/src/ufixnum.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('int8:', () {
@@ -482,6 +482,27 @@ void main() {
           Register64(0x00000002, 0x00000004));
       expect(Register64(0x80000001, 0x80000001)..mul(0x00000004),
           Register64(0x00000006, 0x00000004));
+
+      expect(Register64(0x43dc7, 0xd7e76b0c)..mul(0x7ea),
+          Register64(0x2190ef92, 0xad752cf8));
+      expect(Register64(0x0, 0xc32451e7)..mul(0x23567c25),
+          Register64(0x1aefe407, 0xe485ba63));
+      expect(Register64(0x2, 0xd076305c)..mul(0x2c7b5a06),
+          Register64(0x7d2f7673, 0x7bf97a28));
+      expect(Register64(0x1c, 0xca56897f)..mul(0x3dd00d4),
+          Register64(0x6f39c828, 0xbf4cdd2c));
+      expect(Register64(0x288c, 0xebf98043)..mul(0x279fb),
+          Register64(0x646c35a7, 0x4bc66cb1));
+      expect(Register64(0x11a82, 0xfc7ab318)..mul(0x710a),
+          Register64(0x7cbeda90, 0x5d896f0));
+      expect(Register64(0x2edc, 0x994d7f30)..mul(0x1a21c),
+          Register64(0x4c895271, 0x4e264940));
+      expect(Register64(0xddcf, 0x53e5547b)..mul(0x3b80),
+          Register64(0x338dafff, 0xcd229680));
+      expect(Register64(0x2087b, 0x1f168aac)..mul(0x2067),
+          Register64(0x41e0cd6c, 0x53674b34));
+      expect(Register64(0x0, 0x3e0b2bad)..mul(0x8fc3718f),
+          Register64(0x22d79b6d, 0x7e4bc2a3));
     });
 
     test('mul(y)', () {
@@ -517,6 +538,26 @@ void main() {
           Register64(0x80000001, 0x80000001)
             ..mul(Register64(0x00000000, 0x00000004)),
           Register64(0x00000006, 0x00000004));
+      expect(Register64(0x0, 0xb2ea00)..mul(Register64(0x73, 0xfecac71a)),
+          Register64(0x51112fe3, 0xca11c400));
+      expect(Register64(0x0, 0x7b0e)..mul(Register64(0x4ecc, 0x2675c20c)),
+          Register64(0x25e065a4, 0xaeac60a8));
+      expect(Register64(0x0, 0x325ecbc4)..mul(Register64(0x0, 0xd3dbfcc0)),
+          Register64(0x29af6ac5, 0xf459c300));
+      expect(Register64(0x0, 0xc84d)..mul(Register64(0x7a66, 0x9e3d4aa8)),
+          Register64(0x5fc4fc7d, 0x7ac2b488));
+      expect(Register64(0x0, 0x2ce3)..mul(Register64(0x1218, 0xe1c9dad3)),
+          Register64(0x32c52de, 0xe7994d19));
+      expect(Register64(0x0, 0xaa442)..mul(Register64(0x35e, 0x2537590a)),
+          Register64(0x23d6a246, 0x87b35c94));
+      expect(Register64(0x0, 0x83085)..mul(Register64(0x7e6, 0xceec37e4)),
+          Register64(0x40b5d917, 0x8a53c974));
+      expect(Register64(0x0, 0x45c1c4d)..mul(Register64(0x6, 0xdd294ade)),
+          Register64(0x1dece243, 0x6963ccc6));
+      expect(Register64(0x0, 0x274aef21)..mul(Register64(0x0, 0x4ff9175a)),
+          Register64(0xc465b43, 0x51ed089a));
+      expect(Register64(0x0, 0x13246489)..mul(Register64(0x0, 0x2c6ae04d)),
+          Register64(0x3523f1e, 0xc6a41d35));
     });
 
     test('neg()', () {
