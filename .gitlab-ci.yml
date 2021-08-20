@@ -1,6 +1,3 @@
-variables:
-  PATH: $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin
-
 stages:
   - test
   - score
@@ -13,15 +10,18 @@ test-code-vm:
 test-code-node:
   stage: test
   script:
-    - pub run test -p node
+    - "export $PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin \
+    pub run test -p node"
 
 test-code-chrome:
   stage: test
   script:
-    - pub run test -p chrome
+    - "export $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin \
+    pub run test -p chrome"
 
 score-pana:
   stage: score
   script:
-    - pub global activate pana
-    - pana .
+    - "export $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin \
+    pub global activate pana \
+    pana ."
