@@ -9,23 +9,24 @@ stages:
 test-code-vm:
   stage: test
   script:
-    - pub run test
+    - "export $PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin; \
+    pub run test"
 
 test-code-node:
   stage: test
   script:
-    - "export $PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin \
+    - "export $PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin; \
     pub run test -p node"
 
 test-code-chrome:
   stage: test
   script:
-    - "export $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin \
+    - "export $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
     pub run test -p chrome"
 
 score-pana:
   stage: score
   script:
-    - "export $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin \
-    pub global activate pana \
+    - "export $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
+    pub global activate pana; \
     pana ."
