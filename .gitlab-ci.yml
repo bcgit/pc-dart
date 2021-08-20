@@ -3,14 +3,21 @@ variables:
 
 
 stages:
+  - get
   - test
   - score
+
+get:
+  stage: get
+  script:
+    - "export PATH=$PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin; \
+    pub get;"
 
 test-code-vm:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin; \
-    pub run test"
+    pub run test;"
 
 test-code-node:
   stage: test
