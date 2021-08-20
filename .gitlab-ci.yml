@@ -3,37 +3,31 @@ variables:
 
 
 stages:
-  - get
   - test
   - score
-
-get:
-  stage: get
-  script:
-    - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub get;"
 
 test-code-vm:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub run test;"
+    pub get; pub run test;"
 
 test-code-node:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub run test -p node"
+    pub get; pub run test -p node"
 
 test-code-chrome:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub run test -p chrome"
+    pub get; pub run test -p chrome"
 
 score-pana:
   stage: score
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
+    pub get; \
     pub global activate pana; \
     pana ."
