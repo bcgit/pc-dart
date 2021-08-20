@@ -1,0 +1,27 @@
+variables:
+  PATH: $PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin
+
+stages:
+  - test
+  - score
+
+test-code-vm:
+  stage: test
+  script:
+    - pub run test
+
+test-code-node:
+  stage: test
+  script:
+    - pub run test -p node
+
+test-code-chrome:
+  stage:test
+  script:
+    - pub run test -p chrome
+
+score-pana:
+  stage:score
+  script:
+    - pub global activate pana
+    - pana .
