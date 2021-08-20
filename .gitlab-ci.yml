@@ -16,12 +16,12 @@ test-code-node:
     - pub run test -p node
 
 test-code-chrome:
-  stage:test
+  stage: test
   script:
     - pub run test -p chrome
 
 score-pana:
-  stage:score
+  stage: score
   script:
     - pub global activate pana
     - pana .
