@@ -10,19 +10,19 @@ stages:
 get:
   stage: get
   script:
-    - "export PATH=$PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin; \
+    - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
     pub get;"
 
 test-code-vm:
   stage: test
   script:
-    - "export PATH=$PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin; \
+    - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
     pub run test;"
 
 test-code-node:
   stage: test
   script:
-    - "export PATH=$PATH:/usr/lib/dart/bin$HOME/.pub-cache/bin; \
+    - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
     pub run test -p node"
 
 test-code-chrome:
