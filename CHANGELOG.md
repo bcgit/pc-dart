@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.3.2 (2021-08-27)
+
+* New OIDs
+
 #### Version 3.3.1 (2021-08-18)
 
 * Update to Register64 mul(...)
