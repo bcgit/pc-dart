@@ -286,6 +286,46 @@ class ObjectIdentifiers {
       'readableName': 'SHA1',
       'identifier': [1, 3, 14, 3, 2, 26]
     },
+    {
+      'identifierString': '1.2.840.113549.1.1.13',
+      'readableName': 'sha512WithRSAEncryption',
+      'identifier': [1, 2, 840, 113549, 1, 1, 13]
+    },
+    {
+      'identifierString': '1.2.840.113549.1.1.12',
+      'readableName': 'sha384WithRSAEncryption',
+      'identifier': [1, 2, 840, 113549, 1, 1, 12]
+    },
+    {
+      'identifierString': '1.2.840.113549.1.1.14',
+      'readableName': 'sha224WithRSAEncryption',
+      'identifier': [1, 2, 840, 113549, 1, 1, 14]
+    },
+    {
+      'identifierString': '1.2.840.113549.1.9.14',
+      'readableName': 'extensionRequest',
+      'identifier': [1, 2, 840, 113549, 1, 9, 14]
+    },
+    {
+      'identifierString': '1.2.840.10045.4.1',
+      'readableName': 'ecdsaWithSHA1',
+      'identifier': [1, 2, 840, 10045, 4, 1]
+    },
+    {
+      'identifierString': '1.2.840.10045.4.3.1',
+      'readableName': 'ecdsaWithSHA224',
+      'identifier': [1, 2, 840, 10045, 4, 3, 1]
+    },
+    {
+      'identifierString': '1.2.840.10045.4.3.3',
+      'readableName': 'ecdsaWithSHA384',
+      'identifier': [1, 2, 840, 10045, 4, 3, 3]
+    },
+    {
+      'identifierString': '1.2.840.10045.4.3.4',
+      'readableName': 'ecdsaWithSHA512',
+      'identifier': [1, 2, 840, 10045, 4, 3, 4]
+    }
   ];
 
   ///
