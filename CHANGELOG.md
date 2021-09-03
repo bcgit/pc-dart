@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.3.3 (2021-09-03)
+
+* Argon2 in js environments.
+
 #### Version 3.3.2 (2021-08-27)
 
 * New OIDs
