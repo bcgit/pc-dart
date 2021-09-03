@@ -465,6 +465,16 @@ void main() {
           Register64(0xFFFFFFFF, 0xFFFFFFFE));
     });
 
+    test('mod(int)', () {
+      expect(Register64(0x80000000, 0xFFFFFFFF)..mod(0x80000001),
+          Register64(0x80000000));
+      expect(Register64(0x001a808c, 0xd14e661f)..mod(0x1de25c1c),
+          Register64(0x19c7c283));
+      expect(Register64(0x2419b4a0, 0xb107ecae)..mod(0xf9891c30),
+          Register64(0xed7c34ae));
+      expect(Register64(0x18bda296)..mod(0x0c8b924c), Register64(0x0c32104a));
+    });
+
     test('mul(int)', () {
       expect(Register64(0x00000000, 0x00000000)..mul(0x00000000),
           Register64(0x00000000, 0x00000000));
@@ -503,6 +513,14 @@ void main() {
           Register64(0x41e0cd6c, 0x53674b34));
       expect(Register64(0x0, 0x3e0b2bad)..mul(0x8fc3718f),
           Register64(0x22d79b6d, 0x7e4bc2a3));
+      expect(Register64(0x0, 0xeabdc8f2)..mul(0xf7f86812),
+          Register64(0xe360e429, 0xc36a7104));
+      expect(Register64(0x0, 0xfb56ee12)..mul(0x2a25f213),
+          Register64(0x2961844a, 0x311aaf56));
+      expect(Register64(0x0, 0x5639e48a)..mul(0xfc587481),
+          Register64(0x54fec81c, 0x162ab18a));
+      expect(Register64(0x0, 0xbb0fca68)..mul(0xe480f4e6),
+          Register64(0xa6f84b1c, 0xf11af970));
     });
 
     test('mul(y)', () {

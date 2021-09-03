@@ -291,7 +291,6 @@ class Register64 {
     final a1 = (_lo32 >> 16) & _MASK_16;
     final a2 = (_hi32 & _MASK_16);
     final a3 = (_hi32 >> 16) & _MASK_16;
-
     late int b0, b1, b2, b3;
     if (y is int) {
       // Assume it is a 32-bit integer.
@@ -305,6 +304,7 @@ class Register64 {
       b2 = y._hi32 & _MASK_16;
       b3 = (y._hi32 >> 16) & _MASK_16;
     }
+
     // Compute partial products.
     // Optimization: if b is small, avoid multiplying by parts that are 0.
     var p0 = a0 * b0; // << 0
@@ -340,7 +340,10 @@ class Register64 {
     var slo32 = p0 + ((p1 & _MASK_16) << 16);
     _lo32 = (slo32 & _MASK_32);
     var carry = ((slo32 != _lo32) ? 1 : 0);
-    var shi32 = (p1 >> 16) + p2 + ((p3 & _MASK_16) << 16) + carry;
+    // p1 is a 33-bit integer, shiftr operation will ignore 33th-bit on js
+    var carry2 = ((p1 & _MASK_32) != p1) ? 0x10000 : 0;
+    var shi32 =
+        ((p1 & _MASK_32) >> 16) + p2 + ((p3 & _MASK_16) << 16) + carry + carry2;
     _hi32 = (shi32 & _MASK_32);
   }
 
@@ -408,7 +411,6 @@ class Register64 {
         _lo32 = swap;
         n -= 32;
       }
-
       if (n == 0) {
         // do nothing
       } else {
@@ -432,7 +434,6 @@ class Register64 {
         _lo32 = swap;
         n -= 32;
       }
-
       if (n == 0) {
         // do nothing
       } else {
@@ -442,6 +443,23 @@ class Register64 {
         _lo32 = _lo32 >> n;
         _lo32 |= shiftl32(hi32, (32 - n));
       }
+    }
+  }
+
+  void mod(int n) {
+    if (_hi32 == 0) {
+      // hi32 is zero, so just caculate lo32.
+      _lo32 %= n;
+    } else {
+      // hi32 is not zero, use Horner's Method
+      const b = 0x10000;
+      final a0 = _lo32 & _MASK_16;
+      final a1 = (_lo32 >> 16) & _MASK_16;
+      final a2 = _hi32 & _MASK_16;
+      final a3 = (_hi32 >> 16) & _MASK_16;
+      _lo32 = ((((((a3 % n) * b + a2) % n) * b + a1) % n) * b + a0) % n;
+      // Assume that n is a 32-bit integer, so hi32 will always be zero
+      _hi32 = 0;
     }
   }
 
