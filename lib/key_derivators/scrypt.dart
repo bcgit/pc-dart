@@ -11,7 +11,6 @@ import 'package:pointycastle/key_derivators/pbkdf2.dart';
 import 'package:pointycastle/macs/hmac.dart';
 import 'package:pointycastle/src/impl/base_key_derivator.dart';
 import 'package:pointycastle/src/registry/registry.dart';
-import 'package:pointycastle/src/ufixnum.dart';
 
 ///
 /// Implementation of SCrypt password based key derivation function. See the next link for info on
@@ -42,34 +41,38 @@ class Scrypt extends BaseKeyDerivator {
   @override
   void init(covariant ScryptParameters params) {
     _params = params;
-  }
 
-  @override
-  int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    var key = _scryptJ(Uint8List.fromList(inp.sublist(inpOff)), _params!.salt,
-        _params!.N, _params!.r, _params!.p, _params!.desiredKeyLength);
+    final N = _params!.N;
+    final r = _params!.r;
+    final p = _params!.p;
 
-    out.setRange(0, keySize, key);
-
-    return keySize;
-  }
-
-  Uint8List _scryptJ(
-      Uint8List passwd, Uint8List salt, int N, int r, int p, int dkLen) {
     if (N < 2 || (N & (N - 1)) != 0) {
       throw ArgumentError('N must be a power of 2 greater than 1');
     }
 
-    if (N > _maxValue / 128 / r) {
+    if (N > _maxValue ~/ 128 ~/ r) {
       throw ArgumentError('Parameter N is too large');
     }
 
-    if (r > _maxValue / 128 / p) {
+    if (r > _maxValue ~/ 128 ~/ p) {
       throw ArgumentError('Parameter r is too large');
     }
+  }
 
-    final dk = Uint8List(dkLen);
+  @override
+  int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
+    if (_params == null) {
+      throw StateError('Initialize first.');
+    }
 
+    _scryptJ(inp, inpOff, out, outOff, _params!.salt, _params!.N, _params!.r,
+        _params!.p, _params!.desiredKeyLength);
+
+    return keySize;
+  }
+
+  void _scryptJ(Uint8List pwd, int pwdOff, Uint8List dk, int dkOff,
+      Uint8List salt, int N, int r, int p, int dkLen) {
     final b = Uint8List(128 * r * p);
     final xy = Uint8List(256 * r);
     final v = Uint8List(128 * r * N);
@@ -77,21 +80,19 @@ class Scrypt extends BaseKeyDerivator {
     final pbkdf2 = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64));
 
     pbkdf2.init(Pbkdf2Parameters(salt, 1, p * 128 * r));
-    pbkdf2.deriveKey(passwd, 0, b, 0);
+    pbkdf2.deriveKey(pwd, pwdOff, b, 0);
 
     for (var i = 0; i < p; i++) {
       _smix(b, i * 128 * r, r, N, v, xy);
     }
 
     pbkdf2.init(Pbkdf2Parameters(b, 1, dkLen));
-    pbkdf2.deriveKey(passwd, 0, dk, 0);
-
-    return dk;
+    pbkdf2.deriveKey(pwd, pwdOff, dk, dkOff);
   }
 
   void _smix(Uint8List B, int bi, int r, int N, Uint8List V, Uint8List xy) {
-    var xi = 0;
-    var yi = 128 * r;
+    const xi = 0;
+    final yi = 128 * r;
 
     _arraycopy(B, bi, xy, xi, 128 * r);
 
@@ -109,15 +110,26 @@ class Scrypt extends BaseKeyDerivator {
     _arraycopy(xy, xi, B, bi, 128 * r);
   }
 
-  void _blockmixSalsa8(Uint8List by, int bi, int yi, int r) {
-    final X = Uint8List(64);
+  final _b32 = List<int>.filled(16, 0);
+  final _x = List<int>.filled(16, 0);
 
-    _arraycopy(by, bi + (2 * r - 1) * 64, X, 0, 64);
+  void _blockmixSalsa8(Uint8List by, int bi, int yi, int r) {
+    final byByteData = by.buffer.asByteData(by.offsetInBytes, by.length);
+
+    for (var i = 0; i < 16; ++i) {
+      _b32[i] =
+          byByteData.getUint32(bi + (2 * r - 1) * 64 + i * 4, Endian.little);
+    }
 
     for (var i = 0; i < 2 * r; i++) {
-      _blockxor(by, i * 64, X, 0, 64);
-      _salsa20_8(X);
-      _arraycopy(X, 0, by, yi + (i * 64), 64);
+      for (var j = 0; j < 16; ++j) {
+        _b32[j] ^= byByteData.getUint32(i * 64 + j * 4, Endian.little);
+        _x[j] = _b32[j];
+      }
+      _salsa20_8();
+      for (var j = 0; j < 16; ++j) {
+        byByteData.setUint32(yi + (i * 64) + j * 4, _b32[j], Endian.little);
+      }
     }
 
     for (var i = 0; i < r; i++) {
@@ -129,57 +141,49 @@ class Scrypt extends BaseKeyDerivator {
     }
   }
 
-  void _salsa20_8(Uint8List B) {
-    final b32 = Uint32List(16);
-    final x = Uint32List(16);
+  @pragma('vm:prefer-inline')
+  @pragma('dart2js:tryInline')
+  int _R(int sum, int n) =>
+      ((sum << n) & 0xFFFFFFFF) | (sum & 0xFFFFFFFF) >> (32 - n);
 
-    for (var i = 0; i < 16; i++) {
-      b32[i] = unpack32(B, i * 4, Endian.little);
-    }
-
-    _arraycopy(b32, 0, x, 0, 16);
-
+  void _salsa20_8() {
     for (var i = 8; i > 0; i -= 2) {
-      x[4] ^= crotl32(x[0] + x[12], 7);
-      x[8] ^= crotl32(x[4] + x[0], 9);
-      x[12] ^= crotl32(x[8] + x[4], 13);
-      x[0] ^= crotl32(x[12] + x[8], 18);
-      x[9] ^= crotl32(x[5] + x[1], 7);
-      x[13] ^= crotl32(x[9] + x[5], 9);
-      x[1] ^= crotl32(x[13] + x[9], 13);
-      x[5] ^= crotl32(x[1] + x[13], 18);
-      x[14] ^= crotl32(x[10] + x[6], 7);
-      x[2] ^= crotl32(x[14] + x[10], 9);
-      x[6] ^= crotl32(x[2] + x[14], 13);
-      x[10] ^= crotl32(x[6] + x[2], 18);
-      x[3] ^= crotl32(x[15] + x[11], 7);
-      x[7] ^= crotl32(x[3] + x[15], 9);
-      x[11] ^= crotl32(x[7] + x[3], 13);
-      x[15] ^= crotl32(x[11] + x[7], 18);
-      x[1] ^= crotl32(x[0] + x[3], 7);
-      x[2] ^= crotl32(x[1] + x[0], 9);
-      x[3] ^= crotl32(x[2] + x[1], 13);
-      x[0] ^= crotl32(x[3] + x[2], 18);
-      x[6] ^= crotl32(x[5] + x[4], 7);
-      x[7] ^= crotl32(x[6] + x[5], 9);
-      x[4] ^= crotl32(x[7] + x[6], 13);
-      x[5] ^= crotl32(x[4] + x[7], 18);
-      x[11] ^= crotl32(x[10] + x[9], 7);
-      x[8] ^= crotl32(x[11] + x[10], 9);
-      x[9] ^= crotl32(x[8] + x[11], 13);
-      x[10] ^= crotl32(x[9] + x[8], 18);
-      x[12] ^= crotl32(x[15] + x[14], 7);
-      x[13] ^= crotl32(x[12] + x[15], 9);
-      x[14] ^= crotl32(x[13] + x[12], 13);
-      x[15] ^= crotl32(x[14] + x[13], 18);
+      _x[4] ^= _R(_x[0] + _x[12], 7);
+      _x[8] ^= _R(_x[4] + _x[0], 9);
+      _x[12] ^= _R(_x[8] + _x[4], 13);
+      _x[0] ^= _R(_x[12] + _x[8], 18);
+      _x[9] ^= _R(_x[5] + _x[1], 7);
+      _x[13] ^= _R(_x[9] + _x[5], 9);
+      _x[1] ^= _R(_x[13] + _x[9], 13);
+      _x[5] ^= _R(_x[1] + _x[13], 18);
+      _x[14] ^= _R(_x[10] + _x[6], 7);
+      _x[2] ^= _R(_x[14] + _x[10], 9);
+      _x[6] ^= _R(_x[2] + _x[14], 13);
+      _x[10] ^= _R(_x[6] + _x[2], 18);
+      _x[3] ^= _R(_x[15] + _x[11], 7);
+      _x[7] ^= _R(_x[3] + _x[15], 9);
+      _x[11] ^= _R(_x[7] + _x[3], 13);
+      _x[15] ^= _R(_x[11] + _x[7], 18);
+      _x[1] ^= _R(_x[0] + _x[3], 7);
+      _x[2] ^= _R(_x[1] + _x[0], 9);
+      _x[3] ^= _R(_x[2] + _x[1], 13);
+      _x[0] ^= _R(_x[3] + _x[2], 18);
+      _x[6] ^= _R(_x[5] + _x[4], 7);
+      _x[7] ^= _R(_x[6] + _x[5], 9);
+      _x[4] ^= _R(_x[7] + _x[6], 13);
+      _x[5] ^= _R(_x[4] + _x[7], 18);
+      _x[11] ^= _R(_x[10] + _x[9], 7);
+      _x[8] ^= _R(_x[11] + _x[10], 9);
+      _x[9] ^= _R(_x[8] + _x[11], 13);
+      _x[10] ^= _R(_x[9] + _x[8], 18);
+      _x[12] ^= _R(_x[15] + _x[14], 7);
+      _x[13] ^= _R(_x[12] + _x[15], 9);
+      _x[14] ^= _R(_x[13] + _x[12], 13);
+      _x[15] ^= _R(_x[14] + _x[13], 18);
     }
 
     for (var i = 0; i < 16; i++) {
-      b32[i] = x[i] + b32[i];
-    }
-
-    for (var i = 0; i < 16; i++) {
-      pack32(b32[i], B, i * 4, Endian.little);
+      _b32[i] = (_x[i] + _b32[i]) & 0xFFFFFFFF;
     }
   }
 
@@ -189,12 +193,15 @@ class Scrypt extends BaseKeyDerivator {
     }
   }
 
+  @pragma('vm:prefer-inline')
+  @pragma('dart2js:tryInline')
   int _integerify(Uint8List b, int bi, int r) {
-    bi += (2 * r - 1) * 64;
-    return unpack32(b, bi, Endian.little);
+    return b.buffer
+        .asByteData(b.offsetInBytes, b.length)
+        .getUint32(bi + (2 * r - 1) * 64, Endian.little);
   }
 
   void _arraycopy(
           List<int> inp, int inpOff, List<int> out, int outOff, int len) =>
-      out.setRange(outOff, outOff + len, inp.sublist(inpOff));
+      out.setRange(outOff, outOff + len, inp, inpOff);
 }
