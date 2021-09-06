@@ -1,5 +1,6 @@
 library src.registry.impl;
 
+import 'package:pointycastle/digests/sm3.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 
@@ -61,6 +62,7 @@ void _registerDigests(FactoryRegistry registry) {
   registry.register(WhirlpoolDigest.factoryConfig);
   registry.register(SHAKEDigest.factoryConfig);
   registry.register(CSHAKEDigest.factoryConfig);
+  registry.register(SM3Digest.factoryConfig);
 }
 
 void _registerECCurves(FactoryRegistry registry) {
