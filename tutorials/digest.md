@@ -64,7 +64,7 @@ final d = new Digest("SHA-256");
 
 Possible names include: "MD2", "MD4", "MD5", "RIPEMD-128",
 "RIPEMD-160", "RIPEMD-256", "RIPEMD-320", "SHA-1", "SHA-224",
-"SHA-256", "SHA-384", "SHA-512", "Tiger" and "Whirlpool".
+"SHA-256", "SHA-384", "SHA-512", "Tiger", "Whirlpool" and "SM3".
 
 Note: these examples store the digest object in "d", since they could
 be for any digest algorithm. But it is better to give the variable a

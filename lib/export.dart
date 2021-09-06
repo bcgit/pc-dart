@@ -50,6 +50,7 @@ export 'package:pointycastle/digests/sha512.dart';
 export 'package:pointycastle/digests/sha512t.dart';
 export 'package:pointycastle/digests/tiger.dart';
 export 'package:pointycastle/digests/whirlpool.dart';
+export 'package:pointycastle/digests/sm3.dart';
 
 // ecc
 export 'package:pointycastle/ecc/api.dart';

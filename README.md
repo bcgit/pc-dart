@@ -94,6 +94,7 @@ or like this `StreamCipher('AES/SomeStreamModeHere')`. See sections below for mo
   * 'SHA3-224|256|384|512'
   * 'Tiger'
   * 'Whirlpool'
+  * 'SM3'
 
 **MACs:** Instantiate using registry like this `Mac('SomeBlockCipher/CMAC')` or `Mac('SomeDigest/HMAC)` or `Mac(SomeBlockCipher/Poly1305)`. CMAC and HMAC require a `KeyParameter` and Poly1305 requires a `ParametersWithIV`.
   * 'HMAC'
