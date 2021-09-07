@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.3.4 (2021-09-07)
+
+* Performance update to scrypt
+* SM3 implementation
+
 #### Version 3.3.3 (2021-09-03)
 
 * Argon2 in js environments.
