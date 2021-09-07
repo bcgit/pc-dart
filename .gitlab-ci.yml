@@ -16,13 +16,13 @@ test-code-node:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub get; pub run test -p node"
+    pub get; pub run test --timeout 15m -p node"
 
 test-code-chrome:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub get; pub run test -p chrome"
+    pub get; pub run test --timeout 15m -p chrome"
 
 score-pana:
   stage: score
