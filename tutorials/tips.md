@@ -8,7 +8,7 @@ generic types.
 Sometimes a method will return an abstract class that needs to be
 cast into its actual type before it can be properly used.
 
-```
+```dart
 final pair = keyGen.generateKeyPair(); // returns AsymmetricKeyPair<PublicKey, PrivateKey>
 
 final pub = pair.publicKey; // PublicKey - not very useful
@@ -23,7 +23,7 @@ subtype for the method to work (even though the type system accepts
 the base generic type). Make the generic type more specific for the
 subclass that is being used.
 
-```
+```dart
 RSAPrivateKey pvtKey = ... // RSAPrivateKey implements PrivateKey
 RSASigner signer = ...
 
