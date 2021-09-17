@@ -19,7 +19,7 @@ Initialization Vector (IV).
 
 There are three algorithms in the AES family: AES-128, AES-192 and
 AES-256, corresponding to the length of the keys in bits. For all the
-algorithms, the block size is always 128-bits (32 bytes).
+algorithms, the block size is always 128-bits (16 bytes).
 
 To encrypt using AES-CBC:
 
