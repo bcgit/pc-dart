@@ -325,6 +325,11 @@ class ObjectIdentifiers {
       'identifierString': '1.2.840.10045.4.3.4',
       'readableName': 'ecdsaWithSHA512',
       'identifier': [1, 2, 840, 10045, 4, 3, 4]
+    },
+    {
+      'identifierString': '0.9.2342.19200300.100.1.1',
+      'readableName': 'UID',
+      'identifier': [0, 9, 2342, 19200300, 100, 1, 1]
     }
   ];
 
