@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.3.5 (2021-10-27)
+
+* New OID
+
 #### Version 3.3.4 (2021-09-07)
 
 * Performance update to scrypt
