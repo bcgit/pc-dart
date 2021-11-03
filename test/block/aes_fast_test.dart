@@ -8,6 +8,11 @@ import 'package:pointycastle/pointycastle.dart';
 
 import '../test/runners/block_cipher.dart';
 
+/*
+  These tests are no longer part of the test suit.
+  See aes_test.dart
+ */
+
 void main() {
   final key = Uint8List.fromList([
     0x00,

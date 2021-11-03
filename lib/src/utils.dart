@@ -13,6 +13,35 @@ void arrayCopy(Uint8List? sourceArr, int sourcePos, Uint8List? outArr,
   }
 }
 
+///
+///A constant time equals comparison - does not terminate early if
+///test will fail. For best results always pass the expected value
+///as the first parameter.
+///
+/// @param expected first array
+/// @param supplied second array
+/// @return true if arrays equal, false otherwise.
+///
+bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
+  if (expected == supplied) {
+    return true;
+  }
+
+  int len =
+      (expected.length < supplied.length) ? expected.length : supplied.length;
+
+  int nonEqual = expected.length ^ supplied.length;
+
+  for (int i = 0; i != len; i++) {
+    nonEqual |= (expected[i] ^ supplied[i]);
+  }
+  for (int i = len; i < supplied.length; i++) {
+    nonEqual |= (supplied[i] ^ ~supplied[i]);
+  }
+
+  return nonEqual == 0;
+}
+
 Uint8List concatUint8List(Iterable<Uint8List> list) =>
     Uint8List.fromList(list.expand((element) => element).toList());
 
@@ -117,26 +146,6 @@ Uint8List encodeBigIntAsUnsigned(BigInt number) {
   return result;
 }
 
-bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
-  if (expected == supplied) {
-    return true;
-  }
-
-  var len =
-      (expected.length < supplied.length) ? expected.length : supplied.length;
-
-  var nonEqual = expected.length ^ supplied.length;
-
-  for (var i = 0; i != len; i++) {
-    nonEqual |= (expected[i] ^ supplied[i]);
-  }
-  for (var i = len; i < supplied.length; i++) {
-    nonEqual |= (supplied[i] ^ ~supplied[i]);
-  }
-
-  return nonEqual == 0;
-}
-
 bool constantTimeAreEqualOffset(
     int len, Uint8List a, int aOff, Uint8List b, int bOff) {
   if (len < 0) {
@@ -174,6 +183,11 @@ abstract class Pack {
       ns[i] = littleEndianToInt(bs, off);
       off += 4;
     }
+  }
+
+  static void intToLittleEndian(int n, Uint8List bs, int off) {
+    var data = ByteData.view(bs.buffer);
+    data.setInt32(off, n, Endian.little);
   }
 
   static Uint8List longToLittleEndianList(int n) {

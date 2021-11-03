@@ -1,5 +1,6 @@
 library src.registry.impl;
 
+import 'package:pointycastle/block/aes.dart';
 import 'package:pointycastle/digests/sm3.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/src/registry/registry.dart';
@@ -26,7 +27,7 @@ void _registerAsymmetricCiphers(FactoryRegistry registry) {
 }
 
 void _registerBlockCiphers(FactoryRegistry registry) {
-  registry.register(AESFastEngine.factoryConfig);
+  registry.register(AESEngine.factoryConfig);
 
   // modes
   registry.register(CBCBlockCipher.factoryConfig);

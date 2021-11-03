@@ -17,6 +17,7 @@ export 'package:pointycastle/asymmetric/oaep.dart';
 
 // block
 export 'package:pointycastle/block/aes_fast.dart';
+export 'package:pointycastle/block/aes.dart';
 // block/modes
 export 'package:pointycastle/block/modes/cbc.dart';
 export 'package:pointycastle/block/modes/cfb.dart';

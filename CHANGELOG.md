@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.4.0-rc1
+
+* Security update, AESFastEngine is open to timing attacks, this has been deprecated and replaced with AESEngine.
+* validateMac in BaseAEADBlockCipher is now constant time.
+
 #### Version 3.3.5 (2021-10-27)
 
 * New OID

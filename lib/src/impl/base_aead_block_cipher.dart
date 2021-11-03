@@ -1,10 +1,10 @@
 library src.impl.base_aead_block_cipher;
 
 import 'dart:math' show min;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/utils.dart';
 
 abstract class BaseAEADBlockCipher implements AEADBlockCipher {
   final BlockCipher _underlyingCipher;
@@ -67,17 +67,9 @@ abstract class BaseAEADBlockCipher implements AEADBlockCipher {
     if (_lastMacSizeBytesOff != macSize) {
       throw InvalidCipherTextException('Input data too short');
     }
-    if (!_compareLists(mac, _lastMacSizeBytes!)) {
+    if (!constantTimeAreEqual(mac, _lastMacSizeBytes!)) {
       throw InvalidCipherTextException('Authentication tag check failed');
     }
-  }
-
-  bool _compareLists(Uint8List a, Uint8List b) {
-    if (a.length != b.length) return false;
-    for (var i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
   }
 
   @override
