@@ -12,7 +12,7 @@ import '../test/runners/mac.dart';
 import '../test/src/helpers.dart';
 
 void main() {
-  var mac = Poly1305.withCipher(AESFastEngine());
+  var mac = Poly1305.withCipher(AESEngine());
 
   // Test vectors from BouncyCastle Poly1305 class
   final key = createUint8ListFromHexString(
@@ -32,7 +32,7 @@ void main() {
     PlainTextDigestPair(input1, output1)
   ]);
 
-  mac = Poly1305.withCipher(AESFastEngine());
+  mac = Poly1305.withCipher(AESEngine());
   final key2 = createUint8ListFromHexString(
       'f795bd0a50e29e0710d3130a20e98d0cf795bd4a52e29ed713d313fa20e98dbc');
   final iv2 = createUint8ListFromHexString('917cf69ebd68b2ec9b9fe9a3eadda692');
@@ -48,7 +48,7 @@ void main() {
     PlainTextDigestPair(input2, output2)
   ]);
 
-  mac = Poly1305.withCipher(AESFastEngine());
+  mac = Poly1305.withCipher(AESEngine());
   final key3 = createUint8ListFromHexString(
       '3ef49901c8e11c000430d90ad45e7603e69dae0aab9f91c03a325dcc9436fa90');
   final iv3 = createUint8ListFromHexString('166450152e2394835606a9d1dd2cdc8b');

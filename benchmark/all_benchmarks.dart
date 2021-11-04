@@ -2,7 +2,7 @@
 
 library pointycastle.benchmark.all_benchmarks;
 
-import './block/aes_fast_benchmark.dart' as aes_fast_benchmark;
+import './block/aes_benchmark.dart' as aes_benchmark;
 import './digests/md2_benchmark.dart' as md2_benchmark;
 import './digests/md4_benchmark.dart' as md4_benchmark;
 import './digests/md5_benchmark.dart' as md5_benchmark;
@@ -27,7 +27,7 @@ void main() {
   ufixnum_benchmark.main();
 
   // block ciphers
-  aes_fast_benchmark.main();
+  aes_benchmark.main();
 
   // digests
   md2_benchmark.main();

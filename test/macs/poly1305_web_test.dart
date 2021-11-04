@@ -13,7 +13,7 @@ void main() {
   group('Poly1305 - js', () {
     test('must emit PlatformException', () {
       expect(() {
-        Poly1305.withCipher(AESFastEngine());
+        Poly1305.withCipher(AESEngine());
       }, throwsA(TypeMatcher<PlatformException>()));
 
       expect(() {

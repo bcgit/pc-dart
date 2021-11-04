@@ -29,7 +29,7 @@ Uint8List aesCbcEncrypt(
 
   // Create a CBC block cipher with AES, and initialize with key and IV
 
-  final cbc = CBCBlockCipher(AESFastEngine())
+  final cbc = CBCBlockCipher(AESEngine())
     ..init(true, ParametersWithIV(KeyParameter(key), iv)); // true=encrypt
 
   // Encrypt the plaintext block-by-block
@@ -60,7 +60,7 @@ Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {
 
   // Create a CBC block cipher with AES, and initialize with key and IV
 
-  final cbc = CBCBlockCipher(AESFastEngine())
+  final cbc = CBCBlockCipher(AESEngine())
     ..init(false, ParametersWithIV(KeyParameter(key), iv)); // false=decrypt
 
   // Decrypt the cipherText block-by-block

@@ -17,14 +17,14 @@
 /// but they can or cannot be used depending on what imports were used.
 ///
 /// To see the differences between the examples, run 'diff' on the files.
-
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/asymmetric/api.dart';
-import 'package:pointycastle/block/aes_fast.dart';
+import 'package:pointycastle/block/aes.dart';
+import 'package:pointycastle/block/modes/cbc.dart';
 import 'package:pointycastle/digests/md5.dart';
 import 'package:pointycastle/digests/sha1.dart';
 import 'package:pointycastle/digests/sha256.dart';
@@ -34,10 +34,9 @@ import 'package:pointycastle/key_derivators/pbkdf2.dart';
 import 'package:pointycastle/key_generators/api.dart';
 import 'package:pointycastle/key_generators/rsa_key_generator.dart';
 import 'package:pointycastle/macs/hmac.dart';
-import 'package:pointycastle/signers/rsa_signer.dart';
-import 'package:pointycastle/block/modes/cbc.dart';
 import 'package:pointycastle/paddings/pkcs7.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
+import 'package:pointycastle/signers/rsa_signer.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 
 void main() {
@@ -157,7 +156,7 @@ void useConstructors() {
   final aes256key = keyDerivator256.process(Uint8List.fromList(_secret));
 
   final _iv = secRnd.nextBytes(128 ~/ 8);
-  final aesCbc = CBCBlockCipher(AESFastEngine())
+  final aesCbc = CBCBlockCipher(AESEngine())
     ..init(true, ParametersWithIV(KeyParameter(aes256key), _iv));
 
   final _paddedData = Uint8List(

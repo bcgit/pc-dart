@@ -1,6 +1,13 @@
 Changelog
 =========
 
+#### Version 3.4.0-rc2
+
+* Security update, fixed timing leaking in GCM implementation.
+* Fixed bug in GCM counter.
+* Added constant time gated xor.
+* Removed more references to AESFastEngine.
+
 #### Version 3.4.0-rc1
 
 * Security update, AESFastEngine is open to timing attacks, this has been deprecated and replaced with AESEngine.

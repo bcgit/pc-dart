@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library benchmark.block.aes_fast_benchmark;
+library benchmark.block.aes_benchmark;
 
 import 'dart:typed_data';
 

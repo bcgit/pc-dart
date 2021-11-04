@@ -4,7 +4,7 @@ library test.modes.gcm_test;
 
 import 'dart:typed_data';
 
-import 'package:pointycastle/block/aes_fast.dart';
+import 'package:pointycastle/block/aes.dart';
 import 'package:pointycastle/block/modes/ccm.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
@@ -50,7 +50,7 @@ void main() {
   group('AES-CCM', () {
     for (var map in paramList) {
       test(map['name'], () {
-        var encrypter = CCMBlockCipher(AESFastEngine());
+        var encrypter = CCMBlockCipher(AESEngine());
         var params = AEADParameters(
             KeyParameter((map['key'] as Uint8List)),
             map['tl'] as int,
@@ -67,7 +67,7 @@ void main() {
                 createUint8ListFromHexString(map['output'] as String)));
         expect(encrypter.mac, orderedEquals(map['mac'] as Uint8List));
 
-        var decrypter = CCMBlockCipher(AESFastEngine())..init(false, params);
+        var decrypter = CCMBlockCipher(AESEngine())..init(false, params);
         var decrypted = formatBytesAsHexString(decrypter.process(result));
         expect(decrypted, map['input']);
       });

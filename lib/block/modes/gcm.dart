@@ -3,6 +3,8 @@ library impl.block_cipher.modes.gcm;
 import 'dart:math' show min;
 import 'dart:typed_data';
 
+import 'package:pointycastle/src/ct.dart';
+
 import '../../api.dart';
 import '../../src/impl/base_aead_block_cipher.dart';
 import '../../src/registry/registry.dart';
@@ -24,11 +26,26 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
   late Uint8List _e0;
   late Uint8List _x;
   late int _processedBytes;
+  int _blocksRemaining = 0;
 
-  GCMBlockCipher(BlockCipher cipher) : super(cipher);
+  GCMBlockCipher(BlockCipher cipher) : super(cipher) {}
 
   @override
   String get algorithmName => '${underlyingCipher.algorithmName}/GCM';
+
+  @override
+  void init(bool forEncryption, CipherParameters? params) {
+    var bs = underlyingCipher.blockSize;
+    _blocksRemaining = (2 ^ 36 - 64) ~/ bs;
+    super.init(forEncryption, params);
+  }
+
+  @override
+  void reset() {
+    var bs = underlyingCipher.blockSize;
+    _blocksRemaining = (2 ^ 36 - 64) ~/ bs;
+    super.reset();
+  }
 
   @override
   void prepare(KeyParameter keyParam) {
@@ -109,12 +126,20 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
   }
 
   void _getNextCTRBlock(Uint8List out) {
+    //
+    // This is tested manually by forcing _blocksRemaining to 1 and trying to run
+    // the unit tests. Otherwise it takes 64GB of data to exhaust.
+    //
+    if (_blocksRemaining == 0) {
+      throw StateError('Attempt to process too many blocks');
+    }
+    _blocksRemaining--;
+
     _counter[15]++;
-    for (var i = 15; i >= 12 && _counter[i] == 256; i--) {
+    for (var i = 15; i >= 12 && _counter[i] == 0; i--) {
       _counter[i] = 0;
       if (i > 12) _counter[i - 1]++;
     }
-
     _computeE(_counter, out);
   }
 
@@ -129,12 +154,8 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
     var z = Uint8List(x.length);
 
     for (var i = 0; i < 128; i++) {
-      if (_bit(y, i)) {
-        _xor(z, v);
-      }
-      if (_shiftRight(v)) {
-        _xor(v, r);
-      }
+      CT_xor(z, v, _bit(y, i));
+      CT_xor(v, r, _shiftRight(v));
     }
 
     x.setAll(0, z);

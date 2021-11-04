@@ -142,7 +142,7 @@ void useConstructors() {
   final aes256key = keyDerivator256.process(Uint8List.fromList(_secret));
 
   final _iv = secRnd.nextBytes(128 ~/ 8);
-  final aesCbc = CBCBlockCipher(AESFastEngine())
+  final aesCbc = CBCBlockCipher(AESEngine())
     ..init(true, ParametersWithIV(KeyParameter(aes256key), _iv));
 
   final _paddedData = Uint8List(
