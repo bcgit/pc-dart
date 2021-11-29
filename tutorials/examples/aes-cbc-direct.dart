@@ -127,7 +127,7 @@ Uint8List hex2bin(String hexStr) {
 //----------------------------------------------------------------
 /// Added padding
 
-Uint8List pad(Uint8List bytes, int blockSize) {
+Uint8List pad(Uint8List bytes, int blockSizeBytes) {
   // The PKCS #7 padding just fills the extra bytes with the same value.
   // That value is the number of bytes of padding there is.
   //
@@ -135,7 +135,7 @@ Uint8List pad(Uint8List bytes, int blockSize) {
   // [0x03, 0x03, 0x03] to the bytes. If the bytes is already a multiple of the
   // block size, a full block of padding is added.
 
-  final padLength = blockSize - (bytes.length % blockSize);
+  final padLength = blockSizeBytes - (bytes.length % blockSizeBytes);
 
   final padded = Uint8List(bytes.length + padLength)..setAll(0, bytes);
   PKCS7Padding().addPadding(padded, bytes.length);
@@ -325,7 +325,7 @@ in culpa qui officia deserunt mollit anim id est laborum.
   final cipherText = aesCbcEncrypt(
       passphraseToKey(passphrase, salt: randomSalt, bitLength: aesSize),
       iv,
-      pad(utf8.encode(textToEncrypt) as Uint8List, 128));
+      pad(utf8.encode(textToEncrypt) as Uint8List, 16));
 
   // If the encrypted data was to be stored or transmitted to the receiver,
   // it will have to store the cipher-text, Initialization Vector (IV) and
