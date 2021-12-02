@@ -1,7 +1,7 @@
 Changelog
 =========
 
-#### Version 3.4.0 (2021-10-09)
+#### Version 3.4.0 (2021-11-09)
 
 * Security update, fixed timing leaking in GCM implementation.
 * Fixed bug in GCM counter.
