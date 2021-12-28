@@ -2,14 +2,17 @@
 
 library impl.asymmetric_block_cipher.oeap;
 
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
-import 'package:pointycastle/digests/sha1.dart';
-import 'package:pointycastle/random/fortuna_random.dart';
-import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
-import 'package:pointycastle/src/platform_check/platform_check.dart';
 import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
+import 'package:pointycastle/random/fortuna_random.dart';
+import 'package:pointycastle/digests/sha1.dart';
+import 'package:pointycastle/digests/sha256.dart';
+
+typedef DigestFactory = Digest Function();
 
 /// RSAES-OAEP v2.0
 ///
@@ -27,7 +30,7 @@ import 'package:pointycastle/src/registry/registry.dart';
 ///
 /// Currently, this implementation has the following restrictions:
 ///
-/// - the hash function is hard-coded to be SHA-1;
+/// - the hash function is hard-coded to be SHA-1 or SHA-256;
 /// - the mask generation function is hard-coded to MGF1; and
 /// - it cannot accept any _encoding parameters_ (that is, _P_ is always empty)
 
@@ -42,7 +45,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
           });
 
   /// Hash function used by the EME-OAEP (Encoding Method for Encryption OAEP).
-  Digest hash = SHA1Digest();
+  Digest hash;
 
   /// Hash function used by the MGF1 Mask Generation Function.
   late Digest mgf1Hash;
@@ -51,15 +54,30 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   ///
   /// Note: in this implementation the encoding parameters is always zero
   /// octets. There is no mechanism to provide encoding parameters.
-  Uint8List defHash = Uint8List(SHA1Digest().digestSize);
+  Uint8List defHash;
 
   final AsymmetricBlockCipher _engine;
   late SecureRandom _random;
   late bool _forEncryption;
 
-  OAEPEncoding(this._engine) {
-    SHA1Digest().doFinal(defHash, 0);
+  OAEPEncoding._(DigestFactory digestFactory, this._engine)
+      : hash = digestFactory(),
+        defHash = Uint8List(digestFactory().digestSize) {
+    digestFactory().doFinal(defHash, 0);
   }
+
+  factory OAEPEncoding(AsymmetricBlockCipher engine) =>
+      OAEPEncoding.withSHA1(engine);
+
+  factory OAEPEncoding.withSHA1(AsymmetricBlockCipher engine) =>
+      OAEPEncoding._(() => SHA1Digest(), engine);
+
+  factory OAEPEncoding.withSHA256(AsymmetricBlockCipher engine) =>
+      OAEPEncoding._(() => SHA256Digest(), engine);
+
+  factory OAEPEncoding.withCustomDigest(
+          DigestFactory digestFactory, AsymmetricBlockCipher engine) =>
+      OAEPEncoding._(digestFactory, engine);
 
   @override
   String get algorithmName => '${_engine.algorithmName}/OAEP';
