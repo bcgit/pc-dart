@@ -173,8 +173,8 @@ abstract class KeccakEngine extends BaseDigest {
     _dataQueue.fillRange(off, off + len, 0);
   }
 
-  void _doUpdate(Uint8List data, int off, int databitlen) {
-    absorbRange(data, off, databitlen);
+  void _doUpdate(Uint8List data, int off, int len) {
+    absorbRange(data, off, len);
   }
 
   void init(int bitlen) {
