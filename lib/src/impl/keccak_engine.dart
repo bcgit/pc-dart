@@ -95,7 +95,7 @@ abstract class KeccakEngine extends BaseDigest {
 
   @override
   void updateByte(int inp) {
-    _doUpdate(Uint8List.fromList([inp]), 0, 8);
+    _doUpdate(Uint8List.fromList([inp]), 0, 1);
   }
 
   @override
