@@ -95,7 +95,7 @@ abstract class KeccakEngine extends BaseDigest {
 
   @override
   void updateByte(int inp) {
-    _doUpdate(Uint8List.fromList([inp]), 0, 8);
+    _doUpdate(Uint8List.fromList([inp]), 0, 1);
   }
 
   @override
@@ -173,8 +173,8 @@ abstract class KeccakEngine extends BaseDigest {
     _dataQueue.fillRange(off, off + len, 0);
   }
 
-  void _doUpdate(Uint8List data, int off, int databitlen) {
-    absorbRange(data, off, databitlen);
+  void _doUpdate(Uint8List data, int off, int len) {
+    absorbRange(data, off, len);
   }
 
   void init(int bitlen) {
