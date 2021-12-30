@@ -95,7 +95,7 @@ abstract class KeccakEngine extends BaseDigest {
 
   @override
   void updateByte(int inp) {
-    _doUpdate(Uint8List.fromList([inp]), 0, 1);
+    absorb(inp);
   }
 
   @override
@@ -257,15 +257,24 @@ abstract class KeccakEngine extends BaseDigest {
     if (++_bitsInQueue == _rate) {
       _keccakAbsorb(_dataQueue, 0);
     } else {
-      var full = _bitsInQueue >> 3, partial = _bitsInQueue & 63;
-      var off = 0;
-      for (var i = 0; i < full; ++i) {
+      var full = (_bitsInQueue >> 6), partial = _bitsInQueue & 63;
+      for (var i = 0; i < full * 8; ++i) {
         _state[i] ^= _dataQueue[i];
-        off++;
       }
+
       if (partial > 0) {
-        var mask = (1 << partial) - 1;
-        _state[full] ^= dataQueue[off] & mask;
+        for (var k = 0; k != 8; k++) {
+          if (partial >= 8) {
+            _state[full * 8 + k] ^= dataQueue[full * 8 + k];
+          } else {
+            _state[full * 8 + k] ^=
+                dataQueue[full * 8 + k] & ((1 << partial) - 1);
+          }
+          partial -= 8;
+          if (partial < 0) {
+            partial = 0;
+          }
+        }
       }
     }
 

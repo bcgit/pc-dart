@@ -4,6 +4,7 @@ Changelog
 #### Version 3.5.0 (2021-12-30)
 
 * RSAES-OAEP with SHA256 or any digest instance.
+* Fixed bug in Keccak when updating with single bytes.
 
 #### Version 3.4.0 (2021-11-09)
 

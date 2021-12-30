@@ -11,8 +11,56 @@ import 'package:test/test.dart';
 import '../test/src/helpers.dart';
 
 void main() {
+  testRegressions();
   testKeccakSizeEnforcement();
   testKeccakAgainstVectors();
+}
+
+void testRegressions() {
+  group('Keccak Regressions', () {
+    test('single byte update regression', () {
+      var expected = createUint8ListFromHexString(
+          '4d3894ba300d1853982045f7d93cb8e32ea5150d0d4eb8a44d783c1362a73a9bdd4c5ba3');
+      var dig = KeccakDigest(288);
+
+      for (var t = 0; t < 255; t++) {
+        dig.updateByte(t);
+      }
+
+      var res = Uint8List(dig.digestSize);
+      dig.doFinal(res, 0);
+      expect(res, equals(expected));
+    });
+
+    test('_padAndSwitchToSqueezingPhase', () {
+      //
+      // Exercise keccak with inputs ranging in length from zero bytes to 1024
+      // Keccak Digest output is passed to SHA256 as a summation step to avoid need
+      // to include a vector file with 1024 entries in it.
+      // Summation digest calculated using BC Java Api
+      //
+
+      var iut = KeccakDigest(288);
+      var summationDigest = SHA256Digest();
+      var iutRes = Uint8List(iut.digestSize);
+
+      for (var t = 0; t < 1024; t++) {
+        for (var i = 0; i < t; i++) {
+          iut.updateByte(i);
+        }
+        iut.doFinal(iutRes, 0);
+        summationDigest.update(iutRes, 0, iutRes.length);
+      }
+
+      var sum = Uint8List(summationDigest.digestSize);
+      summationDigest.doFinal(sum, 0);
+
+      expect(
+          sum,
+          equals(createUint8ListFromHexString(
+              "51e16cafd44b120fde44105f299b8343c22899851da30bb33a481d4b81c2ef3e")));
+    });
+  });
 }
 
 void testKeccakSizeEnforcement() {
