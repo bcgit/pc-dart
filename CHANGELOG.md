@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.5.0 (2021-12-30)
+
+* RSAES-OAEP with SHA256 or any digest instance.
+
 #### Version 3.4.0 (2021-11-09)
 
 * Security update, fixed timing leaking in GCM implementation.

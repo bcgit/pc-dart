@@ -2,16 +2,15 @@
 
 library impl.asymmetric_block_cipher.oeap;
 
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
-import 'package:pointycastle/src/platform_check/platform_check.dart';
-import 'package:pointycastle/src/registry/registry.dart';
-import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
-import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:pointycastle/digests/sha1.dart';
 import 'package:pointycastle/digests/sha256.dart';
+import 'package:pointycastle/random/fortuna_random.dart';
+import 'package:pointycastle/src/impl/base_asymmetric_block_cipher.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
+import 'package:pointycastle/src/registry/registry.dart';
 
 typedef DigestFactory = Digest Function();
 
@@ -425,9 +424,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     var defHashWrong = false;
 
     for (var i = 0; i != defHash.length; i++) {
-      if (defHash[i] != block[defHash.length + i]) {
-        defHashWrong = true;
-      }
+      defHashWrong |= defHash[i] != block[defHash.length + i];
     }
 
     // 5.9 Split _DB_ into pHash1 || PS || 0x01 || M
@@ -446,7 +443,8 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // The data-start-is-wrong if the rest of the [block] contains all 0x00
     // bytes or that first non-zero byte is not 0x01.
 
-    var dataStartWrong = (start > (block.length - 1)) | (block[start] != 0x01);
+    var dataStartWrong = (start > (block.length - 1)) |
+        (start < block.length && block[start] != 0x01);
     start++;
 
     if (decryptFailed || defHashWrong || wrongData || dataStartWrong) {

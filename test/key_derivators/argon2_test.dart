@@ -18,6 +18,9 @@ const int DEFAULT_OUTPUTLEN = 32;
 void main() {
   group('Argon2BytesGenerator', () {
     /* Multiple test cases for various input values */
+
+    final timeout = Timeout.parse("15m");
+
     test('Argon2 Test 1', () {
       _hashTest(
           Argon2Parameters.ARGON2_VERSION_10,
@@ -27,7 +30,7 @@ void main() {
           'somesalt',
           'f6c4db4a54e2a370627aff3db6176b94a2a209a62c8e36152711802f7b30c694',
           DEFAULT_OUTPUTLEN);
-    });
+    }, timeout: timeout);
     // A memory-cosing test, will fail on Web platform.
     test('Argon2 Test 2', () {
       _hashTest(
@@ -38,7 +41,7 @@ void main() {
           'somesalt',
           '9690ec55d28d3ed32562f2e73ea62b02b018757643a2ae6e79528459de8106e9',
           DEFAULT_OUTPUTLEN);
-    }, onPlatform: {
+    }, timeout: timeout, onPlatform: {
       'chrome': Skip('Due to high memory occupation, Chrome will die.'),
     });
     test('Argon2 Test 3', () {
@@ -50,7 +53,7 @@ void main() {
           'diffsalt',
           '79a103b90fe8aef8570cb31fc8b22259778916f8336b7bdac3892569d4f1c497',
           DEFAULT_OUTPUTLEN);
-    });
+    }, timeout: timeout);
 
     test('Argon2 Test 4', () {
       _hashTest(
@@ -63,7 +66,7 @@ void main() {
               '39feba4a9cd9cc5b4c798f2aaf70eb4bd044c8d148decb569870dbd923430b82a083f284beae777812cce18cdac68ee8ccef'
               'c6ec9789f30a6b5a034591f51af830f4',
           112);
-    });
+    }, timeout: timeout);
     test('Argon2 Test 5', () {
       /* Multiple test cases for various input values */
       _hashTest(
@@ -74,7 +77,7 @@ void main() {
           'somesalt',
           'c1628832147d9720c5bd1cfd61367078729f6dfb6f8fea9ff98158e0d7816ed0',
           DEFAULT_OUTPUTLEN);
-    });
+    }, timeout: timeout);
     test('Argon2 Test 6', () {
       _hashTest(
           Argon2Parameters.ARGON2_VERSION_13,
@@ -84,7 +87,7 @@ void main() {
           'somesalt',
           'd1587aca0922c3b5d6a83edab31bee3c4ebaef342ed6127a55d19b2351ad1f41',
           DEFAULT_OUTPUTLEN);
-    }, onPlatform: {
+    }, timeout: timeout, onPlatform: {
       'chrome': Skip('Due to high memory occupation, Chrome will die.'),
     });
     test('Argon2 Test 7', () {
@@ -96,7 +99,7 @@ void main() {
           'somesalt',
           '296dbae80b807cdceaad44ae741b506f14db0959267b183b118f9b24229bc7cb',
           DEFAULT_OUTPUTLEN);
-    });
+    }, timeout: timeout);
     test('Argon2 Test 8', () {
       _hashTest(
           Argon2Parameters.ARGON2_VERSION_13,
@@ -106,7 +109,7 @@ void main() {
           'somesalt',
           '89e9029f4637b295beb027056a7336c414fadd43f6b208645281cb214a56452f',
           DEFAULT_OUTPUTLEN);
-    });
+    }, timeout: timeout);
   }, onPlatform: {
     'node': Skip('Node is not supported currently, because this is quite a '
         'high memory occupation implementation. A fatal error '
