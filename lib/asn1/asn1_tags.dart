@@ -26,7 +26,8 @@ class ASN1Tags {
     IA5_STRING,
     IA5_STRING_CONSTRUCTED,
     UTC_TIME,
-    GENERALIZED_TIME
+    GENERALIZED_TIME,
+    BMP_STRING
   ];
 
   /// Decimal 1
