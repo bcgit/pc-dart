@@ -330,6 +330,11 @@ class ObjectIdentifiers {
       'identifierString': '0.9.2342.19200300.100.1.1',
       'readableName': 'UID',
       'identifier': [0, 9, 2342, 19200300, 100, 1, 1]
+    },
+    {
+      'identifierString': '1.2.840.113549.1.9.1',
+      'readableName': 'emailAddress',
+      'identifier': [1, 2, 840, 113549, 1, 9, 1]
     }
   ];
 
