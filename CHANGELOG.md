@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.5.1 (2022-02-08)
+
+* Added ASN1BMPString
+* Added emailAddress OID
+
 #### Version 3.5.0 (2021-12-30)
 
 * RSAES-OAEP with SHA256 or any digest instance.
