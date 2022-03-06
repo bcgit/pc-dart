@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.5.2 (2022-03-07)
+
+* Added secp521r1 OID
+
 #### Version 3.5.1 (2022-02-08)
 
 * Added ASN1BMPString
