@@ -3,6 +3,7 @@ library src.registry.impl;
 import 'package:pointycastle/block/aes.dart';
 import 'package:pointycastle/digests/sm3.dart';
 import 'package:pointycastle/export.dart';
+import 'package:pointycastle/key_derivators/concat_kdf.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 
 void registerFactories(FactoryRegistry registry) {
@@ -115,6 +116,7 @@ void _registerKeyDerivators(FactoryRegistry registry) {
   registry.register(Scrypt.factoryConfig);
   registry.register(HKDFKeyDerivator.factoryConfig);
   registry.register(Argon2BytesGenerator.factoryConfig);
+  registry.register(ConcatKDFDerivator.factoryConfig);
 }
 
 void _registerKeyGenerators(FactoryRegistry registry) {
