@@ -2,13 +2,12 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:pointycastle/pointycastle.dart';
-import 'package:pointycastle/src/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Test concatKDF", () {
-    var kdf = KeyDerivator("SHA-256/ConcatKDF");
-    var Z = decodeBigInt([
+  test('Test concatKDF', () {
+    var kdf = KeyDerivator('SHA-256/ConcatKDF');
+    var Z = Uint8List.fromList([
       158,
       86,
       217,

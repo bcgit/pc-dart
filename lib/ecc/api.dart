@@ -230,19 +230,13 @@ abstract class ECDecryptor {
 }
 
 abstract class ECDHAgreement {
-  /**
-   * initialise the agreement engine.
-   */
+  /// initialise the agreement engine.
   void init(ECPrivateKey param);
 
-  /**
-   * return the field size for the agreement algorithm in bytes.
-   */
+  /// return the field size for the agreement algorithm in bytes.
   int getFieldSize();
 
-  /**
-   * given a public key from a given party calculate the next
-   * message in the agreement sequence.
-   */
+  /// given a public key from a given party calculate the next
+  /// message in the agreement sequence.
   BigInt calculateAgreement(ECPublicKey pubKey);
 }

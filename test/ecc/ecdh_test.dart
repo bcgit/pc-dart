@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/src/utils.dart';
 import 'package:test/test.dart';
 
 class P256Testvector {
@@ -10,7 +11,7 @@ class P256Testvector {
   late final BigInt Z;
 
   P256Testvector(this.index, String a, String bx, String by, String z) {
-    final ecDomainParameters = ECDomainParameters("secp256r1");
+    final ecDomainParameters = ECDomainParameters('secp256r1');
     final curve = ecDomainParameters.curve;
     privateKey = ECPrivateKey(BigInt.parse(a, radix: 16), ecDomainParameters);
     publicKey = ECPublicKey(
@@ -175,16 +176,16 @@ final testVectors = <P256Testvector>[
 ];
 
 void main() {
-  test("Test ECDH with brainpool keys", () {
+  test('Test ECDH with brainpool keys', () {
     AsymmetricKeyPair generateKeyPair(int seed) {
-      var rnd = SecureRandom("Fortuna")
+      var rnd = SecureRandom('Fortuna')
         ..seed(KeyParameter(Uint8List.fromList(List<int>.filled(32, seed))));
 
-      var domainParams = ECDomainParameters("brainpoolp256r1");
+      var domainParams = ECDomainParameters('brainpoolp256r1');
       var ecParams = ECKeyGeneratorParameters(domainParams);
       var params =
           ParametersWithRandom<ECKeyGeneratorParameters>(ecParams, rnd);
-      var keygen = KeyGenerator("EC")..init(params);
+      var keygen = KeyGenerator('EC')..init(params);
       var pcecKeyPair = keygen.generateKeyPair();
       return pcecKeyPair;
     }
@@ -198,10 +199,19 @@ void main() {
     assert(ag1 == ag2);
   });
 
-  test("Test ECDH with test vectors for P256", () {
+  test('Test ECDH with test vectors for P256', () {
     for (var v in testVectors) {
-      var ecdsa = ECDHBasicAgreement()..init(v.privateKey);
-      var ag = ecdsa.calculateAgreement(v.publicKey);
+      var ecdh = ECDHBasicAgreement()..init(v.privateKey);
+      var ag = ecdh.calculateAgreement(v.publicKey);
+      assert(ag == v.Z);
+    }
+  });
+
+  test('Test ECDHKDF with test vectors for P256', () {
+    for (var v in testVectors) {
+      var ecdhparams = ECDHKDFParameters(v.privateKey, v.publicKey);
+      var kdf = KeyDerivator('ECDH')..init(ecdhparams);
+      var ag = decodeBigInt(kdf.process(Uint8List(0)));
       assert(ag == v.Z);
     }
   });

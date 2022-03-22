@@ -19,7 +19,7 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
   final Digest _digest;
   late final ConcatKDFParameters _parameters;
 
-  ConcatKDFDerivator(Digest this._digest);
+  ConcatKDFDerivator(this._digest);
 
   @override
   String get algorithmName => '${_digest.algorithmName}/ConcatKDF';
@@ -30,7 +30,7 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
 
     var reps = _getReps(_parameters.keydatalen, _digest.digestSize * 8);
     for (var i = 1; i <= reps; i++) {
-      int counterInt = i.toUnsigned(32);
+      var counterInt = i.toUnsigned(32);
       var counter = Uint8List(4);
       counter[0] = (counterInt >> 24) & 255;
       counter[1] = (counterInt >> 16) & 255;
@@ -52,8 +52,8 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
   }
 
   @override
-  void init(CipherParameters params) {
-    _parameters = params as ConcatKDFParameters;
+  void init(covariant ConcatKDFParameters params) {
+    _parameters = params;
   }
 
   @override

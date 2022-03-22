@@ -5,7 +5,7 @@ library api.key_derivators;
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
-import 'package:pointycastle/src/utils.dart';
+import 'package:pointycastle/ecc/api.dart';
 
 /// [CipherParameters] used by PBKDF2.
 class Pbkdf2Parameters extends CipherParameters {
@@ -120,9 +120,15 @@ class Argon2Parameters extends CipherParameters {
 
 class ConcatKDFParameters extends CipherParameters {
   final Uint8List Z;
-  final int keydatalen;
+  final int keydatalen; // key length in bits
   final Uint8List otherInfo;
 
-  ConcatKDFParameters(BigInt z, this.keydatalen, this.otherInfo)
-      : Z = encodeBigInt(z);
+  ConcatKDFParameters(this.Z, this.keydatalen, this.otherInfo);
+}
+
+class ECDHKDFParameters extends CipherParameters {
+  final ECPrivateKey privateKey;
+  final ECPublicKey publicKey;
+
+  ECDHKDFParameters(this.privateKey, this.publicKey);
 }
