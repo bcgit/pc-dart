@@ -74,7 +74,7 @@ void main() {
       0,
       128
     ]);
-    var params = ConcatKDFParameters(Z, 128, otherData);
+    var params = HkdfParameters(Z, 128, otherData);
     kdf.init(params);
 
     var key = kdf.process(Uint8List(0));

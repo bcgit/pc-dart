@@ -118,14 +118,6 @@ class Argon2Parameters extends CipherParameters {
   }
 }
 
-class ConcatKDFParameters extends CipherParameters {
-  final Uint8List Z;
-  final int keydatalen; // key length in bits
-  final Uint8List otherInfo;
-
-  ConcatKDFParameters(this.Z, this.keydatalen, this.otherInfo);
-}
-
 class ECDHKDFParameters extends CipherParameters {
   final ECPrivateKey privateKey;
   final ECPublicKey publicKey;

@@ -17,7 +17,7 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
   });
 
   final Digest _digest;
-  late final ConcatKDFParameters _parameters;
+  late final HkdfParameters _parameters;
 
   ConcatKDFDerivator(this._digest);
 
@@ -28,7 +28,7 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
   int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     _digest.reset();
 
-    var reps = _getReps(_parameters.keydatalen, _digest.digestSize * 8);
+    var reps = _getReps(_parameters.desiredKeyLength, _digest.digestSize * 8);
     for (var i = 1; i <= reps; i++) {
       var counterInt = i.toUnsigned(32);
       var counter = Uint8List(4);
@@ -37,8 +37,9 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
       counter[2] = (counterInt >> 8) & 255;
       counter[3] = (counterInt) & 255;
       _digest.update(counter, 0, 4);
-      _digest.update(_parameters.Z, 0, _parameters.Z.length);
-      _digest.update(_parameters.otherInfo, 0, _parameters.otherInfo.length);
+      _digest.update(_parameters.ikm, 0, _parameters.ikm.length);
+      _digest.update(
+          _parameters.salt ?? Uint8List(0), 0, _parameters.salt?.length ?? 0);
     }
 
     var output = Uint8List(_digest.byteLength);
@@ -52,10 +53,10 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
   }
 
   @override
-  void init(covariant ConcatKDFParameters params) {
+  void init(covariant HkdfParameters params) {
     _parameters = params;
   }
 
   @override
-  int get keySize => (_parameters.keydatalen / 8).ceil();
+  int get keySize => (_parameters.desiredKeyLength / 8).ceil();
 }
