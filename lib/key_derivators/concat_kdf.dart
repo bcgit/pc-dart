@@ -38,8 +38,8 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
       counter[3] = (counterInt) & 255;
       _digest.update(counter, 0, 4);
       _digest.update(_parameters.ikm, 0, _parameters.ikm.length);
-      _digest.update(
-          _parameters.salt ?? Uint8List(0), 0, _parameters.salt?.length ?? 0);
+      _digest.update(_parameters.salt ?? inp.sublist(inpOff), 0,
+          _parameters.salt?.length ?? inp.sublist(inpOff).length);
     }
 
     var output = Uint8List(_digest.byteLength);

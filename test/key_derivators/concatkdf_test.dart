@@ -74,10 +74,10 @@ void main() {
       0,
       128
     ]);
-    var params = HkdfParameters(Z, 128, otherData);
+    var params = HkdfParameters(Z, 128);
     kdf.init(params);
 
-    var key = kdf.process(Uint8List(0));
+    var key = kdf.process(otherData);
     assert(ListEquality().equals(
         key,
         Uint8List.fromList([
