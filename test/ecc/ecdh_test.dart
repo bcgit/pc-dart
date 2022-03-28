@@ -1,17 +1,18 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/utils.dart';
 import 'package:test/test.dart';
 
-class P256Testvector {
+class ECDHTestvector {
   final int index;
   late final ECPrivateKey privateKey;
   late final ECPublicKey publicKey;
   late final BigInt Z;
 
-  P256Testvector(this.index, String a, String bx, String by, String z) {
-    final ecDomainParameters = ECDomainParameters('secp256r1');
+  ECDHTestvector(this.index, String a, String bx, String by, String z,
+      ECDomainParameters ecDomainParameters) {
     final curve = ecDomainParameters.curve;
     privateKey = ECPrivateKey(BigInt.parse(a, radix: 16), ecDomainParameters);
     publicKey = ECPublicKey(
@@ -20,6 +21,16 @@ class P256Testvector {
         ecDomainParameters);
     Z = BigInt.parse(z, radix: 16);
   }
+}
+
+class P256Testvector extends ECDHTestvector {
+  P256Testvector(index, String a, String bx, String by, String z)
+      : super(index, a, bx, by, z, ECDomainParameters('secp256r1'));
+}
+
+class BrainpoolP256r1TestVector extends ECDHTestvector {
+  BrainpoolP256r1TestVector(int index, String a, String bx, String by, String z)
+      : super(index, a, bx, by, z, ECDomainParameters('brainpoolp256r1'));
 }
 
 final testVectors = <P256Testvector>[
@@ -197,6 +208,47 @@ void main() {
     var ag1 = ecdsa1.calculateAgreement(key2.publicKey as ECPublicKey);
     var ag2 = ecdsa2.calculateAgreement(key1.publicKey as ECPublicKey);
     assert(ag1 == ag2);
+  });
+
+  test('Test ECDH with jose4j derived testvector for brainpool', () {
+    var zl = base64Decode('kAMXBrzuu3NrvRZC5ca9AyfiNAzJcd3+wbqhvn1Xqdw=');
+    var z = zl.fold('', (String s, e) => s + '${e.toRadixString(16)}');
+    var bx = BigInt.parse(
+            '9081435728752638263367097265083294633999566778486547389501321800986797192058')
+        .toRadixString(16);
+    var by = BigInt.parse(
+            '4641039605534473736795393225798713950715108684028696101076503273988401290026')
+        .toRadixString(16);
+    var a = BigInt.parse(
+        '11389698291027219705720854063086701177373480468419126898830387062538016871056',
+        radix: 10);
+
+    var ecdhtestvector =
+        BrainpoolP256r1TestVector(1, a.toRadixString(16), bx, by, z);
+    var ecdh = ECDHBasicAgreement()..init(ecdhtestvector.privateKey);
+    var ag = ecdh.calculateAgreement(ecdhtestvector.publicKey);
+    assert(ag == ecdhtestvector.Z);
+  });
+
+  test('Test ECDH with brainpool from Test vector of RFC 6932', () {
+    var ecdhtestvector1 = BrainpoolP256r1TestVector(
+        1,
+        '041EB8B1E2BC681BCE8E39963B2E9FC415B05283313DD1A8BCC055F11AE49699',
+        '8E07E219BA588916C5B06AA30A2F464C2F2ACFC1610A3BE2FB240B635341F0DB',
+        '148EA1D7D1E7E54B9555B6C9AC90629C18B63BEE5D7AA6949EBBF47B24FDE40D',
+        '05E940915549E9F6A4A75693716E37466ABA79B4BF2919877A16DD2CC2E23708');
+    var ecdhtestvector2 = BrainpoolP256r1TestVector(
+        2,
+        '06F5240EACDB9837BC96D48274C8AA834B6C87BA9CC3EEDD81F99A16B8D804D3',
+        '78028496B5ECAAB3C8B6C12E45DB1E02C9E4D26B4113BC4F015F60C5CCC0D206',
+        'A2AE1762A3831C1D20F03F8D1E3C0C39AFE6F09B4D44BBE80CD100987B05F92B',
+        '05E940915549E9F6A4A75693716E37466ABA79B4BF2919877A16DD2CC2E23708');
+    var ecdh = ECDHBasicAgreement()..init(ecdhtestvector1.privateKey);
+    var ag = ecdh.calculateAgreement(ecdhtestvector1.publicKey);
+    assert(ag == ecdhtestvector1.Z);
+    var ecdh2 = ECDHBasicAgreement()..init(ecdhtestvector2.privateKey);
+    var ag2 = ecdh2.calculateAgreement(ecdhtestvector2.publicKey);
+    assert(ag2 == ecdhtestvector2.Z);
   });
 
   test('Test ECDH with test vectors for P256', () {
