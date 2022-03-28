@@ -29,6 +29,7 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
     _digest.reset();
 
     var reps = _getReps(_parameters.desiredKeyLength, _digest.digestSize * 8);
+    var output = Uint8List(reps * _digest.digestSize);
     for (var i = 1; i <= reps; i++) {
       var counterInt = i.toUnsigned(32);
       var counter = Uint8List(4);
@@ -40,10 +41,9 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
       _digest.update(_parameters.ikm, 0, _parameters.ikm.length);
       _digest.update(_parameters.salt ?? inp.sublist(inpOff), 0,
           _parameters.salt?.length ?? inp.sublist(inpOff).length);
+      _digest.doFinal(output, (i - 1) * _digest.digestSize);
     }
 
-    var output = Uint8List(_digest.byteLength);
-    _digest.doFinal(output, 0);
     out.setAll(outOff, output.getRange(0, keySize));
     return keySize;
   }
