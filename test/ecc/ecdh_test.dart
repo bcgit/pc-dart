@@ -231,7 +231,7 @@ void main() {
     assert(ag == ecdhtestvector.Z);
   });
 
-  test('Test ECDHKeyDerivator with brainpool', () {
+  test('Test ECDHKDF with brainpool', () {
     var z = BigInt.parse(
             '65138509659007270841390460885129724324131841274570317669830341947633356483036')
         .toRadixString(16);
@@ -240,6 +240,29 @@ void main() {
         .toRadixString(16);
     var by = BigInt.parse(
             '42724727959342265773907894856035815102192701310430313271362424512013052339065')
+        .toRadixString(16);
+    var a = BigInt.parse(
+            '11389698291027219705720854063086701177373480468419126898830387062538016871056')
+        .toRadixString(16);
+
+    var ecdhtestvector = BrainpoolP256r1TestVector(1, a, bx, by, z);
+    var kdev = KeyDerivator('ECDH');
+    kdev.init(
+        ECDHKDFParameters(ecdhtestvector.privateKey, ecdhtestvector.publicKey));
+    var agl = kdev.process(Uint8List(0));
+    var ag = decodeBigIntWithSign(1, agl);
+    assert(ag == ecdhtestvector.Z);
+  });
+
+  test('Test ECDHKDF with brainpool 2', () {
+    var z = BigInt.parse(
+            '52654472886054093008464270686039556607329397624865361587872468137410856915')
+        .toRadixString(16);
+    var bx = BigInt.parse(
+            '11770914954953311947851650675015300970186573673422305697535672144940842288675')
+        .toRadixString(16);
+    var by = BigInt.parse(
+            '28588645609587273162900079046576065116292583182825622980943756235967543473722')
         .toRadixString(16);
     var a = BigInt.parse(
             '11389698291027219705720854063086701177373480468419126898830387062538016871056')
@@ -307,7 +330,7 @@ void main() {
     for (var v in testVectors) {
       var ecdhparams = ECDHKDFParameters(v.privateKey, v.publicKey);
       var kdf = KeyDerivator('ECDH')..init(ecdhparams);
-      var ag = decodeBigInt(kdf.process(Uint8List(0)));
+      var ag = decodeBigIntWithSign(1, kdf.process(Uint8List(0)));
       assert(ag == v.Z);
     }
   });

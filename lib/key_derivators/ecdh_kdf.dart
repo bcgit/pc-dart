@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
@@ -19,8 +20,11 @@ class ECDHKeyDerivator extends BaseKeyDerivator {
     var ecdh = ECDHBasicAgreement()..init(parameters.privateKey);
     var ag = ecdh.calculateAgreement(parameters.publicKey);
     var key = encodeBigIntAsUnsigned(ag);
-    out.setAll(outOff, key);
-    return key.length;
+    // pad to keysize
+    var padlength = max((keySize / 8).ceil() - key.length, 0);
+    out.setAll(outOff, Uint8List.fromList(List.filled(padlength, 0)));
+    out.setAll(outOff + padlength, key);
+    return padlength + key.length;
   }
 
   @override
