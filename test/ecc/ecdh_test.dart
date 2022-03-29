@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
@@ -201,30 +200,75 @@ void main() {
       return pcecKeyPair;
     }
 
-    var key1 = generateKeyPair(0);
-    var key2 = generateKeyPair(255);
-    var ecdsa1 = ECDHBasicAgreement()..init(key1.privateKey as ECPrivateKey);
-    var ecdsa2 = ECDHBasicAgreement()..init(key2.privateKey as ECPrivateKey);
-    var ag1 = ecdsa1.calculateAgreement(key2.publicKey as ECPublicKey);
-    var ag2 = ecdsa2.calculateAgreement(key1.publicKey as ECPublicKey);
-    assert(ag1 == ag2);
+    for (int i = 0; i < 100; i++) {
+      var key1 = generateKeyPair(i);
+      var key2 = generateKeyPair(i + 1);
+      var ecdsa1 = ECDHBasicAgreement()..init(key1.privateKey as ECPrivateKey);
+      var ecdsa2 = ECDHBasicAgreement()..init(key2.privateKey as ECPrivateKey);
+      var ag1 = ecdsa1.calculateAgreement(key2.publicKey as ECPublicKey);
+      var ag2 = ecdsa2.calculateAgreement(key1.publicKey as ECPublicKey);
+      assert(ag1 == ag2);
+    }
   });
 
   test('Test ECDH with jose4j derived testvector for brainpool', () {
-    var zl = base64Decode('kAMXBrzuu3NrvRZC5ca9AyfiNAzJcd3+wbqhvn1Xqdw=');
-    var z = zl.fold('', (String s, e) => s + '${e.toRadixString(16)}');
+    var z = BigInt.parse(
+            '65138509659007270841390460885129724324131841274570317669830341947633356483036')
+        .toRadixString(16);
     var bx = BigInt.parse(
             '9081435728752638263367097265083294633999566778486547389501321800986797192058')
         .toRadixString(16);
     var by = BigInt.parse(
-            '4641039605534473736795393225798713950715108684028696101076503273988401290026')
+            '42724727959342265773907894856035815102192701310430313271362424512013052339065')
         .toRadixString(16);
     var a = BigInt.parse(
-        '11389698291027219705720854063086701177373480468419126898830387062538016871056',
-        radix: 10);
+            '11389698291027219705720854063086701177373480468419126898830387062538016871056')
+        .toRadixString(16);
 
-    var ecdhtestvector =
-        BrainpoolP256r1TestVector(1, a.toRadixString(16), bx, by, z);
+    var ecdhtestvector = BrainpoolP256r1TestVector(1, a, bx, by, z);
+    var ecdh = ECDHBasicAgreement()..init(ecdhtestvector.privateKey);
+    var ag = ecdh.calculateAgreement(ecdhtestvector.publicKey);
+    assert(ag == ecdhtestvector.Z);
+  });
+
+  test('Test ECDHKeyDerivator with brainpool', () {
+    var z = BigInt.parse(
+            '65138509659007270841390460885129724324131841274570317669830341947633356483036')
+        .toRadixString(16);
+    var bx = BigInt.parse(
+            '9081435728752638263367097265083294633999566778486547389501321800986797192058')
+        .toRadixString(16);
+    var by = BigInt.parse(
+            '42724727959342265773907894856035815102192701310430313271362424512013052339065')
+        .toRadixString(16);
+    var a = BigInt.parse(
+            '11389698291027219705720854063086701177373480468419126898830387062538016871056')
+        .toRadixString(16);
+
+    var ecdhtestvector = BrainpoolP256r1TestVector(1, a, bx, by, z);
+    var kdev = KeyDerivator('ECDH');
+    kdev.init(
+        ECDHKDFParameters(ecdhtestvector.privateKey, ecdhtestvector.publicKey));
+    var agl = kdev.process(Uint8List(0));
+    var ag = decodeBigIntWithSign(1, agl);
+    assert(ag == ecdhtestvector.Z);
+  });
+
+  test('Test ECDH with bouncycastle derived testvector for brainpool', () {
+    var z = BigInt.parse(
+            "62035452719449902544084895701129591677592844515050058000761959332847413670618")
+        .toRadixString(16);
+    var bx = BigInt.parse(
+            '53535355328855043322505278710464138773506437230442680203030305357393812004243')
+        .toRadixString(16);
+    var by = BigInt.parse(
+            '71732587040522161341399014632224799350721466455975116137925664616486205295601')
+        .toRadixString(16);
+    var a = BigInt.parse(
+            '11389698291027219705720854063086701177373480468419126898830387062538016871056')
+        .toRadixString(16);
+
+    var ecdhtestvector = BrainpoolP256r1TestVector(1, a, bx, by, z);
     var ecdh = ECDHBasicAgreement()..init(ecdhtestvector.privateKey);
     var ag = ecdh.calculateAgreement(ecdhtestvector.publicKey);
     assert(ag == ecdhtestvector.Z);

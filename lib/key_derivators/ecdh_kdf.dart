@@ -18,7 +18,7 @@ class ECDHKeyDerivator extends BaseKeyDerivator {
   int deriveKey(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     var ecdh = ECDHBasicAgreement()..init(parameters.privateKey);
     var ag = ecdh.calculateAgreement(parameters.publicKey);
-    var key = encodeBigInt(ag);
+    var key = encodeBigIntAsUnsigned(ag);
     out.setAll(outOff, key);
     return key.length;
   }
