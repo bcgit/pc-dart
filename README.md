@@ -2,7 +2,7 @@
 Pointy Castle
 =============
 
-![Dart VM](https://github.com/bcgit/pc-dart/actions/workflows/vm.workflow.yml/badge.svg) ![Chrome](https://github.com//bcgit/pc-dart/actions/workflows/chrome.workflow.yml/badge.svg) ![Node JS](https://github.com/bcgit/pc-dart/actions/workflows/node.workflow.yml/badge.svg)
+![Dart VM](https://github.com/bcgit/pc-dart/workflows/ci-vm/badge.svg) ![Chrome](https://github.com//bcgit/pc-dart/workflows/ci-chrome/badge.svg) ![Node JS](https://github.com/bcgit/pc-dart/workflows/ci-node/badge.svg)
 
 A Dart library for encryption and decryption. In this release, most of the classes are ports of Bouncy Castle from Java
 to Dart. The porting is almost always direct except for some classes that had been added to ease the use of low level
