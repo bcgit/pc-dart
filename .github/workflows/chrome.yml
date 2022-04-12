@@ -30,11 +30,5 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
-      - name: Test dartvm
-        run: pub run test
-
       - name: Test chrome
         run: pub run test -p chrome
-
-      - name: Test node
-        run: pub run test -p node

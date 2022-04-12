@@ -1,3 +1,7 @@
+@OnPlatform({
+  'chrome': Skip('Excessive time / resource consumption on this platform'),
+  'node': Skip('Excessive time / resource consumption on this platform')
+})
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -17,26 +21,6 @@ const int DEFAULT_OUTPUTLEN = 32;
 /// is a 1:1 port of BouncyCastle's Java implementation.
 void main() {
   final timeout = Timeout.parse("15m");
-
-  group('Argon2BytesGenerator - non dart vm', () {
-    //
-    // This is more of a sanity test on js platforms.
-    // The full battery of tests, has been observed to run some JS platforms
-    // out of memory and it is very very slow.
-    //
-    test('Argon2 Test 1', () {
-      _hashTest(
-          Argon2Parameters.ARGON2_VERSION_10,
-          2,
-          16,
-          'password',
-          'somesalt',
-          'f6c4db4a54e2a370627aff3db6176b94a2a209a62c8e36152711802f7b30c694',
-          DEFAULT_OUTPUTLEN);
-    }, timeout: timeout);
-  }, onPlatform: {
-    'vm': Skip('run only on non dart-vm'),
-  });
 
   group('Argon2BytesGenerator -- non-js platforms', () {
     /* Multiple test cases for various input values */
@@ -129,11 +113,6 @@ void main() {
           '89e9029f4637b295beb027056a7336c414fadd43f6b208645281cb214a56452f',
           DEFAULT_OUTPUTLEN);
     }, timeout: timeout);
-  }, onPlatform: {
-    'node': Skip('Skip on JS platforms, running full battery can run '
-        'platforms like node out of memory.'),
-    'chrome': Skip('Skip on JS platforms, running full battery can run '
-        'platforms like node out of memory.'),
   });
 }
 
