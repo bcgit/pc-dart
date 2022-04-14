@@ -5,7 +5,7 @@ import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Test concatKDF', () {
+  test('Test concatKDF from RFC 7518 Appendix C', () {
     var kdf = KeyDerivator('SHA-256/ConcatKDF');
     var Z = Uint8List.fromList([
       158,
@@ -100,26 +100,26 @@ void main() {
         ]));
   });
 
-  test("Test concatKdf A1", () {
+  test("Test concatKdf A1 derived from jose4j", () {
     var z = base64Url.decode('Sq8rGLm4rEtzScmnSsY5r1n-AqBl_iBU8FxN80Uc0S0=');
     var alg = 'A256CBC-HS512';
-    var _otherInfo = computerOtherInfo(alg, 512);
+    var otherInfo = computerOtherInfo(alg, 512);
     var c = HkdfParameters(z, 512);
     var concatKdf = KeyDerivator('SHA-256/ConcatKDF')..init(c);
-    var key = concatKdf.process(_otherInfo);
+    var key = concatKdf.process(otherInfo);
     var keyencoded = base64UrlEncode(key);
     expect(
         'pgs50IOZ6BxfqvTSie4t9OjWxGr4whiHo1v9Dti93CRiJE2PP60FojLatVVrcjg3BxpuFjnlQxL97GOwAfcwLA==',
         keyencoded);
   });
 
-  test("Test concatKdf A2", () {
+  test("Test concatKdf A2 derived from jose4j", () {
     var z = base64Url.decode('LfkHot2nGTVlmfxbgxQfMg==');
     var alg = 'A128CBC-HS256';
-    var _otherInfo = computerOtherInfo(alg, 256);
+    var otherInfo = computerOtherInfo(alg, 256);
     var c = HkdfParameters(z, 256);
     var concatKdf = KeyDerivator('SHA-256/ConcatKDF')..init(c);
-    var key = concatKdf.process(_otherInfo);
+    var key = concatKdf.process(otherInfo);
     var keyencoded = base64UrlEncode(key);
     expect('vphyobtvExGXF7TaOvAkx6CCjHQNYamP2ET8xkhTu-0=', keyencoded);
   });
