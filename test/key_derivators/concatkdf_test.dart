@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
 
@@ -79,7 +78,7 @@ void main() {
     kdf.init(params);
 
     var key = kdf.process(otherData);
-    assert(ListEquality().equals(
+    expect(
         key,
         Uint8List.fromList([
           86,
@@ -98,7 +97,7 @@ void main() {
           167,
           16,
           26
-        ])));
+        ]));
   });
 
   test("Test concatKdf A1", () {
@@ -109,10 +108,9 @@ void main() {
     var concatKdf = KeyDerivator('SHA-256/ConcatKDF')..init(c);
     var key = concatKdf.process(_otherInfo);
     var keyencoded = base64UrlEncode(key);
-    assert(
-        'pgs50IOZ6BxfqvTSie4t9OjWxGr4whiHo1v9Dti93CRiJE2PP60FojLatVVrcjg3BxpuFjnlQxL97GOwAfcwLA=='
-                .compareTo(keyencoded) ==
-            0);
+    expect(
+        'pgs50IOZ6BxfqvTSie4t9OjWxGr4whiHo1v9Dti93CRiJE2PP60FojLatVVrcjg3BxpuFjnlQxL97GOwAfcwLA==',
+        keyencoded);
   });
 
   test("Test concatKdf A2", () {
@@ -123,9 +121,7 @@ void main() {
     var concatKdf = KeyDerivator('SHA-256/ConcatKDF')..init(c);
     var key = concatKdf.process(_otherInfo);
     var keyencoded = base64UrlEncode(key);
-    assert(
-        'vphyobtvExGXF7TaOvAkx6CCjHQNYamP2ET8xkhTu-0='.compareTo(keyencoded) ==
-            0);
+    expect('vphyobtvExGXF7TaOvAkx6CCjHQNYamP2ET8xkhTu-0=', keyencoded);
   });
 }
 
