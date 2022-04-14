@@ -32,6 +32,7 @@ class BrainpoolP256r1TestVector extends ECDHTestvector {
       : super(index, a, bx, by, z, ECDomainParameters('brainpoolp256r1'));
 }
 
+// From http://csrc.nist.gov/groups/STM/cavp/documents/components/ecccdhtestvectors.zip
 final testVectors = <P256Testvector>[
   P256Testvector(
       1,
