@@ -33,5 +33,5 @@ class ECDHKeyDerivator extends BaseKeyDerivator {
   }
 
   @override
-  int get keySize => (parameters.privateKey.parameters?.curve.fieldSize)!;
+  int get keySize => parameters.privateKey.parameters!.curve.fieldSize;
 }

@@ -24,7 +24,7 @@ class ECDHBasicAgreement implements ECDHAgreement {
 
   @override
   int getFieldSize() {
-    return ((key.parameters?.curve.fieldSize)! + 7) ~/ 8;
+    return (key.parameters!.curve.fieldSize + 7) ~/ 8;
   }
 
   @override
@@ -51,7 +51,7 @@ class ECDHBasicAgreement implements ECDHAgreement {
 
     var P = (Q! * d)!;
 
-    return (P.x?.toBigInteger())!;
+    return P.x!.toBigInteger()!;
   }
 }
 
