@@ -208,7 +208,7 @@ void main() {
       var ecdsa2 = ECDHBasicAgreement()..init(key2.privateKey as ECPrivateKey);
       var ag1 = ecdsa1.calculateAgreement(key2.publicKey as ECPublicKey);
       var ag2 = ecdsa2.calculateAgreement(key1.publicKey as ECPublicKey);
-      assert(ag1 == ag2);
+      expect(ag1, ag2);
     }
   });
 
@@ -229,7 +229,7 @@ void main() {
     var ecdhtestvector = BrainpoolP256r1TestVector(1, a, bx, by, z);
     var ecdh = ECDHBasicAgreement()..init(ecdhtestvector.privateKey);
     var ag = ecdh.calculateAgreement(ecdhtestvector.publicKey);
-    assert(ag == ecdhtestvector.Z);
+    expect(ag, ecdhtestvector.Z);
   });
 
   test('Test ECDHKDF with brainpool', () {
@@ -252,7 +252,7 @@ void main() {
         ECDHKDFParameters(ecdhtestvector.privateKey, ecdhtestvector.publicKey));
     var agl = kdev.process(Uint8List(0));
     var ag = decodeBigIntWithSign(1, agl);
-    assert(ag == ecdhtestvector.Z);
+    expect(ag, ecdhtestvector.Z);
   });
 
   test('Test ECDHKDF with brainpool 2', () {
@@ -275,7 +275,7 @@ void main() {
         ECDHKDFParameters(ecdhtestvector.privateKey, ecdhtestvector.publicKey));
     var agl = kdev.process(Uint8List(0));
     var ag = decodeBigIntWithSign(1, agl);
-    assert(ag == ecdhtestvector.Z);
+    expect(ag, ecdhtestvector.Z);
   });
 
   test('Test ECDH with bouncycastle derived testvector for brainpool', () {
@@ -295,7 +295,7 @@ void main() {
     var ecdhtestvector = BrainpoolP256r1TestVector(1, a, bx, by, z);
     var ecdh = ECDHBasicAgreement()..init(ecdhtestvector.privateKey);
     var ag = ecdh.calculateAgreement(ecdhtestvector.publicKey);
-    assert(ag == ecdhtestvector.Z);
+    expect(ag, ecdhtestvector.Z);
   });
 
   test('Test ECDH with brainpool from Test vector of RFC 6932', () {
@@ -313,17 +313,17 @@ void main() {
         '05E940915549E9F6A4A75693716E37466ABA79B4BF2919877A16DD2CC2E23708');
     var ecdh = ECDHBasicAgreement()..init(ecdhtestvector1.privateKey);
     var ag = ecdh.calculateAgreement(ecdhtestvector1.publicKey);
-    assert(ag == ecdhtestvector1.Z);
+    expect(ag, ecdhtestvector1.Z);
     var ecdh2 = ECDHBasicAgreement()..init(ecdhtestvector2.privateKey);
     var ag2 = ecdh2.calculateAgreement(ecdhtestvector2.publicKey);
-    assert(ag2 == ecdhtestvector2.Z);
+    expect(ag2, ecdhtestvector2.Z);
   });
 
   test('Test ECDH with test vectors for P256', () {
     for (var v in testVectors) {
       var ecdh = ECDHBasicAgreement()..init(v.privateKey);
       var ag = ecdh.calculateAgreement(v.publicKey);
-      assert(ag == v.Z);
+      expect(ag, v.Z);
     }
   });
 
@@ -332,7 +332,7 @@ void main() {
       var ecdhparams = ECDHKDFParameters(v.privateKey, v.publicKey);
       var kdf = KeyDerivator('ECDH')..init(ecdhparams);
       var ag = decodeBigIntWithSign(1, kdf.process(Uint8List(0)));
-      assert(ag == v.Z);
+      expect(ag, v.Z);
     }
   });
 }
