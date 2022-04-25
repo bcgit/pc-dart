@@ -1,6 +1,5 @@
 @OnPlatform({
-  'chrome': Skip('Excessive time / resource consumption on this platform'),
-  'node': Skip('Excessive time / resource consumption on this platform')
+  'vm': Skip(),
 })
 import 'dart:math';
 import 'dart:typed_data';
@@ -19,7 +18,7 @@ void main() {
 
   group('ct', () {
     test('xor monte', () {
-      for (int j = 0; j < 500000; j++) {
+      for (int j = 0; j < 1000; j++) {
         var len = rand.nextInt(256);
         var x = Uint8List.fromList(
             List.generate(len, (index) => rand.nextInt(256)));

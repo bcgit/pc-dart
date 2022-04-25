@@ -1,3 +1,7 @@
+@OnPlatform({
+  'chrome': Skip('Excessive time / resource consumption on this platform'),
+  'node': Skip('Excessive time / resource consumption on this platform')
+})
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -16,11 +20,10 @@ const int DEFAULT_OUTPUTLEN = 32;
 /// The linked project was adapted for the purposes of this project, since it
 /// is a 1:1 port of BouncyCastle's Java implementation.
 void main() {
-  group('Argon2BytesGenerator', () {
+  final timeout = Timeout.parse("15m");
+
+  group('Argon2BytesGenerator -- non-js platforms', () {
     /* Multiple test cases for various input values */
-
-    final timeout = Timeout.parse("15m");
-
     test('Argon2 Test 1', () {
       _hashTest(
           Argon2Parameters.ARGON2_VERSION_10,
@@ -110,10 +113,6 @@ void main() {
           '89e9029f4637b295beb027056a7336c414fadd43f6b208645281cb214a56452f',
           DEFAULT_OUTPUTLEN);
     }, timeout: timeout);
-  }, onPlatform: {
-    'node': Skip('Node is not supported currently, because this is quite a '
-        'high memory occupation implementation. A fatal error '
-        '\'JavaScript heap out of memory\' will be thrown.'),
   });
 }
 
