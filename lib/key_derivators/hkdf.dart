@@ -37,6 +37,12 @@ class HKDFKeyDerivator extends BaseKeyDerivator {
     'SHA-256': 64,
     'SHA-384': 128,
     'SHA-512': 128,
+    'SHA-512/224': 128,
+    'SHA-512/256': 128,
+    'SHA3-224': 1152 ~/ 8,
+    'SHA3-256': 1088 ~/ 8,
+    'SHA3-384': 832 ~/ 8,
+    'SHA3-512': 576 ~/ 8,
     'Tiger': 64,
     'Whirlpool': 64,
   };

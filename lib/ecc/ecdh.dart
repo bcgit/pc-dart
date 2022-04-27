@@ -38,7 +38,7 @@ class ECDHBasicAgreement implements ECDHAgreement {
 
     // Always perform calculations on the exact curve specified by our private key's parameters
     var Q = cleanPoint(params!.curve, pubKey.Q!);
-    if (Q == null) {
+    if (Q == null || Q.isInfinity) {
       throw PlatformException('Infinity is not a valid public key for ECDH');
     }
 
@@ -50,6 +50,11 @@ class ECDHBasicAgreement implements ECDHAgreement {
     }
 
     var P = (Q! * d)!;
+
+    if (P.isInfinity) {
+      throw PlatformException(
+          'Infinity is not a valid agreement value for ECDH');
+    }
 
     return P.x!.toBigInteger()!;
   }
