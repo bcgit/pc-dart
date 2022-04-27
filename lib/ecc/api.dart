@@ -7,6 +7,8 @@ import 'dart:typed_data';
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 
+export 'ecdh.dart';
+
 /// Standard ECC curve description
 abstract class ECDomainParameters {
   /// Get this domain's standard name.
@@ -225,4 +227,16 @@ abstract class ECDecryptor {
 
   /// Initialize the decryptor.
   void init(CipherParameters params);
+}
+
+abstract class ECDHAgreement {
+  /// initialise the agreement engine.
+  void init(ECPrivateKey param);
+
+  /// return the field size for the agreement algorithm in bytes.
+  int getFieldSize();
+
+  /// given a public key from a given party calculate the next
+  /// message in the agreement sequence.
+  BigInt calculateAgreement(ECPublicKey pubKey);
 }
