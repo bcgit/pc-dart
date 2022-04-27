@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.6.0 (2022-04-27)
+
+* Added ECDH Basic Agreement
+* Added ConcatKDF
+
 #### Version 3.5.2 (2022-03-07)
 
 * Added secp521r1 OID
