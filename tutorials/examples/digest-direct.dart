@@ -19,11 +19,15 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
 
+// BEGIN EXAMPLE in "../digest.md"
+
 Uint8List sha256Digest(Uint8List dataToDigest) {
   final d = SHA256Digest();
 
   return d.process(dataToDigest);
 }
+
+// END EXAMPLE
 
 void main(List<String> args) {
   if (args.contains('-h') || args.contains('--help')) {
@@ -35,7 +39,7 @@ void main(List<String> args) {
 
   for (final data in valuesToDigest) {
     print('Data: "$data"');
-    final hash = sha256Digest(Uint8List.fromList(utf8.encode(data)));
+    final hash = sha256Digest(utf8.encode(data) as Uint8List);
     print('SHA-256: $hash');
     print('SHA-256: ${bin2hex(hash)}'); // output in hexadecimal
   }

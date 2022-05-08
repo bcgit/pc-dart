@@ -10,7 +10,7 @@ import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 
 // Code convention: variable names starting with underscores are examples only,
-// and should be implementated according to the needs of the program.
+// and should be implemented according to the needs of the program.
 
 //----------------------------------------------------------------
 
@@ -44,6 +44,7 @@ Uint8List aesCbcEncrypt(
 
   return cipherText;
 }
+
 //----------------------------------------------------------------
 
 Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {

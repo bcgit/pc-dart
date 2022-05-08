@@ -25,7 +25,7 @@ import 'dart:typed_data';
 import "package:pointycastle/export.dart";
 
 Uint8List hmacSha256(Uint8List hmacKey, Uint8List data) {
-  final hmac = HMac(SHA256Digest(), 64) // for HMAC SHA-256, block length must be 64
+  final hmac = HMac(SHA256Digest(), 64) // HMAC SHA-256: block must be 64 bytes
     ..init(KeyParameter(hmacKey));
 
   return hmac.process(data);
@@ -34,7 +34,7 @@ Uint8List hmacSha256(Uint8List hmacKey, Uint8List data) {
 void main(List<String> args) {
   final key = utf8.encode(args[0]); // first argument is the key
   final data = utf8.encode(args[1]); // second argument is the data
-  
+
   final hmacValue = hmacSha256(key, data);
   print('HMAC SHA-256: $hmacValue');
 }
@@ -51,7 +51,7 @@ HMAC algorithm. The name of the HMAC algorithm is the name of the
 digest algorithm followed by "/HMAC" (e.g. "SHA-1/HMAC").
 
 ```dart
-final hmac = new Mac("SHA-256/HMAC");
+final hmac = Mac("SHA-256/HMAC");
 ```
 
 #### Without the registry
