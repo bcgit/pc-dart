@@ -31,4 +31,4 @@ jobs:
         run: dart pub get
 
       - name: Test dartvm
-        run: pub run test -p vm
+        run: dart pub run test -p vm
