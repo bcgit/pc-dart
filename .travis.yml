@@ -2,6 +2,6 @@ language: dart
 dart:
   - stable
 script:
-  - pub run test
-  - pub global activate pana
-  - pana .
+  - dart pub run test
+  - dart pub global activate pana
+  - dart pana .

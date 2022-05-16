@@ -33,4 +33,4 @@ jobs:
         run: dart pub get
 
       - name: Test chrome
-        run: pub run test -p chrome
+        run: dart pub run test -p chrome

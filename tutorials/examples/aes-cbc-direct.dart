@@ -10,22 +10,16 @@ import 'package:pointycastle/export.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 
 // Code convention: variable names starting with underscores are examples only,
-// and should be implementated according to the needs of the program.
+// and should be implemented according to the needs of the program.
 
 //----------------------------------------------------------------
+// BEGIN EXAMPLE in "../aes-cbc.md"
 
 Uint8List aesCbcEncrypt(
     Uint8List key, Uint8List iv, Uint8List paddedPlaintext) {
-  if (![128, 192, 256].contains(key.length * 8)) {
-    throw ArgumentError.value(key, 'key', 'invalid key length for AES');
-  }
-  if (iv.length * 8 != 128) {
-    throw ArgumentError.value(iv, 'iv', 'invalid IV length for AES');
-  }
-  if (paddedPlaintext.length * 8 % 128 != 0) {
-    throw ArgumentError.value(
-        paddedPlaintext, 'paddedPlaintext', 'invalid length for AES');
-  }
+  assert([128, 192, 256].contains(key.length * 8));
+  assert(128 == iv.length * 8);
+  assert(128 == paddedPlaintext.length * 8);
 
   // Create a CBC block cipher with AES, and initialize with key and IV
 
@@ -44,19 +38,11 @@ Uint8List aesCbcEncrypt(
 
   return cipherText;
 }
-//----------------------------------------------------------------
 
 Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {
-  if (![128, 192, 256].contains(key.length * 8)) {
-    throw ArgumentError.value(key, 'key', 'invalid key length for AES');
-  }
-  if (iv.length * 8 != 128) {
-    throw ArgumentError.value(iv, 'iv', 'invalid IV length for AES');
-  }
-  if (cipherText.length * 8 % 128 != 0) {
-    throw ArgumentError.value(
-        cipherText, 'cipherText', 'invalid length for AES');
-  }
+  assert([128, 192, 256].contains(key.length * 8));
+  assert(128 == iv.length * 8);
+  assert(128 == cipherText.length * 8);
 
   // Create a CBC block cipher with AES, and initialize with key and IV
 
@@ -75,6 +61,8 @@ Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {
 
   return paddedPlainText;
 }
+
+// END EXAMPLE
 
 //================================================================
 // Supporting functions
