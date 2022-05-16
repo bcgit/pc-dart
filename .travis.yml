@@ -1,7 +1,0 @@
-language: dart
-dart:
-  - stable
-script:
-  - dart pub run test
-  - dart pub global activate pana
-  - dart pana .
