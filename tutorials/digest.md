@@ -31,17 +31,19 @@ import 'dart:typed_data';
 import "package:pointycastle/export.dart";
 
 Uint8List sha256Digest(Uint8List dataToDigest) {
-
-  final d = new SHA256Digest();
+  final d = SHA256Digest();
 
   return d.process(dataToDigest);
 }
 
 void main(List<String> args) {
-  for (final data in args) {
+  final valuesToDigest = (args.isNotEmpty) ? args : ['Hello world!'];
+
+  for (final data in valuesToDigest) {
     print('Data: "$data"');
-    final hashValue = sha256Digest(utf8.encode(data));
-	print('SHA-256: $hashValue');
+    final hash = sha256Digest(utf8.encode(data) as Uint8List);
+    print('SHA-256: $hash');
+    print('SHA-256: ${bin2hex(hash)}'); // output in hexadecimal
   }
 }
 ```
@@ -59,7 +61,7 @@ If using the registry, invoke the `Digest` factory with the name of
 the digest algorithm.
 
 ```dart
-final d = new Digest("SHA-256");
+final d = Digest("SHA-256");
 ```
 
 Possible names include: "MD2", "MD4", "MD5", "RIPEMD-128",
@@ -81,7 +83,7 @@ If the registery is not used, invoke the digest implementation's
 constructor.
 
 ```dart
-final d = new SHA256Digest(); // SHA-256
+final d = SHA256Digest(); // SHA-256
 ```
 
 All of the available digest classes of are listed as the implementers
@@ -153,7 +155,7 @@ required if previously provided data is abandoned.
 final part1 = utf8.encode('Hello ');
 final part2 = utf8.encode('world!');
 
-final d = new SHA256Digest();
+final d = SHA256Digest();
 final hash = Uint8List(d.digestSize);
 
 // Without rest

@@ -38,10 +38,12 @@ AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
     {int bitLength = 2048}) {
   // Create an RSA key generator and initialize it
 
-  final keyGen = RSAKeyGenerator()
-      ..init(ParametersWithRandom(
-          RSAKeyGeneratorParameters(BigInt.parse('65537'), bitLength, 64),
-          secureRandom));
+  // final keyGen = KeyGenerator('RSA'); // Get using registry
+  final keyGen = RSAKeyGenerator();
+
+  keyGen.init(ParametersWithRandom(
+      RSAKeyGeneratorParameters(BigInt.parse('65537'), bitLength, 64),
+      secureRandom));
 
   // Use the generator
 
@@ -168,10 +170,11 @@ using SHA-256 as the digest algorithm:
 import "package:pointycastle/export.dart";
 
 Uint8List rsaSign(RSAPrivateKey privateKey, Uint8List dataToSign) {
-
+  //final signer = Signer('SHA-256/RSA'); // Get using registry
   final signer = RSASigner(SHA256Digest(), '0609608648016503040201');
 
-  signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey)); // true=sign
+  // initialize with true, which means sign
+  signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
 
   final sig = signer.generateSignature(dataToSign);
 
@@ -180,11 +183,13 @@ Uint8List rsaSign(RSAPrivateKey privateKey, Uint8List dataToSign) {
 
 bool rsaVerify(
     RSAPublicKey publicKey, Uint8List signedData, Uint8List signature) {
+  //final signer = Signer('SHA-256/RSA'); // Get using registry
   final sig = RSASignature(signature);
 
   final verifier = RSASigner(SHA256Digest(), '0609608648016503040201');
 
-  verifier.init(false, PublicKeyParameter<RSAPublicKey>(publicKey)); // false=verify
+  // initialize with false, which means verify
+  verifier.init(false, PublicKeyParameter<RSAPublicKey>(publicKey));
 
   try {
     return verifier.verifySignature(signedData, sig);

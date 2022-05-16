@@ -10,24 +10,27 @@ test-code-vm:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub get; pub run test;"
+    dart pub get; \
+    dart pub run test;"
 
 test-code-node:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub get; pub run test --timeout 15m -p node"
+    dart pub get; \
+    dart pub run test --timeout 15m -p node"
 
 test-code-chrome:
   stage: test
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub get; pub run test --timeout 15m -p chrome"
+    dart pub get; \
+    dart pub run test --timeout 15m -p chrome"
 
 score-pana:
   stage: score
   script:
     - "export PATH=$PATH:/usr/lib/dart/bin:$HOME/.pub-cache/bin; \
-    pub get; \
-    pub global activate pana; \
+    dart pub get; \
+    dart pub global activate pana; \
     pana ."

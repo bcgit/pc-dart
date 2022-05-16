@@ -42,10 +42,15 @@ import 'dart:typed_data';
 
 import "package:pointycastle/export.dart";
 
-Uint8List aesCbcEncrypt(Uint8List key, Uint8List iv, Uint8List paddedPlaintext) {
+Uint8List aesCbcEncrypt(
+    Uint8List key, Uint8List iv, Uint8List paddedPlaintext) {
+  assert([128, 192, 256].contains(key.length * 8));
+  assert(128 == iv.length * 8);
+  assert(128 == paddedPlaintext.length * 8);
+
   // Create a CBC block cipher with AES, and initialize with key and IV
 
-  final cbc = CBCBlockCipher(AESFastEngine())
+  final cbc = CBCBlockCipher(AESEngine())
     ..init(true, ParametersWithIV(KeyParameter(key), iv)); // true=encrypt
 
   // Encrypt the plaintext block-by-block
@@ -62,9 +67,13 @@ Uint8List aesCbcEncrypt(Uint8List key, Uint8List iv, Uint8List paddedPlaintext) 
 }
 
 Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {
+  assert([128, 192, 256].contains(key.length * 8));
+  assert(128 == iv.length * 8);
+  assert(128 == cipherText.length * 8);
+
   // Create a CBC block cipher with AES, and initialize with key and IV
 
-  final cbc = CBCBlockCipher(AESFastEngine())
+  final cbc = CBCBlockCipher(AESEngine())
     ..init(false, ParametersWithIV(KeyParameter(key), iv)); // false=decrypt
 
   // Decrypt the cipherText block-by-block
@@ -85,12 +94,13 @@ The _key_ must be exactly 128-bits, 192-bits or 256-bits (i.e. 16, 24
 or 32 bytes). This is what determines whether AES-128, AES-192 or
 AES-256 is being performed.
 
-The _iv_ must be exactly 128-bites (16 bytes) long, which is the AES
+The _iv_ must be exactly 128-bits (16 bytes) long, which is the AES
 block size.
 
 The _paddedPlainText_ must be a multiple of the block size
 (128-bits). If the data being encrypted is not the correct length, it
-must be padded before it can be processed by AES.
+must be padded before it can be processed by AES. The implementations
+of padding algorithms in Pointy Castle can be used for this.
 
 
 ## Details
@@ -112,7 +122,7 @@ If the registry is not used, invoke the block cipher's constructor,
 passing in the AES implementation as a parameter.
 
 ```dart
-final aesCbc = CBCBlockCipher(AESFastEngine());
+final aesCbc = CBCBlockCipher(AESEngine());
 ```
 
 ### Initialize with key and IV

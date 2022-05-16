@@ -8,7 +8,6 @@
 /// Invoke with "-l" to use longer plaintext.
 
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 // For using the registry:
@@ -53,7 +52,7 @@ AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
 
   final pair = keyGen.generateKeyPair();
 
-  // Examine the generated key-pair
+  // Cast the generated key pair into the RSA key types
 
   final myPublic = pair.publicKey as RSAPublicKey;
   final myPrivate = pair.privateKey as RSAPrivateKey;
@@ -87,6 +86,7 @@ Uint8List rsaSign(RSAPrivateKey privateKey, Uint8List dataToSign) {
   // corresponding to the digest algorithm, otherwise the signature won't
   // verify.
 
+  // initialize with true, which means sign
   signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
 
   final sig = signer.generateSignature(dataToSign);
@@ -99,14 +99,15 @@ Uint8List rsaSign(RSAPrivateKey privateKey, Uint8List dataToSign) {
 
 bool rsaVerify(
     RSAPublicKey publicKey, Uint8List signedData, Uint8List signature) {
-  final sig = RSASignature(signature);
   //final signer = Signer('SHA-256/RSA'); // Get using registry
+  final sig = RSASignature(signature);
   final verifier = RSASigner(SHA256Digest(), '0609608648016503040201');
   // See _DIGEST_IDENTIFIER_HEXES in RSASigner for correct hex values to use
   // IMPORTANT: the correct digest identifier hex value must be used,
   // corresponding to the digest algorithm, otherwise the signature won't
   // verify.
 
+  // initialize with false, which means verify
   verifier.init(false, PublicKeyParameter<RSAPublicKey>(publicKey));
 
   return verifier.verifySignature(signedData, sig);
