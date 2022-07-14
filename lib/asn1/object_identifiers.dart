@@ -340,6 +340,11 @@ class ObjectIdentifiers {
       'identifierString': '1.2.840.113549.1.9.1',
       'readableName': 'emailAddress',
       'identifier': [1, 2, 840, 113549, 1, 9, 1]
+    },
+    {
+      'identifierString': '2.5.4.26',
+      'readableName': 'registeredAddress',
+      'identifier': [2,5,4,26]
     }
   ];
 
