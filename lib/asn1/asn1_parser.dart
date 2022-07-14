@@ -110,6 +110,7 @@ class ASN1Parser {
       case 0xA1:
       case 0xA2:
       case 0xA3:
+      case 0xA4:
         return ASN1Object.fromBytes(bytes);
       default:
         throw UnsupportedASN1TagException(tag);
