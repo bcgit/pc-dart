@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.6.1 (2022-06-19)
+
+* Added OID 2.5.4.26/registeredAddress
+* Support ASN1 tag 164
+
 #### Version 3.6.0 (2022-04-27)
 
 * Added ECDH Basic Agreement
