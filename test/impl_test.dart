@@ -151,6 +151,7 @@ void main() {
         testStreamCipher('ChaCha20/20');
         testStreamCipher('ChaCha7539/20');
         testAEADCipher('ChaCha20-Poly1305');
+        testAEADCipher('AES/EAX');
       });
     } else {
       test(
@@ -162,6 +163,7 @@ void main() {
         testStreamCipher('ChaCha20/20');
         testStreamCipher('ChaCha7539/20');
         //testAEADCipher('ChaCha20-Poly1305');
+        testAEADCipher('AES/EAX');
       });
     }
   });

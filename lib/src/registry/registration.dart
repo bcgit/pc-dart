@@ -161,4 +161,5 @@ void _registerStreamCiphers(FactoryRegistry registry) {
   registry.register(ChaCha7539Engine.factoryConfig);
   registry.register(ChaCha20Poly1305.factoryConfig);
   registry.register(SICStreamCipher.factoryConfig);
+  registry.register(EAX.factoryConfig);
 }
