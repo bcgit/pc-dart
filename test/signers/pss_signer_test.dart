@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-library test.paddings.pss_signer_test;
+library test.signers.pss_signer_test;
 
 import 'dart:typed_data';
 
