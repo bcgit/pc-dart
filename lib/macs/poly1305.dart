@@ -21,7 +21,7 @@ class Poly1305 extends BaseMac {
     cipher = null;
   }
 
-  Poly1305.withCipher(final this.cipher) {
+  Poly1305.withCipher(this.cipher) {
     Platform.instance.assertFullWidthInteger();
     if (cipher!.blockSize != BLOCK_SIZE) {
       throw ArgumentError('Poly1305 requires a 128 bit block cipher.');
@@ -104,20 +104,17 @@ class Poly1305 extends BaseMac {
             'Poly1305 requires an IV when used with a block cipher.');
       }
 
-      var ivParams = params as ParametersWithIV;
-      nonce = ivParams.iv;
-      params = ivParams.parameters!;
+      nonce = params.iv;
+      params = params.parameters!;
     }
 
     if (!(params is KeyParameter)) {
       throw ArgumentError('Poly1305 requires a key.');
     }
 
-    var keyParams = params as KeyParameter;
+    if (!checkKey(params.key)) clamp(params.key);
 
-    if (!checkKey(keyParams.key)) clamp(keyParams.key);
-
-    setKey(keyParams.key, nonce);
+    setKey(params.key, nonce);
 
     reset();
   }

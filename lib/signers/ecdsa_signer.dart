@@ -70,20 +70,12 @@ class ECDSASigner implements Signer {
         pvparams = params as PrivateKeyParameter<PrivateKey>;
       }
 
-      if (pvparams is! PrivateKeyParameter) {
-        throw ArgumentError(
-            'Unsupported parameters type ${pvparams.runtimeType}: should be PrivateKeyParameter');
-      }
       _pvkey = pvparams.key as ECPrivateKey;
     } else {
       PublicKeyParameter pbparams;
 
       pbparams = params as PublicKeyParameter<PublicKey>;
 
-      if (pbparams is! PublicKeyParameter) {
-        throw ArgumentError(
-            'Unsupported parameters type ${pbparams.runtimeType}: should be PublicKeyParameter');
-      }
       _pbkey = pbparams.key as ECPublicKey;
     }
   }
