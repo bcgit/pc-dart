@@ -345,6 +345,16 @@ class ObjectIdentifiers {
       'identifierString': '2.5.4.26',
       'readableName': 'registeredAddress',
       'identifier': [2,5,4,26]
+    },
+    {
+      'identifierString': '2.16.840.1.114412.1.1',
+      'readableName': 'digiCertOVCert (Digicert CA policy)',
+      'identifier': [2,16,840,1,114412,1,1]
+    },
+    {
+      'identifierString': '2.23.140.1.2.2',
+      'readableName': 'organization-validated',
+      'identifier': [2,23,140,1,2,2]
     }
   ];
 
