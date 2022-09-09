@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.6.2 (2022-09-09)
+
+* Added OIDs 2.16.840.1.114412.1.1/digiCertOVCert and
+* 2.23.140.1.2.2/organization-validated
+
 #### Version 3.6.1 (2022-06-19)
 
 * Added OID 2.5.4.26/registeredAddress
