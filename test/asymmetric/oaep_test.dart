@@ -331,6 +331,63 @@ void rsaOaepStandardTests() {
 
   //----------------------------------------------------------------
 
+  test('encryption with encoding parameters', () {
+    final Uint8List params = Uint8List.fromList("TestLabel".codeUnits);
+    final encryptor = OAEPEncoding(RSAEngine(), params); // without using the registry
+
+    encryptor.init(
+        true, // true = for encryption
+        ParametersWithRandom(PublicKeyParameter<RSAPublicKey>(publicKey),
+            SecureRandom('_oaep_rand')..seed(KeyParameter(seed))));
+
+    // Encrypt the test [message] value
+
+    final output = Uint8List(encryptor.outputBlockSize);
+
+    final size = encryptor.processBlock(message, 0, message.length, output, 0);
+    expect(size, equals(encryptor.outputBlockSize));
+
+    // The ciphertext should be the [expectedCipherText] value
+    final expectedCipherText = createUint8ListFromHexString(
+        '04 cc a5 6a f9 f7 93 67 3e 98 9e d1 d6 08 4a 5c a7 46 f3 9b d7 37 40'
+        '40 1d 88 0d 70 24 57 e9 41 42 a2 5a 04 92 0f 83 60 04 14 ef 43 a8 0e'
+        '60 ad 72 c7 e4 66 ae 18 68 5f 05 a5 5b 0d b8 db 19 67 d7 18 b9 5d e7'
+        '09 db d0 20 6c 2a 43 31 15 ae d5 cf b3 9b 68 bb 13 d2 22 4a 51 e1 b0'
+        '6f 93 4c 91 f3 f7 48 6b 5f 57 28 f6 b3 b2 2d e6 9a 6d b9 12 4a a9 31'
+        '03 12 86 20 f0 50 d7 0c e4 33 58 ee 7c');
+
+    expect(output, equals(expectedCipherText));
+  });
+
+  test('decryption with encoding parameters', () {
+    final Uint8List params = Uint8List.fromList("TestLabel".codeUnits);
+    final decryptor = OAEPEncoding(RSAEngine(), params); // without using the registry
+
+    decryptor.init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
+
+    final cipherTextEncodingParams = createUint8ListFromHexString(
+        '04 cc a5 6a f9 f7 93 67 3e 98 9e d1 d6 08 4a 5c a7 46 f3 9b d7 37 40'
+        '40 1d 88 0d 70 24 57 e9 41 42 a2 5a 04 92 0f 83 60 04 14 ef 43 a8 0e'
+        '60 ad 72 c7 e4 66 ae 18 68 5f 05 a5 5b 0d b8 db 19 67 d7 18 b9 5d e7'
+        '09 db d0 20 6c 2a 43 31 15 ae d5 cf b3 9b 68 bb 13 d2 22 4a 51 e1 b0'
+        '6f 93 4c 91 f3 f7 48 6b 5f 57 28 f6 b3 b2 2d e6 9a 6d b9 12 4a a9 31'
+        '03 12 86 20 f0 50 d7 0c e4 33 58 ee 7c');
+
+    // Decrypt the test [cipherTextEncodingParams] value
+
+    final outBuf = Uint8List(decryptor.outputBlockSize);
+
+    final outputSize =
+    decryptor.processBlock(cipherTextEncodingParams, 0, cipherTextEncodingParams.length, outBuf, 0);
+    final decrypted = outBuf.sublist(0, outputSize);
+
+    // The decrypted message should be the expected test [message] value
+
+    expect(decrypted, equals(message));
+  });
+
+  //----------------------------------------------------------------
+
   test('tampered ciphertext detected', () {
     final decryptor = OAEPEncoding(RSAEngine()); // without using the registry
 
