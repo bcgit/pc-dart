@@ -15,7 +15,7 @@ abstract class BasePadding implements Padding {
       return out;
     } else {
       var len = padCount(data);
-      return Uint8List.fromList(data.sublist(0, len));
+      return data.sublist(0, data.length - len);
     }
   }
 }
