@@ -61,7 +61,7 @@ class EAX extends BaseAEADCipher {
   late Uint8List mac;
 
   @override
-  String get algorithmName => '{${underlyingCipher.algorithmName}/EAX';
+  String get algorithmName => '${underlyingCipher.algorithmName}/EAX';
 
   EAX(this.underlyingCipher)
       : _ctr = CTRStreamCipher(underlyingCipher),
