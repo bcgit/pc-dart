@@ -11,8 +11,8 @@ abstract class BasePadding implements Padding {
   @override
   Uint8List process(bool pad, Uint8List data) {
     if (pad) {
-      var out = Uint8List.fromList(data);
-      return out;
+      throw StateError(
+          'cannot add padding, use PaddedBlockCipher to add padding');
     } else {
       var len = padCount(data);
       return data.sublist(0, data.length - len);

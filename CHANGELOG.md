@@ -5,6 +5,7 @@ Changelog
 
 * EAX
 * Linting
+* Fix to BasePadding
 
 #### Version 3.6.2 (2022-09-09)
 
