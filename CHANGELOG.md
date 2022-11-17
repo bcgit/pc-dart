@@ -3,7 +3,7 @@ Changelog
 
 #### Version 3.6.3 (2022-11-17)
 
-    EAX
+* EAX
 
 #### Version 3.6.2 (2022-09-09)
 
