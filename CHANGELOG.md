@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.6.3 (2022-11-17)
+
+* EAX
+* Linting
+
 #### Version 3.6.2 (2022-09-09)
 
 * Added OIDs 2.16.840.1.114412.1.1/digiCertOVCert and

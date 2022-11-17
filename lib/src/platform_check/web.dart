@@ -16,7 +16,7 @@ class PlatformWeb extends Platform {
     try {
       Random.secure();
       useBuiltInRng = true;
-    } on UnsupportedError catch (use) {
+    } on UnsupportedError {
       useBuiltInRng = false;
     }
   }

@@ -151,17 +151,19 @@ void main() {
         testStreamCipher('ChaCha20/20');
         testStreamCipher('ChaCha7539/20');
         testAEADCipher('ChaCha20-Poly1305');
+        testAEADCipher('AES/EAX');
       });
     } else {
       test(
           'StreamCipher returns valid implementations on platforms without full width integer',
           () {
-        testStreamCipher('Salsa20');
+            testStreamCipher('Salsa20');
         testStreamCipher('AES/SIC');
         testStreamCipher('AES/CTR');
         testStreamCipher('ChaCha20/20');
         testStreamCipher('ChaCha7539/20');
         //testAEADCipher('ChaCha20-Poly1305');
+        testAEADCipher('AES/EAX');
       });
     }
   });
