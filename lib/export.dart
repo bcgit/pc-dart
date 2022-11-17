@@ -99,6 +99,7 @@ export 'package:pointycastle/stream/chacha20.dart';
 export 'package:pointycastle/stream/chacha7539.dart';
 export 'package:pointycastle/stream/chacha20poly1305.dart';
 export 'package:pointycastle/stream/sic.dart';
+export 'package:pointycastle/stream/eax.dart';
 
 // ecc curves
 export 'package:pointycastle/ecc/curves/brainpoolp160r1.dart';
