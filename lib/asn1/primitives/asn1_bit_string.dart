@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
