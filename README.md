@@ -43,6 +43,7 @@ to instantiate classes in PointyCastle. See "Using the Registry" for more).
 
 **AEAD ciphers:** To use with the registry, instantiate like this `AEADCipher('ChaCha20-Poly1305')`. Ciphers use `AEADParameters` to initialize.
   * 'ChaCha20-Poly1305'
+  * 'AES/EAX'
 
 **Block ciphers:** To use with the registry, instantiate like this `PaddedBlockCipher('AES/SomeBlockModeHere/SomePaddingHere')` 
 or like this `StreamCipher('AES/SomeStreamModeHere')`. See sections below for modes and paddings.
