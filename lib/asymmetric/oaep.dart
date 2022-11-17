@@ -50,34 +50,40 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   /// Hash function used by the MGF1 Mask Generation Function.
   late Digest mgf1Hash;
 
-  /// Hash of the encoding parameters.
-  ///
-  /// Note: in this implementation the encoding parameters is always zero
-  /// octets. There is no mechanism to provide encoding parameters.
+  /// Default hash of the encoding parameters,
+  /// all zero octets
   Uint8List defHash;
+
+  /// The encoding params, or P, as specified in
+  /// [RFC 2437](https://tools.ietf.org/html/rfc2437#section-7.1.1)
+  Uint8List? encodingParams = null;
 
   final AsymmetricBlockCipher _engine;
   late SecureRandom _random;
   late bool _forEncryption;
 
-  OAEPEncoding._(DigestFactory digestFactory, this._engine)
+  OAEPEncoding._(DigestFactory digestFactory, this._engine,
+      [this.encodingParams = null])
       : hash = digestFactory(),
         defHash = Uint8List(digestFactory().digestSize) {
     digestFactory().doFinal(defHash, 0);
   }
 
-  factory OAEPEncoding(AsymmetricBlockCipher engine) =>
-      OAEPEncoding.withSHA1(engine);
+  factory OAEPEncoding(AsymmetricBlockCipher engine,
+      [Uint8List? encodingParams = null]) =>
+      OAEPEncoding.withSHA1(engine, encodingParams);
 
-  factory OAEPEncoding.withSHA1(AsymmetricBlockCipher engine) =>
-      OAEPEncoding._(() => SHA1Digest(), engine);
+  factory OAEPEncoding.withSHA1(AsymmetricBlockCipher engine,
+      [Uint8List? encodingParams = null]) =>
+      OAEPEncoding._(() => SHA1Digest(), engine, encodingParams);
 
-  factory OAEPEncoding.withSHA256(AsymmetricBlockCipher engine) =>
-      OAEPEncoding._(() => SHA256Digest(), engine);
+  factory OAEPEncoding.withSHA256(AsymmetricBlockCipher engine,
+      [Uint8List? encodingParams = null]) =>
+      OAEPEncoding._(() => SHA256Digest(), engine, encodingParams);
 
-  factory OAEPEncoding.withCustomDigest(
-          DigestFactory digestFactory, AsymmetricBlockCipher engine) =>
-      OAEPEncoding._(digestFactory, engine);
+  factory OAEPEncoding.withCustomDigest(DigestFactory digestFactory,
+      AsymmetricBlockCipher engine, [Uint8List? encodingParams = null]) =>
+      OAEPEncoding._(digestFactory, engine, encodingParams);
 
   @override
   String get algorithmName => '${_engine.algorithmName}/OAEP';
@@ -202,12 +208,12 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     //
     // The result _pHash_ is stored into [pHash].
     //
-    // defHash = hash.process(encodingParams);
-
-    // Note: This implementation currently does not support encodingParams
-    // so the [defHash] is used as is (which was initialized to be a hash of no
-    // bytes). (Not sure why it is a member variable instead of a variable
-    // local to this method.)
+    // Note: If no encodingParams are set
+    // the [defHash] is used as is (which was initialized to be a hash of no
+    // bytes)
+    Uint8List pHash = encodingParams != null
+        ? hash.process(encodingParams!)
+        : defHash;
 
     // 5. Calculate _DB_ = pHash || PS || 01 || M
     //
@@ -218,7 +224,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // The result _DB_ is stored into [block] starting at offset _hLen_ to the
     // end.
 
-    var block = Uint8List(inputBlockSize + 1 + 2 * defHash.length);
+    var block = Uint8List(inputBlockSize + 1 + 2 * pHash.length);
 
     // M: copy the message into the end of the block.
     //
@@ -233,20 +239,20 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
     // pHash: add the hash of the encoding params.
     //
-    block = _arraycopy(defHash, 0, block, defHash.length, defHash.length);
+    block = _arraycopy(pHash, 0, block, pHash.length, pHash.length);
 
     // 6. Generate a random octet string _seed_ of length _hLen_.
     //
     // The _seed_ is stored in [seed].
 
-    var seed = _random.nextBytes(defHash.length);
+    var seed = _random.nextBytes(pHash.length);
 
     // 7. Calculate _dbMask_ = MGF(seed, emLen - hLen)
     //
     // The _seed_ comes from [seed]. The result _dbMask_ is stored into [mask].
 
     var mask = _maskGeneratorFunction1(
-        seed, 0, seed.length, block.length - defHash.length);
+        seed, 0, seed.length, block.length - pHash.length);
 
     // 8. Calculate _maskedDB_ = DB XOR dbMask
     //
@@ -254,14 +260,14 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // _dbMask_ comes from [mask]. The result _maskedDB_ is stored into [block]
     // starting at offset _hLen_ to the end (overwriting the _DB_).
 
-    for (var i = defHash.length; i != block.length; i++) {
-      block[i] ^= mask[i - defHash.length];
+    for (var i = pHash.length; i != block.length; i++) {
+      block[i] ^= mask[i - pHash.length];
     }
 
     // Temporally store the _seed_ in the first _hLen_ bytes of the [block]
     // so it can be used later.
 
-    block = _arraycopy(seed, 0, block, 0, defHash.length);
+    block = _arraycopy(seed, 0, block, 0, pHash.length);
 
     // 9. Calculate _seedMask_ = MGF(maskedDB, hLen)
     //
@@ -270,7 +276,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // is no longer needed).
 
     mask = _maskGeneratorFunction1(
-        block, defHash.length, block.length - defHash.length, defHash.length);
+        block, pHash.length, block.length - pHash.length, pHash.length);
 
     // 10. Calculate _maskedSeed_ = seed XOR seedMask
     //
@@ -279,7 +285,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // _maskedSeed_ is stored into [block], the first _hLen_ bytes (overwriting
     // the temporary _seed_).
 
-    for (var i = 0; i != defHash.length; i++) {
+    for (var i = 0; i != pHash.length; i++) {
       block[i] ^= mask[i];
     }
 
@@ -410,9 +416,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     }
 
     // 5.8 pHash = Hash(P)
-    //
-    // Since in this implementation P is always an empty octet string, _pHash_
-    // is already the value in _defHash_.
+    Uint8List pHash = encodingParams != null ? hash.process(encodingParams!) : defHash;
 
     // 5.10 Check _pHash'_ to _pHash_
     //
@@ -421,10 +425,10 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     //
     // The _pHash'_ comes from the first _hLen_ bytes of [block]
 
-    var defHashWrong = false;
-
-    for (var i = 0; i != defHash.length; i++) {
-      defHashWrong |= defHash[i] != block[defHash.length + i];
+    var pHashWrong = false;
+    
+    for (var i = 0; i != pHash.length; i++) {
+      pHashWrong |= pHash[i] != block[pHash.length + i];
     }
 
     // 5.9 Split _DB_ into pHash1 || PS || 0x01 || M
@@ -434,7 +438,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // to that first non-zero byte (or will be block.length if none found).
 
     var start = block.length;
-    for (var index = 2 * defHash.length; index != block.length; index++) {
+    for (var index = 2 * pHash.length; index != block.length; index++) {
       if ((block[index] != 0) & (start == block.length)) {
         start = index;
       }
@@ -447,7 +451,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
         (start < block.length && block[start] != 0x01);
     start++;
 
-    if (decryptFailed || defHashWrong || wrongData || dataStartWrong) {
+    if (decryptFailed || pHashWrong || wrongData || dataStartWrong) {
       block.fillRange(0, block.length, 0);
       throw ArgumentError('decoding error');
     }

@@ -157,7 +157,7 @@ void main() {
       test(
           'StreamCipher returns valid implementations on platforms without full width integer',
           () {
-        testStreamCipher('Salsa20');
+            testStreamCipher('Salsa20');
         testStreamCipher('AES/SIC');
         testStreamCipher('AES/CTR');
         testStreamCipher('ChaCha20/20');
