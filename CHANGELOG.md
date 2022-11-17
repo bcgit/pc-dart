@@ -1,7 +1,7 @@
 Changelog
 =========
 
-#### Version 3.6.3 (2022-11-17)
+#### Version 3.6.3 (TBA)
 
 * EAX
 * Linting
