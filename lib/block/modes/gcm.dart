@@ -78,7 +78,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
       counter[15] = 1;
     } else {
       _gHASH(counter, iv);
-      var length = Uint8List.view((Uint64List(2)..[0] = iv.length * 8).buffer);
+      var length = Uint8List.view((Uint32List(4)..[0] = iv.length * 8).buffer);
       length = Uint8List.fromList(length.reversed.toList());
 
       _gHASHBlock(counter, length);
@@ -190,8 +190,8 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
         ? processBlock(remainingInput, 0, out, outOff)
         : 0;
 
-    var len = Uint8List.view((Uint64List(2)
-          ..[1] = aad!.length * 8
+    var len = Uint8List.view((Uint32List(4)
+          ..[2] = aad!.length * 8
           ..[0] = _processedBytes * 8)
         .buffer);
     len = Uint8List.fromList(len.reversed.toList());
