@@ -355,6 +355,31 @@ class ObjectIdentifiers {
       'identifierString': '2.23.140.1.2.2',
       'readableName': 'organization-validated',
       'identifier': [2,23,140,1,2,2]
+    },
+        {
+      'identifierString': '1.2.840.113549.1.1.10',
+      'readableName': 'rsaPSS',
+      'identifier': [1,2,840,113549,1,1,10]
+    },
+    {
+      'identifierString': '12.16.840.1.101.3.4.2.1',
+      'readableName': 'SHA-256',
+      'identifier': [2,16,840,1,101,3,4,2,1]
+    },
+    {
+      'identifierString': '12.16.840.1.101.3.4.2.2',
+      'readableName': 'SHA-384',
+      'identifier': [2,16,840,1,101,3,4,2,2]
+    },
+    {
+      'identifierString': '12.16.840.1.101.3.4.2.3',
+      'readableName': 'SHA-512',
+      'identifier': [2,16,840,1,101,3,4,2,3]
+    },
+    {
+      'identifierString': '12.16.840.1.101.3.4.2.4',
+      'readableName': 'SHA-224',
+      'identifier': [2,16,840,1,101,3,4,2,4]
     }
   ];
 
