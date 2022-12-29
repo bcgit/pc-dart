@@ -83,10 +83,6 @@ class PSSSigner implements Signer {
       throw ArgumentError('Verification requires public key');
     }
 
-    if (!forSigning && !_sSet) {
-      throw ArgumentError('Verification requires salt');
-    }
-
     _emBits = k.modulus!.bitLength - 1;
 
     if (_emBits < (8 * _hLen + 8 * _sLen + 9)) {

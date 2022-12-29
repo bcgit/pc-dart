@@ -5,6 +5,7 @@ library test.signers.pss_signer_test;
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:test/test.dart';
 
 import '../test/src/helpers.dart';
@@ -214,10 +215,12 @@ void main() {
   });
 }
 
-var pubParams = (RSAPublicKey pubk, Uint8List salt) => () => ParametersWithSalt(
-      PublicKeyParameter<RSAPublicKey>(pubk),
-      salt,
-    );
+var pubParams = (RSAPublicKey pubk, Uint8List salt) =>
+    () => ParametersWithSaltConfiguration(
+          PublicKeyParameter<RSAPublicKey>(pubk),
+          FortunaRandom(),
+          salt.length,
+        );
 var privParams = (RSAPrivateKey privk, Uint8List salt) =>
     () => ParametersWithSalt(PrivateKeyParameter<RSAPrivateKey>(privk), salt);
 
