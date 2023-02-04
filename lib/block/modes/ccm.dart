@@ -216,7 +216,7 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
       Uint8List data, int dataOff, int dataLen, Uint8List macBlock) {
     Mac cMac = CBCBlockCipherMac(underlyingCipher, macSize * 8, null);
 
-    cMac.init(_keyParam);
+    cMac.init(ParametersWithIV<KeyParameter>(_keyParam, Uint8List(blockSize)));
 
     //
     // build b0
