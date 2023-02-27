@@ -1,6 +1,6 @@
 name: pointycastle
 version: 3.6.2
-publish_to: https://onepub.dev/api/jssxpsdavu/
+publish_to: https://dart.pkg.jetbrains.space/blanq/p/blanq/pointycastle/
 description: A Dart library implementing cryptographic algorithms and primitives, modeled on the BouncyCastle library.
 repository: https://github.com/blanqlabs/pc-dart.git
 environment: 
