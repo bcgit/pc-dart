@@ -2,12 +2,10 @@ library impl.block_cipher.modes.ccm;
 
 import 'dart:typed_data';
 
-import 'package:pointycastle/block/modes/sic.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/src/ufixnum.dart';
 import 'package:pointycastle/src/utils.dart';
 
-import '../../api.dart';
 import '../../src/impl/base_aead_block_cipher.dart';
 import '../../src/registry/registry.dart';
 
@@ -216,7 +214,7 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
       Uint8List data, int dataOff, int dataLen, Uint8List macBlock) {
     Mac cMac = CBCBlockCipherMac(underlyingCipher, macSize * 8, null);
 
-    cMac.init(_keyParam);
+    cMac.init(ParametersWithIV<KeyParameter>(_keyParam, Uint8List(blockSize)));
 
     //
     // build b0
