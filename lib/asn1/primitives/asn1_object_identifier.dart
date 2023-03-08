@@ -120,12 +120,17 @@ class ASN1ObjectIdentifier extends ASN1Object {
       : super(tag: tag) {
     var identifier =
         ObjectIdentifiers.getIdentifierByIdentifier(objectIdentifierAsString);
-    if (identifier == null) {
-      throw UnsupportedObjectIdentifierException(objectIdentifierAsString);
+    if (identifier != null) {
+      objectIdentifierAsString = identifier['identifierString'] as String?;
+      readableName = identifier['readableName'] as String?;
+      objectIdentifier = identifier['identifier'] as List<int>?;
+    } else {
+      var splittedInts = objectIdentifierAsString!.split('.');
+      objectIdentifier = <int>[];
+      for (var i in splittedInts) {
+        objectIdentifier!.add(int.parse(i));
+      }
     }
-    objectIdentifierAsString = identifier['identifierString'] as String?;
-    readableName = identifier['readableName'] as String?;
-    objectIdentifier = identifier['identifier'] as List<int>?;
   }
 
   ///
