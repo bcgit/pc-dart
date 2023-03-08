@@ -1,7 +1,5 @@
 library src.registry.impl;
 
-import 'package:pointycastle/block/aes.dart';
-import 'package:pointycastle/digests/sm3.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/key_derivators/concat_kdf.dart';
 import 'package:pointycastle/key_derivators/ecdh_kdf.dart';
@@ -14,6 +12,7 @@ void registerFactories(FactoryRegistry registry) {
   _registerECCurves(registry);
   _registerKeyDerivators(registry);
   _registerKeyGenerators(registry);
+  _registerPbeParameterGenerators(registry);
   _registerMacs(registry);
   _registerPaddedBlockCiphers(registry);
   _registerPaddings(registry);
@@ -30,7 +29,8 @@ void _registerAsymmetricCiphers(FactoryRegistry registry) {
 
 void _registerBlockCiphers(FactoryRegistry registry) {
   registry.register(AESEngine.factoryConfig);
-
+  registry.register(RC2Engine.factoryConfig);
+  registry.register(DESedeEngine.factoryConfig);
   // modes
   registry.register(CBCBlockCipher.factoryConfig);
   registry.register(CFBBlockCipher.factoryConfig);
@@ -119,11 +119,18 @@ void _registerKeyDerivators(FactoryRegistry registry) {
   registry.register(Argon2BytesGenerator.factoryConfig);
   registry.register(ConcatKDFDerivator.factoryConfig);
   registry.register(ECDHKeyDerivator.factoryConfig);
+  registry.register(ECDHKeyDerivator.factoryConfig);
+  registry.register(ECDHKeyDerivator.factoryConfig);
 }
 
 void _registerKeyGenerators(FactoryRegistry registry) {
   registry.register(ECKeyGenerator.factoryConfig);
   registry.register(RSAKeyGenerator.factoryConfig);
+}
+
+void _registerPbeParameterGenerators(FactoryRegistry registry) {
+  registry.register(PKCS12ParametersGenerator.factoryConfig);
+  registry.register(PKCS5S1ParameterGenerator.factoryConfig);
 }
 
 void _registerMacs(FactoryRegistry registry) {
@@ -162,4 +169,5 @@ void _registerStreamCiphers(FactoryRegistry registry) {
   registry.register(ChaCha20Poly1305.factoryConfig);
   registry.register(SICStreamCipher.factoryConfig);
   registry.register(EAX.factoryConfig);
+  registry.register(RC4Engine.factoryConfig);
 }

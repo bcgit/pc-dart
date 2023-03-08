@@ -18,6 +18,9 @@ export 'package:pointycastle/asymmetric/oaep.dart';
 // block
 export 'package:pointycastle/block/aes_fast.dart';
 export 'package:pointycastle/block/aes.dart';
+export 'package:pointycastle/block/desede_engine.dart';
+export 'package:pointycastle/block/rc2_engine.dart';
+
 // block/modes
 export 'package:pointycastle/block/modes/cbc.dart';
 export 'package:pointycastle/block/modes/cfb.dart';
@@ -65,6 +68,8 @@ export 'package:pointycastle/key_derivators/hkdf.dart';
 export 'package:pointycastle/key_derivators/pbkdf2.dart';
 export 'package:pointycastle/key_derivators/scrypt.dart';
 export 'package:pointycastle/key_derivators/argon2.dart';
+export 'package:pointycastle/key_derivators/pkcs12_parameter_generator.dart';
+export 'package:pointycastle/key_derivators/pkcs5s1_parameter_generator.dart';
 
 // key_generators
 export 'package:pointycastle/key_generators/api.dart';
@@ -100,6 +105,7 @@ export 'package:pointycastle/stream/chacha7539.dart';
 export 'package:pointycastle/stream/chacha20poly1305.dart';
 export 'package:pointycastle/stream/sic.dart';
 export 'package:pointycastle/stream/eax.dart';
+export 'package:pointycastle/stream/rc4_engine.dart';
 
 // ecc curves
 export 'package:pointycastle/ecc/curves/brainpoolp160r1.dart';

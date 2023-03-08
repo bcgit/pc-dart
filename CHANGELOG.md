@@ -1,8 +1,15 @@
 Changelog
 =========
 
-#### Version 3.6.3 (TBA)
+#### Version 3.7.0 (TBA)
 
+* Added RC2
+* Added RC4
+* Added 3DES
+* Added PKCS5S1ParameterGenerator
+* Added PKCS12ParametersGenerator
+* Added new OIDs
+* Added new ASN1 models
 * EAX
 * Linting
 * Fix to BasePadding
