@@ -176,7 +176,7 @@ decodeBigInt and encodeBigInt.
 * Linter Fixes
 * Updates to ASN1 API
 
-#### Version 2.0.0-rc1 (2020-09-11) (Dart SDK version 2.1.1)::q!
+#### Version 2.0.0-rc1 (2020-09-11) (Dart SDK version 2.1.1)
 
 * Fixed OAEPEncoding and PKCS1Encoding to use provided output offset value.
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
