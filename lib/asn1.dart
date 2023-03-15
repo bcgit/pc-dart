@@ -23,3 +23,38 @@ export 'asn1/primitives/asn1_utc_time.dart';
 export 'asn1/primitives/asn1_utf8_string.dart';
 export 'asn1/unsupported_asn1_encoding_rule_exception.dart';
 export 'asn1/unsupported_asn1_tag_exception.dart';
+
+// X501
+export 'asn1/x501/attribute_type_and_value.dart';
+export 'asn1/x501/name.dart';
+export 'asn1/x501/rdn.dart';
+
+// X509
+export 'asn1/x509/algorithm_identifier.dart';
+
+// PKCS7
+export 'asn1/pkcs/pkcs1/digest_info.dart';
+
+// PKCS7
+export 'asn1/pkcs/pkcs7/content_info.dart';
+export 'asn1/pkcs/pkcs7/encrypted_content_info.dart';
+
+// PKCS8
+export 'asn1/pkcs/pkcs8/encrypted_data.dart';
+export 'asn1/pkcs/pkcs8/encrypted_private_key_info.dart';
+export 'asn1/pkcs/pkcs8/private_key_info.dart';
+
+// PKCS10
+export 'asn1/pkcs/pkcs10/certification_request.dart';
+export 'asn1/pkcs/pkcs10/subject_public_key_info.dart';
+export 'asn1/pkcs/pkcs10/certification_request_info.dart';
+
+// PKCS12
+export 'asn1/pkcs/pkcs12/authenticated_safe.dart';
+export 'asn1/pkcs/pkcs12/cert_bag.dart';
+export 'asn1/pkcs/pkcs12/key_bag.dart';
+export 'asn1/pkcs/pkcs12/mac_data.dart';
+export 'asn1/pkcs/pkcs12/pfx.dart';
+export 'asn1/pkcs/pkcs12/pkcs12_attribute.dart';
+export 'asn1/pkcs/pkcs12/safe_bag.dart';
+export 'asn1/pkcs/pkcs12/safe_contents.dart';

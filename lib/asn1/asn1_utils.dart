@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:pointycastle/asn1.dart';
 import 'package:pointycastle/asn1/asn1_tags.dart';
+import 'package:pointycastle/asn1/object_identifiers.dart';
+import 'package:pointycastle/ecc/api.dart';
 
 ///
 /// Utils class holding different methods to ease the handling of ANS1Objects and their byte representation.
@@ -114,5 +118,87 @@ class ASN1Utils {
       return true;
     }
     return false;
+  }
+
+  static Uint8List getBytesFromPEMString(String pem,
+      {bool checkHeader = true}) {
+    var lines = LineSplitter.split(pem)
+        .map((line) => line.trim())
+        .where((line) => line.isNotEmpty)
+        .toList();
+    var base64;
+    if (checkHeader) {
+      if (lines.length < 2 ||
+          !lines.first.startsWith('-----BEGIN') ||
+          !lines.last.startsWith('-----END')) {
+        throw ArgumentError('The given string does not have the correct '
+            'begin/end markers expected in a PEM file.');
+      }
+      base64 = lines.sublist(1, lines.length - 1).join('');
+    } else {
+      base64 = lines.join('');
+    }
+
+    return Uint8List.fromList(base64Decode(base64));
+  }
+
+  static ECPrivateKey ecPrivateKeyFromDerBytes(Uint8List bytes,
+      {bool pkcs8 = false}) {
+    var asn1Parser = ASN1Parser(bytes);
+    var topLevelSeq = asn1Parser.nextObject() as ASN1Sequence;
+    var curveName;
+    var x;
+    if (pkcs8) {
+      // Parse the PKCS8 format
+      var innerSeq = topLevelSeq.elements!.elementAt(1) as ASN1Sequence;
+      var b2 = innerSeq.elements!.elementAt(1) as ASN1ObjectIdentifier;
+      var b2Data = b2.objectIdentifierAsString;
+      var b2Curvedata = ObjectIdentifiers.getIdentifierByIdentifier(b2Data);
+      if (b2Curvedata != null) {
+        curveName = b2Curvedata['readableName'];
+      }
+
+      var octetString = topLevelSeq.elements!.elementAt(2) as ASN1OctetString;
+      asn1Parser = ASN1Parser(octetString.valueBytes);
+      var octetStringSeq = asn1Parser.nextObject() as ASN1Sequence;
+      var octetStringKeyData =
+          octetStringSeq.elements!.elementAt(1) as ASN1OctetString;
+
+      x = octetStringKeyData.valueBytes!;
+    } else {
+      // Parse the SEC1 format
+      var privateKeyAsOctetString =
+          topLevelSeq.elements!.elementAt(1) as ASN1OctetString;
+      var choice = topLevelSeq.elements!.elementAt(2);
+      var s = ASN1Sequence();
+      var parser = ASN1Parser(choice.valueBytes);
+      while (parser.hasNext()) {
+        s.add(parser.nextObject());
+      }
+      var curveNameOi = s.elements!.elementAt(0) as ASN1ObjectIdentifier;
+      var data = ObjectIdentifiers.getIdentifierByIdentifier(
+          curveNameOi.objectIdentifierAsString);
+      if (data != null) {
+        curveName = data['readableName'];
+      }
+
+      x = privateKeyAsOctetString.valueBytes!;
+    }
+
+    return ECPrivateKey(osp2i(x), ECDomainParameters(curveName));
+  }
+
+  static BigInt osp2i(Iterable<int> bytes, {Endian endian = Endian.big}) {
+    var result = BigInt.from(0);
+    if (endian == Endian.little) {
+      bytes = bytes.toList().reversed;
+    }
+
+    for (var byte in bytes) {
+      result = result << 8;
+      result |= BigInt.from(byte);
+    }
+
+    return result;
   }
 }
