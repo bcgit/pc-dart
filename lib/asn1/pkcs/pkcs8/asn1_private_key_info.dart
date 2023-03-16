@@ -16,34 +16,34 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class PrivateKeyInfo extends ASN1Object {
+class ASN1PrivateKeyInfo extends ASN1Object {
   late ASN1Integer version;
-  late AlgorithmIdentifier privateKeyAlgorithm;
+  late ASN1AlgorithmIdentifier privateKeyAlgorithm;
   late ASN1OctetString privateKey;
   ASN1Set? attributes;
   ASN1BitString? publicKey;
 
-  PrivateKeyInfo(this.version, this.privateKeyAlgorithm, this.privateKey);
+  ASN1PrivateKeyInfo(this.version, this.privateKeyAlgorithm, this.privateKey);
 
   ///
   /// Creates an instance of PrivateKeyInfo for the given [pem].
   /// The [pem] should represent a RSA private key in PKCS1.
   ///
-  PrivateKeyInfo.fromPkcs1RsaPem(String pem) {
+  ASN1PrivateKeyInfo.fromPkcs1RsaPem(String pem) {
     var bytes = ASN1Utils.getBytesFromPEMString(pem);
     var asn1Parser = ASN1Parser(bytes);
     var privateKeySeq = asn1Parser.nextObject();
     privateKey = ASN1OctetString(octets: privateKeySeq.encode());
     version = ASN1Integer.fromtInt(0);
     privateKeyAlgorithm =
-        AlgorithmIdentifier.fromIdentifier('1.2.840.113549.1.1.1');
+        ASN1AlgorithmIdentifier.fromIdentifier('1.2.840.113549.1.1.1');
   }
 
   ///
   /// Creates an instance of PrivateKeyInfo for the given [pem].
   /// The [pem] should represent a RSA private key in PKCS1.
   ///
-  PrivateKeyInfo.fromEccPem(String pem) {
+  ASN1PrivateKeyInfo.fromEccPem(String pem) {
     var bytes = ASN1Utils.getBytesFromPEMString(pem);
     var private = ASN1Utils.ecPrivateKeyFromDerBytes(bytes);
     var asn1Parser = ASN1Parser(bytes);
@@ -58,7 +58,7 @@ class PrivateKeyInfo extends ASN1Object {
 
     version = ASN1Integer.fromtInt(0);
     var param = ASN1ObjectIdentifier.fromName(private.parameters!.domainName);
-    privateKeyAlgorithm = AlgorithmIdentifier.fromName(
+    privateKeyAlgorithm = ASN1AlgorithmIdentifier.fromName(
       'ecPublicKey',
       parameters: param,
     );
@@ -68,12 +68,12 @@ class PrivateKeyInfo extends ASN1Object {
   /// Creates an instance of PrivateKeyInfo for the given [pem].
   /// The [pem] should represent a RSA private key in PKCS8.
   ///
-  PrivateKeyInfo.fromPkcs8RsaPem(String pem) {
+  ASN1PrivateKeyInfo.fromPkcs8RsaPem(String pem) {
     var bytes = ASN1Utils.getBytesFromPEMString(pem);
     var asn1Parser = ASN1Parser(bytes);
     var privateKeySeq = asn1Parser.nextObject() as ASN1Sequence;
     version = privateKeySeq.elements!.elementAt(0) as ASN1Integer;
-    privateKeyAlgorithm = AlgorithmIdentifier.fromSequence(
+    privateKeyAlgorithm = ASN1AlgorithmIdentifier.fromSequence(
         privateKeySeq.elements!.elementAt(1) as ASN1Sequence);
     privateKey = privateKeySeq.elements!.elementAt(2) as ASN1OctetString;
   }
@@ -82,11 +82,11 @@ class PrivateKeyInfo extends ASN1Object {
   /// Creates an instance of PrivateKeyInfo for the given [key].
   /// The [key] should represent a RSA private key in PKCS1 format as an [ASN1Sequence].
   ///
-  PrivateKeyInfo.fromPkcs1Rsa(ASN1Object key) {
+  ASN1PrivateKeyInfo.fromPkcs1Rsa(ASN1Object key) {
     privateKey = ASN1OctetString(octets: key.encode());
     version = ASN1Integer.fromtInt(0);
     privateKeyAlgorithm =
-        AlgorithmIdentifier.fromIdentifier('1.2.840.113549.1.1.1');
+        ASN1AlgorithmIdentifier.fromIdentifier('1.2.840.113549.1.1.1');
   }
 
   @override

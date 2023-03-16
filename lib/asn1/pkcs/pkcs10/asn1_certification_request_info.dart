@@ -12,27 +12,27 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class CertificationRequestInfo extends ASN1Object {
+class ASN1CertificationRequestInfo extends ASN1Object {
   /// The version. The default should be 0
   late ASN1Integer version;
 
   /// The distinguished name of the certificate subject
-  late Name subject;
+  late ASN1Name subject;
 
   /// Information about the public key being certified.
-  late SubjectPublicKeyInfo subjectPKInfo;
+  late ASN1SubjectPublicKeyInfo subjectPKInfo;
 
   /// Collection of attributes providing additional information about the subject of the certificate.
   ASN1Object? attributes;
 
-  CertificationRequestInfo(
+  ASN1CertificationRequestInfo(
     this.version,
     this.subject,
     this.subjectPKInfo, {
     this.attributes,
   });
 
-  CertificationRequestInfo.fromSequence(ASN1Sequence seq) {
+  ASN1CertificationRequestInfo.fromSequence(ASN1Sequence seq) {
     if (seq.elements == null || seq.elements!.length != 3) {
       throw ArgumentError('');
     }

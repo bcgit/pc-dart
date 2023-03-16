@@ -10,7 +10,7 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class CertBag extends ASN1Object {
+class ASN1CertBag extends ASN1Object {
   ///
   /// Possible objectIdentifier :
   /// * 1.2.840.113549.1.9.22.1 (x509Certificate)
@@ -25,12 +25,12 @@ class CertBag extends ASN1Object {
   ///
   late ASN1Object certValue;
 
-  CertBag(this.certId, this.certValue);
+  ASN1CertBag(this.certId, this.certValue);
 
   ///
   /// Constructor to create the CertBag for a X509 Certificate.
   ///
-  CertBag.forX509Certificate(ASN1OctetString certValue) {
+  ASN1CertBag.forX509Certificate(ASN1OctetString certValue) {
     certId =
         ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.9.22.1');
     this.certValue = certValue;
@@ -39,7 +39,7 @@ class CertBag extends ASN1Object {
   ///
   /// Constructor to create the CertBag for a SDSI Certificate.
   ///
-  CertBag.forSdsiCertificate(ASN1IA5String certValue) {
+  ASN1CertBag.forSdsiCertificate(ASN1IA5String certValue) {
     certId =
         ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.9.22.2');
     this.certValue = certValue;
@@ -50,7 +50,7 @@ class CertBag extends ASN1Object {
   /// * ASN1ObjectIdentifier
   /// * ASN1OctetString or ASN1IA5String
   ///
-  CertBag.fromSequence(ASN1Sequence seq) {
+  ASN1CertBag.fromSequence(ASN1Sequence seq) {
     certId = seq.elements!.elementAt(0) as ASN1ObjectIdentifier;
     if (seq.elements!.length == 2) {
       var el = seq.elements!.elementAt(1);
@@ -81,7 +81,7 @@ class CertBag extends ASN1Object {
     return wrapper;
   }
 
-  CertBag.fromX509Pem(String pem) {
+  ASN1CertBag.fromX509Pem(String pem) {
     var bytes = ASN1Utils.getBytesFromPEMString(pem);
     certValue = ASN1OctetString(octets: bytes);
     certId =

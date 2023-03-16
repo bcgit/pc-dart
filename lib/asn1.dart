@@ -25,36 +25,36 @@ export 'asn1/unsupported_asn1_encoding_rule_exception.dart';
 export 'asn1/unsupported_asn1_tag_exception.dart';
 
 // X501
-export 'asn1/x501/attribute_type_and_value.dart';
-export 'asn1/x501/name.dart';
-export 'asn1/x501/rdn.dart';
+export 'asn1/x501/asn1_attribute_type_and_value.dart';
+export 'asn1/x501/asn1_name.dart';
+export 'asn1/x501/asn1_rdn.dart';
 
 // X509
-export 'asn1/x509/algorithm_identifier.dart';
+export 'asn1/x509/asn1_algorithm_identifier.dart';
 
 // PKCS7
-export 'asn1/pkcs/pkcs1/digest_info.dart';
+export 'asn1/pkcs/pkcs1/asn1_digest_info.dart';
 
 // PKCS7
-export 'asn1/pkcs/pkcs7/content_info.dart';
-export 'asn1/pkcs/pkcs7/encrypted_content_info.dart';
+export 'asn1/pkcs/pkcs7/asn1_content_info.dart';
+export 'asn1/pkcs/pkcs7/asn1_encrypted_content_info.dart';
 
 // PKCS8
-export 'asn1/pkcs/pkcs8/encrypted_data.dart';
-export 'asn1/pkcs/pkcs8/encrypted_private_key_info.dart';
-export 'asn1/pkcs/pkcs8/private_key_info.dart';
+export 'asn1/pkcs/pkcs8/asn1_encrypted_data.dart';
+export 'asn1/pkcs/pkcs8/asn1_encrypted_private_key_info.dart';
+export 'asn1/pkcs/pkcs8/asn1_private_key_info.dart';
 
 // PKCS10
-export 'asn1/pkcs/pkcs10/certification_request.dart';
-export 'asn1/pkcs/pkcs10/subject_public_key_info.dart';
-export 'asn1/pkcs/pkcs10/certification_request_info.dart';
+export 'asn1/pkcs/pkcs10/asn1_certification_request.dart';
+export 'asn1/pkcs/pkcs10/asn1_subject_public_key_info.dart';
+export 'asn1/pkcs/pkcs10/asn1_certification_request_info.dart';
 
 // PKCS12
-export 'asn1/pkcs/pkcs12/authenticated_safe.dart';
-export 'asn1/pkcs/pkcs12/cert_bag.dart';
-export 'asn1/pkcs/pkcs12/key_bag.dart';
-export 'asn1/pkcs/pkcs12/mac_data.dart';
-export 'asn1/pkcs/pkcs12/pfx.dart';
-export 'asn1/pkcs/pkcs12/pkcs12_attribute.dart';
-export 'asn1/pkcs/pkcs12/safe_bag.dart';
-export 'asn1/pkcs/pkcs12/safe_contents.dart';
+export 'asn1/pkcs/pkcs12/asn1_authenticated_safe.dart';
+export 'asn1/pkcs/pkcs12/asn1_cert_bag.dart';
+export 'asn1/pkcs/pkcs12/asn1_key_bag.dart';
+export 'asn1/pkcs/pkcs12/asn1_mac_data.dart';
+export 'asn1/pkcs/pkcs12/asn1_pfx.dart';
+export 'asn1/pkcs/pkcs12/asn1_pkcs12_attribute.dart';
+export 'asn1/pkcs/pkcs12/asn1_safe_bag.dart';
+export 'asn1/pkcs/pkcs12/asn1_safe_contents.dart';

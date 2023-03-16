@@ -10,16 +10,16 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class SubjectPublicKeyInfo extends ASN1Object {
-  late AlgorithmIdentifier algorithm;
+class ASN1SubjectPublicKeyInfo extends ASN1Object {
+  late ASN1AlgorithmIdentifier algorithm;
   late ASN1BitString subjectPublicKey;
 
-  SubjectPublicKeyInfo(
+  ASN1SubjectPublicKeyInfo(
     this.algorithm,
     this.subjectPublicKey,
   );
 
-  SubjectPublicKeyInfo.fromSequence(ASN1Sequence seq) {
+  ASN1SubjectPublicKeyInfo.fromSequence(ASN1Sequence seq) {
     if (seq.elements == null || seq.elements!.length != 2) {
       throw ArgumentError('');
     }
@@ -29,7 +29,7 @@ class SubjectPublicKeyInfo extends ASN1Object {
     if (!(seq.elements!.elementAt(1) is ASN1BitString)) {
       throw ArgumentError('Element at index 1 has to be ASN1BitString');
     }
-    algorithm = AlgorithmIdentifier.fromSequence(
+    algorithm = ASN1AlgorithmIdentifier.fromSequence(
         seq.elements!.elementAt(0) as ASN1Sequence);
     subjectPublicKey = seq.elements!.elementAt(1) as ASN1BitString;
   }

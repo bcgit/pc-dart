@@ -7,11 +7,11 @@ import 'package:pointycastle/asn1.dart';
 /// RelativeDistinguishedName ::= SET SIZE (1..MAX) OF AttributeTypeAndValue
 ///```
 ///
-class RDN extends ASN1Object {
+class ASN1RDN extends ASN1Object {
   /// Values for the RDN. Elements should be of [AttributeTypeAndValue]
   late ASN1Set values;
 
-  RDN(this.values);
+  ASN1RDN(this.values);
 
   @override
   Uint8List encode(

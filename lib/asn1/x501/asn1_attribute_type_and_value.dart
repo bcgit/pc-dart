@@ -10,7 +10,7 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class AttributeTypeAndValue extends ASN1Object {
+class ASN1AttributeTypeAndValue extends ASN1Object {
   late ASN1ObjectIdentifier type;
 
   ///
@@ -22,9 +22,9 @@ class AttributeTypeAndValue extends ASN1Object {
   ///
   late ASN1Object value;
 
-  AttributeTypeAndValue(this.type, this.value);
+  ASN1AttributeTypeAndValue(this.type, this.value);
 
-  AttributeTypeAndValue.fromSequence(ASN1Sequence seq) {
+  ASN1AttributeTypeAndValue.fromSequence(ASN1Sequence seq) {
     if (seq.elements == null || seq.elements!.length != 2) {
       throw ArgumentError('');
     }

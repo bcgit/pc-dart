@@ -8,17 +8,17 @@ import 'package:pointycastle/asn1.dart';
 /// AuthenticatedSafe ::= SEQUENCE OF ContentInfo
 ///```
 ///
-class AuthenticatedSafe extends ASN1Object {
-  late List<ContentInfo> info;
+class ASN1AuthenticatedSafe extends ASN1Object {
+  late List<ASN1ContentInfo> info;
 
-  AuthenticatedSafe(this.info);
+  ASN1AuthenticatedSafe(this.info);
 
-  AuthenticatedSafe.fromSequence(ASN1Sequence seq) {
+  ASN1AuthenticatedSafe.fromSequence(ASN1Sequence seq) {
     info = [];
     if (seq.elements != null) {
       seq.elements!.forEach(
         (element) {
-          info.add(ContentInfo.fromSequence(element as ASN1Sequence));
+          info.add(ASN1ContentInfo.fromSequence(element as ASN1Sequence));
         },
       );
     }

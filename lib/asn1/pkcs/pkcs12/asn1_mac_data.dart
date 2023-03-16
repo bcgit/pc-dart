@@ -11,18 +11,19 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class MacData extends ASN1Object {
-  late DigestInfo mac;
+class ASN1MacData extends ASN1Object {
+  late ASN1DigestInfo mac;
   late Uint8List macSalt;
   late BigInt iterationCount;
 
-  MacData(this.mac, this.macSalt, this.iterationCount);
+  ASN1MacData(this.mac, this.macSalt, this.iterationCount);
 
-  MacData.fromSequence(ASN1Sequence seq) {
+  ASN1MacData.fromSequence(ASN1Sequence seq) {
     if (seq.elements!.length != 3) {
       throw ArgumentError('Sequence has not enough elements');
     }
-    mac = DigestInfo.fromSequence(seq.elements!.elementAt(0) as ASN1Sequence);
+    mac =
+        ASN1DigestInfo.fromSequence(seq.elements!.elementAt(0) as ASN1Sequence);
     var o = seq.elements!.elementAt(1) as ASN1OctetString;
     if (o.valueBytes != null) {
       macSalt = o.valueBytes!;

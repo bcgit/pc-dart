@@ -10,7 +10,7 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class Pkcs12Attribute extends ASN1Object {
+class ASN1Pkcs12Attribute extends ASN1Object {
   ///
   /// Defines the type of the attribute.
   ///
@@ -27,12 +27,12 @@ class Pkcs12Attribute extends ASN1Object {
   ///
   late ASN1Set attrValues;
 
-  Pkcs12Attribute(this.attrId, this.attrValues);
+  ASN1Pkcs12Attribute(this.attrId, this.attrValues);
 
   ///
   /// Creates an instance of Attribute for friendlyName with the given [name].
   ///
-  Pkcs12Attribute.friendlyName(String name) {
+  ASN1Pkcs12Attribute.friendlyName(String name) {
     attrId = ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.9.20');
     var bmpString = ASN1BMPString(stringValue: name);
     attrValues = ASN1Set(elements: [bmpString]);
@@ -41,7 +41,7 @@ class Pkcs12Attribute extends ASN1Object {
   ///
   /// Creates an instance of Attribute for localKeyID with the given [octets].
   ///
-  Pkcs12Attribute.localKeyID(Uint8List octets) {
+  ASN1Pkcs12Attribute.localKeyID(Uint8List octets) {
     //attrId = ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.9.21');
     attrId = ASN1ObjectIdentifier.fromBytes(Uint8List.fromList(
         [0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x09, 0x15]));

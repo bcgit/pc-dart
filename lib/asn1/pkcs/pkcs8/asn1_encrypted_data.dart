@@ -10,18 +10,18 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class EncryptedData extends ASN1Object {
+class ASN1EncryptedData extends ASN1Object {
   ASN1Integer version = ASN1Integer.fromtInt(0);
-  late EncryptedContentInfo encryptedContentInfo;
+  late ASN1EncryptedContentInfo encryptedContentInfo;
 
-  EncryptedData(this.encryptedContentInfo);
+  ASN1EncryptedData(this.encryptedContentInfo);
 
-  EncryptedData.fromSequence(ASN1Sequence seq) {
+  ASN1EncryptedData.fromSequence(ASN1Sequence seq) {
     version = seq.elements!.elementAt(0) as ASN1Integer;
     if (seq.elements!.length >= 2) {
       var el = seq.elements!.elementAt(1);
       if (el is ASN1Sequence) {
-        encryptedContentInfo = EncryptedContentInfo.fromSequence(el);
+        encryptedContentInfo = ASN1EncryptedContentInfo.fromSequence(el);
       }
     }
   }

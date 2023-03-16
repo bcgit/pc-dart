@@ -11,18 +11,18 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class CertificationRequest extends ASN1Object {
+class ASN1CertificationRequest extends ASN1Object {
   late ASN1Object certificationRequestInfo;
-  late AlgorithmIdentifier signatureAlgorithm;
+  late ASN1AlgorithmIdentifier signatureAlgorithm;
   late ASN1BitString signature;
 
-  CertificationRequest(
+  ASN1CertificationRequest(
     this.certificationRequestInfo,
     this.signatureAlgorithm,
     this.signature,
   );
 
-  CertificationRequest.fromSequence(ASN1Sequence seq) {
+  ASN1CertificationRequest.fromSequence(ASN1Sequence seq) {
     if (seq.elements == null || seq.elements!.length != 3) {
       throw ArgumentError('');
     }
@@ -36,7 +36,7 @@ class CertificationRequest extends ASN1Object {
       throw ArgumentError('Element at index 2 has to be ASN1BitString');
     }
     certificationRequestInfo = seq.elements!.elementAt(0);
-    signatureAlgorithm = AlgorithmIdentifier.fromSequence(
+    signatureAlgorithm = ASN1AlgorithmIdentifier.fromSequence(
         seq.elements!.elementAt(1) as ASN1Sequence);
     signature = seq.elements!.elementAt(2) as ASN1BitString;
   }

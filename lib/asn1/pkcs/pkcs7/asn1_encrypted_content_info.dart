@@ -12,20 +12,20 @@ import 'package:pointycastle/pointycastle.dart';
 /// }
 ///```
 ///
-class EncryptedContentInfo extends ASN1Object {
+class ASN1EncryptedContentInfo extends ASN1Object {
   late ASN1ObjectIdentifier contentType;
-  late AlgorithmIdentifier contentEncryptionAlgorithm;
+  late ASN1AlgorithmIdentifier contentEncryptionAlgorithm;
   Uint8List? encryptedContent;
 
-  EncryptedContentInfo(this.contentType, this.contentEncryptionAlgorithm,
+  ASN1EncryptedContentInfo(this.contentType, this.contentEncryptionAlgorithm,
       {this.encryptedContent});
 
-  EncryptedContentInfo.fromSequence(ASN1Sequence seq) {
+  ASN1EncryptedContentInfo.fromSequence(ASN1Sequence seq) {
     contentType = seq.elements!.elementAt(0) as ASN1ObjectIdentifier;
     if (seq.elements!.length >= 2) {
       var el = seq.elements!.elementAt(1);
       if (el is ASN1Sequence) {
-        contentEncryptionAlgorithm = AlgorithmIdentifier.fromSequence(el);
+        contentEncryptionAlgorithm = ASN1AlgorithmIdentifier.fromSequence(el);
       }
     }
     if (seq.elements!.length >= 3) {
@@ -34,7 +34,7 @@ class EncryptedContentInfo extends ASN1Object {
     }
   }
 
-  EncryptedContentInfo.forData(
+  ASN1EncryptedContentInfo.forData(
       this.contentEncryptionAlgorithm, this.encryptedContent) {
     //contentType =
     //    ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.7.1');

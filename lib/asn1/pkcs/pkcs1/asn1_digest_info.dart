@@ -12,17 +12,17 @@ import 'package:pointycastle/asn1.dart';
 /// Digest ::= OCTET STRING
 ///```
 ///
-class DigestInfo extends ASN1Object {
-  late AlgorithmIdentifier digestAlgorithm;
+class ASN1DigestInfo extends ASN1Object {
+  late ASN1AlgorithmIdentifier digestAlgorithm;
   late Uint8List digest;
 
-  DigestInfo(this.digest, this.digestAlgorithm);
+  ASN1DigestInfo(this.digest, this.digestAlgorithm);
 
-  DigestInfo.fromSequence(ASN1Sequence seq) {
+  ASN1DigestInfo.fromSequence(ASN1Sequence seq) {
     if (seq.elements!.length != 2) {
       throw ArgumentError('Sequence has not enough elements');
     }
-    digestAlgorithm = AlgorithmIdentifier.fromSequence(
+    digestAlgorithm = ASN1AlgorithmIdentifier.fromSequence(
         seq.elements!.elementAt(0) as ASN1Sequence);
     var o = seq.elements!.elementAt(1) as ASN1OctetString;
     if (o.valueBytes != null) {

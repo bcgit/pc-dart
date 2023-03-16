@@ -6,10 +6,10 @@ import 'package:pointycastle/asn1.dart';
 /// KeyBag ::= PrivateKeyInfo
 ///```
 ///
-class KeyBag extends ASN1Object {
-  PrivateKeyInfo privateKeyInfo;
+class ASN1KeyBag extends ASN1Object {
+  ASN1PrivateKeyInfo privateKeyInfo;
 
-  KeyBag(this.privateKeyInfo);
+  ASN1KeyBag(this.privateKeyInfo);
 
   @override
   Uint8List encode(

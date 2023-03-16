@@ -1,3 +1,4 @@
+
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1.dart';
@@ -7,25 +8,25 @@ import 'package:pointycastle/asn1.dart';
 ///  SafeContents ::= SEQUENCE OF SafeBag
 ///```
 ///
-class SafeContents extends ASN1Object {
+class ASN1SafeContents extends ASN1Object {
   ///
   /// The safebags to store.
   ///
-  late List<SafeBag> safeBags;
+  late List<ASN1SafeBag> safeBags;
 
-  SafeContents(this.safeBags);
+  ASN1SafeContents(this.safeBags);
 
   ///
   /// Creates a SafeContents object from the given sequence consisting of [SafeBag] or [ASN1Sequence].
   ///
-  SafeContents.fromSequence(ASN1Sequence seq) {
+  ASN1SafeContents.fromSequence(ASN1Sequence seq) {
     safeBags = [];
     if (seq.elements != null) {
       seq.elements!.forEach((element) {
-        if (element is SafeBag) {
+        if (element is ASN1SafeBag) {
           safeBags.add(element);
         } else if (element is ASN1Sequence) {
-          safeBags.add(SafeBag.fromSequence(element));
+          safeBags.add(ASN1SafeBag.fromSequence(element));
         }
       });
     }

@@ -10,27 +10,27 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class AlgorithmIdentifier extends ASN1Object {
+class ASN1AlgorithmIdentifier extends ASN1Object {
   late ASN1ObjectIdentifier algorithm;
   ASN1Object? parameters;
 
-  AlgorithmIdentifier(this.algorithm, {this.parameters});
+  ASN1AlgorithmIdentifier(this.algorithm, {this.parameters});
 
   ///
   /// Creates a AlgorithmIdentifier instance from the given [identifier] like "1.3.14.3.2.26".
   ///
-  AlgorithmIdentifier.fromIdentifier(String identifier, {this.parameters}) {
+  ASN1AlgorithmIdentifier.fromIdentifier(String identifier, {this.parameters}) {
     algorithm = ASN1ObjectIdentifier.fromIdentifierString(identifier);
   }
 
   ///
   /// Creates a AlgorithmIdentifier instance from the given [name] like "sha1".
   ///
-  AlgorithmIdentifier.fromName(String name, {this.parameters}) {
+  ASN1AlgorithmIdentifier.fromName(String name, {this.parameters}) {
     algorithm = ASN1ObjectIdentifier.fromName(name);
   }
 
-  AlgorithmIdentifier.fromSequence(ASN1Sequence seq) {
+  ASN1AlgorithmIdentifier.fromSequence(ASN1Sequence seq) {
     algorithm = seq.elements!.elementAt(0) as ASN1ObjectIdentifier;
     if (seq.elements!.length >= 2) {
       parameters = seq.elements!.elementAt(1);

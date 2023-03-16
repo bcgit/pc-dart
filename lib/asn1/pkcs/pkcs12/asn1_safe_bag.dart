@@ -11,7 +11,7 @@ import 'package:pointycastle/asn1.dart';
 /// }
 ///```
 ///
-class SafeBag extends ASN1Object {
+class ASN1SafeBag extends ASN1Object {
   ///
   /// Describes the bag type. Possible objectIdentifier :
   ///
@@ -26,12 +26,12 @@ class SafeBag extends ASN1Object {
   late ASN1Object bagValue;
   ASN1Set? bagAttributes;
 
-  SafeBag(this.bagId, this.bagValue, {this.bagAttributes});
+  ASN1SafeBag(this.bagId, this.bagValue, {this.bagAttributes});
 
   ///
   /// Constructor to create the SafeBag for a pkcs-8ShroudedKeyBag.
   ///
-  SafeBag.forPkcs8ShroudedKeyBag(this.bagValue, {this.bagAttributes}) {
+  ASN1SafeBag.forPkcs8ShroudedKeyBag(this.bagValue, {this.bagAttributes}) {
     bagId =
         ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.12.10.1.2');
   }
@@ -39,7 +39,7 @@ class SafeBag extends ASN1Object {
   ///
   /// Constructor to create the SafeBag for a certBag.
   ///
-  SafeBag.forCertBag(this.bagValue, {this.bagAttributes}) {
+  ASN1SafeBag.forCertBag(this.bagValue, {this.bagAttributes}) {
     bagId =
         ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.12.10.1.3');
   }
@@ -47,7 +47,7 @@ class SafeBag extends ASN1Object {
   ///
   /// Constructor to create the SafeBag for a [KeyBag] holding a [PrivateKeyInfo].
   ///
-  SafeBag.forKeyBag(this.bagValue, {this.bagAttributes}) {
+  ASN1SafeBag.forKeyBag(this.bagValue, {this.bagAttributes}) {
     bagId =
         ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.12.10.1.1');
   }
@@ -58,7 +58,7 @@ class SafeBag extends ASN1Object {
   /// * [EncryptedPrivateKeyInfo] or [CertBag]
   /// * [ASN1Set] (OPTIONAL)
   ///
-  SafeBag.fromSequence(ASN1Sequence seq) {
+  ASN1SafeBag.fromSequence(ASN1Sequence seq) {
     bagId = seq.elements!.elementAt(0) as ASN1ObjectIdentifier;
     if (seq.elements!.length >= 2) {
       var el = seq.elements!.elementAt(1);

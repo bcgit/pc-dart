@@ -10,10 +10,10 @@ import 'package:pointycastle/asn1.dart';
 /// RDNSequence ::= SEQUENCE OF RelativeDistinguishedName
 ///```
 ///
-class Name extends ASN1Object {
-  late List<RDN> rdnSequence;
+class ASN1Name extends ASN1Object {
+  late List<ASN1RDN> rdnSequence;
 
-  Name(this.rdnSequence);
+  ASN1Name(this.rdnSequence);
 
   @override
   Uint8List encode(
