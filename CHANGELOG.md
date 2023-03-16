@@ -1,7 +1,7 @@
 Changelog
 =========
 
-#### Version 3.7.0 (TBA)
+#### Version 3.7.0 (2023-03-16)
 
 * Added RC2
 * Added RC4
