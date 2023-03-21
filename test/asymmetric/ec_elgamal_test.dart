@@ -7,7 +7,6 @@ import 'package:pointycastle/ecc/ecc_fp.dart' as fp;
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 import 'package:test/test.dart';
-import 'package:pointycastle/pointycastle.dart';
 
 import '../test/src/helpers.dart';
 

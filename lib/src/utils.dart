@@ -27,15 +27,15 @@ bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
     return true;
   }
 
-  int len =
+  var len =
       (expected.length < supplied.length) ? expected.length : supplied.length;
 
-  int nonEqual = expected.length ^ supplied.length;
+  var nonEqual = expected.length ^ supplied.length;
 
-  for (int i = 0; i != len; i++) {
+  for (var i = 0; i != len; i++) {
     nonEqual |= (expected[i] ^ supplied[i]);
   }
-  for (int i = len; i < supplied.length; i++) {
+  for (var i = len; i < supplied.length; i++) {
     nonEqual |= (supplied[i] ^ ~supplied[i]);
   }
 

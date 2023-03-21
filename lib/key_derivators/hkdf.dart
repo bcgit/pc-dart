@@ -6,9 +6,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:pointycastle/api.dart';
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/key_derivators/api.dart';
 import 'package:pointycastle/src/impl/base_key_derivator.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 

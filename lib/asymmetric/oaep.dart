@@ -56,33 +56,34 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
   /// The encoding params, or P, as specified in
   /// [RFC 2437](https://tools.ietf.org/html/rfc2437#section-7.1.1)
-  Uint8List? encodingParams = null;
+  Uint8List? encodingParams;
 
   final AsymmetricBlockCipher _engine;
   late SecureRandom _random;
   late bool _forEncryption;
 
   OAEPEncoding._(DigestFactory digestFactory, this._engine,
-      [this.encodingParams = null])
+      [this.encodingParams])
       : hash = digestFactory(),
         defHash = Uint8List(digestFactory().digestSize) {
     digestFactory().doFinal(defHash, 0);
   }
 
   factory OAEPEncoding(AsymmetricBlockCipher engine,
-      [Uint8List? encodingParams = null]) =>
+          [Uint8List? encodingParams]) =>
       OAEPEncoding.withSHA1(engine, encodingParams);
 
   factory OAEPEncoding.withSHA1(AsymmetricBlockCipher engine,
-      [Uint8List? encodingParams = null]) =>
+          [Uint8List? encodingParams]) =>
       OAEPEncoding._(() => SHA1Digest(), engine, encodingParams);
 
   factory OAEPEncoding.withSHA256(AsymmetricBlockCipher engine,
-      [Uint8List? encodingParams = null]) =>
+          [Uint8List? encodingParams]) =>
       OAEPEncoding._(() => SHA256Digest(), engine, encodingParams);
 
-  factory OAEPEncoding.withCustomDigest(DigestFactory digestFactory,
-      AsymmetricBlockCipher engine, [Uint8List? encodingParams = null]) =>
+  factory OAEPEncoding.withCustomDigest(
+          DigestFactory digestFactory, AsymmetricBlockCipher engine,
+          [Uint8List? encodingParams]) =>
       OAEPEncoding._(digestFactory, engine, encodingParams);
 
   @override
@@ -211,9 +212,8 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // Note: If no encodingParams are set
     // the [defHash] is used as is (which was initialized to be a hash of no
     // bytes)
-    Uint8List pHash = encodingParams != null
-        ? hash.process(encodingParams!)
-        : defHash;
+    var pHash =
+        encodingParams != null ? hash.process(encodingParams!) : defHash;
 
     // 5. Calculate _DB_ = pHash || PS || 01 || M
     //
@@ -416,7 +416,8 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     }
 
     // 5.8 pHash = Hash(P)
-    Uint8List pHash = encodingParams != null ? hash.process(encodingParams!) : defHash;
+    var pHash =
+        encodingParams != null ? hash.process(encodingParams!) : defHash;
 
     // 5.10 Check _pHash'_ to _pHash_
     //
@@ -426,7 +427,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // The _pHash'_ comes from the first _hLen_ bytes of [block]
 
     var pHashWrong = false;
-    
+
     for (var i = 0; i != pHash.length; i++) {
       pHashWrong |= pHash[i] != block[pHash.length + i];
     }

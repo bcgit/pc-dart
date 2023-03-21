@@ -30,7 +30,7 @@ class ASN1EncryptedContentInfo extends ASN1Object {
     }
     if (seq.elements!.length >= 3) {
       var asn1Obj = seq.elements!.elementAt(2);
-      encryptedContent = asn1Obj.valueBytes ?? null;
+      encryptedContent = asn1Obj.valueBytes;
     }
   }
 

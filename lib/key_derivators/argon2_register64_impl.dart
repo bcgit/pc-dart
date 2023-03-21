@@ -586,7 +586,9 @@ class _FillBlock {
       ..set(2)
       ..mul(a.lo32)
       ..mul(b.lo32);
-    a..sumReg(b)..sumReg(_reg);
+    a
+      ..sumReg(b)
+      ..sumReg(_reg);
     c
       ..xor(a)
       ..rotr(s);
@@ -663,7 +665,9 @@ class _Block {
     var v1 = b1._v;
     var v2 = b2._v;
     for (var i = SIZE - 1; i >= 0; --i) {
-      v0[i]..xor(v1[i])..xor(v2[i]);
+      v0[i]
+        ..xor(v1[i])
+        ..xor(v2[i]);
     }
   }
 

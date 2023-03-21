@@ -83,7 +83,7 @@ class ChaCha20Engine extends BaseStreamCipher {
     rounds = 20;
   }
 
-  ChaCha20Engine.fromRounds(this.rounds) {}
+  ChaCha20Engine.fromRounds(this.rounds);
 
   @override
   void reset() {

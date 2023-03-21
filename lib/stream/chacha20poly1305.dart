@@ -4,8 +4,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/src/registry/registry.dart';
-import 'package:pointycastle/stream/chacha7539.dart';
-import '../api.dart';
 import '../export.dart';
 import '../src/impl/base_aead_cipher.dart';
 import '../src/ufixnum.dart';

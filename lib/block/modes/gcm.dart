@@ -28,7 +28,7 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
   late int _processedBytes;
   int _blocksRemaining = 0;
 
-  GCMBlockCipher(BlockCipher cipher) : super(cipher) {}
+  GCMBlockCipher(BlockCipher cipher) : super(cipher);
 
   @override
   String get algorithmName => '${underlyingCipher.algorithmName}/GCM';

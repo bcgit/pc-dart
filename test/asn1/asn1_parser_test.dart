@@ -2,15 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1.dart';
-import 'package:pointycastle/asn1/asn1_object.dart';
-import 'package:pointycastle/asn1/asn1_parser.dart';
-import 'package:pointycastle/asn1/primitives/asn1_bit_string.dart';
-import 'package:pointycastle/asn1/primitives/asn1_integer.dart';
-import 'package:pointycastle/asn1/primitives/asn1_null.dart';
-import 'package:pointycastle/asn1/primitives/asn1_object_identifier.dart';
-import 'package:pointycastle/asn1/primitives/asn1_printable_string.dart';
-import 'package:pointycastle/asn1/primitives/asn1_sequence.dart';
-import 'package:pointycastle/asn1/primitives/asn1_set.dart';
 import 'package:test/test.dart';
 
 void main() {

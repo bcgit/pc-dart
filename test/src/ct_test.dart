@@ -59,7 +59,7 @@ void main() {
 // naive non ct xor
 void _xor(Uint8List x, Uint8List y, bool enable) {
   if (enable) {
-    for (int t = 0; t < x.length; t++) {
+    for (var t = 0; t < x.length; t++) {
       x[t] = x[t] ^ y[t];
     }
   }

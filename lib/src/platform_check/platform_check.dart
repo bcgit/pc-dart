@@ -32,5 +32,6 @@ class PlatformException implements Exception {
 
   PlatformException(this.cause);
 
+  @override
   String toString() => cause;
 }

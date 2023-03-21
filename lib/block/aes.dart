@@ -1103,8 +1103,8 @@ class AESEngine extends BaseBlockCipher {
   }
 
   int _fFmulX2(int x) {
-    int t0 = shiftl32((x & _m5), 2); // int t0  = (x & m5) << 2;
-    int t1 = (x & _m4);
+    var t0 = shiftl32((x & _m5), 2); // int t0  = (x & m5) << 2;
+    var t1 = (x & _m4);
     t1 ^= shiftr32(t1, 1);
     return t0 ^ shiftr32(t1, 2) ^ shiftr32(t1, 5);
   }
@@ -1144,6 +1144,7 @@ class AESEngine extends BaseBlockCipher {
   @override
   void reset() {}
 
+  @override
   void init(bool forEncryption, covariant KeyParameter params) {
     _forEncryption = forEncryption;
 
@@ -1160,7 +1161,7 @@ class AESEngine extends BaseBlockCipher {
     var key = params.key;
     var keyLen = key.length;
     if (keyLen < 16 || keyLen > 32 || (keyLen & 7) != 0) {
-      throw ArgumentError("Key length not 128/192/256 bits.");
+      throw ArgumentError('Key length not 128/192/256 bits.');
     }
 
     var KC = shiftr32(keyLen, 2);
@@ -1183,7 +1184,7 @@ class AESEngine extends BaseBlockCipher {
         var col3 = unpack32(key, 12, Endian.little);
         W[0][3] = col3;
 
-        for (int i = 1; i <= 10; ++i) {
+        for (var i = 1; i <= 10; ++i) {
           var colx = _subWord(_shift(col3, 8)) ^ _rcon[i - 1];
           col0 ^= colx;
           W[i][0] = col0;
@@ -1303,7 +1304,7 @@ class AESEngine extends BaseBlockCipher {
         }
       default:
         {
-          throw StateError("Should never get here");
+          throw StateError('Should never get here');
         }
     }
 
@@ -1318,6 +1319,7 @@ class AESEngine extends BaseBlockCipher {
     return W;
   }
 
+  @override
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if (_WorkingKey == null) {
       throw StateError('AES engine not initialised');
