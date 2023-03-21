@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.7.1 (2023-03-21)
+
+* Fix linter warnings
+* Added new oids
+
 #### Version 3.7.0 (2023-03-16)
 
 * Added RC2
