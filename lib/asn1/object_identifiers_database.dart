@@ -248,6 +248,261 @@ const oi = [
     'identifier': [1, 2, 840, 10045, 3, 1, 7]
   },
   {
+    'identifierString': '1.2.840.10045.3.1.6',
+    'readableName': 'prime239v3',
+    'identifier': [1, 2, 840, 10045, 3, 1, 6]
+  },
+  {
+    'identifierString': '1.2.840.10045.3.1.5',
+    'readableName': 'prime239v2',
+    'identifier': [1, 2, 840, 10045, 3, 1, 5]
+  },
+  {
+    'identifierString': '1.2.840.10045.3.1.4',
+    'readableName': 'prime239v1',
+    'identifier': [1, 2, 840, 10045, 3, 1, 4]
+  },
+  {
+    'identifierString': '1.2.840.10045.3.1.3',
+    'readableName': 'prime192v3',
+    'identifier': [1, 2, 840, 10045, 3, 1, 3]
+  },
+  {
+    'identifierString': '1.2.840.10045.3.1.2',
+    'readableName': 'prime192v2',
+    'identifier': [1, 2, 840, 10045, 3, 1, 2]
+  },
+  {
+    'identifierString': '1.2.840.10045.3.1.1',
+    'readableName': 'prime192v1',
+    'identifier': [1, 2, 840, 10045, 3, 1, 1]
+  },
+  {
+    'identifierString': '1.3.132.0.1',
+    'readableName': 'ansit163k1',
+    'identifier': [1, 3, 132, 0, 1]
+  },
+  {
+    'identifierString': '1.3.132.0.2',
+    'readableName': 'ansit163r1',
+    'identifier': [1, 3, 132, 0, 2]
+  },
+  {
+    'identifierString': '1.3.132.0.3',
+    'readableName': 'ansit239k1',
+    'identifier': [1, 3, 132, 0, 3]
+  },
+  {
+    'identifierString': '1.3.132.0.4',
+    'readableName': 'sect113r1',
+    'identifier': [1, 3, 132, 0, 4]
+  },
+  {
+    'identifierString': '1.3.132.0.5',
+    'readableName': 'sect113r2',
+    'identifier': [1, 3, 132, 0, 5]
+  },
+  {
+    'identifierString': '1.3.132.0.6',
+    'readableName': 'secp112r1',
+    'identifier': [1, 3, 132, 0, 6]
+  },
+  {
+    'identifierString': '1.3.132.0.7',
+    'readableName': 'secp112r2',
+    'identifier': [1, 3, 132, 0, 7]
+  },
+  {
+    'identifierString': '1.3.132.0.8',
+    'readableName': 'ansip160r1',
+    'identifier': [1, 3, 132, 0, 8]
+  },
+  {
+    'identifierString': '1.3.132.0.9',
+    'readableName': 'ansip160k1',
+    'identifier': [1, 3, 132, 0, 9]
+  },
+  {
+    'identifierString': '1.3.132.0.10',
+    'readableName': 'ansip256k1',
+    'identifier': [1, 3, 132, 0, 10]
+  },
+  {
+    'identifierString': '1.3.132.0.15',
+    'readableName': 'ansit163r2',
+    'identifier': [1, 3, 132, 0, 15]
+  },
+  {
+    'identifierString': '1.3.132.0.16',
+    'readableName': 'ansit283k1',
+    'identifier': [1, 3, 132, 0, 16]
+  },
+  {
+    'identifierString': '1.3.132.0.17',
+    'readableName': 'ansit283r1',
+    'identifier': [1, 3, 132, 0, 17]
+  },
+  {
+    'identifierString': '1.3.132.0.22',
+    'readableName': 'sect131r1',
+    'identifier': [1, 3, 132, 0, 22]
+  },
+  {
+    'identifierString': '1.3.132.0.23',
+    'readableName': '23',
+    'identifier': [1, 3, 132, 0, 23]
+  },
+  {
+    'identifierString': '1.3.132.0.24',
+    'readableName': 'ansit193r1',
+    'identifier': [1, 3, 132, 0, 24]
+  },
+  {
+    'identifierString': '1.3.132.0.25',
+    'readableName': 'ansit193r2',
+    'identifier': [1, 3, 132, 0, 25]
+  },
+  {
+    'identifierString': '1.3.132.0.26',
+    'readableName': 'ansit233k1',
+    'identifier': [1, 3, 132, 0, 26]
+  },
+  {
+    'identifierString': '1.3.132.0.27',
+    'readableName': 'ansit233r1',
+    'identifier': [1, 3, 132, 0, 27]
+  },
+  {
+    'identifierString': '1.3.132.0.28',
+    'readableName': 'secp128r1',
+    'identifier': [1, 3, 132, 0, 28]
+  },
+  {
+    'identifierString': '1.3.132.0.29',
+    'readableName': 'secp128r2',
+    'identifier': [1, 3, 132, 0, 29]
+  },
+  {
+    'identifierString': '1.3.132.0.30',
+    'readableName': 'ansip160r2',
+    'identifier': [1, 3, 132, 0, 30]
+  },
+  {
+    'identifierString': '1.3.132.0.31',
+    'readableName': 'ansip192k1',
+    'identifier': [1, 3, 132, 0, 31]
+  },
+  {
+    'identifierString': '1.3.132.0.32',
+    'readableName': 'ansip224k1',
+    'identifier': [1, 3, 132, 0, 32]
+  },
+  {
+    'identifierString': '1.3.132.0.33',
+    'readableName': 'ansip224r1',
+    'identifier': [1, 3, 132, 0, 33]
+  },
+  {
+    'identifierString': '1.3.132.0.34',
+    'readableName': 'ansip384r1',
+    'identifier': [1, 3, 132, 0, 34]
+  },
+  {
+    'identifierString': '1.3.132.0.35',
+    'readableName': 'ansip521r1',
+    'identifier': [1, 3, 132, 0, 35]
+  },
+  {
+    'identifierString': '1.3.132.0.36',
+    'readableName': 'ansit409k1',
+    'identifier': [1, 3, 132, 0, 36]
+  },
+  {
+    'identifierString': '1.3.132.0.37',
+    'readableName': 'ansit409r1',
+    'identifier': [1, 3, 132, 0, 37]
+  },
+  {
+    'identifierString': '1.3.132.0.38',
+    'readableName': 'ansit571k1',
+    'identifier': [1, 3, 132, 0, 38]
+  },
+  {
+    'identifierString': '1.3.132.0.39',
+    'readableName': 'ansit571r1',
+    'identifier': [1, 3, 132, 0, 39]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.1',
+    'readableName': 'brainpoolP160r1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 1]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.2',
+    'readableName': 'brainpoolP160t1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 2]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.3',
+    'readableName': 'brainpoolP192r1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 3]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.4',
+    'readableName': 'brainpoolP192t1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 4]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.5',
+    'readableName': 'brainpoolP224r1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 5]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.6',
+    'readableName': 'brainpoolP224t1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 6]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.7',
+    'readableName': 'brainpoolP256r1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 7]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.8',
+    'readableName': 'brainpoolP256t1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 8]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.9',
+    'readableName': 'brainpoolP320r1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 9]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.10',
+    'readableName': 'brainpoolP320t1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 10]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.11',
+    'readableName': 'brainpoolP384r1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 11]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.12',
+    'readableName': 'brainpoolP384t1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 12]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.13',
+    'readableName': 'brainpoolP512r1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 13]
+  },
+  {
+    'identifierString': '1.3.36.3.3.2.8.1.1.14',
+    'readableName': 'brainpoolP512t1',
+    'identifier': [1, 3, 36, 3, 3, 2, 8, 1, 1, 14]
+  },
+  {
     'identifierString': '1.2.840.10045.4.3.2',
     'readableName': 'ecdsaWithSHA256',
     'identifier': [1, 2, 840, 10045, 4, 3, 2]
