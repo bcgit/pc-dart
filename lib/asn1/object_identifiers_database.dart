@@ -323,11 +323,6 @@ const oi = [
     'identifier': [1, 3, 132, 0, 9]
   },
   {
-    'identifierString': '1.3.132.0.10',
-    'readableName': 'ansip256k1',
-    'identifier': [1, 3, 132, 0, 10]
-  },
-  {
     'identifierString': '1.3.132.0.15',
     'readableName': 'ansit163r2',
     'identifier': [1, 3, 132, 0, 15]
@@ -401,16 +396,6 @@ const oi = [
     'identifierString': '1.3.132.0.33',
     'readableName': 'ansip224r1',
     'identifier': [1, 3, 132, 0, 33]
-  },
-  {
-    'identifierString': '1.3.132.0.34',
-    'readableName': 'ansip384r1',
-    'identifier': [1, 3, 132, 0, 34]
-  },
-  {
-    'identifierString': '1.3.132.0.35',
-    'readableName': 'ansip521r1',
-    'identifier': [1, 3, 132, 0, 35]
   },
   {
     'identifierString': '1.3.132.0.36',
