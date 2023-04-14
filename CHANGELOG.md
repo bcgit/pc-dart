@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.7.3 (2023-04-14)
+
+* PSSSigner requires only salt length to verify signature
+
 #### Version 3.7.2 (2023-03-23)
 
 * Removed duplicate oids
