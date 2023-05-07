@@ -41,7 +41,7 @@ class RSAKeyGenerator implements KeyGenerator {
   }
 
   @override
-  AsymmetricKeyPair generateKeyPair() {
+  AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateKeyPair() {
     BigInt p, q, n, e;
 
     // p and q values should have a length of half the strength in bits
@@ -119,7 +119,10 @@ class RSAKeyGenerator implements KeyGenerator {
     var phi = (pSub1 * qSub1);
     var d = e.modInverse(phi);
 
-    return AsymmetricKeyPair(RSAPublicKey(n, e), RSAPrivateKey(n, d, p, q, e));
+    return AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>(
+      RSAPublicKey(n, e),
+      RSAPrivateKey(n, d, p, q, e),
+    );
   }
 }
 
