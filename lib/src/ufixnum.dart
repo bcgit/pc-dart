@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.ufixnum;
-
 import 'dart:typed_data';
 
 const _MASK_3 = 0x07;
@@ -51,44 +49,44 @@ final _MASK32_HI_BITS = [
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 8 bit operations
 //
-int clip8(int x) => (x & _MASK_8);
+int clip8(int x) => x & _MASK_8;
 
 int csum8(int x, int y) => sum8(clip8(x), clip8(y));
 int sum8(int x, int y) {
   assert((x >= 0) && (x <= _MASK_8));
   assert((y >= 0) && (y <= _MASK_8));
-  return ((x + y) & _MASK_8);
+  return (x + y) & _MASK_8;
 }
 
 int csub8(int x, int y) => sub8(clip8(x), clip8(y));
 int sub8(int x, int y) {
   assert((x >= 0) && (x <= _MASK_8));
   assert((y >= 0) && (y <= _MASK_8));
-  return ((x - y) & _MASK_8);
+  return (x - y) & _MASK_8;
 }
 
 int cshiftl8(int x, int n) => shiftl8(clip8(x), n);
 int shiftl8(int x, int n) {
   assert((x >= 0) && (x <= _MASK_8));
-  return ((x << (n & _MASK_3)) & _MASK_8);
+  return (x << (n & _MASK_3)) & _MASK_8;
 }
 
 int cshiftr8(int x, int n) => shiftr8(clip8(x), n);
 int shiftr8(int x, int n) {
   assert((x >= 0) && (x <= _MASK_8));
-  return (x >> (n & _MASK_3));
+  return x >> (n & _MASK_3);
 }
 
 int cneg8(int x) => neg8(clip8(x));
 int neg8(int x) {
   assert((x >= 0) && (x <= _MASK_8));
-  return (-x & _MASK_8);
+  return -x & _MASK_8;
 }
 
 int cnot8(int x) => not8(clip8(x));
 int not8(int x) {
   assert((x >= 0) && (x <= _MASK_8));
-  return (~x & _MASK_8);
+  return ~x & _MASK_8;
 }
 
 int crotl8(int x, int n) => rotl8(clip8(x), n);
@@ -110,7 +108,7 @@ int rotr8(int x, int n) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 16 bit operations
 //
-int clip16(int x) => (x & _MASK_16);
+int clip16(int x) => x & _MASK_16;
 
 /// Packs a 16 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
 /// [ByteData] if you will run it several times against the same buffer and want faster execution.
@@ -135,20 +133,20 @@ int unpack16(dynamic inp, int offset, Endian endian) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 32 bit operations
 //
-int clip32(int x) => (x & _MASK_32);
+int clip32(int x) => x & _MASK_32;
 
 int csum32(int x, int y) => sum32(clip32(x), clip32(y));
 int sum32(int x, int y) {
   assert((x >= 0) && (x <= _MASK_32));
   assert((y >= 0) && (y <= _MASK_32));
-  return ((x + y) & _MASK_32);
+  return (x + y) & _MASK_32;
 }
 
 int csub32(int x, int y) => sub32(clip32(x), clip32(y));
 int sub32(int x, int y) {
   assert((x >= 0) && (x <= _MASK_32));
   assert((y >= 0) && (y <= _MASK_32));
-  return ((x - y) & _MASK_32);
+  return (x - y) & _MASK_32;
 }
 
 int cshiftl32(int x, int n) => shiftl32(clip32(x), n);
@@ -156,26 +154,26 @@ int shiftl32(int x, int n) {
   assert((x >= 0) && (x <= _MASK_32));
   n &= _MASK_5;
   x &= _MASK32_HI_BITS[n];
-  return ((x << n) & _MASK_32);
+  return (x << n) & _MASK_32;
 }
 
 int cshiftr32(int x, int n) => shiftr32(clip32(x), n);
 int shiftr32(int x, int n) {
   assert((x >= 0) && (x <= _MASK_32));
   n &= _MASK_5;
-  return (x >> n);
+  return x >> n;
 }
 
 int cneg32(int x) => neg32(clip32(x));
 int neg32(int x) {
   assert((x >= 0) && (x <= _MASK_32));
-  return (-x & _MASK_32);
+  return -x & _MASK_32;
 }
 
 int cnot32(int x) => not32(clip32(x));
 int not32(int x) {
   assert((x >= 0) && (x <= _MASK_32));
-  return (~x & _MASK_32);
+  return ~x & _MASK_32;
 }
 
 int crotl32(int x, int n) => rotl32(clip32(x), n);
@@ -191,7 +189,7 @@ int rotr32(int x, int n) {
   assert(n >= 0);
   assert((x >= 0) && (x <= _MASK_32));
   n &= _MASK_5;
-  return (x >> n) | shiftl32(x, (32 - n));
+  return (x >> n) | shiftl32(x, 32 - n);
 }
 
 /// Packs a 32 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
@@ -221,7 +219,7 @@ class Register64 {
   late int _hi32;
   late int _lo32;
 
-  Register64([dynamic hiOrLo32OrY = 0, int? lo32]) {
+  Register64([Object hiOrLo32OrY = 0, int? lo32]) {
     set(hiOrLo32OrY, lo32);
   }
 
@@ -229,14 +227,15 @@ class Register64 {
   int get hi32 => _hi32;
 
   @override
-  bool operator ==(Object y) =>
-      y is Register64 ? (((_hi32 == y._hi32) && (_lo32 == y._lo32))) : false;
+  bool operator ==(Object other) => other is Register64
+      ? (((_hi32 == other._hi32) && (_lo32 == other._lo32)))
+      : false;
   bool operator <(Register64 y) =>
-      ((_hi32 < y._hi32) || ((_hi32 == y._hi32) && (_lo32 < y._lo32)));
-  bool operator <=(Register64 y) => ((this < y) || (this == y));
+      (_hi32 < y._hi32) || ((_hi32 == y._hi32) && (_lo32 < y._lo32));
+  bool operator <=(Register64 y) => (this < y) || (this == y);
   bool operator >(Register64 y) =>
-      ((_hi32 > y._hi32) || ((_hi32 == y._hi32) && (_lo32 > y._lo32)));
-  bool operator >=(Register64 y) => ((this > y) || (this == y));
+      (_hi32 > y._hi32) || ((_hi32 == y._hi32) && (_lo32 > y._lo32));
+  bool operator >=(Register64 y) => (this > y) || (this == y);
 
   void set(dynamic hiOrLo32OrY, [int? lo32]) {
     if (lo32 == null) {
@@ -244,14 +243,14 @@ class Register64 {
         _hi32 = hiOrLo32OrY._hi32;
         _lo32 = hiOrLo32OrY._lo32;
       } else {
-        assert(hiOrLo32OrY <= _MASK_32);
+        assert(hiOrLo32OrY as int <= _MASK_32);
         _hi32 = 0;
-        _lo32 = hiOrLo32OrY;
+        _lo32 = hiOrLo32OrY as int;
       }
     } else {
-      assert(hiOrLo32OrY <= _MASK_32);
+      assert(hiOrLo32OrY as int <= _MASK_32);
       assert(lo32 <= _MASK_32);
-      _hi32 = hiOrLo32OrY;
+      _hi32 = hiOrLo32OrY as int;
       _lo32 = lo32;
     }
   }
@@ -259,25 +258,25 @@ class Register64 {
   void sum(dynamic y) {
     if (y is int) {
       y &= _MASK_32;
-      var slo32 = (_lo32 + y);
-      _lo32 = (slo32 & _MASK_32);
+      var slo32 = _lo32 + y;
+      _lo32 = slo32 & _MASK_32;
       if (slo32 != _lo32) {
         _hi32++;
         _hi32 &= _MASK_32;
       }
     } else {
       var slo32 = _lo32 + y._lo32 as int;
-      _lo32 = (slo32 & _MASK_32);
+      _lo32 = slo32 & _MASK_32;
       var carry = ((slo32 != _lo32) ? 1 : 0);
-      _hi32 = (((_hi32 + y._hi32 + carry) as int) & _MASK_32);
+      _hi32 = ((_hi32 + y._hi32 + carry) as int) & _MASK_32;
     }
   }
 
   void sumReg(Register64 y) {
-    var slo32 = (_lo32 + y._lo32);
-    _lo32 = (slo32 & _MASK_32);
+    var slo32 = _lo32 + y._lo32;
+    _lo32 = slo32 & _MASK_32;
     var carry = ((slo32 != _lo32) ? 1 : 0);
-    _hi32 = ((_hi32 + y._hi32 + carry) & _MASK_32);
+    _hi32 = (_hi32 + y._hi32 + carry) & _MASK_32;
   }
 
   void sub(dynamic y) {
@@ -289,7 +288,7 @@ class Register64 {
     // Grab 16-bit chunks.
     final a0 = _lo32 & _MASK_16;
     final a1 = (_lo32 >> 16) & _MASK_16;
-    final a2 = (_hi32 & _MASK_16);
+    final a2 = _hi32 & _MASK_16;
     final a3 = (_hi32 >> 16) & _MASK_16;
     late int b0, b1, b2, b3;
     if (y is int) {
@@ -299,7 +298,7 @@ class Register64 {
       b1 = (y >> 16) & _MASK_16;
       b2 = b3 = 0;
     } else /* if (y is Register64) */ {
-      b0 = y._lo32 & _MASK_16;
+      b0 = (y as Register64)._lo32 & _MASK_16;
       b1 = (y._lo32 >> 16) & _MASK_16;
       b2 = y._hi32 & _MASK_16;
       b3 = (y._hi32 >> 16) & _MASK_16;
@@ -338,13 +337,13 @@ class Register64 {
     // |................................|................................|
     // |xxxxxxxxxxxxxxxx................|................................| p3
     var slo32 = p0 + ((p1 & _MASK_16) << 16);
-    _lo32 = (slo32 & _MASK_32);
+    _lo32 = slo32 & _MASK_32;
     var carry = ((slo32 != _lo32) ? 1 : 0);
     // p1 is a 33-bit integer, shiftr operation will ignore 33th-bit on js
     var carry2 = ((p1 & _MASK_32) != p1) ? 0x10000 : 0;
     var shi32 =
         ((p1 & _MASK_32) >> 16) + p2 + ((p3 & _MASK_16) << 16) + carry + carry2;
-    _hi32 = (shi32 & _MASK_32);
+    _hi32 = shi32 & _MASK_32;
   }
 
   void neg() {
@@ -353,8 +352,8 @@ class Register64 {
   }
 
   void not() {
-    _hi32 = (~_hi32 & _MASK_32);
-    _lo32 = (~_lo32 & _MASK_32);
+    _hi32 = ~_hi32 & _MASK_32;
+    _lo32 = ~_lo32 & _MASK_32;
   }
 
   void and(Register64 y) {
@@ -377,7 +376,7 @@ class Register64 {
     if (n == 0) {
       // do nothing
     } else if (n >= 32) {
-      _hi32 = shiftl32(_lo32, (n - 32));
+      _hi32 = shiftl32(_lo32, n - 32);
       _lo32 = 0;
     } else {
       _hi32 = shiftl32(_hi32, n);
@@ -439,9 +438,9 @@ class Register64 {
       } else {
         var hi32 = _hi32;
         _hi32 = _hi32 >> n;
-        _hi32 |= shiftl32(_lo32, (32 - n));
+        _hi32 |= shiftl32(_lo32, 32 - n);
         _lo32 = _lo32 >> n;
-        _lo32 |= shiftl32(hi32, (32 - n));
+        _lo32 |= shiftl32(hi32, 32 - n);
       }
     }
   }
@@ -511,14 +510,14 @@ class Register64 {
 
   void _padWrite(StringBuffer sb, int value) {
     var str = value.toRadixString(16);
-    for (var i = (8 - str.length); i > 0; i--) {
+    for (var i = 8 - str.length; i > 0; i--) {
       sb.write('0');
     }
     sb.write(str);
   }
 
   @override
-  int get hashCode => super.hashCode;
+  int get hashCode => Object.hash(_hi32, _lo32);
 }
 
 class Register64List {

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.test.digest_tests;
-
 import 'dart:typed_data';
 
 import 'package:test/test.dart';
@@ -16,7 +14,7 @@ void runDigestTests(Digest digest, List<String> plainDigestTextPairs) {
         var plainText = plainDigestTextPairs[i];
         var digestText = plainDigestTextPairs[i + 1];
 
-        test('${formatAsTruncated(plainText)}',
+        test(formatAsTruncated(plainText),
             () => _runDigestTest(digest, plainText, digestText));
       }
     });

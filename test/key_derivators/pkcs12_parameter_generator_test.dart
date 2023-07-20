@@ -13,7 +13,7 @@ void main() {
       var bytes = Uint8List((password.length + 1) * 2);
 
       for (var i = 0; i != password.length; i++) {
-        bytes[i * 2] = (password[i] >>> 8);
+        bytes[i * 2] = password[i] >>> 8;
         bytes[i * 2 + 1] = password[i];
       }
 

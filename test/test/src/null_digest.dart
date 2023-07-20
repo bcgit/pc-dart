@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library impl.block_chipher.test.src.null_digest;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';

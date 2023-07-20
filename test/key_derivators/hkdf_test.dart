@@ -1,12 +1,8 @@
 // See file LICENSE for more information.
 
-library test.key_derivators.hkdf_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/key_derivators/hkdf.dart';
-import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
 
 import '../test/runners/key_derivators.dart';

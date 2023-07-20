@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.asymmetric.pkcs1_test;
-
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 
@@ -10,10 +8,12 @@ import '../test/src/null_asymmetric_block_cipher.dart';
 import '../test/src/null_secure_random.dart';
 
 void main() {
-  var pubpar = () => ParametersWithRandom(
-      PublicKeyParameter(NullPublicKey()), NullSecureRandom());
-  var privpar = () => ParametersWithRandom(
-      PrivateKeyParameter(NullPrivateKey()), NullSecureRandom());
+  ParametersWithRandom<PublicKeyParameter<PublicKey>> pubpar() =>
+      ParametersWithRandom(
+          PublicKeyParameter(NullPublicKey()), NullSecureRandom());
+  ParametersWithRandom<PrivateKeyParameter<PrivateKey>> privpar() =>
+      ParametersWithRandom(
+          PrivateKeyParameter(NullPrivateKey()), NullSecureRandom());
 
   registry.register(NullAsymmetricBlockCipher.factoryConfig);
   registry.register(NullSecureRandom.factoryConfig);

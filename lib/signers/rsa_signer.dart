@@ -143,11 +143,11 @@ class RSASigner implements Signer {
       var nonEqual = 0;
 
       for (var i = 0; i < hash.length; i++) {
-        nonEqual |= (sig[sigOffset + i] ^ expected[expectedOffset + i]);
+        nonEqual |= sig[sigOffset + i] ^ expected[expectedOffset + i];
       }
 
       for (var i = 0; i < sigOffset; i++) {
-        nonEqual |= (sig[i] ^ expected[i]); // check header less NULL
+        nonEqual |= sig[i] ^ expected[i]; // check header less NULL
       }
 
       return nonEqual == 0;

@@ -19,8 +19,8 @@
 /// To see the differences between the examples, run 'diff' on the files.
 
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/key_derivators/api.dart';
@@ -44,73 +44,72 @@ void useRegistry() {
   final sha1 = Digest('SHA-1');
   final md5 = Digest('MD5');
 
-  final _digest = sha256.process(Uint8List.fromList(_data));
+  final digest = sha256.process(Uint8List.fromList(_data));
 
   final hmacSha256 = Mac('SHA-256/HMAC');
   final hmacSha512 = Mac('SHA-512/HMAC');
   final hmacMd5 = Mac('MD5/HMAC');
 
-  final _hmacValue = hmacSha256.process(Uint8List.fromList(_data));
+  final hmacValue = hmacSha256.process(Uint8List.fromList(_data));
 
   //final kd = KeyDerivator('SHA-256/HMAC/PBKDF2');
 
-  final _sGen = Random.secure();
-  final _seed = Platform.instance.platformEntropySource().getBytes(32);
-  final secRnd = SecureRandom('Fortuna')..seed(KeyParameter(_seed));
+  final seed = Platform.instance.platformEntropySource().getBytes(32);
+  final secRnd = SecureRandom('Fortuna')..seed(KeyParameter(seed));
 
   // AES-CBC encryption
 
-  final _salt = secRnd.nextBytes(32);
+  final salt = secRnd.nextBytes(32);
 
   final keyDerivator256 = KeyDerivator('SHA-256/HMAC/PBKDF2')
-    ..init(Pbkdf2Parameters(_salt, 10000, 256 ~/ 8));
+    ..init(Pbkdf2Parameters(salt, 10000, 256 ~/ 8));
 
   final aes256key = keyDerivator256.process(Uint8List.fromList(_secret));
 
-  final _iv = secRnd.nextBytes(128 ~/ 8);
+  final iv = secRnd.nextBytes(128 ~/ 8);
   final aesCbc = BlockCipher('AES/CBC')
-    ..init(true, ParametersWithIV(KeyParameter(aes256key), _iv));
+    ..init(true, ParametersWithIV(KeyParameter(aes256key), iv));
 
-  final _paddedData = Uint8List(
+  final paddedData = Uint8List(
       _data.length + (aesCbc.blockSize - (_data.length % aesCbc.blockSize)))
     ..setAll(0, _data);
-  Padding('PKCS7').addPadding(_paddedData, _data.length);
+  Padding('PKCS7').addPadding(paddedData, _data.length);
 
-  final _ciphertext = aesCbc.process(_paddedData);
+  final ciphertext = aesCbc.process(paddedData);
 
   // RSA key generation and signing
 
   final keyGen = KeyGenerator('RSA');
   keyGen.init(ParametersWithRandom(
       RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64), secRnd));
-  final _pair = keyGen.generateKeyPair();
+  final pair = keyGen.generateKeyPair();
 
   final signer = Signer('SHA-256/RSA')
-    ..init(true, PrivateKeyParameter<RSAPrivateKey>(_pair.privateKey));
+    ..init(true, PrivateKeyParameter<RSAPrivateKey>(pair.privateKey));
 
-  final _signature =
+  final signature =
       signer.generateSignature(Uint8List.fromList(_data)) as RSASignature;
 
   final verifier = Signer('SHA-256/RSA')
-    ..init(false, PublicKeyParameter<RSAPublicKey>(_pair.publicKey));
-  final sigOk = verifier.verifySignature(Uint8List.fromList(_data), _signature);
+    ..init(false, PublicKeyParameter<RSAPublicKey>(pair.publicKey));
+  final sigOk = verifier.verifySignature(Uint8List.fromList(_data), signature);
 
   print('''
 Data: '${utf8.decode(_data)}'
 
-SHA-256: ${bin2hex(_digest)}
+SHA-256: ${bin2hex(digest)}
 SHA-1:   ${bin2hex(sha1.process(Uint8List.fromList(_data)))}
 MD5:     ${bin2hex(md5.process(Uint8List.fromList(_data)), separator: ':')}
 
-HMAC-SHA256: ${bin2hex(_hmacValue)}
+HMAC-SHA256: ${bin2hex(hmacValue)}
 HMAC-512:    ${bin2hex(hmacSha512.process(Uint8List.fromList(_data)))}
 HMAC-MD5:    ${bin2hex(hmacMd5.process(Uint8List.fromList(_data)))}
 
 AES-CBC ciphertext:
-${bin2hex(_ciphertext, wrap: 64)}
+${bin2hex(ciphertext, wrap: 64)}
 
 Signature:
-${bin2hex(_signature.bytes, wrap: 64)}
+${bin2hex(signature.bytes, wrap: 64)}
 Verifies: $sigOk
 ''');
 }

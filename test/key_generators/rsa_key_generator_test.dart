@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.key_generators.rsa_key_generator_test;
-
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 import 'package:test/test.dart';
@@ -244,6 +242,13 @@ void _exponentTests(AsymmetricKeyPair pair, BigInt expectedPublicExponent) {
 AsymmetricKeyPair _keyPair(String n, String e, String d, String p, String q,
         String pubExpInPrivateKey) =>
     AsymmetricKeyPair(
-        RSAPublicKey(BigInt.parse(n), BigInt.parse(e)),
-        RSAPrivateKey(BigInt.parse(n), BigInt.parse(d), BigInt.parse(p),
-            BigInt.parse(q), BigInt.parse(pubExpInPrivateKey)));
+      RSAPublicKey(BigInt.parse(n), BigInt.parse(e)),
+      RSAPrivateKey(
+        BigInt.parse(n),
+        BigInt.parse(d),
+        BigInt.parse(p),
+        BigInt.parse(q),
+        // ignore: deprecated_member_use_from_same_package
+        BigInt.parse(pubExpInPrivateKey),
+      ),
+    );

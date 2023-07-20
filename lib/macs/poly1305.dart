@@ -71,7 +71,7 @@ class Poly1305 extends BaseMac {
 
   @override
   String get algorithmName =>
-      cipher == null ? 'Poly1305' : cipher!.algorithmName + '/Poly1305';
+      cipher == null ? 'Poly1305' : '${cipher!.algorithmName}/Poly1305';
 
   @override
   int get macSize => BLOCK_SIZE;
@@ -99,7 +99,7 @@ class Poly1305 extends BaseMac {
     Uint8List? nonce;
 
     if (cipher != null) {
-      if (!(params is ParametersWithIV)) {
+      if (params is! ParametersWithIV) {
         throw ArgumentError(
             'Poly1305 requires an IV when used with a block cipher.');
       }
@@ -108,7 +108,7 @@ class Poly1305 extends BaseMac {
       params = params.parameters!;
     }
 
-    if (!(params is KeyParameter)) {
+    if (params is! KeyParameter) {
       throw ArgumentError('Poly1305 requires a key.');
     }
 
@@ -279,10 +279,10 @@ class Poly1305 extends BaseMac {
     h4 = (h4 & nb) | (g4 & b);
 
     int f0, f1, f2, f3;
-    f0 = (h0 | shiftl32(h1, 26)) + (k0);
-    f1 = (cshiftr32(h1, 6) | shiftl32(h2, 20)) + (k1);
-    f2 = (cshiftr32(h2, 12) | shiftl32(h3, 14)) + (k2);
-    f3 = (cshiftr32(h3, 18) | shiftl32(h4, 8)) + (k3);
+    f0 = (h0 | shiftl32(h1, 26)) + k0;
+    f1 = (cshiftr32(h1, 6) | shiftl32(h2, 20)) + k1;
+    f2 = (cshiftr32(h2, 12) | shiftl32(h3, 14)) + k2;
+    f3 = (cshiftr32(h3, 18) | shiftl32(h4, 8)) + k3;
 
     var outByte = ByteData.view(out.buffer, out.offsetInBytes, out.length);
     pack32(f0 & 0xffffffff, outByte, outOff, Endian.little);

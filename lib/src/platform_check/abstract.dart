@@ -18,14 +18,14 @@ class PlatformGeneric extends Platform {
 
   @override
   EntropySource platformEntropySource() {
-    return _genericEntropySource();
+    return _GenericEntropySource();
   }
 }
 
 Platform getPlatform() => PlatformGeneric.instance;
 
 // Uses the built in entropy source
-class _genericEntropySource implements EntropySource {
+class _GenericEntropySource implements EntropySource {
   final _src = Random.secure();
 
   @override

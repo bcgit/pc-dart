@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.modes.ige_test;
-
 import 'package:pointycastle/pointycastle.dart';
 
 import '../test/runners/block_cipher.dart';

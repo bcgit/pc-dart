@@ -57,7 +57,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
     _engine.init(forEncryption, akparams);
 
-    _forPrivateKey = (akparams.key is PrivateKey);
+    _forPrivateKey = akparams.key is PrivateKey;
     _forEncryption = forEncryption;
   }
 
@@ -100,7 +100,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     }
 
     var block = Uint8List(_engine.inputBlockSize);
-    var padLength = (block.length - inpLen - 1);
+    var padLength = block.length - inpLen - 1;
 
     if (_forPrivateKey) {
       block[0] = 0x01; // type code 1
@@ -166,7 +166,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       throw ArgumentError('No data found in block, only padding');
     }
 
-    var rlen = (block.length - start);
+    var rlen = block.length - start;
     out.setRange(outOff, outOff + rlen, block.sublist(start));
     return rlen;
   }

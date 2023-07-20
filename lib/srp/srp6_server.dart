@@ -1,8 +1,8 @@
 library impl.srp_server;
 
+import 'package:pointycastle/api.dart';
 import 'package:pointycastle/srp/srp6_standard_groups.dart';
 import 'package:pointycastle/srp/srp6_util.dart';
-import 'package:pointycastle/api.dart';
 
 class SRP6Server implements SRPServer {
   late BigInt N;
@@ -69,7 +69,7 @@ class SRP6Server implements SRPServer {
   BigInt? generateServerCredentials() {
     var k = SRP6Util.calculateK(digest, N, g);
     b = selectPrivateValue();
-    B = ((k * v + g.modPow(b!, N)) % N);
+    B = (k * v + g.modPow(b!, N)) % N;
 
     return B;
   }

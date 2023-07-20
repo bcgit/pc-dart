@@ -23,7 +23,7 @@ class ECDHTestvector {
 }
 
 class P256Testvector extends ECDHTestvector {
-  P256Testvector(index, String a, String bx, String by, String z)
+  P256Testvector(int index, String a, String bx, String by, String z)
       : super(index, a, bx, by, z, ECDomainParameters('secp256r1'));
 }
 
@@ -201,7 +201,7 @@ void main() {
       return pcecKeyPair;
     }
 
-    for (int i = 0; i < 100; i++) {
+    for (var i = 0; i < 100; i++) {
       var key1 = generateKeyPair(i);
       var key2 = generateKeyPair(i + 1);
       var ecdsa1 = ECDHBasicAgreement()..init(key1.privateKey as ECPrivateKey);
@@ -280,7 +280,7 @@ void main() {
 
   test('Test ECDH with bouncycastle derived testvector for brainpool', () {
     var z = BigInt.parse(
-            "62035452719449902544084895701129591677592844515050058000761959332847413670618")
+            '62035452719449902544084895701129591677592844515050058000761959332847413670618')
         .toRadixString(16);
     var bx = BigInt.parse(
             '53535355328855043322505278710464138773506437230442680203030305357393812004243')

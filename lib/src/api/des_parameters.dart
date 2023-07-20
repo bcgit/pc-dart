@@ -1,4 +1,4 @@
-part of api;
+part of '../../api.dart';
 
 class DESParameters extends KeyParameter {
   final int DES_KEY_LENGTH = 8;

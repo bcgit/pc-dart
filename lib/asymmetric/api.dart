@@ -33,13 +33,9 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
   /// The optional parameter is retained for backward compatibility, but it
   /// does not need to be provided.
 
-  RSAPrivateKey(
-      BigInt modulus,
-      BigInt privateExponent,
-      this.p,
-      this.q,
+  RSAPrivateKey(BigInt modulus, BigInt privateExponent, this.p, this.q,
       [@Deprecated('Public exponent is calculated from the other values')
-          BigInt? publicExponent])
+      BigInt? publicExponent])
       : super(modulus, privateExponent) {
     // Check RSA relationship between p, q and modulus hold true.
 
@@ -49,8 +45,7 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 
     // Calculate the correct RSA public exponent
 
-    _pubExp =
-        privateExponent.modInverse(((p! - BigInt.one) * (q! - BigInt.one)));
+    _pubExp = privateExponent.modInverse((p! - BigInt.one) * (q! - BigInt.one));
 
     // If explicitly provided, the public exponent value must be correct.
     if (publicExponent != null && publicExponent != _pubExp) {
@@ -74,7 +69,7 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
   BigInt? get pubExponent => publicExponent;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is RSAPrivateKey) {
       return other.privateExponent == privateExponent &&
           other.modulus == modulus;
@@ -99,7 +94,7 @@ class RSAPublicKey extends RSAAsymmetricKey implements PublicKey {
   BigInt? get publicExponent => exponent;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is RSAPublicKey) {
       return (other.modulus == modulus) &&
           (other.publicExponent == publicExponent);
@@ -120,7 +115,7 @@ class RSASignature implements Signature {
   @override
   String toString() => bytes.toString();
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is! RSASignature) return false;
     if (other.bytes.length != bytes.length) return false;
 
@@ -146,7 +141,7 @@ class PSSSignature implements Signature {
   String toString() => bytes.toString();
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is! PSSSignature) return false;
     if (other.bytes.length != bytes.length) return false;
 

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.digests.blake2b_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/digests/blake2b.dart';
@@ -13,7 +11,7 @@ import '../test/src/helpers.dart';
 
 void main() {
   group('PR108 regression test', () {
-    test("vectors from: https://blake2.net/blake2b-test.txt", () {
+    test('vectors from: https://blake2.net/blake2b-test.txt', () {
       var vec = [
         [
           '',
@@ -47,7 +45,7 @@ void main() {
         ]
       ];
 
-      vec.forEach((set) {
+      for (var set in vec) {
         var input = createUint8ListFromHexString(set[0]);
         var key = createUint8ListFromHexString(set[1]);
         var dig = Blake2bDigest(key: key);
@@ -56,7 +54,7 @@ void main() {
         dig.doFinal(res, 0);
         var expected = createUint8ListFromHexString(set[2]);
         expect(res, equals(expected));
-      });
+      }
     });
   });
 

@@ -36,7 +36,7 @@ class ConcatKDFDerivator extends BaseKeyDerivator {
       counter[0] = (counterInt >> 24) & 255;
       counter[1] = (counterInt >> 16) & 255;
       counter[2] = (counterInt >> 8) & 255;
-      counter[3] = (counterInt) & 255;
+      counter[3] = counterInt & 255;
       _digest.update(counter, 0, 4);
       _digest.update(_parameters.ikm, 0, _parameters.ikm.length);
       _digest.update(_parameters.salt ?? inp.sublist(inpOff), 0,

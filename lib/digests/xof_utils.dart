@@ -29,7 +29,7 @@ class XofUtils {
     b[n] = n;
 
     for (var i = 0; i < n; i++) {
-      b[i] = (strLen >> (8 * (n - i - 1)));
+      b[i] = strLen >> (8 * (n - i - 1));
     }
 
     return b;

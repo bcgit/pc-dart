@@ -26,7 +26,7 @@ class ISO7816d4Padding extends BasePadding {
   /// number of bytes added.
   @override
   int addPadding(Uint8List data, int offset) {
-    var added = (data.length - offset);
+    var added = data.length - offset;
 
     data[offset] = 0x80;
     offset++;

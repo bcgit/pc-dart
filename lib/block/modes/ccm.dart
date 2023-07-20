@@ -25,8 +25,8 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
 
   late KeyParameter _keyParam;
 
-  var associatedText = BytesBuilder();
-  var data = BytesBuilder();
+  BytesBuilder associatedText = BytesBuilder();
+  BytesBuilder data = BytesBuilder();
 
   late bool _forEncryption;
 
@@ -54,7 +54,7 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
   }
 
   @override
-  void init(forEncryption, covariant CipherParameters params) {
+  void init(bool forEncryption, covariant CipherParameters params) {
     _forEncryption = forEncryption;
     KeyParameter key;
 
@@ -121,7 +121,7 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
     }
 
     var iv = Uint8List(blockSize);
-    iv[0] = ((q - 1) & 0x7);
+    iv[0] = (q - 1) & 0x7;
     arrayCopy(nonce, 0, iv, 1, nonce.length);
 
     BlockCipher ctrCipher =
@@ -234,7 +234,7 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
     var q = dataLen;
     var count = 1;
     while (q > 0) {
-      b0[b0.length - count] = (q & 0xff);
+      b0[b0.length - count] = q & 0xff;
       q = cshiftr32(q, 8);
       count++;
     }
@@ -249,16 +249,16 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
 
       var textLength = _getAssociatedTextLength();
       if (textLength < ((1 << 16) - (1 << 8))) {
-        cMac.updateByte((textLength >> 8));
+        cMac.updateByte(textLength >> 8);
         cMac.updateByte(textLength);
 
         extra = 2;
       } else {
         cMac.updateByte(0xff);
         cMac.updateByte(0xfe);
-        cMac.updateByte((textLength >> 24));
-        cMac.updateByte((textLength >> 16));
-        cMac.updateByte((textLength >> 8));
+        cMac.updateByte(textLength >> 24);
+        cMac.updateByte(textLength >> 16);
+        cMac.updateByte(textLength >> 8);
         cMac.updateByte(textLength);
 
         extra = 6;
@@ -315,8 +315,8 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
   }
 
   @override
-  int getOutputSize(int len) {
-    var totalData = len + data.length;
+  int getOutputSize(int length) {
+    var totalData = length + data.length;
 
     if (forEncryption) {
       return totalData + macSize;

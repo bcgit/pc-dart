@@ -30,19 +30,17 @@ class ASN1CertBag extends ASN1Object {
   ///
   /// Constructor to create the CertBag for a X509 Certificate.
   ///
-  ASN1CertBag.forX509Certificate(ASN1OctetString certValue) {
+  ASN1CertBag.forX509Certificate(ASN1OctetString this.certValue) {
     certId =
         ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.9.22.1');
-    this.certValue = certValue;
   }
 
   ///
   /// Constructor to create the CertBag for a SDSI Certificate.
   ///
-  ASN1CertBag.forSdsiCertificate(ASN1IA5String certValue) {
+  ASN1CertBag.forSdsiCertificate(ASN1IA5String this.certValue) {
     certId =
         ASN1ObjectIdentifier.fromIdentifierString('1.2.840.113549.1.9.22.2');
-    this.certValue = certValue;
   }
 
   ///

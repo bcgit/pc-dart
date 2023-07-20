@@ -1,11 +1,9 @@
 // See file LICENSE for more information.
 
-library src.impl.digests.long_sha2_family_digest;
-
 import 'dart:typed_data';
 
-import 'package:pointycastle/src/ufixnum.dart';
 import 'package:pointycastle/src/impl/base_digest.dart';
+import 'package:pointycastle/src/ufixnum.dart';
 
 /// Base implementation of SHA-2 family algorithms SHA-384 and SHA-512.
 abstract class LongSHA2FamilyDigest extends BaseDigest {
@@ -158,44 +156,92 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
     var t = 0;
     for (var i = 0; i < 10; i++) {
       // t = 8 * i
-      h..sum(_sum1(e))..sum(_ch(e, f, g))..sum(_k[t])..sum(_w[t++]);
+      h
+        ..sum(_sum1(e))
+        ..sum(_ch(e, f, g))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       d.sum(h);
-      h..sum(_sum0(a))..sum(_maj(a, b, c));
+      h
+        ..sum(_sum0(a))
+        ..sum(_maj(a, b, c));
 
       // t = 8 * i + 1
-      g..sum(_sum1(d))..sum(_ch(d, e, f))..sum(_k[t])..sum(_w[t++]);
+      g
+        ..sum(_sum1(d))
+        ..sum(_ch(d, e, f))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       c.sum(g);
-      g..sum(_sum0(h))..sum(_maj(h, a, b));
+      g
+        ..sum(_sum0(h))
+        ..sum(_maj(h, a, b));
 
       // t = 8 * i + 2
-      f..sum(_sum1(c))..sum(_ch(c, d, e))..sum(_k[t])..sum(_w[t++]);
+      f
+        ..sum(_sum1(c))
+        ..sum(_ch(c, d, e))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       b.sum(f);
-      f..sum(_sum0(g))..sum(_maj(g, h, a));
+      f
+        ..sum(_sum0(g))
+        ..sum(_maj(g, h, a));
 
       // t = 8 * i + 3
-      e..sum(_sum1(b))..sum(_ch(b, c, d))..sum(_k[t])..sum(_w[t++]);
+      e
+        ..sum(_sum1(b))
+        ..sum(_ch(b, c, d))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       a.sum(e);
-      e..sum(_sum0(f))..sum(_maj(f, g, h));
+      e
+        ..sum(_sum0(f))
+        ..sum(_maj(f, g, h));
 
       // t = 8 * i + 4
-      d..sum(_sum1(a))..sum(_ch(a, b, c))..sum(_k[t])..sum(_w[t++]);
+      d
+        ..sum(_sum1(a))
+        ..sum(_ch(a, b, c))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       h.sum(d);
-      d..sum(_sum0(e))..sum(_maj(e, f, g));
+      d
+        ..sum(_sum0(e))
+        ..sum(_maj(e, f, g));
 
       // t = 8 * i + 5
-      c..sum(_sum1(h))..sum(_ch(h, a, b))..sum(_k[t])..sum(_w[t++]);
+      c
+        ..sum(_sum1(h))
+        ..sum(_ch(h, a, b))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       g.sum(c);
-      c..sum(_sum0(d))..sum(_maj(d, e, f));
+      c
+        ..sum(_sum0(d))
+        ..sum(_maj(d, e, f));
 
       // t = 8 * i + 6
-      b..sum(_sum1(g))..sum(_ch(g, h, a))..sum(_k[t])..sum(_w[t++]);
+      b
+        ..sum(_sum1(g))
+        ..sum(_ch(g, h, a))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       f.sum(b);
-      b..sum(_sum0(c))..sum(_maj(c, d, e));
+      b
+        ..sum(_sum0(c))
+        ..sum(_maj(c, d, e));
 
       // t = 8 * i + 7
-      a..sum(_sum1(f))..sum(_ch(f, g, h))..sum(_k[t])..sum(_w[t++]);
+      a
+        ..sum(_sum1(f))
+        ..sum(_ch(f, g, h))
+        ..sum(_k[t])
+        ..sum(_w[t++]);
       e.sum(a);
-      a..sum(_sum0(b))..sum(_maj(b, c, d));
+      a
+        ..sum(_sum0(b))
+        ..sum(_maj(b, c, d));
     }
 
     h1.sum(a);

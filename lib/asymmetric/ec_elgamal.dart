@@ -48,7 +48,7 @@ class ECElGamalEncryptor implements ECEncryptor {
       _random = _newSecureRandom();
     }
     var k = akparams.key as ECAsymmetricKey;
-    if (!(k is ECPublicKey)) {
+    if (k is! ECPublicKey) {
       throw ArgumentError('ECPublicKey is required for encryption.');
     }
     _key = k;
@@ -72,7 +72,7 @@ class ECElGamalDecryptor implements ECDecryptor {
   void init(CipherParameters params) {
     var akparams = params as AsymmetricKeyParameter<AsymmetricKey>;
     var k = akparams.key as ECAsymmetricKey;
-    if (!(k is ECPrivateKey)) {
+    if (k is! ECPrivateKey) {
       throw ArgumentError('ECPrivateKey is required for decryption.');
     }
     _key = k;

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// The interface that a message digest conforms to.
 abstract class Digest extends Algorithm {

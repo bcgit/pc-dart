@@ -60,8 +60,7 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
 
       var macSizeBits = aeadParams.macSize;
       if ((MAC_SIZE * 8) != macSizeBits) {
-        throw ArgumentError(
-            'Invalid value for MAC size: ' + macSizeBits.toString());
+        throw ArgumentError('Invalid value for MAC size: $macSizeBits');
       }
 
       initKeyParam = aeadParams.parameters as KeyParameter;
@@ -117,7 +116,7 @@ class ChaCha20Poly1305 extends BaseAEADCipher {
       case State.ENC_DATA:
         return total + MAC_SIZE;
       default:
-        throw StateError('state = ' + _state.toString());
+        throw StateError('state = $_state');
     }
   }
 

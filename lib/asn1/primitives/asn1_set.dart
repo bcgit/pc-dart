@@ -50,11 +50,11 @@ class ASN1Set extends ASN1Object {
       valueByteLength = _childLength();
       valueBytes = Uint8List(valueByteLength!);
       var i = 0;
-      elements!.forEach((obj) {
+      for (var obj in elements!) {
         var b = obj.encode();
         valueBytes!.setRange(i, i + b.length, b);
         i += b.length;
-      });
+      }
     }
     return super.encode();
   }
@@ -64,9 +64,9 @@ class ASN1Set extends ASN1Object {
   ///
   int _childLength() {
     var l = 0;
-    elements!.forEach((ASN1Object obj) {
+    for (var obj in elements!) {
       l += obj.encode().length;
-    });
+    }
     return l;
   }
 

@@ -1,11 +1,7 @@
 // See file LICENSE for more information.
 
-library test.test.registry_tests;
-
 import 'package:pointycastle/pointycastle.dart';
-
 import 'package:test/test.dart';
-import 'package:matcher/matcher.dart';
 
 void testAsymmetricBlockCipher(String algorithmName) {
   var cipher = AsymmetricBlockCipher(algorithmName);

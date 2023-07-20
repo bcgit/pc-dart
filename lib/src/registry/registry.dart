@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.registry;
-
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/src/registry/registration.dart';
 

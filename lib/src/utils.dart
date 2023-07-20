@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.utils;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/src/platform_check/platform_check.dart';
@@ -33,10 +31,10 @@ bool constantTimeAreEqual(Uint8List expected, Uint8List supplied) {
   var nonEqual = expected.length ^ supplied.length;
 
   for (var i = 0; i != len; i++) {
-    nonEqual |= (expected[i] ^ supplied[i]);
+    nonEqual |= expected[i] ^ supplied[i];
   }
   for (var i = len; i < supplied.length; i++) {
-    nonEqual |= (supplied[i] ^ ~supplied[i]);
+    nonEqual |= supplied[i] ^ ~supplied[i];
   }
 
   return nonEqual == 0;
@@ -58,7 +56,7 @@ BigInt decodeBigInt(List<int> bytes) {
     result = BigInt.zero;
     for (var i = 0; i < bytes.length; i++) {
       var item = bytes[bytes.length - i - 1];
-      result |= (BigInt.from(item) << (8 * i));
+      result |= BigInt.from(item) << (8 * i);
     }
   }
   return result != BigInt.zero
@@ -86,7 +84,7 @@ BigInt decodeBigIntWithSign(int sign, List<int> magnitude) {
     result = BigInt.from(0);
     for (var i = 0; i < magnitude.length; i++) {
       var item = magnitude[magnitude.length - i - 1];
-      result |= (BigInt.from(item) << (8 * i));
+      result |= BigInt.from(item) << (8 * i);
     }
   }
 
@@ -160,7 +158,7 @@ bool constantTimeAreEqualOffset(
 
   var d = 0;
   for (var i = 0; i < len; ++i) {
-    d |= (a[aOff + i] ^ b[bOff + i]);
+    d |= a[aOff + i] ^ b[bOff + i];
   }
   return 0 == d;
 }
@@ -292,7 +290,7 @@ abstract class Longs {
     }
 
     var hi32 = (n >> 32) & 0xFFFFFFFF;
-    var lo32 = (n) & 0xFFFFFFFF;
+    var lo32 = n & 0xFFFFFFFF;
 
     if (distance >= 32) {
       var swap = hi32;
@@ -305,21 +303,21 @@ abstract class Longs {
       }
     }
 
-    final distance32 = (32 - distance);
+    final distance32 = 32 - distance;
     final m = _MASK32_HI_BITS[distance32];
 
     final hi32cp = hi32;
 
     hi32 = hi32 >> distance;
-    hi32 |= (((lo32 & m) << distance32) & _MASK_32);
+    hi32 |= ((lo32 & m) << distance32) & _MASK_32;
 
     lo32 = lo32 >> distance;
-    lo32 |= (((hi32cp & m) << distance32) & _MASK_32);
+    lo32 |= ((hi32cp & m) << distance32) & _MASK_32;
 
     return (hi32 << 32) | lo32;
   }
 
-  static int toInt32(int n) => (n & 0xFFFFFFFF);
+  static int toInt32(int n) => n & 0xFFFFFFFF;
 }
 
 const mask64 = (0xFFFFFFFF << 32) + 0xFFFFFFFF;
@@ -330,9 +328,9 @@ int unsignedShiftRight64(int n, int count) {
   } else {
     count &= 0x1f;
     if (n >= 0) {
-      return (n >> count);
+      return n >> count;
     } else {
-      return (n >> count) ^ ((mask64) ^ ((1 << (64 - count)) - 1));
+      return (n >> count) ^ (mask64 ^ ((1 << (64 - count)) - 1));
     }
   }
 }

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.random.fortuna_random_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
@@ -12,7 +10,7 @@ void main() {
   group('Fortuna:', () {
     final rnd = SecureRandom('Fortuna');
 
-    test('${rnd.algorithmName}', () {
+    test(rnd.algorithmName, () {
       final key = Uint8List(32);
       final keyParam = KeyParameter(key);
 

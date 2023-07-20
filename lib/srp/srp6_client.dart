@@ -2,9 +2,9 @@ library impl.srp_client;
 
 import 'dart:typed_data';
 
+import 'package:pointycastle/api.dart';
 import 'package:pointycastle/srp/srp6_standard_groups.dart';
 import 'package:pointycastle/srp/srp6_util.dart';
-import 'package:pointycastle/api.dart';
 
 class SRP6Client implements SRPClient {
   late BigInt N;
@@ -51,7 +51,7 @@ class SRP6Client implements SRPClient {
     var exp = (u! * x!) + a!;
     var tmp = g.modPow(x!, N) * (k % N);
 
-    return (B! - (tmp % (N))).modPow(exp, N);
+    return (B! - (tmp % N)).modPow(exp, N);
   }
 
   @override

@@ -42,7 +42,7 @@ class ASN1ObjectIdentifier extends ASN1Object {
     BigInt? bigValue;
     var list = <int>[];
     var sb = StringBuffer();
-    valueBytes!.forEach((element) {
+    for (var element in valueBytes!) {
       var b = element & 0xff;
       if (value < 0x80000000000000) {
         value = value * 128 + (b & 0x7f);
@@ -66,15 +66,15 @@ class ASN1ObjectIdentifier extends ASN1Object {
         }
       } else {
         bigValue ??= BigInt.from(value);
-        bigValue = bigValue! << (7);
-        bigValue = bigValue! | BigInt.from(b & 0x7f);
+        bigValue = bigValue << (7);
+        bigValue = bigValue | BigInt.from(b & 0x7f);
         if ((b & 0x80) == 0) {
           sb.write('.$bigValue');
           bigValue = null;
           value = 0;
         }
       }
-    });
+    }
     objectIdentifierAsString = sb.toString();
     objectIdentifier = Uint8List.fromList(list);
     var identifier =

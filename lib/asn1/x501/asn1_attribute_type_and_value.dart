@@ -28,7 +28,7 @@ class ASN1AttributeTypeAndValue extends ASN1Object {
     if (seq.elements == null || seq.elements!.length != 2) {
       throw ArgumentError('');
     }
-    if (!(seq.elements!.elementAt(0) is ASN1ObjectIdentifier)) {
+    if (seq.elements!.elementAt(0) is! ASN1ObjectIdentifier) {
       throw ArgumentError('Element at index 0 has to be ASN1ObjectIdentifier');
     }
     if (seq.elements!.elementAt(1) is ASN1TeletextString ||
