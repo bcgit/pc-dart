@@ -12,11 +12,11 @@ class PKCS12ParametersGenerator implements PBEParametersGenerator {
             return PKCS12ParametersGenerator(mac);
           });
 
-  static final int KEY_MATERIAL = 1;
+  static const int KEY_MATERIAL = 1;
 
-  static final int IV_MATERIAL = 2;
+  static const int IV_MATERIAL = 2;
 
-  static final int MAC_MATERIAL = 3;
+  static const int MAC_MATERIAL = 3;
 
   Digest digest;
 
@@ -81,7 +81,7 @@ class PKCS12ParametersGenerator implements PBEParametersGenerator {
     }
     Uint8List S;
     if (salt.isNotEmpty) {
-      S = Uint8List((v * (((salt.length + v) - 1) ~/ v)));
+      S = Uint8List(v * (((salt.length + v) - 1) ~/ v));
       for (var i = 0; i != S.length; i++) {
         S[i] = salt[i % salt.length];
       }
@@ -90,18 +90,18 @@ class PKCS12ParametersGenerator implements PBEParametersGenerator {
     }
     Uint8List P;
     if (password.isNotEmpty) {
-      P = Uint8List((v * (((password.length + v) - 1) ~/ v)));
+      P = Uint8List(v * (((password.length + v) - 1) ~/ v));
       for (var i = 0; i != P.length; i++) {
         P[i] = password[i % password.length];
       }
     } else {
       P = Uint8List(0);
     }
-    var I = Uint8List((S.length + P.length));
+    var I = Uint8List(S.length + P.length);
     _arrayCopy(S, 0, I, 0, S.length);
     _arrayCopy(P, 0, I, S.length, P.length);
     var B = Uint8List(v);
-    var c = (((n + u) - 1) ~/ u);
+    var c = ((n + u) - 1) ~/ u;
     var A = Uint8List(u);
     for (var i = 1; i <= c; i++) {
       digest.update(D, 0, D.length);

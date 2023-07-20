@@ -9,6 +9,7 @@
 ///
 /// This program was written to check some of the "magic values" in the
 /// Pointy Castle source code.
+library;
 
 import 'dart:typed_data';
 
@@ -124,7 +125,7 @@ List<int> decodeBERObjectIdentifier(Uint8List bytes) {
     throw const FormatException('incomplete OID content');
   }
   if ((contentStart + contentLength) < bytes.length) {
-    throw const FormatException(('extra bytes after OID'));
+    throw const FormatException('extra bytes after OID');
   }
 
   return components;
@@ -180,13 +181,13 @@ Uint8List encodeBERObjectIdentifier(String oidStr, {int tag = 0x06}) {
 
   if (bytes.length - 2 < 127) {
     // Length can be represented by a single byte: use the bytes as the result
-    bytes[1] = (bytes.length - 2);
+    bytes[1] = bytes.length - 2;
     return Uint8List.fromList(bytes);
   } else {
     // Length needs multiple bytes: create bigger list and copy the bytes to it
 
     final lengthEnc = <int>[]; // first encode the length (temporary LSB order)
-    var v = (bytes.length - 2);
+    var v = bytes.length - 2;
     while (0 < v) {
       lengthEnc.add(v & 0x7F);
       v >>= 7;

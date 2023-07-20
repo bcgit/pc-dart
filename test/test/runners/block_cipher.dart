@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.test.block_cipher_tests;
-
 import 'dart:typed_data';
 
 import 'package:test/test.dart';
@@ -17,7 +15,7 @@ void runBlockCipherTests(BlockCipher cipher, CipherParameters? params,
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i + 1];
 
-        test('${formatAsTruncated(plainText)}',
+        test(formatAsTruncated(plainText),
             () => _runBlockCipherTest(cipher, params, plainText, cipherText));
       }
     });
@@ -27,7 +25,7 @@ void runBlockCipherTests(BlockCipher cipher, CipherParameters? params,
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i + 1];
 
-        test('${formatAsTruncated(plainText)}',
+        test(formatAsTruncated(plainText),
             () => _runBlockDecipherTest(cipher, params, cipherText, plainText));
       }
     });

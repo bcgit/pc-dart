@@ -314,7 +314,7 @@ class RC2Engine extends BaseBlockCipher {
     var newKey = List<int>.generate(64, (index) => 0);
 
     for (var i = 0; i != newKey.length; i++) {
-      newKey[i] = (xKey[2 * i] + (xKey[2 * i + 1] << 8));
+      newKey[i] = xKey[2 * i] + (xKey[2 * i + 1] << 8);
     }
 
     return newKey;
@@ -426,13 +426,13 @@ class RC2Engine extends BaseBlockCipher {
     }
 
     out[outOff + 0] = x10;
-    out[outOff + 1] = (x10 >> 8);
+    out[outOff + 1] = x10 >> 8;
     out[outOff + 2] = x32;
-    out[outOff + 3] = (x32 >> 8);
+    out[outOff + 3] = x32 >> 8;
     out[outOff + 4] = x54;
-    out[outOff + 5] = (x54 >> 8);
+    out[outOff + 5] = x54 >> 8;
     out[outOff + 6] = x76;
-    out[outOff + 7] = (x76 >> 8);
+    out[outOff + 7] = x76 >> 8;
   }
 
   void decryptBlock(Uint8List input, int inOff, Uint8List out, int outOff) {
@@ -487,12 +487,12 @@ class RC2Engine extends BaseBlockCipher {
     }
 
     out[outOff + 0] = x10;
-    out[outOff + 1] = (x10 >> 8);
+    out[outOff + 1] = x10 >> 8;
     out[outOff + 2] = x32;
-    out[outOff + 3] = (x32 >> 8);
+    out[outOff + 3] = x32 >> 8;
     out[outOff + 4] = x54;
-    out[outOff + 5] = (x54 >> 8);
+    out[outOff + 5] = x54 >> 8;
     out[outOff + 6] = x76;
-    out[outOff + 7] = (x76 >> 8);
+    out[outOff + 7] = x76 >> 8;
   }
 }

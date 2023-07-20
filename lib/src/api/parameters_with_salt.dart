@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// [CipherParameters] consisting of an underlying [CipherParameters] (of type
 /// [UnderlyingParameters]) and an acompanying salt of type [Uint8List].

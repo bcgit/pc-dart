@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.stream.chacha20_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';

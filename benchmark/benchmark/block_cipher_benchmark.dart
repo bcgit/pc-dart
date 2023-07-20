@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library benchmark.benchmark.block_cipher_benchmark;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';

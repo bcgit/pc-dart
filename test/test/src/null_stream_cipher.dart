@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library impl.stream_cipher.test.src.null_stream_cipher;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';

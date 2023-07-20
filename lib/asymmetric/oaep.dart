@@ -379,7 +379,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
     // 5.2 Check length
 
-    var wrongData = (block.length < (2 * defHash.length) + 1);
+    var wrongData = block.length < (2 * defHash.length) + 1;
 
     // 5.4 Calculate _seedMask_ = MGF(maskedDB, hLen)
     //

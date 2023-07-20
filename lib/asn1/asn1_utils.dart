@@ -47,7 +47,7 @@ class ASN1Utils {
       length = 0;
       for (var i = 0; i < numLengthBytes; i++) {
         length <<= 8;
-        length |= (encodedBytes[valueStartPosition++] & 0xFF);
+        length |= encodedBytes[valueStartPosition++] & 0xFF;
       }
       return length;
     }
@@ -125,7 +125,7 @@ class ASN1Utils {
         .map((line) => line.trim())
         .where((line) => line.isNotEmpty)
         .toList();
-    var base64;
+    String base64;
     if (checkHeader) {
       if (lines.length < 2 ||
           !lines.first.startsWith('-----BEGIN') ||
@@ -145,8 +145,8 @@ class ASN1Utils {
       {bool pkcs8 = false}) {
     var asn1Parser = ASN1Parser(bytes);
     var topLevelSeq = asn1Parser.nextObject() as ASN1Sequence;
-    var curveName;
-    var x;
+    late String curveName;
+    Uint8List x;
     if (pkcs8) {
       // Parse the PKCS8 format
       var innerSeq = topLevelSeq.elements!.elementAt(1) as ASN1Sequence;
@@ -154,7 +154,7 @@ class ASN1Utils {
       var b2Data = b2.objectIdentifierAsString;
       var b2Curvedata = ObjectIdentifiers.getIdentifierByIdentifier(b2Data);
       if (b2Curvedata != null) {
-        curveName = b2Curvedata['readableName'];
+        curveName = b2Curvedata['readableName'] as String;
       }
 
       var octetString = topLevelSeq.elements!.elementAt(2) as ASN1OctetString;
@@ -178,7 +178,7 @@ class ASN1Utils {
       var data = ObjectIdentifiers.getIdentifierByIdentifier(
           curveNameOi.objectIdentifierAsString);
       if (data != null) {
-        curveName = data['readableName'];
+        curveName = data['readableName'] as String;
       }
 
       x = privateKeyAsOctetString.valueBytes!;

@@ -705,7 +705,7 @@ class DesBase {
       if (encrypting) {
         m = shiftl32(i, 1);
       } else {
-        m = shiftl32((15 - i), 1);
+        m = shiftl32(15 - i, 1);
       }
 
       n = m + 1;
@@ -749,14 +749,14 @@ class DesBase {
       i1 = newKey[i];
       i2 = newKey[i + 1];
 
-      newKey[i] = (shiftl32((i1 & 0x00fc0000), 6)) |
-          (shiftl32((i1 & 0x00000fc0), 10)) |
-          (shiftr32((i2 & 0x00fc0000), 10)) |
-          (shiftr32((i2 & 0x00000fc0), 6));
+      newKey[i] = (shiftl32(i1 & 0x00fc0000, 6)) |
+          (shiftl32(i1 & 0x00000fc0, 10)) |
+          (shiftr32(i2 & 0x00fc0000, 10)) |
+          (shiftr32(i2 & 0x00000fc0, 6));
 
-      newKey[i + 1] = (shiftl32((i1 & 0x0003f000), 12)) |
-          (shiftl32((i1 & 0x0000003f), 16)) |
-          (shiftr32((i2 & 0x0003f000), 4)) |
+      newKey[i + 1] = (shiftl32(i1 & 0x0003f000, 12)) |
+          (shiftl32(i1 & 0x0000003f, 16)) |
+          (shiftr32(i2 & 0x0003f000, 4)) |
           (i2 & 0x0000003f);
     }
 
@@ -777,16 +777,16 @@ class DesBase {
 
     work = ((shiftr32(left, 4)) ^ right) & 0x0f0f0f0f;
     right ^= work;
-    left ^= (shiftl32(work, 4));
+    left ^= shiftl32(work, 4);
     work = ((shiftr32(left, 16)) ^ right) & 0x0000ffff;
     right ^= work;
-    left ^= (shiftl32(work, 16));
+    left ^= shiftl32(work, 16);
     work = ((shiftr32(right, 2)) ^ left) & 0x33333333;
     left ^= work;
-    right ^= (shiftl32(work, 2));
+    right ^= shiftl32(work, 2);
     work = ((shiftr32(right, 8)) ^ left) & 0x00ff00ff;
     left ^= work;
-    right ^= (shiftl32(work, 8));
+    right ^= shiftl32(work, 8);
     right = (shiftl32(right, 1)) | (shiftr32(right, 31));
     work = (left ^ right) & 0xaaaaaaaa;
     left ^= work;
@@ -828,16 +828,16 @@ class DesBase {
     left = (shiftl32(left, 31)) | (shiftr32(left, 1));
     work = ((shiftr32(left, 8)) ^ right) & 0x00ff00ff;
     right ^= work;
-    left ^= (shiftl32(work, 8));
+    left ^= shiftl32(work, 8);
     work = ((shiftr32(left, 2)) ^ right) & 0x33333333;
     right ^= work;
-    left ^= (shiftl32(work, 2));
+    left ^= shiftl32(work, 2);
     work = ((shiftr32(right, 16)) ^ left) & 0x0000ffff;
     left ^= work;
-    right ^= (shiftl32(work, 16));
+    right ^= shiftl32(work, 16);
     work = ((shiftr32(right, 4)) ^ left) & 0x0f0f0f0f;
     left ^= work;
-    right ^= (shiftl32(work, 4));
+    right ^= shiftl32(work, 4);
 
     _intToBigEndian(right, out, outOff);
     _intToBigEndian(left, out, outOff + 4);
@@ -847,14 +847,14 @@ class DesBase {
     bs[off] = shiftr32(n, 24);
     bs[++off] = shiftr32(n, 16);
     bs[++off] = shiftr32(n, 8);
-    bs[++off] = (n);
+    bs[++off] = n;
   }
 
   int _bigEndianToInt(Uint8List bs, int off) {
     var n = shiftl32(bs[off], 24);
-    n |= shiftl32((bs[++off] & 0xff), 16);
-    n |= shiftl32((bs[++off] & 0xff), 8);
-    n |= (bs[++off] & 0xff);
+    n |= shiftl32(bs[++off] & 0xff, 16);
+    n |= shiftl32(bs[++off] & 0xff, 8);
+    n |= bs[++off] & 0xff;
     return n;
   }
 }

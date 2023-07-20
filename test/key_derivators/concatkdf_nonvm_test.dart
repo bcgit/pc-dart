@@ -24,7 +24,7 @@ Uint8List nullSafeBytes(dynamic src) {
 }
 
 void main() {
-  var acvpToDart = Map();
+  var acvpToDart = {};
   acvpToDart['SHA2-224'] = 'SHA-224';
   acvpToDart['SHA2-256'] = 'SHA-256';
   acvpToDart['SHA2-384'] = 'SHA-384';
@@ -56,19 +56,17 @@ void main() {
       // Form a maps of known correct results.
       //
 
-      var validDKMAFT = Map<String, Uint8List>();
-      var validVALResult = Map<String, bool>();
+      var validDKMAFT = <String, Uint8List>{};
+      var validVALResult = <String, bool>{};
 
       rsp[1]['testGroups'].forEach((group) {
         group['tests'].forEach((test) {
           if (test['dkm'] != null) {
-            validDKMAFT[
-                    group['tgId'].toString() + ':' + test['tcId'].toString()] =
+            validDKMAFT['${group['tgId']}:${test['tcId']}'] =
                 createUint8ListFromHexString(test['dkm']);
           } else {
-            validVALResult[group['tgId'].toString() +
-                ':' +
-                test['tcId'].toString()] = test['testPassed'];
+            validVALResult['${group['tgId']}:${test['tcId']}'] =
+                test['testPassed'];
           }
         });
       });
@@ -109,8 +107,7 @@ void main() {
             // AFT test, IUT must generate a DKM that must match what NIST
             // is expecting.
             //
-            var knownDKM = validDKMAFT[
-                group['tgId'].toString() + ':' + test['tcId'].toString()];
+            var knownDKM = validDKMAFT['${group['tgId']}:${test['tcId']}'];
             expect(key, equals(knownDKM));
           } else {
             // VAL test
@@ -121,9 +118,7 @@ void main() {
             var dkm = createUint8ListFromHexString(test['dkm']);
             var tp = constantTimeAreEqual(dkm, key);
             expect(
-                validVALResult[
-                    group['tgId'].toString() + ':' + test['tcId'].toString()],
-                equals(tp));
+                validVALResult['${group['tgId']}:${test['tcId']}'], equals(tp));
           }
         });
       });
@@ -253,14 +248,13 @@ void main() {
 }
 
 // Helpers for ECDH-ES
-Uint8List computerOtherInfo(
-    String _encryptionAlgorithmName, int _keybitLength) {
-  var l = _encryptionAlgorithmName.codeUnits.length.toUnsigned(32);
+Uint8List computerOtherInfo(String encryptionAlgorithmName, int keybitLength) {
+  var l = encryptionAlgorithmName.codeUnits.length.toUnsigned(32);
   var ll = _convertToBigEndian(l);
-  var a = Uint8List.fromList(_encryptionAlgorithmName.codeUnits);
+  var a = Uint8List.fromList(encryptionAlgorithmName.codeUnits);
 // add apu, apv, fixed to empty for now
   var zero = _convertToBigEndian(0);
-  var k = _convertToBigEndian(_keybitLength);
+  var k = _convertToBigEndian(keybitLength);
   return Uint8List.fromList([...ll, ...a, ...zero, ...zero, ...k]);
 }
 
@@ -269,12 +263,12 @@ Uint8List _convertToBigEndian(int l) {
   ll[0] = (l >> 24) & 255;
   ll[1] = (l >> 16) & 255;
   ll[2] = (l >> 8) & 255;
-  ll[3] = (l) & 255;
+  ll[3] = l & 255;
   return ll;
 }
 
-dynamic loadRsp() {
-  var s = '''[
+List loadRsp() {
+  const s = '''[
 {
   "acvVersion": "1.0"
   },
@@ -2088,7 +2082,7 @@ dynamic loadRsp() {
 }
 
 dynamic loadReq() {
-  var s = '''[
+  const s = '''[
   {
     "acvVersion": "1.0"
   },

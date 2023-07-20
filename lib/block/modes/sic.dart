@@ -19,6 +19,5 @@ class SICBlockCipher extends StreamCipherAsBlockCipher {
                 underlying.blockSize, SICStreamCipher(underlying));
           });
 
-  SICBlockCipher(int blockSize, StreamCipher underlyingCipher)
-      : super(blockSize, underlyingCipher);
+  SICBlockCipher(super.blockSize, super.underlyingCipher);
 }

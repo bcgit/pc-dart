@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.test.signer_tests;
-
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
@@ -16,7 +14,7 @@ void runSignerTests(Signer signer, CipherParameters Function() signParams,
         var signature = messageSignaturePairs[i + 1];
 
         test(
-            '${formatAsTruncated(message as String)}',
+            formatAsTruncated(message as String),
             () => _runGenerateSignatureTest(
                 signer, signParams, message, signature as Signature));
       }
@@ -28,7 +26,7 @@ void runSignerTests(Signer signer, CipherParameters Function() signParams,
         var signature = messageSignaturePairs[i + 1];
 
         test(
-            '${formatAsTruncated(message as String)}',
+            formatAsTruncated(message as String),
             () => _runVerifySignatureTest(
                 signer, verifyParams, message, signature as Signature));
       }
@@ -71,7 +69,7 @@ void runSignerTestsFail(Signer signer, CipherParameters Function() signParams,
         var signature = messageSignaturePairs[i + 1];
 
         test(
-            '${formatAsTruncated(message as String)}',
+            formatAsTruncated(message as String),
             () => _runGenerateSignatureTestFail(
                 signer, signParams, message, signature as Signature));
       }
@@ -83,7 +81,7 @@ void runSignerTestsFail(Signer signer, CipherParameters Function() signParams,
         var signature = messageSignaturePairs[i + 1];
 
         test(
-            '${formatAsTruncated(message as String)}',
+            formatAsTruncated(message as String),
             () => _runVerifySignatureTestFail(
                 signer, verifyParams, message, signature as Signature));
       }

@@ -27,8 +27,7 @@ class ASN1Integer extends ASN1Object {
   ///
   /// Creates an [ASN1Integer] entity from the given [encodedBytes].
   ///
-  ASN1Integer.fromBytes(Uint8List encodedBytes)
-      : super.fromBytes(encodedBytes) {
+  ASN1Integer.fromBytes(Uint8List super.encodedBytes) : super.fromBytes() {
     integer = decodeBigInt(valueBytes!);
   }
 

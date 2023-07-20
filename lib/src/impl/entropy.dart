@@ -1,5 +1,3 @@
-library impl.entropy;
-
 import 'dart:typed_data';
 
 /// Defines an entropy source, this is not to be confused with a rng.

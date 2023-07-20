@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// The interface that a symmetric key derivator conforms to.
 ///

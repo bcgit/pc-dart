@@ -7,6 +7,7 @@
 ///     dart hmac-sha256.dart "mykey" "Hello world!"
 ///
 /// Note: this example use Pointy Castle WITH the registry.
+library;
 
 import 'dart:convert';
 import 'dart:typed_data';

@@ -81,7 +81,7 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
           'lanes must be less than $MAX_PARALLELISM');
     } else if (parameters.memory < 2 * parameters.lanes) {
       throw ArgumentError.value(parameters.memory, 'parameters.memory',
-          'memory is less than: ${(2 * parameters.lanes)} expected ${(2 * parameters.lanes)}');
+          'memory is less than: ${2 * parameters.lanes} expected ${2 * parameters.lanes}');
     } else if (parameters.iterations < MIN_ITERATIONS) {
       throw ArgumentError.value(parameters.iterations, 'parameters.iterations',
           'iterations is less than: $MIN_ITERATIONS');
@@ -188,7 +188,7 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
 
       /* 2 Creating a new block */
       var prevBlock = _memory[prevOffset];
-      var refBlock = _memory[((_laneLength) * refLane + refColumn)];
+      var refBlock = _memory[(_laneLength * refLane + refColumn)];
       var currentBlock = _memory[currentOffset];
 
       if (withXor) {
@@ -270,7 +270,7 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
   }
 
   int _getRefLane(_Position position, int pseudoRandom) {
-    var refLane = (unsignedShiftRight64(pseudoRandom, 32) % _parameters.lanes);
+    var refLane = unsignedShiftRight64(pseudoRandom, 32) % _parameters.lanes;
 
     if ((position.pass == 0) && (position.slice == 0)) {
       /* Can not reference other lanes yet */
@@ -446,7 +446,7 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
     }
   }
 
-  static int _intToLong(int x) => (x & M32L);
+  static int _intToLong(int x) => x & M32L;
 }
 
 class _FillBlock {
@@ -642,11 +642,11 @@ class _Block {
 }
 
 class _Position {
-  int pass;
-  int lane;
-  int slice;
+  late int pass;
+  late int lane;
+  late int slice;
 
-  _Position([this.pass = 0, this.lane = 0, this.slice = 0]);
+  _Position();
 }
 
 extension _SetFrom<T> on List<T> {

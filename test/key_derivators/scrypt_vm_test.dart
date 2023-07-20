@@ -17,7 +17,7 @@ import '../test/src/helpers.dart';
 /// [http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-00#page-10] (which at the time of writing
 /// this test had typos because it interchanged N and r parameters).
 void main() {
-  group("scrypt - vm ", () {
+  group('scrypt - vm ', () {
     var scrypt = KeyDerivator('scrypt');
     runKeyDerivatorTests(scrypt, [
       ScryptParameters(1024, 8, 16, 64, createUint8ListFromString('NaCl')),

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.digests.sm3_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
@@ -20,8 +18,8 @@ void main() {
     'debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732',
   ]);
 
-  group("optional SM3 tests", () {
-    test("64K Digest", () {
+  group('optional SM3 tests', () {
+    test('64K Digest', () {
       var dig = Digest('SM3');
 
       for (var i = 0; i < 65536; i++) {

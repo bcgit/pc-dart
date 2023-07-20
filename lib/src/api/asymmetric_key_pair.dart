@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// A pair of public and private asymmetric keys.
 class AsymmetricKeyPair<B extends PublicKey, V extends PrivateKey> {

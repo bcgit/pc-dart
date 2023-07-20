@@ -17,7 +17,7 @@ class ASN1Null extends ASN1Object {
   ///
   /// Creates an [ASN1Null] entity from the given [encodedBytes].
   ///
-  ASN1Null.fromBytes(Uint8List encodedBytes) : super.fromBytes(encodedBytes);
+  ASN1Null.fromBytes(Uint8List super.encodedBytes) : super.fromBytes();
 
   ///
   /// Encode the [ASN1Null] to the byte representation.

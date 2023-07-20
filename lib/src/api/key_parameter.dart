@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// [CipherParameters] consisting of just a key of arbitrary length.
 class KeyParameter extends CipherParameters {

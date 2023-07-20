@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.impl.digests.keccak_engine;
-
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -84,7 +82,7 @@ abstract class KeccakEngine extends BaseDigest {
   int get byteLength => _rate ~/ 8;
 
   @override
-  int get digestSize => (fixedOutputLength ~/ 8);
+  int get digestSize => fixedOutputLength ~/ 8;
 
   int get rate => _rate;
 
@@ -147,7 +145,7 @@ abstract class KeccakEngine extends BaseDigest {
     var available = rateBytes - bytesInQueue;
     if (len < available) {
       _dataQueue.setRange(bytesInQueue, bytesInQueue + len, data, off);
-      _bitsInQueue += (len << 3);
+      _bitsInQueue += len << 3;
       return;
     }
 
@@ -160,17 +158,13 @@ abstract class KeccakEngine extends BaseDigest {
     }
 
     int remaining;
-    while ((remaining = (len - count)) >= rateBytes) {
+    while ((remaining = len - count) >= rateBytes) {
       _keccakAbsorb(data, off + count);
       count += rateBytes;
     }
 
     _dataQueue.setRange(0, remaining, data, off + count);
     _bitsInQueue = remaining << 3;
-  }
-
-  void _clearDataQueueSection(int off, int len) {
-    _dataQueue.fillRange(off, off + len, 0);
   }
 
   void _doUpdate(Uint8List data, int off, int len) {
@@ -194,21 +188,6 @@ abstract class KeccakEngine extends BaseDigest {
     fixedOutputLength = (1600 - theRate) ~/ 2;
   }
 
-  void _absorb(int data) {
-    if ((_bitsInQueue % ~8) != 0) {
-      throw StateError('attempt to absorb with odd length queue');
-    }
-    if (squeezing) {
-      throw StateError('attempt to absorb while squeezing');
-    }
-
-    dataQueue[_bitsInQueue >> 3] = data & 0xFF;
-    if ((_bitsInQueue += 8) == _rate) {
-      _keccakAbsorb(_dataQueue, 0);
-      _bitsInQueue = 0;
-    }
-  }
-
   void _keccakAbsorb(Uint8List? data, int off) {
     var count = _rate >> 3;
     for (var i = 0; i < count; ++i) {
@@ -220,7 +199,7 @@ abstract class KeccakEngine extends BaseDigest {
   void _keccakExtract() {
     _keccakPermutation();
 
-    _dataQueue.setRange(0, (_rate >> 3), _state);
+    _dataQueue.setRange(0, _rate >> 3, _state);
     _bitsInQueue = _rate;
   }
 
@@ -253,11 +232,11 @@ abstract class KeccakEngine extends BaseDigest {
   }
 
   void _padAndSwitchToSqueezingPhase() {
-    _dataQueue[_bitsInQueue >> 3] |= (1 << (_bitsInQueue & 7));
+    _dataQueue[_bitsInQueue >> 3] |= 1 << (_bitsInQueue & 7);
     if (++_bitsInQueue == _rate) {
       _keccakAbsorb(_dataQueue, 0);
     } else {
-      var full = (_bitsInQueue >> 6), partial = _bitsInQueue & 63;
+      var full = _bitsInQueue >> 6, partial = _bitsInQueue & 63;
       for (var i = 0; i < full * 8; ++i) {
         _state[i] ^= _dataQueue[i];
       }
@@ -278,7 +257,7 @@ abstract class KeccakEngine extends BaseDigest {
       }
     }
 
-    _state[((_rate - 1) >> 3)] ^= (1 << 7);
+    _state[((_rate - 1) >> 3)] ^= 1 << 7;
     _bitsInQueue = 0;
     _squeezing = true;
   }

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library benchmark.digests.sha3_benchmark;
-
 import '../benchmark/digest_benchmark.dart';
 
 void main() {
