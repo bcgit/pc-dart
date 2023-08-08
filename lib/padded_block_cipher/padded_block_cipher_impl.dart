@@ -30,7 +30,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   @override
   String get algorithmName =>
-      cipher.algorithmName + '/' + padding.algorithmName;
+      '${cipher.algorithmName}/${padding.algorithmName}';
 
   @override
   int get blockSize => cipher.blockSize;
@@ -66,11 +66,11 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
     var out = Uint8List(outputBlocks * blockSize);
 
     for (var i = 0; i < (inputBlocks - 1); i++) {
-      var offset = (i * blockSize);
+      var offset = i * blockSize;
       processBlock(data, offset, out, offset);
     }
 
-    var lastBlockOffset = ((inputBlocks - 1) * blockSize);
+    var lastBlockOffset = (inputBlocks - 1) * blockSize;
     var lastBlockSize = doFinal(data, lastBlockOffset, out, lastBlockOffset);
 
     return out.sublist(0, lastBlockOffset + lastBlockSize);
@@ -90,7 +90,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
       if (remainder < blockSize) {
         // Padding goes embedded in last block of data
-        padding.addPadding(lastInputBlock, (inp.length - inpOff));
+        padding.addPadding(lastInputBlock, inp.length - inpOff);
 
         processBlock(lastInputBlock, 0, out, outOff);
 

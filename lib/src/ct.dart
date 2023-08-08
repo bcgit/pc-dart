@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.utils;
-
 import 'dart:typed_data';
 
 ///

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library pointycastle.benchmark.all_benchmarks;
-
 import './block/aes_benchmark.dart' as aes_benchmark;
 import './digests/md2_benchmark.dart' as md2_benchmark;
 import './digests/md4_benchmark.dart' as md4_benchmark;

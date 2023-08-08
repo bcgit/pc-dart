@@ -117,9 +117,9 @@ class SHA224Digest extends MD4FamilyDigest implements Digest {
     state[7] = clip32(state[7] + h);
   }
 
-  int _ch(int x, int y, int z) => ((x & y) ^ ((~x) & z));
+  int _ch(int x, int y, int z) => (x & y) ^ ((~x) & z);
 
-  int _maj(int x, int y, int z) => ((x & y) ^ (x & z) ^ (y & z));
+  int _maj(int x, int y, int z) => (x & y) ^ (x & z) ^ (y & z);
 
   int _sum0(int x) => rotr32(x, 2) ^ rotr32(x, 13) ^ rotr32(x, 22);
 

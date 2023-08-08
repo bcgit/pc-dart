@@ -34,11 +34,11 @@ class ECCurve_gostr3410_2001_cryptopro_xcha extends ECDomainParametersImpl {
       seed: null) as ECCurve_gostr3410_2001_cryptopro_xcha;
 
   static ECCurve_gostr3410_2001_cryptopro_xcha _make(String domainName,
-          ECCurve curve, ECPoint G, BigInt n, BigInt _h, List<int>? seed) =>
+          ECCurve curve, ECPoint G, BigInt n, BigInt h, List<int>? seed) =>
       ECCurve_gostr3410_2001_cryptopro_xcha._super(
-          domainName, curve, G, n, _h, seed);
+          domainName, curve, G, n, h, seed);
 
   ECCurve_gostr3410_2001_cryptopro_xcha._super(String domainName, ECCurve curve,
-      ECPoint G, BigInt n, BigInt _h, List<int>? seed)
-      : super(domainName, curve, G, n, _h, seed);
+      ECPoint G, BigInt n, BigInt h, List<int>? seed)
+      : super(domainName, curve, G, n, h, seed);
 }

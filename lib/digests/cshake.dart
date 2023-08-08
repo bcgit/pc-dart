@@ -62,7 +62,7 @@ class CSHAKEDigest extends SHAKEDigest implements Xof {
         absorbBits(0x00, 2);
       }
 
-      squeeze(out, outOff, (outLen) * 8);
+      squeeze(out, outOff, outLen * 8);
 
       return outLen;
     } else {

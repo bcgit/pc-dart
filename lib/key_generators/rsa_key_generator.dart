@@ -96,7 +96,7 @@ class RSAKeyGenerator implements KeyGenerator {
       }
 
       // calculate the modulus
-      n = (p * q);
+      n = p * q;
 
       if (n.bitLength == _params.bitStrength) {
         break;
@@ -114,11 +114,12 @@ class RSAKeyGenerator implements KeyGenerator {
     }
 
     // calculate the private exponent
-    var pSub1 = (p - BigInt.one);
-    var qSub1 = (q - BigInt.one);
-    var phi = (pSub1 * qSub1);
+    var pSub1 = p - BigInt.one;
+    var qSub1 = q - BigInt.one;
+    var phi = pSub1 * qSub1;
     var d = e.modInverse(phi);
 
+    // ignore: deprecated_member_use_from_same_package
     return AsymmetricKeyPair(RSAPublicKey(n, e), RSAPrivateKey(n, d, p, q, e));
   }
 }
@@ -285,7 +286,7 @@ bool _millerRabin(BigInt b, int t) {
 /// test primality with certainty >= 1-.5^t */
 bool _isProbablePrime(BigInt b, int t) {
   // Implementation borrowed from bignum.BigIntegerDartvm.
-  var i;
+  int i;
   var x = b.abs();
   if (b <= _lowprimes.last) {
     for (i = 0; i < _lowprimes.length; ++i) {

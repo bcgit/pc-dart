@@ -24,7 +24,7 @@ class Scrypt extends BaseKeyDerivator {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(KeyDerivator, 'scrypt', () => Scrypt());
 
-  static final int _maxValue = 0x7fffffff;
+  static const int _maxValue = 0x7fffffff;
 
   ScryptParameters? _params;
 

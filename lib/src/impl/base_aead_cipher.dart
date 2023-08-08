@@ -1,5 +1,3 @@
-library src.impl.base_aead_cipher;
-
 import 'dart:typed_data';
 
 import '../../api.dart';

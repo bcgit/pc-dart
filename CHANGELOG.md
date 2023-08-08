@@ -1,6 +1,8 @@
 Changelog
 =========
 
+#### Version 3.7.4-wip
+
 #### Version 3.7.3 (2023-04-14)
 
 * PSSSigner requires only salt length to verify signature

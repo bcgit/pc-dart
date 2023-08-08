@@ -15,12 +15,12 @@ class AESEngine extends BaseBlockCipher {
       StaticFactoryConfig(BlockCipher, 'AES', () => AESEngine());
 
   int _ROUNDS = 0;
-  List<List<int>>? _WorkingKey;
+  late List<List<int>> _WorkingKey;
   bool _forEncryption = false;
 
   List<int> _s = List.empty();
 
-  final _S = [
+  static const _S = [
     99,
     124,
     119,
@@ -279,7 +279,7 @@ class AESEngine extends BaseBlockCipher {
     22,
   ];
 
-  final _Si = [
+  static const _Si = [
     82,
     9,
     106,
@@ -538,7 +538,7 @@ class AESEngine extends BaseBlockCipher {
     125,
   ];
 
-  final _rcon = [
+  static const _rcon = [
     0x01,
     0x02,
     0x04,
@@ -571,7 +571,7 @@ class AESEngine extends BaseBlockCipher {
     0x91
   ];
 
-  final _T0 = [
+  static const _T0 = [
     0xa56363c6,
     0x847c7cf8,
     0x997777ee,
@@ -830,7 +830,7 @@ class AESEngine extends BaseBlockCipher {
     0x3a16162c
   ];
 
-  final _Tinv0 = [
+  static const _Tinv0 = [
     0x50a7f451,
     0x5365417e,
     0xc3a4171a,
@@ -1091,20 +1091,20 @@ class AESEngine extends BaseBlockCipher {
 
   int _shift(int r, int shift) => rotr32(r, shift);
 
-  final int _m1 = 0x80808080;
-  final int _m2 = 0x7f7f7f7f;
-  final int _m3 = 0x0000001b;
-  final int _m4 = 0xC0C0C0C0;
-  final int _m5 = 0x3f3f3f3f;
+  static const int _m1 = 0x80808080;
+  static const int _m2 = 0x7f7f7f7f;
+  static const int _m3 = 0x0000001b;
+  static const int _m4 = 0xC0C0C0C0;
+  static const int _m5 = 0x3f3f3f3f;
 
   int _fFmulX(int x) {
-    var lsr = shiftr32((x & _m1), 7);
-    return (((x & _m2) << 1) ^ lsr * _m3);
+    var lsr = shiftr32(x & _m1, 7);
+    return ((x & _m2) << 1) ^ lsr * _m3;
   }
 
   int _fFmulX2(int x) {
-    var t0 = shiftl32((x & _m5), 2); // int t0  = (x & m5) << 2;
-    var t1 = (x & _m4);
+    var t0 = shiftl32(x & _m5, 2); // int t0  = (x & m5) << 2;
+    var t1 = x & _m4;
     t1 ^= shiftr32(t1, 1);
     return t0 ^ shiftr32(t1, 2) ^ shiftr32(t1, 5);
   }
@@ -1127,10 +1127,10 @@ class AESEngine extends BaseBlockCipher {
   }
 
   int _subWord(int x) {
-    return (_S[x & 255] & 255 |
+    return _S[x & 255] & 255 |
         ((_S[(x >> 8) & 255] & 255) << 8) |
         ((_S[(x >> 16) & 255] & 255) << 16) |
-        _S[(x >> 24) & 255] << 24);
+        _S[(x >> 24) & 255] << 24;
   }
 
   static const _BLOCK_SIZE = 16;
@@ -1157,7 +1157,7 @@ class AESEngine extends BaseBlockCipher {
     }
   }
 
-  List<List<int>>? generateWorkingKey(bool forEncryption, KeyParameter params) {
+  List<List<int>> generateWorkingKey(bool forEncryption, KeyParameter params) {
     var key = params.key;
     var keyLen = key.length;
     if (keyLen < 16 || keyLen > 32 || (keyLen & 7) != 0) {
@@ -1209,7 +1209,7 @@ class AESEngine extends BaseBlockCipher {
         var col4 = unpack32(key, 16, Endian.little);
         var col5 = unpack32(key, 20, Endian.little);
 
-        var i = 1, rcon = 1, colx;
+        int i = 1, rcon = 1, colx;
         for (;;) {
           W[i][0] = col4;
           W[i][1] = col5;
@@ -1270,7 +1270,7 @@ class AESEngine extends BaseBlockCipher {
           var col7 = unpack32(key, 28, Endian.little);
           W[1][3] = col7;
 
-          var i = 2, rcon = 1, colx;
+          int i = 2, rcon = 1, colx;
           for (;;) {
             colx = _subWord(_shift(col7, 8)) ^ rcon;
             rcon <<= 1;
@@ -1321,10 +1321,6 @@ class AESEngine extends BaseBlockCipher {
 
   @override
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    if (_WorkingKey == null) {
-      throw StateError('AES engine not initialised');
-    }
-
     if ((inpOff + (32 / 2)) > inp.lengthInBytes) {
       throw ArgumentError('Input buffer too short');
     }
@@ -1342,7 +1338,8 @@ class AESEngine extends BaseBlockCipher {
     return _BLOCK_SIZE;
   }
 
-  void _encryptBlock(input, inOff, Uint8List out, int outOff, KW) {
+  void _encryptBlock(
+      input, int inOff, Uint8List out, int outOff, List<List<int>> KW) {
     var C0 = unpack32(input, inOff + 0, Endian.little);
     var C1 = unpack32(input, inOff + 4, Endian.little);
     var C2 = unpack32(input, inOff + 8, Endian.little);
@@ -1352,7 +1349,7 @@ class AESEngine extends BaseBlockCipher {
     var t1 = C1 ^ KW[0][1];
     var t2 = C2 ^ KW[0][2];
 
-    var r = 1, r0, r1, r2, r3 = C3 ^ KW[0][3];
+    int r = 1, r0, r1, r2, r3 = C3 ^ KW[0][3];
 
     while (r < _ROUNDS - 1) {
       r0 = _T0[t0 & 255] ^
@@ -1447,7 +1444,8 @@ class AESEngine extends BaseBlockCipher {
     pack32(C3, out, outOff + 12, Endian.little);
   }
 
-  void _decryptBlock(input, inOff, Uint8List out, int outOff, KW) {
+  void _decryptBlock(
+      input, int inOff, Uint8List out, int outOff, List<List<int>> KW) {
     var C0 = unpack32(input, inOff + 0, Endian.little);
     var C1 = unpack32(input, inOff + 4, Endian.little);
     var C2 = unpack32(input, inOff + 8, Endian.little);
@@ -1457,7 +1455,7 @@ class AESEngine extends BaseBlockCipher {
     var t1 = C1 ^ KW[_ROUNDS][1];
     var t2 = C2 ^ KW[_ROUNDS][2];
 
-    var r = _ROUNDS - 1, r0, r1, r2, r3 = C3 ^ KW[_ROUNDS][3];
+    int r = _ROUNDS - 1, r0, r1, r2, r3 = C3 ^ KW[_ROUNDS][3];
     while (r > 1) {
       r0 = _Tinv0[t0 & 255] ^
           _shift(_Tinv0[(r3 >> 8) & 255], 24) ^

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.ufixnum_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/src/ufixnum.dart';

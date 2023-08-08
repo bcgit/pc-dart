@@ -26,8 +26,8 @@ class ECCurve_secp160r2 extends ECDomainParametersImpl {
           radix: 16)) as ECCurve_secp160r2;
 
   static ECCurve_secp160r2 _make(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed) =>
-      ECCurve_secp160r2._super(domainName, curve, G, n, _h, seed);
+          BigInt n, BigInt h, List<int> seed) =>
+      ECCurve_secp160r2._super(domainName, curve, G, n, h, seed);
 
   ECCurve_secp160r2._super(String domainName, ECCurve curve, ECPoint G,
       BigInt n, BigInt _h, List<int> seed)

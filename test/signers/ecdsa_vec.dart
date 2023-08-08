@@ -2855,7 +2855,7 @@ dynamic sigVerVec = jsonDecode('''
 ]
 ''');
 
-dynamic sigGenVec = jsonDecode('''
+List sigGenVec = jsonDecode('''
 [
   {
   },
@@ -4144,4 +4144,4 @@ dynamic sigGenVec = jsonDecode('''
     ]
   }
 ]
-''');
+''') as List;

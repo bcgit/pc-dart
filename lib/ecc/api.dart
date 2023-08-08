@@ -66,9 +66,6 @@ abstract class ECPoint {
 
   bool get isInfinity;
 
-  @override
-  bool operator ==(other);
-
   Uint8List getEncoded([bool compressed = true]);
 
   ECPoint? operator +(ECPoint? b);
@@ -81,9 +78,6 @@ abstract class ECPoint {
 
   /// Multiply this point by the given number [k].
   ECPoint? operator *(BigInt? k);
-
-  @override
-  int get hashCode => super.hashCode;
 }
 
 /// An elliptic curve
@@ -126,7 +120,7 @@ class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
   /// Create an ECC private key for the given d and domain parameters.
   ECPrivateKey(this.d, ECDomainParameters? parameters) : super(parameters);
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is! ECPrivateKey) return false;
     return (other.parameters == parameters) && (other.d == d);
   }
@@ -145,7 +139,7 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
   /// Create an ECC public key for the given Q and domain parameters.
   ECPublicKey(this.Q, ECDomainParameters? parameters) : super(parameters);
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is! ECPublicKey) return false;
     return (other.parameters == parameters) && (other.Q == Q);
   }
@@ -185,7 +179,7 @@ class ECSignature implements Signature {
   @override
   String toString() => '(${r.toString()},${s.toString()})';
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is! ECSignature) return false;
     return (other.r == r) && (other.s == s);
   }
@@ -204,7 +198,7 @@ class ECPair {
   const ECPair(this.x, this.y);
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is! ECPair) return false;
     return (other.x == x) && (other.y == y);
   }

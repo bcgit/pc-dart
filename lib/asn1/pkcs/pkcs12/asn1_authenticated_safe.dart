@@ -16,11 +16,9 @@ class ASN1AuthenticatedSafe extends ASN1Object {
   ASN1AuthenticatedSafe.fromSequence(ASN1Sequence seq) {
     info = [];
     if (seq.elements != null) {
-      seq.elements!.forEach(
-        (element) {
-          info.add(ASN1ContentInfo.fromSequence(element as ASN1Sequence));
-        },
-      );
+      for (var element in seq.elements!) {
+        info.add(ASN1ContentInfo.fromSequence(element as ASN1Sequence));
+      }
     }
   }
 

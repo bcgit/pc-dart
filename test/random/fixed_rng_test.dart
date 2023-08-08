@@ -1,5 +1,3 @@
-library test.random.fixed_rng_test.dart;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';

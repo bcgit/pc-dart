@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.modes.gcm_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/block/aes.dart';
@@ -51,11 +49,8 @@ void main() {
     for (var map in paramList) {
       test(map['name'], () {
         var encrypter = CCMBlockCipher(AESEngine());
-        var params = AEADParameters(
-            KeyParameter((map['key'] as Uint8List)),
-            map['tl'] as int,
-            (map['iv'] as Uint8List),
-            (map['aad'] as Uint8List));
+        var params = AEADParameters(KeyParameter(map['key'] as Uint8List),
+            map['tl'] as int, map['iv'] as Uint8List, map['aad'] as Uint8List);
 
         encrypter.init(true, params);
         var result = encrypter

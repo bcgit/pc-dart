@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.signers.ecdsa_signer_test;
-
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/signers/ecdsa_signer.dart';
 
@@ -17,12 +15,14 @@ void main() {
   var Qy = BigInt.parse(
       '6264116558863692852155702059476882343593676720209154057133');
   var Q = eccDomain.curve.createPoint(Qx, Qy);
-  var verifyParams = () => PublicKeyParameter(ECPublicKey(Q, eccDomain));
+  PublicKeyParameter<PublicKey> verifyParams() =>
+      PublicKeyParameter(ECPublicKey(Q, eccDomain));
 
   var d = BigInt.parse(
       '3062713166230336928689662410859599564103408831862304472446');
   var privParams = PrivateKeyParameter(ECPrivateKey(d, eccDomain));
-  var signParams = () => ParametersWithRandom(privParams, NullSecureRandom());
+  ParametersWithRandom<PrivateKeyParameter<PrivateKey>> signParams() =>
+      ParametersWithRandom(privParams, NullSecureRandom());
 
   runSignerTests(Signer('SHA-1/ECDSA'), signParams, verifyParams, [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit ........',

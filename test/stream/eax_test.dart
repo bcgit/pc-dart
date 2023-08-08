@@ -46,9 +46,7 @@ void main() {
             () => eax.init(false, KeyParameter(K1)), throwsArgumentError));
   });
 
-  group('eax random', () {
-    randomTests();
-  });
+  group('eax random', randomTests);
 
   /* AEADTestUtil from bouncycastle/java needs to be ported
   AEADTestUtil.testReset(this, new EAXBlockCipher(new AESEngine()), new EAXBlockCipher(new AESEngine()), new AEADParameters(new KeyParameter(K1), 32, N2));
@@ -187,10 +185,10 @@ void randomTests() {
 
 void randomTest(SecureRandom srng) {
   test('randomTest', () {
-    var DAT_LEN = unsignedShiftRight64(srng.nextUint32(), 22);
+    var datLen = unsignedShiftRight64(srng.nextUint32(), 22);
     var nonce = srng.nextBytes(NONCE_LEN);
     var authen = srng.nextBytes(AUTHEN_LEN);
-    var datIn = srng.nextBytes(DAT_LEN);
+    var datIn = srng.nextBytes(datLen);
     var key = srng.nextBytes(16);
 
     var engine = AESEngine();
@@ -201,7 +199,7 @@ void randomTest(SecureRandom srng) {
     eaxCipher.init(true, params);
 
     var intrDat = Uint8List(eaxCipher.getOutputSize(datIn.length));
-    var outOff = eaxCipher.processBytes(datIn, 0, DAT_LEN, intrDat, 0);
+    var outOff = eaxCipher.processBytes(datIn, 0, datLen, intrDat, 0);
     outOff += eaxCipher.doFinal(intrDat, outOff);
 
     eaxCipher.init(false, params);

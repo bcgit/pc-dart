@@ -34,8 +34,8 @@ class ECCurve_prime239v3 extends ECDomainParametersImpl {
               radix: 16)) as ECCurve_prime239v3;
 
   static ECCurve_prime239v3 _make(String domainName, ECCurve curve, ECPoint G,
-          BigInt n, BigInt _h, List<int> seed) =>
-      ECCurve_prime239v3._super(domainName, curve, G, n, _h, seed);
+          BigInt n, BigInt h, List<int> seed) =>
+      ECCurve_prime239v3._super(domainName, curve, G, n, h, seed);
 
   ECCurve_prime239v3._super(String domainName, ECCurve curve, ECPoint G,
       BigInt n, BigInt _h, List<int> seed)

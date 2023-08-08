@@ -408,7 +408,7 @@ void main(List<String> args) {
 
   // Use the key pair
 
-  final plaintext = (longText) ? longPlaintext : shortPlaintext;
+  final plaintext = longText ? longPlaintext : shortPlaintext;
   if (verbose) {
     print('Plaintext: $plaintext\n');
   }

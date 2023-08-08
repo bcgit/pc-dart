@@ -39,7 +39,7 @@ void main(List<String> args) {
 
   for (final data in valuesToDigest) {
     print('Data: "$data"');
-    final hash = sha256Digest(utf8.encode(data) as Uint8List);
+    final hash = sha256Digest(utf8.encode(data));
     print('SHA-256: $hash');
     print('SHA-256: ${bin2hex(hash)}'); // output in hexadecimal
   }

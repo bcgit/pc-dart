@@ -159,7 +159,7 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
   void _increment([int bits = 8]) {
     assert(bits <= 0xFFFFFFFF);
 
-    var i = (_bitCount.length - 1);
+    var i = _bitCount.length - 1;
     _bitCount[i].sum(bits);
 
     while (_bitCount[i] == _r64Zero) {
@@ -184,10 +184,10 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     }
 
     if (_bufferPos > 32) {
-      final padCount = (_buffer.length - _bufferPos);
+      final padCount = _buffer.length - _bufferPos;
       update(_zerosList, 0, padCount);
     } else {
-      final padCount = (32 - _bufferPos);
+      final padCount = 32 - _bufferPos;
       update(_zerosList, 0, padCount);
     }
 

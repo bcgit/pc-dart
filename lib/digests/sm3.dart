@@ -108,22 +108,22 @@ class SM3Digest extends MD4FamilyDigest implements Digest {
   }
 
   /// FF1 Function
-  static final _FF1 = (X, Y, Z) => ((X) ^ (Y) ^ (Z));
+  static int _FF1(int X, int Y, int Z) => X ^ Y ^ Z;
 
   /// FF2 Function
-  static final _FF2 = (X, Y, Z) => (((X) & (Y)) | ((X) & (Z)) | ((Y) & (Z)));
+  static int _FF2(int X, int Y, int Z) => (X & Y) | (X & Z) | (Y & Z);
 
   /// GG1 Function
   static final _GG1 = _FF1;
 
   /// GG2 Function
-  static final _GG2 = (X, Y, Z) => (((X) & (Y)) | ((~X) & (Z)));
+  static int _GG2(int X, int Y, int Z) => (X & Y) | ((~X) & Z);
 
   /// P0 Function
-  static final _P0 = (X) => ((X) ^ rotl32((X), 9) ^ rotl32((X), 17));
+  static int _P0(int X) => X ^ rotl32(X, 9) ^ rotl32(X, 17);
 
   /// P1 Function
-  static final _P1 = (X) => ((X) ^ rotl32((X), 15) ^ rotl32((X), 23));
+  static int _P1(int X) => X ^ rotl32(X, 15) ^ rotl32(X, 23);
 
   @override
   int get byteLength => 64;
