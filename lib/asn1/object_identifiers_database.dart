@@ -676,5 +676,15 @@ const oi = [
     'identifierString': '2.23.140.1.2.2',
     'readableName': 'organization-validated',
     'identifier': [2, 23, 140, 1, 2, 2]
+  },
+  {
+    'identifierString': '0.9.2342.19200300.100.1.25',
+    'readableName': 'DC',
+    'identifier': [0, 9, 2342, 19200300, 100, 1, 25]
+  },
+  {
+    'identifierString': '0.9.2342.19200300.100.1.25',
+    'readableName': 'domainComponent',
+    'identifier': [0, 9, 2342, 19200300, 100, 1, 25]
   }
 ];
