@@ -21,10 +21,6 @@ import 'api.dart';
 /// The linked project was adapted for the purposes of this project, since it
 /// is a 1:1 port of BouncyCastle's Java implementation.
 class Argon2BytesGenerator extends BaseKeyDerivator {
-  Argon2BytesGenerator() {
-    Platform.instance.assertFullWidthInteger();
-  }
-
   static const int ARGON2_BLOCK_SIZE = 1024;
   static const int ARGON2_QWORDS_IN_BLOCK = ARGON2_BLOCK_SIZE ~/ 8;
 
@@ -58,6 +54,10 @@ class Argon2BytesGenerator extends BaseKeyDerivator {
 
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(KeyDerivator, 'argon2', () => Argon2BytesGenerator());
+
+  Argon2BytesGenerator() {
+    Platform.instance.assertFullWidthInteger();
+  }
 
   Argon2Parameters get parameters => _parameters;
 
@@ -578,12 +578,12 @@ class _FillBlock {
 }
 
 class _Block {
-  _Block();
-
   static const int SIZE = Argon2BytesGenerator.ARGON2_QWORDS_IN_BLOCK;
 
   /// 128 * 8 Byte QWords.
   final Uint64List _v = Uint64List(SIZE);
+
+  _Block();
 
   void fromBytes(Uint8List input) {
     if (input.length < Argon2BytesGenerator.ARGON2_BLOCK_SIZE) {
@@ -642,11 +642,11 @@ class _Block {
 }
 
 class _Position {
-  _Position();
-
   int pass = 0;
   int lane = 0;
   int slice = 0;
+
+  _Position();
 }
 
 extension _SetFrom<T> on List<T> {
