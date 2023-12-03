@@ -55,9 +55,14 @@ class ASN1Parser {
     // Get the length of the value bytes for the current object
     var length = ASN1Utils.decodeLength(bytes!.sublist(_position));
 
-    var valueStartPosition =
-        ASN1Utils.calculateValueStartPosition(bytes!.sublist(_position));
-    if (_position < length + valueStartPosition) {
+    var valueStartPosition = ASN1Utils.calculateValueStartPosition(bytes!.sublist(_position));
+
+    var isIndefiniteLength = false;
+
+    if (length == -1) {
+      length = ASN1Utils.calculateIndefiniteLength(bytes!, _position) + 2;
+      isIndefiniteLength = true;
+    } else if (_position < length + valueStartPosition) {
       length = length + valueStartPosition;
     } else {
       length = bytes!.length - _position;
@@ -83,7 +88,7 @@ class ASN1Parser {
     }
 
     // Update the position
-    _position = _position + obj.totalEncodedByteLength;
+    _position = _position + obj.totalEncodedByteLength + (isIndefiniteLength ? 2 : 0);
     return obj;
   }
 

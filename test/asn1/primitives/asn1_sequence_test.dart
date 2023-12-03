@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1/primitives/asn1_ia5_string.dart';
+import 'package:pointycastle/asn1/primitives/asn1_integer.dart';
 import 'package:pointycastle/asn1/primitives/asn1_null.dart';
 import 'package:pointycastle/asn1/primitives/asn1_object_identifier.dart';
 import 'package:pointycastle/asn1/primitives/asn1_sequence.dart';
@@ -57,6 +58,108 @@ void main() {
     expect(asn1Object.elements!.length, 2);
     expect(asn1Object.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
     expect(asn1Object.elements!.elementAt(1) is ASN1Null, true);
+  });
+
+  test('Test named constructor fromBytes with nested indefinite length', () {
+    /*
+    SEQUENCE (3 elem, indefinite length)
+      INTEGER 1
+      SEQUENCE (1 elem, indefinite length)
+        OBJECT IDENTIFIER 1.2.840.113549.1.7.1 data (PKCS #7)
+      INTEGER 1
+    */
+    var bytes = Uint8List.fromList([
+      0x30,
+      0x80,
+      0x02,
+      0x01,
+      0x01,
+      0x30,
+      0x80,
+      0x06,
+      0x09,
+      0x2A,
+      0x86,
+      0x48,
+      0x86,
+      0xF7,
+      0x0D,
+      0x01,
+      0x07,
+      0x01,
+      0x00,
+      0x00,
+      0x02,
+      0x01,
+      0x01,
+      0x00,
+      0x00
+    ]);
+
+    var valueBytes = Uint8List.fromList([
+      0x02,
+      0x01,
+      0x01,
+      0x30,
+      0x80,
+      0x06,
+      0x09,
+      0x2A,
+      0x86,
+      0x48,
+      0x86,
+      0xF7,
+      0x0D,
+      0x01,
+      0x07,
+      0x01,
+      0x00,
+      0x00,
+      0x02,
+      0x01,
+      0x01,
+    ]);
+
+    var innerSequenceBytes = Uint8List.fromList([
+      0x30,
+      0x80,
+      0x06,
+      0x09,
+      0x2A,
+      0x86,
+      0x48,
+      0x86,
+      0xF7,
+      0x0D,
+      0x01,
+      0x07,
+      0x01,
+      0x00,
+      0x00
+    ]);
+
+    var innerSequenceValueBytes = Uint8List.fromList(
+        [0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x07, 0x01]);
+
+    var asn1Object = ASN1Sequence.fromBytes(bytes);
+    expect(asn1Object.tag, 48);
+    expect(asn1Object.isConstructed, true);
+    expect(asn1Object.encodedBytes, bytes);
+    expect(asn1Object.valueByteLength, 21);
+    expect(asn1Object.valueStartPosition, 2);
+    expect(asn1Object.valueBytes, valueBytes);
+    expect(asn1Object.elements!.length, 3);
+    expect(asn1Object.elements!.elementAt(0) is ASN1Integer, true);
+    expect(asn1Object.elements!.elementAt(1) is ASN1Sequence, true);
+    expect(asn1Object.elements!.elementAt(2) is ASN1Integer, true);
+
+    final innerSequence = asn1Object.elements!.elementAt(1) as ASN1Sequence;
+    expect(innerSequence.tag, 48);
+    expect(innerSequence.isConstructed, true);
+    expect(innerSequence.encodedBytes, innerSequenceBytes);
+    expect(innerSequence.valueByteLength, 11);
+    expect(innerSequence.valueStartPosition, 2);
+    expect(innerSequence.valueBytes, innerSequenceValueBytes);
   });
 
   test('Test encode', () {
