@@ -127,21 +127,24 @@ class ASN1Utils {
     var currentPosition = startPosition;
     var indefiniteLengthObjects = 0;
     while (currentPosition < bytes.length - 1) {
-      if (bytes[currentPosition] == 0x00 && bytes[currentPosition + 1] == 0x00) {
+      if (bytes[currentPosition] == 0x00 &&
+          bytes[currentPosition + 1] == 0x00) {
         indefiniteLengthObjects--;
         if (indefiniteLengthObjects == 0) {
           return currentPosition - startPosition;
         }
         currentPosition += 2;
       } else {
-        final nextLength = ASN1Utils.decodeLength(bytes.sublist(currentPosition));
-        final valueStartPosition =
-            ASN1Utils.calculateValueStartPosition(bytes.sublist(currentPosition));
+        final nextLength =
+            ASN1Utils.decodeLength(bytes.sublist(currentPosition));
+        final valueStartPosition = ASN1Utils.calculateValueStartPosition(
+            bytes.sublist(currentPosition));
         if (nextLength == 0) {
           throw ArgumentError('Invalid length of zero.');
         }
         if (valueStartPosition <= 0) {
-          throw ArgumentError('Invalid value start position: $valueStartPosition');
+          throw ArgumentError(
+              'Invalid value start position: $valueStartPosition');
         }
 
         if (nextLength == -1) {
@@ -156,7 +159,8 @@ class ASN1Utils {
     throw ArgumentError('End of content octets not found');
   }
 
-  static Uint8List getBytesFromPEMString(String pem, {bool checkHeader = true}) {
+  static Uint8List getBytesFromPEMString(String pem,
+      {bool checkHeader = true}) {
     var lines = LineSplitter.split(pem)
         .map((line) => line.trim())
         .where((line) => line.isNotEmpty)
@@ -177,7 +181,8 @@ class ASN1Utils {
     return Uint8List.fromList(base64Decode(base64));
   }
 
-  static ECPrivateKey ecPrivateKeyFromDerBytes(Uint8List bytes, {bool pkcs8 = false}) {
+  static ECPrivateKey ecPrivateKeyFromDerBytes(Uint8List bytes,
+      {bool pkcs8 = false}) {
     var asn1Parser = ASN1Parser(bytes);
     var topLevelSeq = asn1Parser.nextObject() as ASN1Sequence;
     var curveName;
@@ -195,12 +200,14 @@ class ASN1Utils {
       var octetString = topLevelSeq.elements!.elementAt(2) as ASN1OctetString;
       asn1Parser = ASN1Parser(octetString.valueBytes);
       var octetStringSeq = asn1Parser.nextObject() as ASN1Sequence;
-      var octetStringKeyData = octetStringSeq.elements!.elementAt(1) as ASN1OctetString;
+      var octetStringKeyData =
+          octetStringSeq.elements!.elementAt(1) as ASN1OctetString;
 
       x = octetStringKeyData.valueBytes!;
     } else {
       // Parse the SEC1 format
-      var privateKeyAsOctetString = topLevelSeq.elements!.elementAt(1) as ASN1OctetString;
+      var privateKeyAsOctetString =
+          topLevelSeq.elements!.elementAt(1) as ASN1OctetString;
       var choice = topLevelSeq.elements!.elementAt(2);
       var s = ASN1Sequence();
       var parser = ASN1Parser(choice.valueBytes);
@@ -208,7 +215,8 @@ class ASN1Utils {
         s.add(parser.nextObject());
       }
       var curveNameOi = s.elements!.elementAt(0) as ASN1ObjectIdentifier;
-      var data = ObjectIdentifiers.getIdentifierByIdentifier(curveNameOi.objectIdentifierAsString);
+      var data = ObjectIdentifiers.getIdentifierByIdentifier(
+          curveNameOi.objectIdentifierAsString);
       if (data != null) {
         curveName = data['readableName'];
       }
