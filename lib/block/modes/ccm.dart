@@ -39,7 +39,7 @@ class CCMBlockCipher extends BaseAEADBlockCipher {
             return CCMBlockCipher(underlying);
           });
 
-  CCMBlockCipher(BlockCipher underlyingCipher) : super(underlyingCipher) {
+  CCMBlockCipher(super.underlyingCipher) {
     _macBlock = Uint8List(blockSize);
     if (blockSize != 16) {
       throw ArgumentError('CCM requires a block size of 16');

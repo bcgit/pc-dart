@@ -18,6 +18,5 @@ class CTRBlockCipher extends StreamCipherAsBlockCipher {
                 underlying.blockSize, CTRStreamCipher(underlying));
           });
 
-  CTRBlockCipher(int blockSize, StreamCipher underlyingCipher)
-      : super(blockSize, underlyingCipher);
+  CTRBlockCipher(super.blockSize, super.underlyingCipher);
 }

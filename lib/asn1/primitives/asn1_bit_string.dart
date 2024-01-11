@@ -37,7 +37,7 @@ class ASN1BitString extends ASN1Object {
   ///
   /// Creates an [ASN1BitString] entity from the given [encodedBytes].
   ///
-  ASN1BitString.fromBytes(Uint8List bytes) : super.fromBytes(bytes) {
+  ASN1BitString.fromBytes(Uint8List super.bytes) : super.fromBytes() {
     if (ASN1Utils.isConstructed(encodedBytes!.elementAt(0))) {
       elements = [];
       var parser = ASN1Parser(valueBytes);

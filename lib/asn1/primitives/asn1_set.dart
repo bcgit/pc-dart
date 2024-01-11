@@ -20,7 +20,7 @@ class ASN1Set extends ASN1Object {
   ///
   /// Creates an [ASN1Set] entity from the given [encodedBytes].
   ///
-  ASN1Set.fromBytes(Uint8List encodedBytes) : super.fromBytes(encodedBytes) {
+  ASN1Set.fromBytes(Uint8List super.encodedBytes) : super.fromBytes() {
     elements = [];
     var parser = ASN1Parser(valueBytes);
     while (parser.hasNext()) {

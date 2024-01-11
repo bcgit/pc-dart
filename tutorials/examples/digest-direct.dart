@@ -13,6 +13,7 @@
 ///     echo -n 'Hello world!' | shasum -a 256
 ///
 /// Note: this example use Pointy Castle WITHOUT the registry.
+library;
 
 import 'dart:convert';
 import 'dart:typed_data';

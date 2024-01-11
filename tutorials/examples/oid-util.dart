@@ -9,6 +9,7 @@
 ///
 /// This program was written to check some of the "magic values" in the
 /// Pointy Castle source code.
+library;
 
 import 'dart:typed_data';
 

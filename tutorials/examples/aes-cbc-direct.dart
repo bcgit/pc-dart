@@ -1,6 +1,7 @@
 /// Encrypt and decrypt using AES
-
+///
 /// Note: this example use Pointy Castle WITHOUT the registry.
+library;
 
 import 'dart:convert';
 import 'dart:typed_data';

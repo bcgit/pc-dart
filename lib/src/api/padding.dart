@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// The interface that a padding conforms to.
 abstract class Padding extends Algorithm {

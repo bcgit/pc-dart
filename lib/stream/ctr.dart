@@ -17,7 +17,7 @@ class CTRStreamCipher extends SICStreamCipher {
             return CTRStreamCipher(BlockCipher(digestName!));
           });
 
-  CTRStreamCipher(BlockCipher underlyingCipher) : super(underlyingCipher);
+  CTRStreamCipher(super.underlyingCipher);
   @override
   String get algorithmName => '${underlyingCipher.algorithmName}/CTR';
 }

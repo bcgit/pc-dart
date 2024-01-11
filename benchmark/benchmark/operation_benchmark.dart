@@ -12,9 +12,9 @@ class OperationBenchmark extends BenchmarkBase {
 
   int? _iterations;
 
-  OperationBenchmark(String name, this._operation,
+  OperationBenchmark(super.name, this._operation,
       [this._runLengthMillis = _RUN_LENGTH_MILLIS])
-      : super(name, emitter: OperationEmitter()) {
+      : super(emitter: OperationEmitter()) {
     emitter.benchmark = this;
   }
 

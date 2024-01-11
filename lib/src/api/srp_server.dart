@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// Implements the server side SRP-6a protocol. Note that this class is stateful, and therefore NOT threadsafe.
 /// This implementation of SRP is based on the optimized message sequence put forth by Thomas Wu in the paper

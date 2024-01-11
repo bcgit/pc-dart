@@ -19,7 +19,7 @@ class ASN1GeneralizedTime extends ASN1Object {
   ///
   /// Creates an [ASN1GeneralizedTime] entity from the given [encodedBytes].
   ///
-  ASN1GeneralizedTime.fromBytes(Uint8List bytes) : super.fromBytes(bytes) {
+  ASN1GeneralizedTime.fromBytes(Uint8List super.bytes) : super.fromBytes() {
     var octets = valueBytes!;
     var stringValue = ascii.decode(octets);
     var year = stringValue.substring(0, 4);

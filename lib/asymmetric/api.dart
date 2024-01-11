@@ -84,7 +84,7 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 /// Public keys in RSA
 class RSAPublicKey extends RSAAsymmetricKey implements PublicKey {
   /// Create an RSA public key for the given parameters.
-  RSAPublicKey(BigInt modulus, BigInt exponent) : super(modulus, exponent);
+  RSAPublicKey(BigInt super.modulus, BigInt super.exponent);
 
   /// Get public exponent [e]
   @Deprecated('Use get publicExponent')

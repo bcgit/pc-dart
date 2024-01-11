@@ -37,7 +37,6 @@ class ECCurve_prime239v2 extends ECDomainParametersImpl {
           BigInt n, BigInt h, List<int> seed) =>
       ECCurve_prime239v2._super(domainName, curve, G, n, h, seed);
 
-  ECCurve_prime239v2._super(String domainName, ECCurve curve, ECPoint G,
-      BigInt n, BigInt h, List<int> seed)
-      : super(domainName, curve, G, n, h, seed);
+  ECCurve_prime239v2._super(super.domainName, super.curve, super.G, super.n,
+      BigInt super.h, List<int> super.seed);
 }

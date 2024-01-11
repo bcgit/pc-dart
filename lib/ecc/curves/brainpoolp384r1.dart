@@ -36,7 +36,6 @@ class ECCurve_brainpoolp384r1 extends ECDomainParametersImpl {
           ECPoint G, BigInt n, BigInt h, List<int>? seed) =>
       ECCurve_brainpoolp384r1._super(domainName, curve, G, n, h, seed);
 
-  ECCurve_brainpoolp384r1._super(String domainName, ECCurve curve, ECPoint G,
-      BigInt n, BigInt h, List<int>? seed)
-      : super(domainName, curve, G, n, h, seed);
+  ECCurve_brainpoolp384r1._super(super.domainName, super.curve, super.G,
+      super.n, BigInt super.h, super.seed);
 }

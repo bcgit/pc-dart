@@ -6,6 +6,7 @@
 ///
 /// Invoke with "-v" to print extra information.
 /// Invoke with "-l" to use longer plaintext.
+library;
 
 import 'dart:convert';
 import 'dart:typed_data';

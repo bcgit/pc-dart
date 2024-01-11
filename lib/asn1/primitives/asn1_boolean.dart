@@ -29,8 +29,7 @@ class ASN1Boolean extends ASN1Object {
   ///
   /// Creates an [ASN1Boolean] entity from the given [encodedBytes].
   ///
-  ASN1Boolean.fromBytes(Uint8List encodedBytes)
-      : super.fromBytes(encodedBytes) {
+  ASN1Boolean.fromBytes(Uint8List super.encodedBytes) : super.fromBytes() {
     boolValue = (valueBytes![0] == BOOLEAN_TRUE_VALUE);
   }
 

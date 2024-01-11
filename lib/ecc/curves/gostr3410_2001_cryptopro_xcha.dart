@@ -38,7 +38,6 @@ class ECCurve_gostr3410_2001_cryptopro_xcha extends ECDomainParametersImpl {
       ECCurve_gostr3410_2001_cryptopro_xcha._super(
           domainName, curve, G, n, h, seed);
 
-  ECCurve_gostr3410_2001_cryptopro_xcha._super(String domainName, ECCurve curve,
-      ECPoint G, BigInt n, BigInt h, List<int>? seed)
-      : super(domainName, curve, G, n, h, seed);
+  ECCurve_gostr3410_2001_cryptopro_xcha._super(super.domainName, super.curve,
+      super.G, super.n, BigInt super.h, super.seed);
 }

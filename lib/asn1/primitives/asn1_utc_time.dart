@@ -28,8 +28,7 @@ class ASN1UtcTime extends ASN1Object {
   ///
   /// Creates an [ASN1UtcTime] entity from the given [encodedBytes].
   ///
-  ASN1UtcTime.fromBytes(Uint8List encodedBytes)
-      : super.fromBytes(encodedBytes) {
+  ASN1UtcTime.fromBytes(Uint8List super.encodedBytes) : super.fromBytes() {
     var stringValue = ascii.decode(valueBytes!);
     var formatedStringValue = _format(stringValue);
     time = DateTime.parse(formatedStringValue);

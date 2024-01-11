@@ -267,8 +267,8 @@ void main() {
 final random = SecureRandom('AES/CTR/AUTO-SEED-PRNG');
 
 class TestSRP6Client extends SRP6Client {
-  TestSRP6Client({required SRP6GroupParameters group, digest, random})
-      : super(group: group, digest: digest, random: random) {
+  TestSRP6Client(
+      {required super.group, required super.digest, required super.random}) {
     a = BigInt.parse(
         '60975527035CF2AD1989806F0407210BC81EDC04E2762A56AFD529DDDA2D4393',
         radix: 16);
@@ -281,8 +281,11 @@ class TestSRP6Client extends SRP6Client {
 }
 
 class TestSRP6Server extends SRP6Server {
-  TestSRP6Server({required SRP6GroupParameters group, v, digest, random})
-      : super(group: group, v: v, digest: digest, random: random) {
+  TestSRP6Server(
+      {required super.group,
+      required super.v,
+      required super.digest,
+      required super.random}) {
     b = BigInt.parse(
         'E487CB59D31AC550471E81F00F6928E01DDA08E974A004F49E61F5D105284D20',
         radix: 16);

@@ -17,6 +17,7 @@
 /// but they can or cannot be used depending on what imports were used.
 ///
 /// To see the differences between the examples, run 'diff' on the files.
+library;
 
 import 'dart:convert';
 import 'dart:typed_data';

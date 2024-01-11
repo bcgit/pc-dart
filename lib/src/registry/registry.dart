@@ -25,8 +25,7 @@ class StaticFactoryConfig extends FactoryConfig {
   final String algorithmName;
   final RegistrableConstructor factory;
 
-  StaticFactoryConfig(Type type, this.algorithmName, this.factory)
-      : super(type);
+  StaticFactoryConfig(super.type, this.algorithmName, this.factory);
 }
 
 // From the PatternCharacter rule here:
@@ -45,7 +44,7 @@ class DynamicFactoryConfig extends FactoryConfig {
   final RegExp regExp;
   final DynamicConstructorFactory factory;
 
-  DynamicFactoryConfig(Type type, this.regExp, this.factory) : super(type);
+  DynamicFactoryConfig(super.type, this.regExp, this.factory);
 
   DynamicFactoryConfig.regex(
       Type type, String regexString, DynamicConstructorFactory factory)

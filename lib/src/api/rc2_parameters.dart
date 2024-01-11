@@ -1,4 +1,4 @@
-part of api;
+part of '../../api.dart';
 
 class RC2Parameters extends KeyParameter {
   late int effectiveKeyBits;

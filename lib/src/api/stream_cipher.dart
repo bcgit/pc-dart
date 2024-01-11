@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// The interface stream ciphers conform to.
 abstract class StreamCipher extends Algorithm {

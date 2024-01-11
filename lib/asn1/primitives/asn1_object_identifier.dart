@@ -35,8 +35,8 @@ class ASN1ObjectIdentifier extends ASN1Object {
   ///
   /// Creates an [ASN1ObjectIdentifier] entity from the given [encodedBytes].
   ///
-  ASN1ObjectIdentifier.fromBytes(Uint8List encodedBytes)
-      : super.fromBytes(encodedBytes) {
+  ASN1ObjectIdentifier.fromBytes(Uint8List super.encodedBytes)
+      : super.fromBytes() {
     var value = 0;
     var first = true;
     BigInt? bigValue;
