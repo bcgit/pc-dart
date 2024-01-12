@@ -23,10 +23,10 @@ class ASN1SubjectPublicKeyInfo extends ASN1Object {
     if (seq.elements == null || seq.elements!.length != 2) {
       throw ArgumentError('');
     }
-    if (!(seq.elements!.elementAt(0) is ASN1Sequence)) {
+    if (seq.elements!.elementAt(0) is! ASN1Sequence) {
       throw ArgumentError('Element at index 0 has to be ASN1Sequence');
     }
-    if (!(seq.elements!.elementAt(1) is ASN1BitString)) {
+    if (seq.elements!.elementAt(1) is! ASN1BitString) {
       throw ArgumentError('Element at index 1 has to be ASN1BitString');
     }
     algorithm = ASN1AlgorithmIdentifier.fromSequence(

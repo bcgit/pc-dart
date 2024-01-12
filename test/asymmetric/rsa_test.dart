@@ -1,9 +1,7 @@
 // See file LICENSE for more information.
 
-library test.asymmetric.rsa_test;
-
-import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
+import 'package:test/test.dart';
 
 import '../test/runners/asymmetric_block_cipher.dart';
 
@@ -32,7 +30,14 @@ void main() {
     // Wrong public exponent provided to the constructor raises an exception.
     // ignore: deprecated_member_use_from_same_package
     expect(
-        () => RSAPrivateKey(modulus, privateExponent, p, q, BigInt.zero),
+        () => RSAPrivateKey(
+              modulus,
+              privateExponent,
+              p,
+              q,
+              // ignore: deprecated_member_use_from_same_package
+              BigInt.zero,
+            ),
         throwsA(predicate((dynamic e) =>
             e is ArgumentError &&
             e.message ==
@@ -41,8 +46,10 @@ void main() {
 
   // Test using the RSA key pair to perform block cipher encryption/decryption.
 
-  var pubpar = () => PublicKeyParameter<RSAPublicKey>(pubk);
-  var privpar = () => PrivateKeyParameter<RSAPrivateKey>(privk);
+  PublicKeyParameter<RSAPublicKey> pubpar() =>
+      PublicKeyParameter<RSAPublicKey>(pubk);
+  PrivateKeyParameter<RSAPrivateKey> privpar() =>
+      PrivateKeyParameter<RSAPrivateKey>(privk);
 
   runAsymmetricBlockCipherTests(AsymmetricBlockCipher('RSA'), pubpar, privpar, [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',

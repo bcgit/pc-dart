@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.utils_test;
-
 import 'package:pointycastle/src/utils.dart';
 import 'package:test/test.dart';
 

@@ -1,5 +1,3 @@
-library src.registry.impl;
-
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/key_derivators/concat_kdf.dart';
 import 'package:pointycastle/key_derivators/ecdh_kdf.dart';

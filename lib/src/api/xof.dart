@@ -1,4 +1,4 @@
-part of api;
+part of '../../api.dart';
 
 abstract class Xof extends Digest {
   /// Create the Xof specified by the standard [algorithmName].

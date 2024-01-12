@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
 import 'package:pointycastle/ecc/ecc_base.dart'
-    hide ECFieldElementBase, ECPointBase, ECCurveBase;
+    hide ECCurveBase, ECFieldElementBase, ECPointBase;
 import 'package:pointycastle/ecc/ecc_base.dart' as ecc;
 import 'package:pointycastle/src/utils.dart' as utils;
 
@@ -131,7 +131,7 @@ class ECFieldElement extends ecc.ECFieldElementBase {
           V = V + q!;
         }
 
-        V = (V >> 1);
+        V = V >> 1;
 
         //assert V.multiply(V).mod(q).equals(x);
 
@@ -184,7 +184,7 @@ class ECFieldElement extends ecc.ECFieldElementBase {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is ECFieldElement) {
       return (q == other.q) && (x == other.x);
     }
@@ -368,7 +368,7 @@ class ECCurve extends ecc.ECCurveBase {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is ECCurve) {
       return q == other.q && a == other.a && b == other.b;
     }
@@ -525,7 +525,7 @@ List<int?> _windowNaf(int width, BigInt k) {
   var wnaf = List<int?>.filled(k.bitLength + 1, null, growable: false);
 
   // 2^width as short and BigInt
-  var pow2wB = (1 << width);
+  var pow2wB = 1 << width;
   var pow2wBI = BigInt.from(pow2wB);
 
   var i = 0;

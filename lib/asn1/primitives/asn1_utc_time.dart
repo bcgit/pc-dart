@@ -28,8 +28,7 @@ class ASN1UtcTime extends ASN1Object {
   ///
   /// Creates an [ASN1UtcTime] entity from the given [encodedBytes].
   ///
-  ASN1UtcTime.fromBytes(Uint8List encodedBytes)
-      : super.fromBytes(encodedBytes) {
+  ASN1UtcTime.fromBytes(Uint8List super.encodedBytes) : super.fromBytes() {
     var stringValue = ascii.decode(valueBytes!);
     var formatedStringValue = _format(stringValue);
     time = DateTime.parse(formatedStringValue);
@@ -76,11 +75,11 @@ class ASN1UtcTime extends ASN1Object {
   String _format(String stringValue) {
     var y2 = int.parse(stringValue.substring(0, 2));
     if (y2 > 75) {
-      stringValue = '19' + stringValue;
+      stringValue = '19$stringValue';
     } else {
-      stringValue = '20' + stringValue;
+      stringValue = '20$stringValue';
     }
-    return stringValue.substring(0, 8) + 'T' + stringValue.substring(8);
+    return '${stringValue.substring(0, 8)}T${stringValue.substring(8)}';
   }
 
   @override

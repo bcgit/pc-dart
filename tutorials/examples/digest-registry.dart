@@ -11,6 +11,7 @@
 ///     md5 -s 'Hello world!'
 ///
 /// Note: this example use Pointy Castle WITH the registry.
+library;
 
 import 'dart:convert';
 import 'dart:typed_data';

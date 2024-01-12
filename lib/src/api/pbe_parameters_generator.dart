@@ -1,4 +1,4 @@
-part of api;
+part of '../../api.dart';
 
 abstract class PBEParametersGenerator {
   factory PBEParametersGenerator(String algorithmName) =>

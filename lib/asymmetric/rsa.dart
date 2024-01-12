@@ -63,9 +63,9 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
     _key = params.key;
 
     if (_key is RSAPrivateKey) {
-      var privKey = (_key as RSAPrivateKey);
-      var pSub1 = (privKey.p! - BigInt.one);
-      var qSub1 = (privKey.q! - BigInt.one);
+      var privKey = _key as RSAPrivateKey;
+      var pSub1 = privKey.p! - BigInt.one;
+      var qSub1 = privKey.q! - BigInt.one;
       _dP = privKey.privateExponent!.remainder(pSub1);
       _dQ = privKey.privateExponent!.remainder(qSub1);
       _qInv = privKey.q!.modInverse(privKey.p!);
@@ -116,20 +116,20 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
     if (_forEncryption) {
       if ((output[0] == 0) && (output.length > outputBlockSize)) {
         // have ended up with an extra zero byte, copy down.
-        var len = (output.length - 1);
+        var len = output.length - 1;
         out.setRange(outOff, outOff + len, output.sublist(1));
         return len;
       }
       if (output.length < outputBlockSize) {
         // have ended up with less bytes than normal, lengthen
         var len = outputBlockSize;
-        out.setRange((outOff + len - output.length), (outOff + len), output);
+        out.setRange(outOff + len - output.length, outOff + len, output);
         return len;
       }
     } else {
       if (output[0] == 0) {
         // have ended up with an extra zero byte, copy down.
-        var len = (output.length - 1);
+        var len = output.length - 1;
         out.setRange(outOff, outOff + len, output.sublist(1));
         return len;
       }
@@ -141,12 +141,12 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
 
   BigInt _processBigInteger(BigInt input) {
     if (_key is RSAPrivateKey) {
-      var privKey = (_key as RSAPrivateKey);
+      var privKey = _key as RSAPrivateKey;
       BigInt mP, mQ, h, m;
 
-      mP = (input.remainder(privKey.p!)).modPow(_dP, privKey.p!);
+      mP = input.remainder(privKey.p!).modPow(_dP, privKey.p!);
 
-      mQ = (input.remainder(privKey.q!)).modPow(_dQ, privKey.q!);
+      mQ = input.remainder(privKey.q!).modPow(_dQ, privKey.q!);
 
       h = mP - mQ;
       h = h * _qInv;

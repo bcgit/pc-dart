@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// Abstract [CipherParameters] to hold an asymmetric (public or private) key
 abstract class AsymmetricKeyParameter<T extends AsymmetricKey>

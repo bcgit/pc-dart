@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.asymmetric.ec_elgamal_test;
-
 import 'package:pointycastle/asymmetric/ec_elgamal.dart';
 import 'package:pointycastle/ecc/ecc_fp.dart' as fp;
 import 'package:pointycastle/export.dart';

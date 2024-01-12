@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// Abstract [CipherParameters] to init an asymmetric key generator.
 abstract class KeyGeneratorParameters implements CipherParameters {

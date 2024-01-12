@@ -134,11 +134,11 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
   static const _Y3 = 0x8f1bbcdc;
   static const _Y4 = 0xca62c1d6;
 
-  int _f(int u, int v, int w) => ((u & v) | ((~u) & w));
+  int _f(int u, int v, int w) => (u & v) | ((~u) & w);
 
-  int _h(int u, int v, int w) => (u ^ v ^ w);
+  int _h(int u, int v, int w) => u ^ v ^ w;
 
-  int _g(int u, int v, int w) => ((u & v) | (u & w) | (v & w));
+  int _g(int u, int v, int w) => (u & v) | (u & w) | (v & w);
 
   @override
   int get byteLength => 64;

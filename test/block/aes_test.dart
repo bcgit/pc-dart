@@ -1,5 +1,3 @@
-library test.block.aes_fast_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/block/aes.dart';
@@ -175,38 +173,38 @@ KeyParameter kp(String src) {
 void blockCipherTest(int id, BlockCipher cipher, CipherParameters parameters,
     String input, String output) {
   test('AES BlockCipher Test: $id ', () {
-    var _input = createUint8ListFromHexString(input);
-    var _output = createUint8ListFromHexString(output);
+    var input0 = createUint8ListFromHexString(input);
+    var output0 = createUint8ListFromHexString(output);
 
     cipher.init(true, parameters);
-    var out = Uint8List(_input.length);
+    var out = Uint8List(input0.length);
     var p = 0;
-    while (p < _input.length) {
-      p += cipher.processBlock(_input, p, out, p);
+    while (p < input0.length) {
+      p += cipher.processBlock(input0, p, out, p);
     }
 
-    expect(_output, equals(out), reason: '$id did not match output');
+    expect(output0, equals(out), reason: '$id did not match output');
 
     cipher.init(false, parameters);
-    out = Uint8List(_output.length);
+    out = Uint8List(output0.length);
     p = 0;
-    while (p < _output.length) {
-      p += cipher.processBlock(_output, p, out, p);
+    while (p < output0.length) {
+      p += cipher.processBlock(output0, p, out, p);
     }
 
-    expect(_input, equals(out), reason: '$id did not match input');
+    expect(input0, equals(out), reason: '$id did not match input');
   });
 }
 
 void blockCipherMCTTest(int id, int iterations, BlockCipher cipher,
     CipherParameters parameters, String input, String output) {
   test('AES BlockCipher MCT Test: $id ', () {
-    var _input = createUint8ListFromHexString(input);
-    var _output = createUint8ListFromHexString(output);
+    var input0 = createUint8ListFromHexString(input);
+    var output0 = createUint8ListFromHexString(output);
 
     cipher.init(true, parameters);
-    var out = Uint8List(_input.length);
-    out.setRange(0, out.length, _input);
+    var out = Uint8List(input0.length);
+    out.setRange(0, out.length, input0);
 
     for (var i = 0; i != iterations; i++) {
       var p = 0;
@@ -215,7 +213,7 @@ void blockCipherMCTTest(int id, int iterations, BlockCipher cipher,
       }
     }
 
-    expect(_output, equals(out), reason: '$id did not match output');
+    expect(output0, equals(out), reason: '$id did not match output');
 
     cipher.init(false, parameters);
 
@@ -226,6 +224,6 @@ void blockCipherMCTTest(int id, int iterations, BlockCipher cipher,
       }
     }
 
-    expect(_input, equals(out), reason: '$id did not match input');
+    expect(input0, equals(out), reason: '$id did not match input');
   });
 }

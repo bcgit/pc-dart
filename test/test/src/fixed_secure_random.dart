@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library impl.secure_random.test.src.fixed_secure_random;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';

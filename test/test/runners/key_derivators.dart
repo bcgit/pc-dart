@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.test.key_derivators_tests;
-
 import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
 
@@ -17,7 +15,7 @@ void runKeyDerivatorTests(
         var key = paramsPasswordKeyTuples[i + 2];
 
         test(
-            '${formatAsTruncated(password as String)}',
+            formatAsTruncated(password as String),
             () => _runKeyDerivatorTest(keyDerivator, params as CipherParameters,
                 password, key as String));
       }

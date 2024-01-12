@@ -1,9 +1,6 @@
 // See file LICENSE for more information.
 
-library test.padded_block_cipher_test;
-
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/src/registry/registry.dart';
 import 'package:test/test.dart';
 

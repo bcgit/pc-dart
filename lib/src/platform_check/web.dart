@@ -56,7 +56,7 @@ class _JsBuiltInEntropySource implements EntropySource {
 class _JsNodeEntropySource implements EntropySource {
   @override
   Uint8List getBytes(int len) {
-    NodeCrypto j = require('crypto');
+    final j = require('crypto') as NodeCrypto;
     var list = Uint8List(len);
     j.randomFillSync(list);
     return list;

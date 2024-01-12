@@ -1,12 +1,10 @@
 // See file LICENSE for more information.
 
-library benchmark.signers.rsa_signer_benchmark;
-
 import 'package:pointycastle/pointycastle.dart';
 
-import '../benchmark/signer_benchmark.dart';
 // ignore: directives_ordering
 import '../../test/test/src/null_secure_random.dart';
+import '../benchmark/signer_benchmark.dart';
 
 void main() {
   var modulus = BigInt.parse(
@@ -22,11 +20,13 @@ void main() {
   var pubk = RSAPublicKey(modulus, publicExponent);
   var privk = RSAPrivateKey(modulus, privateExponent, p, q);
 
-  // ignore: unused_local_variable
-  var pubParamsFactory = () => ParametersWithRandom(
-      PublicKeyParameter<RSAPublicKey>(pubk), NullSecureRandom());
-  var privParamsFactory = () => ParametersWithRandom(
-      PrivateKeyParameter<RSAPrivateKey>(privk), NullSecureRandom());
+  // ignore: unused_element
+  ParametersWithRandom<PublicKeyParameter<RSAPublicKey>> pubParamsFactory() =>
+      ParametersWithRandom(
+          PublicKeyParameter<RSAPublicKey>(pubk), NullSecureRandom());
+  ParametersWithRandom<PrivateKeyParameter<RSAPrivateKey>>
+      privParamsFactory() => ParametersWithRandom(
+          PrivateKeyParameter<RSAPrivateKey>(privk), NullSecureRandom());
 
   SignerBenchmark('Null/RSA', true, privParamsFactory).report();
 }

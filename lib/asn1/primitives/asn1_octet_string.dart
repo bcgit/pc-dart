@@ -80,11 +80,11 @@ class ASN1OctetString extends ASN1Object {
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH);
         valueBytes = Uint8List(valueByteLength!);
         var i = 0;
-        elements!.forEach((obj) {
+        for (var obj in elements!) {
           var b = obj.encode();
           valueBytes!.setRange(i, i + b.length, b);
           i += b.length;
-        });
+        }
         break;
       case ASN1EncodingRule.ENCODING_BER_PADDED:
         throw UnsupportedAsn1EncodingRuleException(encodingRule);
@@ -97,9 +97,9 @@ class ASN1OctetString extends ASN1Object {
   ///
   int _childLength({bool isIndefinite = false}) {
     var l = 0;
-    elements!.forEach((ASN1Object obj) {
+    for (var obj in elements!) {
       l += obj.encode().length;
-    });
+    }
     if (isIndefinite) {
       return l + 2;
     }

@@ -1,11 +1,9 @@
 // See file LICENSE for more information.
 
-library test.signers.ecdsa_vector_test;
-
-import 'package:pointycastle/ecc/api.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/src/utils.dart';
 import 'package:test/test.dart';
+
 import '../test/src/fixed_secure_random.dart';
 import '../test/src/helpers.dart';
 import 'ecdsa_vec.dart';
@@ -41,7 +39,7 @@ void sigVer() {
         domainParameters = ECCurve_secp521r1();
         break;
       default:
-        throw ArgumentError('curve not supported in this test: ' + hashAlg);
+        throw ArgumentError('curve not supported in this test: $hashAlg');
     }
 
     String alg;
@@ -60,10 +58,10 @@ void sigVer() {
         alg = 'SHA-512/ECDSA';
         break;
       default:
-        throw ArgumentError('hash alg not supported in this test: ' + hashAlg);
+        throw ArgumentError('hash alg not supported in this test: $hashAlg');
     }
 
-    group("ECDSA SigVer", () {
+    group('ECDSA SigVer', () {
       grp['tests'].forEach((test) {
         checkSigVer(domainParameters, alg, grp, test);
       });
@@ -75,14 +73,14 @@ void checkSigVer(ECDomainParameters domainParameters, String alg, dynamic grp,
     dynamic vector) {
   group("${grp["tgId"]} ${grp["curve"]} ${grp["hashAlg"]}", () {
     test("test ${vector["tcId"]}", () {
-      BigInt qX =
+      var qX =
           decodeBigIntWithSign(1, createUint8ListFromHexString(vector['qx']));
-      BigInt qY =
+      var qY =
           decodeBigIntWithSign(1, createUint8ListFromHexString(vector['qy']));
 
-      BigInt r =
+      var r =
           decodeBigIntWithSign(1, createUint8ListFromHexString(vector['r']));
-      BigInt s =
+      var s =
           decodeBigIntWithSign(1, createUint8ListFromHexString(vector['s']));
 
       bool expectedResult = vector['testPassed'];
@@ -97,7 +95,7 @@ void checkSigVer(ECDomainParameters domainParameters, String alg, dynamic grp,
       var signer = Signer(alg);
       signer.init(false, params);
 
-      bool result = signer.verifySignature(message, new ECSignature(r, s));
+      var result = signer.verifySignature(message, ECSignature(r, s));
 
       expect(expectedResult, equals(result));
     });
@@ -110,11 +108,9 @@ void sigGen() {
   vectors[1]['testGroups'].forEach((grp) {
     String hashAlg = grp['hashAlg'];
     String curve = grp['curve'];
-    BigInt d = decodeBigIntWithSign(1, createUint8ListFromHexString(grp['d']));
-    BigInt qX =
-        decodeBigIntWithSign(1, createUint8ListFromHexString(grp['qx']));
-    BigInt qY =
-        decodeBigIntWithSign(1, createUint8ListFromHexString(grp['qy']));
+    var d = decodeBigIntWithSign(1, createUint8ListFromHexString(grp['d']));
+    var qX = decodeBigIntWithSign(1, createUint8ListFromHexString(grp['qx']));
+    var qY = decodeBigIntWithSign(1, createUint8ListFromHexString(grp['qy']));
 
     // "P-224","P-256","P-384","P-521","B-233","B-283","B-409","B-571","K-233","K-283","K-409","K-571"
 
@@ -133,7 +129,7 @@ void sigGen() {
         domainParameters = ECCurve_secp521r1();
         break;
       default:
-        throw ArgumentError('curve not supported in this test: ' + hashAlg);
+        throw ArgumentError('curve not supported in this test: $hashAlg');
     }
 
     String alg;
@@ -152,7 +148,7 @@ void sigGen() {
         alg = 'SHA-512/ECDSA';
         break;
       default:
-        throw ArgumentError('hash alg not supported in this test: ' + hashAlg);
+        throw ArgumentError('hash alg not supported in this test: $hashAlg');
     }
 
     var keyPair = AsymmetricKeyPair(
@@ -160,7 +156,7 @@ void sigGen() {
             domainParameters.curve.createPoint(qX, qY), domainParameters),
         ECPrivateKey(d, domainParameters));
 
-    group("ECDSA SigGen", () {
+    group('ECDSA SigGen', () {
       grp['tests'].forEach((test) {
         checkSigGen(keyPair, alg, grp, test);
       });
@@ -169,7 +165,7 @@ void sigGen() {
 }
 
 void checkSigGen(
-    AsymmetricKeyPair keyPair, String alg, dynamic grp, dynamic vector) {
+    AsymmetricKeyPair keyPair, String alg, dynamic grp, Map vector) {
   group("${grp["tgId"]} ${grp["curve"]} ${grp["hashAlg"]}", () {
     test("test ${vector["tcId"]}", () {
       var seed = createUint8ListFromHexString(vector['seed']);

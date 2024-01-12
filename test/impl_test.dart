@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.impl_test;
-
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 import 'package:test/test.dart';
 import 'test/runners/registry.dart';
@@ -157,7 +155,7 @@ void main() {
       test(
           'StreamCipher returns valid implementations on platforms without full width integer',
           () {
-            testStreamCipher('Salsa20');
+        testStreamCipher('Salsa20');
         testStreamCipher('AES/SIC');
         testStreamCipher('AES/CTR');
         testStreamCipher('ChaCha20/20');

@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.test.stream_cipher_tests;
-
 import 'dart:typed_data';
 
 import 'package:test/test.dart';
@@ -17,7 +15,7 @@ void runStreamCipherTests(StreamCipher cipher, CipherParameters params,
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i + 1];
 
-        test('${formatAsTruncated(plainText)}',
+        test(formatAsTruncated(plainText),
             () => _runStreamCipherTest(cipher, params, plainText, cipherText));
       }
     });
@@ -28,7 +26,7 @@ void runStreamCipherTests(StreamCipher cipher, CipherParameters params,
         var cipherText = plainCipherTextPairs[i + 1];
 
         test(
-            '${formatAsTruncated(plainText)}',
+            formatAsTruncated(plainText),
             () =>
                 _runStreamDecipherTest(cipher, params, cipherText, plainText));
       }

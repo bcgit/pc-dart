@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.test.src.helpers;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';
@@ -14,7 +12,7 @@ import 'package:test/test.dart';
 
 String formatAsTruncated(String str) {
   if (str.length > 26) {
-    return str.substring(0, 26) + '[...]';
+    return '${str.substring(0, 26)}[...]';
   } else if (str.isEmpty) {
     return '(empty string)';
   } else {
@@ -44,9 +42,7 @@ String _format(double val) {
   } else if (val.isNaN) {
     return 'NaN';
   } else {
-    return val.floor().toString() +
-        '.' +
-        (100 * (val - val.toInt())).toInt().toString();
+    return '${val.floor()}.${(100 * (val - val.toInt())).toInt()}';
   }
 }
 
@@ -111,44 +107,44 @@ class _IsAllZeros extends Matcher {
 void blockCipherTest(int id, BlockCipher cipher, CipherParameters parameters,
     String input, String output) {
   test('BlockCipher Test: $id ', () {
-    var _input = createUint8ListFromHexString(input);
-    var _output = createUint8ListFromHexString(output);
+    var input0 = createUint8ListFromHexString(input);
+    var output0 = createUint8ListFromHexString(output);
 
     cipher.init(true, parameters);
-    var out = Uint8List(_input.length);
+    var out = Uint8List(input0.length);
     var p = 0;
-    while (p < _input.length) {
-      p += cipher.processBlock(_input, p, out, p);
+    while (p < input0.length) {
+      p += cipher.processBlock(input0, p, out, p);
     }
 
-    expect(_output, equals(out), reason: '$id did not match output');
+    expect(output0, equals(out), reason: '$id did not match output');
 
     cipher.init(false, parameters);
-    out = Uint8List(_output.length);
+    out = Uint8List(output0.length);
     p = 0;
-    while (p < _output.length) {
-      p += cipher.processBlock(_output, p, out, p);
+    while (p < output0.length) {
+      p += cipher.processBlock(output0, p, out, p);
     }
 
-    expect(_input, equals(out), reason: '$id did not match input');
+    expect(input0, equals(out), reason: '$id did not match input');
   });
 }
 
 void streamCipherTest(int id, StreamCipher cipher, CipherParameters parameters,
     String input, String output) {
   test('StreamCipher Test: $id ', () {
-    var _input = createUint8ListFromHexString(input);
-    var _output = createUint8ListFromHexString(output);
+    var input0 = createUint8ListFromHexString(input);
+    var output0 = createUint8ListFromHexString(output);
 
     cipher.init(true, parameters);
-    var out = cipher.process(_input);
+    var out = cipher.process(input0);
 
-    expect(_output, equals(out), reason: '$id did not match output');
+    expect(output0, equals(out), reason: '$id did not match output');
 
     cipher.init(false, parameters);
     out = cipher.process(out);
 
-    expect(_input, equals(out), reason: '$id did not match input');
+    expect(input0, equals(out), reason: '$id did not match input');
   });
 }
 

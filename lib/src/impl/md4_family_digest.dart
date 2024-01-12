@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.impl.digests.md4_family_digest;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/src/ufixnum.dart';
@@ -186,7 +184,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
 
   void _packState(Uint8List out, int outOff) {
     for (var i = 0; i < _packedStateSize; i++) {
-      pack32(state[i], out, (outOff + i * 4), _endian);
+      pack32(state[i], out, outOff + i * 4, _endian);
     }
   }
 }

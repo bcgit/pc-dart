@@ -26,13 +26,13 @@ class ASN1CertificationRequest extends ASN1Object {
     if (seq.elements == null || seq.elements!.length != 3) {
       throw ArgumentError('');
     }
-    if (!(seq.elements!.elementAt(0) is ASN1Sequence)) {
+    if (seq.elements!.elementAt(0) is! ASN1Sequence) {
       throw ArgumentError('Element at index 0 has to be ASN1Sequence');
     }
-    if (!(seq.elements!.elementAt(1) is ASN1Sequence)) {
+    if (seq.elements!.elementAt(1) is! ASN1Sequence) {
       throw ArgumentError('Element at index 1 has to be ASN1Sequence');
     }
-    if (!(seq.elements!.elementAt(2) is ASN1BitString)) {
+    if (seq.elements!.elementAt(2) is! ASN1BitString) {
       throw ArgumentError('Element at index 2 has to be ASN1BitString');
     }
     certificationRequestInfo = seq.elements!.elementAt(0);

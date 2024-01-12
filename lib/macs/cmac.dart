@@ -106,7 +106,7 @@ class CMac extends BaseMac {
     var bit = 0;
     while (--i >= 0) {
       var b = block[i] & 0xff;
-      output[i] = ((b << 1) | bit);
+      output[i] = (b << 1) | bit;
       bit = (b >> 7) & 1;
     }
     return bit;
@@ -173,10 +173,10 @@ class CMac extends BaseMac {
     }
 
     final out = Uint8List(4);
-    out[3] = (xor >> 0);
-    out[2] = (xor >> 8);
-    out[1] = (xor >> 16);
-    out[0] = (xor >> 24);
+    out[3] = xor >> 0;
+    out[2] = xor >> 8;
+    out[1] = xor >> 16;
+    out[0] = xor >> 24;
     return out;
   }
 

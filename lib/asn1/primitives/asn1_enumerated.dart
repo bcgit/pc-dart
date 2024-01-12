@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:pointycastle/asn1/asn1_tags.dart';
 import 'package:pointycastle/asn1/primitives/asn1_integer.dart';
 
@@ -16,6 +14,5 @@ class ASN1Enumerated extends ASN1Integer {
   ///
   /// Creates an [ASN1Enumerated] entity from the given [encodedBytes].
   ///
-  ASN1Enumerated.fromBytes(Uint8List encodedBytes)
-      : super.fromBytes(encodedBytes);
+  ASN1Enumerated.fromBytes(super.encodedBytes) : super.fromBytes();
 }

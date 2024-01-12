@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.signers.rsa_signer_test;
-
 import 'package:pointycastle/pointycastle.dart';
 
 import '../test/runners/signer.dart';
@@ -22,10 +20,12 @@ void main() {
   var pubk = RSAPublicKey(modulus, publicExponent);
   var privk = RSAPrivateKey(modulus, privateExponent, p, q);
 
-  var pubParams = () => ParametersWithRandom(
-      PublicKeyParameter<RSAPublicKey>(pubk), NullSecureRandom());
-  var privParams = () => ParametersWithRandom(
-      PrivateKeyParameter<RSAPrivateKey>(privk), NullSecureRandom());
+  ParametersWithRandom<PublicKeyParameter<RSAPublicKey>> pubParams() =>
+      ParametersWithRandom(
+          PublicKeyParameter<RSAPublicKey>(pubk), NullSecureRandom());
+  ParametersWithRandom<PrivateKeyParameter<RSAPrivateKey>> privParams() =>
+      ParametersWithRandom(
+          PrivateKeyParameter<RSAPrivateKey>(privk), NullSecureRandom());
 
   runSignerTests(Signer('SHA-1/RSA'), privParams, pubParams, [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',

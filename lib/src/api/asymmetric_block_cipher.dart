@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// Asymmetric block cipher engines are expected to conform to this interface.
 abstract class AsymmetricBlockCipher extends Algorithm {

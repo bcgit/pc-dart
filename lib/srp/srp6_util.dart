@@ -1,8 +1,9 @@
 library src.srp_util;
 
-import 'dart:typed_data';
-import 'package:pointycastle/pointycastle.dart';
 import 'dart:math' as math;
+import 'dart:typed_data';
+
+import 'package:pointycastle/pointycastle.dart';
 
 class SRP6Util {
   static final _byteMask = BigInt.from(0xff);
@@ -58,7 +59,7 @@ class SRP6Util {
     var min = BigInt.one << (minBits - 1);
     var max = N - BigInt.one;
 
-    var result;
+    BigInt result;
     do {
       result = random.nextBigInteger(minBits);
     } while (result > max || result < min);
@@ -109,8 +110,8 @@ class SRP6Util {
   /// @return the final Key value.
   static BigInt calculateKey(Digest digest, BigInt N, BigInt? S) {
     var padLength = (N.bitLength + 7) ~/ 8;
-    var _S = getPadded(S!, padLength);
-    digest.update(_S, 0, _S.length);
+    var S0 = getPadded(S!, padLength);
+    digest.update(S0, 0, S0.length);
 
     var output = Uint8List(digest.digestSize);
     digest.doFinal(output, 0);
@@ -139,7 +140,7 @@ class SRP6Util {
     var bs = encodeBigInt(n);
     if (bs.length < length) {
       var tmp = Uint8List(length);
-      var start = (length - bs.length);
+      var start = length - bs.length;
       for (var i = 0; start < length; i++, start++) {
         tmp[start] = bs[i];
       }
