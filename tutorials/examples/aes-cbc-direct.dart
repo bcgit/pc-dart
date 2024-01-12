@@ -1,9 +1,9 @@
 /// Encrypt and decrypt using AES
-
+///
 /// Note: this example use Pointy Castle WITHOUT the registry.
+library;
 
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
@@ -153,10 +153,9 @@ Uint8List passphraseToKey(String passPhrase,
   final numBytes = bitLength ~/ 8;
 
   final kd = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64)) // 64 for SHA-256
-    ..init(
-        Pbkdf2Parameters(utf8.encode(salt) as Uint8List, iterations, numBytes));
+    ..init(Pbkdf2Parameters(utf8.encode(salt), iterations, numBytes));
 
-  return kd.process(utf8.encode(passPhrase) as Uint8List);
+  return kd.process(utf8.encode(passPhrase));
 }
 
 //----------------------------------------------------------------
@@ -188,7 +187,7 @@ FortunaRandom? _secureRandom;
 void katTest() {
   // Encryption tests
 
-  [
+  for (var testCase in [
     [
       'CBCGFSbox128.rsp: encrypt 0',
       '00000000000000000000000000000000', // key
@@ -231,7 +230,7 @@ void katTest() {
       '014730f80ac625fe84f026c60bfd547d',
       '5c9d844ed46f9885085e5d6a4f94c7d7',
     ]
-  ].forEach((testCase) {
+  ]) {
     final name = testCase[0];
     final key = testCase[1];
     final iv = testCase[2];
@@ -243,11 +242,11 @@ void katTest() {
       print('$name: failed');
       throw AssertionError('$name: failed');
     }
-  });
+  }
 
   // Decryption tests
 
-  [
+  for (var testCase in [
     [
       'CBCGFSbox128.rsp: decrypt 0',
       '00000000000000000000000000000000', // key
@@ -269,7 +268,7 @@ void katTest() {
       '1bc704f1bce135ceb810341b216d7abe', // ciphertext
       '91fbef2d15a97816060bee1feaa49afe', // plaintext
     ]
-  ].forEach((testCase) {
+  ]) {
     final name = testCase[0];
     final key = testCase[1];
     final iv = testCase[2];
@@ -281,7 +280,7 @@ void katTest() {
       print('$name: failed');
       throw AssertionError('$name: failed');
     }
-  });
+  }
 }
 
 //----------------------------------------------------------------
@@ -313,7 +312,7 @@ in culpa qui officia deserunt mollit anim id est laborum.
   final cipherText = aesCbcEncrypt(
       passphraseToKey(passphrase, salt: randomSalt, bitLength: aesSize),
       iv,
-      pad(utf8.encode(textToEncrypt) as Uint8List, 16));
+      pad(utf8.encode(textToEncrypt), 16));
 
   // If the encrypted data was to be stored or transmitted to the receiver,
   // it will have to store the cipher-text, Initialization Vector (IV) and

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 abstract class SRPClient {
   ///Computes the client evidence message M1 using the previously received values.

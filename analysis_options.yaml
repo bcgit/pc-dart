@@ -1,1 +1,9 @@
-include: package:pedantic/analysis_options.yaml
+include: package:lints/recommended.yaml
+
+analyzer:
+  errors:
+    constant_identifier_names: ignore
+    file_names: ignore # these should be fixed
+    no_leading_underscores_for_local_identifiers: ignore # should be fixed!
+    non_constant_identifier_names: ignore
+    unnecessary_library_directive: ignore # blocked by dartdoc changes

@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// An interface for DSAs (digital signature algorithms)
 abstract class Signer extends Algorithm {

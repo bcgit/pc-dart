@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library benchmark.benchmark.rate_benchmark;
-
 import 'package:benchmark_harness/benchmark_harness.dart';
 
 abstract class RateBenchmark extends BenchmarkBase {
@@ -10,7 +8,7 @@ abstract class RateBenchmark extends BenchmarkBase {
   int _totalData = 0;
   int _iterations = 0;
 
-  RateBenchmark(String name) : super(name, emitter: RateEmitter()) {
+  RateBenchmark(super.name) : super(emitter: RateEmitter()) {
     emitter.benchmark = this;
   }
 

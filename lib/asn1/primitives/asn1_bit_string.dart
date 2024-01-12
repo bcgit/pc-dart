@@ -37,7 +37,7 @@ class ASN1BitString extends ASN1Object {
   ///
   /// Creates an [ASN1BitString] entity from the given [encodedBytes].
   ///
-  ASN1BitString.fromBytes(Uint8List bytes) : super.fromBytes(bytes) {
+  ASN1BitString.fromBytes(Uint8List super.bytes) : super.fromBytes() {
     if (ASN1Utils.isConstructed(encodedBytes!.elementAt(0))) {
       elements = [];
       var parser = ASN1Parser(valueBytes);
@@ -95,11 +95,11 @@ class ASN1BitString extends ASN1Object {
                 ASN1EncodingRule.ENCODING_BER_CONSTRUCTED_INDEFINITE_LENGTH);
         valueBytes = Uint8List(valueByteLength!);
         var i = 0;
-        elements!.forEach((obj) {
+        for (var obj in elements!) {
           var b = obj.encode();
           valueBytes!.setRange(i, i + b.length, b);
           i += b.length;
-        });
+        }
         break;
     }
 
@@ -111,9 +111,9 @@ class ASN1BitString extends ASN1Object {
   ///
   int _childLength({bool isIndefinite = false}) {
     var l = 0;
-    elements!.forEach((ASN1Object obj) {
+    for (var obj in elements!) {
       l += obj.encode().length;
-    });
+    }
     if (isIndefinite) {
       return l + 2;
     }
@@ -146,7 +146,7 @@ class ASN1BitString extends ASN1Object {
         var parser = ASN1Parser(stringValues as Uint8List?);
         var next = parser.nextObject();
         var dump = next.dump(spaces: spaces + dumpIndent);
-        sb.write('BIT STRING (${(bits.length)} bit)\n$dump');
+        sb.write('BIT STRING (${bits.length} bit)\n$dump');
       } else {
         var sb2 = StringBuffer();
         for (var v in stringValues!) {
@@ -157,7 +157,7 @@ class ASN1BitString extends ASN1Object {
         if (unusedbits != null) {
           bits = bits.substring(0, bits.length - unusedbits!);
         }
-        sb.write('BIT STRING (${(bits.length)} bit) ');
+        sb.write('BIT STRING (${bits.length} bit) ');
         sb.write(bits);
       }
     }

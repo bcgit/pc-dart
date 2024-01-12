@@ -1,11 +1,9 @@
 // See file LICENSE for more information.
 
-library test.test.mac_tests;
-
 import 'dart:typed_data' show Uint8List;
 
-import 'package:test/test.dart';
 import 'package:pointycastle/pointycastle.dart';
+import 'package:test/test.dart';
 
 import '../src/helpers.dart';
 
@@ -23,7 +21,7 @@ void runMacTests(Mac mac, List<PlainTextDigestPair> plainDigestTextPairs) {
         var plainText = plainDigestTextPairs[i].plainText;
         var digestText = plainDigestTextPairs[i].hexDigestText;
 
-        test('${formatAsTruncated(plainText.toString())}',
+        test(formatAsTruncated(plainText.toString()),
             () => _runMacTest(mac, plainText, digestText));
       }
     });
@@ -77,8 +75,7 @@ class Rfc4231TestVector {
 
       final d = hmac.process(data);
 
-      final result =
-          formatBytesAsHexString(((truncate128)) ? d.sublist(0, 16) : d);
+      final result = formatBytesAsHexString(truncate128 ? d.sublist(0, 16) : d);
       //print('$testName: $result');
       expect(result, equals(expected));
     });

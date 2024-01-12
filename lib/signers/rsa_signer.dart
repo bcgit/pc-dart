@@ -131,7 +131,6 @@ class RSASigner implements Signer {
         }
       }
       return true; //return Arrays.constantTimeAreEqual(sig, expected);
-
     } else if (sig.length == expected.length - 2) {
       // NULL left out
       var sigOffset = sig.length - hash.length - 2;
@@ -143,11 +142,11 @@ class RSASigner implements Signer {
       var nonEqual = 0;
 
       for (var i = 0; i < hash.length; i++) {
-        nonEqual |= (sig[sigOffset + i] ^ expected[expectedOffset + i]);
+        nonEqual |= sig[sigOffset + i] ^ expected[expectedOffset + i];
       }
 
       for (var i = 0; i < sigOffset; i++) {
-        nonEqual |= (sig[i] ^ expected[i]); // check header less NULL
+        nonEqual |= sig[i] ^ expected[i]; // check header less NULL
       }
 
       return nonEqual == 0;

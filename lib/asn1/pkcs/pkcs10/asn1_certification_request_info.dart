@@ -36,7 +36,7 @@ class ASN1CertificationRequestInfo extends ASN1Object {
     if (seq.elements == null || seq.elements!.length != 3) {
       throw ArgumentError('');
     }
-    if (!(seq.elements!.elementAt(0) is ASN1Integer)) {
+    if (seq.elements!.elementAt(0) is! ASN1Integer) {
       throw ArgumentError('Element at index 0 has to be ASN1Integer');
     }
     version = seq.elements!.elementAt(0) as ASN1Integer;

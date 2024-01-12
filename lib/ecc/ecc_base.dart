@@ -42,7 +42,7 @@ abstract class ECFieldElementBase implements ECFieldElement {
   int get fieldSize;
 
   @override
-  int get byteLength => ((fieldSize + 7) ~/ 8);
+  int get byteLength => (fieldSize + 7) ~/ 8;
 
   @override
   ECFieldElementBase operator +(covariant ECFieldElementBase b);
@@ -90,14 +90,14 @@ abstract class ECPointBase implements ECPoint {
       [this._multiplier = _fpNafMultiplier]);
 
   @override
-  bool get isInfinity => (x == null && y == null);
+  bool get isInfinity => x == null && y == null;
 
   set preCompInfo(PreCompInfo preCompInfo) {
     _preCompInfo = preCompInfo;
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is ECPointBase) {
       if (isInfinity) {
         return other.isInfinity;
@@ -231,7 +231,7 @@ abstract class ECCurveBase implements ECCurve {
 
       default:
         throw ArgumentError(
-            'Invalid point encoding 0x' + encoded[0].toRadixString(16));
+            'Invalid point encoding 0x${encoded[0].toRadixString(16)}');
     }
 
     return p;

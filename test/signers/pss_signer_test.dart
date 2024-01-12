@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.signers.pss_signer_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
@@ -214,11 +212,15 @@ void main() {
   });
 }
 
-var pubParams = (RSAPublicKey pubk, Uint8List salt) => () => ParametersWithSalt(
-      PublicKeyParameter<RSAPublicKey>(pubk),
-      salt,
-    );
-var privParams = (RSAPrivateKey privk, Uint8List salt) =>
+ParametersWithSalt<PublicKeyParameter<RSAPublicKey>> Function() Function(
+        RSAPublicKey pubk, Uint8List salt) pubParams =
+    (RSAPublicKey pubk, Uint8List salt) => () => ParametersWithSalt(
+          PublicKeyParameter<RSAPublicKey>(pubk),
+          salt,
+        );
+ParametersWithSalt<PrivateKeyParameter<RSAPrivateKey>> Function() Function(
+    RSAPrivateKey privk, Uint8List salt) privParams = (RSAPrivateKey privk,
+        Uint8List salt) =>
     () => ParametersWithSalt(PrivateKeyParameter<RSAPrivateKey>(privk), salt);
 
 void _testSign(

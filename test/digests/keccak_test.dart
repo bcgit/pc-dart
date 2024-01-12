@@ -1,10 +1,7 @@
 // See file LICENSE for more information.
 
-library test.digests.keccak_test;
-
 import 'dart:typed_data';
 
-import 'package:pointycastle/digests/keccak.dart';
 import 'package:pointycastle/export.dart';
 import 'package:test/test.dart';
 
@@ -58,7 +55,7 @@ void testRegressions() {
       expect(
           sum,
           equals(createUint8ListFromHexString(
-              "51e16cafd44b120fde44105f299b8343c22899851da30bb33a481d4b81c2ef3e")));
+              '51e16cafd44b120fde44105f299b8343c22899851da30bb33a481d4b81c2ef3e')));
     });
   });
 }
@@ -182,7 +179,7 @@ void exerciseDigest(KeccakDigest digest, List<String> expected) {
         reason: 'Keccak mismatch on ${digest.algorithmName} 64k a single');
 
     for (var i = 0; i != k64.length; i++) {
-      k64[i] = (97 + (i % 26));
+      k64[i] = 97 + (i % 26);
     }
 
     digest.update(k64, 0, k64.length);
@@ -319,7 +316,7 @@ void exerciseKeccakMac(Digest digest, List<Uint8List> keys, List<String> data,
           reason: 'Keccak HMAC mismatch on ${digest.algorithmName}');
     }
 
-    mac = Mac(digest.algorithmName + '/HMAC') as HMac;
+    mac = Mac('${digest.algorithmName}/HMAC') as HMac;
 
     mac.init(_truncKey);
 

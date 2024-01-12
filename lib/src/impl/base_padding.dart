@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library src.impl.base_padding;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart';

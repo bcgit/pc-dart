@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.digests.sha3_test.dart;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/digests/sha3.dart';

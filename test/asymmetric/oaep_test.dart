@@ -1,7 +1,5 @@
 // See file LICENSE for more information.
 
-library test.asymmetric.oaep_test;
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
@@ -215,6 +213,7 @@ void rsaOaepStandardTests() {
   // Instantiate the RSA key pair objects
 
   final publicKey = RSAPublicKey(n, e);
+  // ignore: deprecated_member_use_from_same_package
   final privateKey = RSAPrivateKey(n, privateExponent, p, q, e);
 
   //----------------
@@ -409,7 +408,7 @@ void rsaOaepStandardTests() {
         final outBuf = Uint8List(decryptor.outputBlockSize);
 
         // ignore: unused_local_variable
-        final _outputSize = decryptor.processBlock(
+        final outputSize0 = decryptor.processBlock(
             tamperedCiphertext, 0, tamperedCiphertext.length, outBuf, 0);
         fail('tampered with ciphertext still decrypted');
 
@@ -507,7 +506,7 @@ void rsaOaepStandardTests() {
       final testFixedRndSeed = Uint8List.fromList(numbers.reversed.toList());
       // print('FixedSecureRandom seed: $testFixedRndSeed (from x = $x)');
 
-      final processTestCaseWith = (AsymmetricBlockCipher blockCipher) {
+      Uint8List processTestCaseWith(AsymmetricBlockCipher blockCipher) {
         final rnd = _OAEPTestEntropySource()
           ..seed(KeyParameter(testFixedRndSeed));
 
@@ -518,10 +517,10 @@ void rsaOaepStandardTests() {
             ParametersWithRandom(
                 PublicKeyParameter<RSAPublicKey>(publicKey), rnd));
 
-        final _buf = Uint8List(enc.outputBlockSize);
-        final _len = enc.processBlock(testMsg, 0, testMsg.length, _buf, 0);
-        return _buf.sublist(0, _len);
-      };
+        final buf = Uint8List(enc.outputBlockSize);
+        final len = enc.processBlock(testMsg, 0, testMsg.length, buf, 0);
+        return buf.sublist(0, len);
+      }
 
       // Use null block cipher to obtain the EM (encryption does nothing)
 
@@ -554,9 +553,9 @@ void rsaOaepStandardTests() {
 
       dec.init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
 
-      final _decBuf = Uint8List(dec.outputBlockSize);
-      final _decSize = dec.processBlock(cipher, 0, cipher.length, _decBuf, 0);
-      final decrypted = _decBuf.sublist(0, _decSize);
+      final decBuf = Uint8List(dec.outputBlockSize);
+      final decSize = dec.processBlock(cipher, 0, cipher.length, decBuf, 0);
+      final decrypted = decBuf.sublist(0, decSize);
 
       expect(decrypted, equals(testMsg));
     }
@@ -927,18 +926,18 @@ void rsaesOaepFromBC() {
   ];
 
   test('RSAESOAEP decryption vectors from BC', () {
-    vectors.forEach((Vector v) {
+    for (var v in vectors) {
       var rsaesOaep = OAEPEncoding(RSAEngine());
       rsaesOaep.init(
           false, PrivateKeyParameter<RSAPrivateKey>(v.getPrivateKey()));
       final output = Uint8List(v.pt!.length);
       final size = rsaesOaep.processBlock(v.ct!, 0, v.ct!.length, output, 0);
       expect(output, equals(v.pt, size));
-    });
+    }
   });
 
   test('RSAESOAEP encryption vectors from BC', () {
-    vectors.forEach((Vector v) {
+    for (var v in vectors) {
       var rng = _OAEPTestEntropySource();
       rng.seed(KeyParameter(v.seed!));
 
@@ -950,7 +949,7 @@ void rsaesOaepFromBC() {
       final output = Uint8List(v.ct!.length);
       final size = rsaesOaep.processBlock(v.pt!, 0, v.pt!.length, output, 0);
       expect(output, equals(v.ct, size));
-    });
+    }
   });
 }
 
@@ -990,14 +989,14 @@ class _OAEPTestEntropySource extends SecureRandomBase {
 
   @override
   void seed(covariant KeyParameter params) {
-    _values = (params).key;
+    _values = params.key;
     _next = 0;
   }
 }
 
 /// Broke RSA Engine that allows us to modify the output len;
 class _RSABroken extends RSAEngine {
-  var wrongSizeDelta = 0;
+  int wrongSizeDelta = 0;
 
   @override
   int get outputBlockSize {

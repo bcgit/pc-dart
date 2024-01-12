@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// All algorithms defined by Pointy Castle inherit from this class.
 abstract class Algorithm {

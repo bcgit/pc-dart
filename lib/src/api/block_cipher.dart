@@ -1,6 +1,6 @@
 // See file LICENSE for more information.
 
-part of api;
+part of '../../api.dart';
 
 /// Block cipher engines are expected to conform to this interface.
 abstract class BlockCipher extends Algorithm {

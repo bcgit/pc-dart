@@ -19,7 +19,7 @@ void main() {
 
   group('ct', () {
     test('xor monte', () {
-      for (int j = 0; j < 500000; j++) {
+      for (var j = 0; j < 500000; j++) {
         var len = rand.nextInt(256);
         var x = Uint8List.fromList(
             List.generate(len, (index) => rand.nextInt(256)));
@@ -28,7 +28,7 @@ void main() {
         var enable = rand.nextInt(10) >= 5;
 
         var reason =
-            "$enable ${formatBytesAsHexString(x)} ${formatBytesAsHexString(y)}";
+            '$enable ${formatBytesAsHexString(x)} ${formatBytesAsHexString(y)}';
 
         var xExpected = Uint8List.fromList(x);
         _xor(xExpected, y, enable);
@@ -40,9 +40,9 @@ void main() {
         // Should be all zero
         //
         CT_xor(y, y, true);
-        y.forEach((element) {
+        for (var element in y) {
           expect(element, equals(0));
-        });
+        }
       }
     });
 

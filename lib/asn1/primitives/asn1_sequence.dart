@@ -20,8 +20,7 @@ class ASN1Sequence extends ASN1Object {
   ///
   /// Creates an [ASN1Sequence] entity from the given [encodedBytes].
   ///
-  ASN1Sequence.fromBytes(Uint8List encodedBytes)
-      : super.fromBytes(encodedBytes) {
+  ASN1Sequence.fromBytes(Uint8List super.encodedBytes) : super.fromBytes() {
     elements = [];
     var parser = ASN1Parser(valueBytes);
     while (parser.hasNext()) {
@@ -51,11 +50,11 @@ class ASN1Sequence extends ASN1Object {
       valueByteLength = _childLength();
       valueBytes = Uint8List(valueByteLength!);
       var i = 0;
-      elements!.forEach((obj) {
+      for (var obj in elements!) {
         var b = obj.encode();
         valueBytes!.setRange(i, i + b.length, b);
         i += b.length;
-      });
+      }
     }
     return super.encode();
   }
@@ -65,9 +64,9 @@ class ASN1Sequence extends ASN1Object {
   ///
   int _childLength() {
     var l = 0;
-    elements!.forEach((ASN1Object obj) {
+    for (var obj in elements!) {
       l += obj.encode().length;
-    });
+    }
     return l;
   }
 

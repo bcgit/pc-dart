@@ -2,6 +2,7 @@
 /// Collection of ASN1 related tests.
 /// Invoker for <-->/all_tests_web.dart
 ///
+library;
 
 import 'asn1_object_test.dart' as object_test;
 import 'asn1_utils_test.dart' as utils_test;

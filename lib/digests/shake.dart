@@ -72,7 +72,7 @@ class SHAKEDigest extends KeccakEngine implements Xof {
       absorbBits(finalInput, finalBits);
     }
 
-    squeeze(out, outOff, (outLen) * 8);
+    squeeze(out, outOff, outLen * 8);
 
     reset();
 
@@ -85,7 +85,7 @@ class SHAKEDigest extends KeccakEngine implements Xof {
       absorbBits(0x0F, 4);
     }
 
-    squeeze(out, outOff, (outLen) * 8);
+    squeeze(out, outOff, outLen * 8);
 
     return outLen;
   }

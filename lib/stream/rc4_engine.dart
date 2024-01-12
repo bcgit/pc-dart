@@ -62,8 +62,8 @@ class RC4Engine extends BaseStreamCipher {
       _engineState![_y] = tmp;
 
       // xor
-      out[i + outOff] = (inp[i + inpOff] ^
-          _engineState![(_engineState![_x] + _engineState![_y]) & 0xff]);
+      out[i + outOff] = inp[i + inpOff] ^
+          _engineState![(_engineState![_x] + _engineState![_y]) & 0xff];
     }
   }
 
@@ -83,8 +83,7 @@ class RC4Engine extends BaseStreamCipher {
     _engineState![_y] = tmp;
 
     // xor
-    return (inp ^
-        _engineState![(_engineState![_x] + _engineState![_y]) & 0xff]);
+    return inp ^ _engineState![(_engineState![_x] + _engineState![_y]) & 0xff];
   }
 
   void setKey(Uint8List keyBytes) {

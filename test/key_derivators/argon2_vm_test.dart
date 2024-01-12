@@ -20,7 +20,7 @@ const int DEFAULT_OUTPUTLEN = 32;
 /// The linked project was adapted for the purposes of this project, since it
 /// is a 1:1 port of BouncyCastle's Java implementation.
 void main() {
-  final timeout = Timeout.parse("15m");
+  final timeout = Timeout.parse('15m');
 
   group('Argon2BytesGenerator -- non-js platforms', () {
     /* Multiple test cases for various input values */

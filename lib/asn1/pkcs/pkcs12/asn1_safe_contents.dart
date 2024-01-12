@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1.dart';
@@ -22,13 +21,13 @@ class ASN1SafeContents extends ASN1Object {
   ASN1SafeContents.fromSequence(ASN1Sequence seq) {
     safeBags = [];
     if (seq.elements != null) {
-      seq.elements!.forEach((element) {
+      for (var element in seq.elements!) {
         if (element is ASN1SafeBag) {
           safeBags.add(element);
         } else if (element is ASN1Sequence) {
           safeBags.add(ASN1SafeBag.fromSequence(element));
         }
-      });
+      }
     }
   }
 

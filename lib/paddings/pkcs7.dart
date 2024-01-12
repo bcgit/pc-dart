@@ -24,7 +24,7 @@ class PKCS7Padding extends BasePadding {
 
   @override
   int addPadding(Uint8List data, int offset) {
-    var code = (data.length - offset);
+    var code = data.length - offset;
 
     while (offset < data.length) {
       data[offset] = code;
