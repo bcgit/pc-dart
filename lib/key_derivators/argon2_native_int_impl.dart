@@ -642,11 +642,11 @@ class _Block {
 }
 
 class _Position {
-  int pass;
-  int lane;
-  int slice;
+  int pass = 0;
+  int lane = 0;
+  int slice = 0;
 
-  _Position([this.pass = 0, this.lane = 0, this.slice = 0]);
+  _Position();
 }
 
 extension _SetFrom<T> on List<T> {
