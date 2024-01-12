@@ -119,6 +119,46 @@ class ASN1Utils {
     return false;
   }
 
+  ///
+  /// Calculates the indefinite length of the ASN1 object.
+  /// Throws an [ArgumentError] if the end of content octets is not found.
+  ///
+  static int calculateIndefiniteLength(Uint8List bytes, int startPosition) {
+    var currentPosition = startPosition;
+    var indefiniteLengthObjects = 0;
+    while (currentPosition < bytes.length - 1) {
+      if (bytes[currentPosition] == 0x00 &&
+          bytes[currentPosition + 1] == 0x00) {
+        indefiniteLengthObjects--;
+        if (indefiniteLengthObjects == 0) {
+          return currentPosition - startPosition;
+        }
+        currentPosition += 2;
+      } else {
+        final nextLength =
+            ASN1Utils.decodeLength(bytes.sublist(currentPosition));
+        final valueStartPosition = ASN1Utils.calculateValueStartPosition(
+            bytes.sublist(currentPosition));
+        if (nextLength == 0) {
+          throw ArgumentError('Invalid length of zero.');
+        }
+        if (valueStartPosition <= 0) {
+          throw ArgumentError(
+              'Invalid value start position: $valueStartPosition');
+        }
+
+        if (nextLength == -1) {
+          indefiniteLengthObjects++;
+          currentPosition += valueStartPosition;
+        } else {
+          currentPosition += valueStartPosition + nextLength;
+        }
+      }
+    }
+
+    throw ArgumentError('End of content octets not found');
+  }
+
   static Uint8List getBytesFromPEMString(String pem,
       {bool checkHeader = true}) {
     var lines = LineSplitter.split(pem)
