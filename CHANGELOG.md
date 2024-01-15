@@ -1,10 +1,11 @@
 Changelog
 =========
 
-#### Version 3.7.4 (2024-01-11)
+#### Version 3.7.4 (2024-01-15)
 
-* Support the latest version of `package:js`.
-* Require Dart v3.0
+* Support the latest version of `package:js`. (PR #220)
+* Require Dart v3.0 (PR #220)
+* Support parsing of nested objects with indefinite lengths (PR #215)
 
 #### Version 3.7.3 (2023-04-14)
 
