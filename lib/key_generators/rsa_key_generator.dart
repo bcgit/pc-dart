@@ -41,7 +41,7 @@ class RSAKeyGenerator implements KeyGenerator {
   }
 
   @override
-  AsymmetricKeyPair generateKeyPair() {
+  AsymmetricKeyPair generateKeyPair({BigInt? d = null}) {
     BigInt p, q, n, e;
 
     // p and q values should have a length of half the strength in bits
