@@ -1,12 +1,17 @@
 /// Wrapper for needed NodeJS Crypto library function and require.
-@JS()
 library nodecryto;
 
-import 'package:js/js.dart';
-
-external dynamic require(String id);
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 @JS()
+external JSObject require(String id);
+
+@JS()
+@staticInterop
 class NodeCrypto {
-  external randomFillSync(buf);
+  static JSAny randomFillSync(JSAny buf) {
+    final crypto = require('crypto');
+    return crypto.callMethod('randomFillSync'.toJS, [buf].toJS);
+  }
 }

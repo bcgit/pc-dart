@@ -1,8 +1,8 @@
 @JS()
+import 'dart:js_interop';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:js/js.dart';
 import 'package:pointycastle/src/impl/entropy.dart';
 
 import 'node_crypto.dart';
@@ -56,9 +56,8 @@ class _JsBuiltInEntropySource implements EntropySource {
 class _JsNodeEntropySource implements EntropySource {
   @override
   Uint8List getBytes(int len) {
-    final j = require('crypto') as NodeCrypto;
     var list = Uint8List(len);
-    j.randomFillSync(list);
+    NodeCrypto.randomFillSync(list.toJS);
     return list;
   }
 }
