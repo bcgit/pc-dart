@@ -57,7 +57,7 @@ class _JsNodeEntropySource implements EntropySource {
   @override
   Uint8List getBytes(int len) {
     var list = Uint8List(len);
-    NodeCrypto.randomFillSync(list.toJS);
+    NodeCrypto.randomFillSync(list.buffer.toJS);
     return list;
   }
 }

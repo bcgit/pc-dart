@@ -12,6 +12,6 @@ external JSObject require(String id);
 class NodeCrypto {
   static JSAny randomFillSync(JSAny buf) {
     final crypto = require('crypto');
-    return crypto.callMethod('randomFillSync'.toJS, [buf].toJS);
+    return crypto.callMethod('randomFillSync'.toJS, buf);
   }
 }
