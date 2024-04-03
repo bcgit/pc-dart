@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.8.0 (2024-03-24)
+
+* Add dart2wasm support (PR #225)
+
 #### Version 3.7.4 (2024-01-15)
 
 * Support the latest version of `package:js`. (PR #220)
