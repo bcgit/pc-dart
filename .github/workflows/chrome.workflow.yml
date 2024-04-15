@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [3.0.0, dev]
+        sdk: [3.1.0, dev]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -36,4 +36,4 @@ jobs:
         run: dart pub get
 
       - name: Test chrome
-        run: dart pub run test -j 1 -p chrome
+        run: dart test -j 1 -p chrome
