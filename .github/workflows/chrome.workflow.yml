@@ -21,6 +21,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         sdk: [3.1.0, 3.2.0, 3.3.0, stable, dev]
 
