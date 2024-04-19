@@ -1,6 +1,10 @@
 Changelog
 =========
 
+#### Version 3.9.0 (2024-04-19)
+
+* Update minimum SDK version to 3.2.0 (PR #231)
+
 #### Version 3.8.0 (2024-03-24)
 
 * Add dart2wasm support (PR #225)
