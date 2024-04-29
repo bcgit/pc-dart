@@ -91,7 +91,7 @@ class ECDSASigner implements Signer {
 
     dynamic kCalculator;
     if (_kMac != null) {
-      kCalculator = _RFC6979KCalculator(_kMac!, n, _pvkey!.d!, message);
+      kCalculator = _RFC6979KCalculator(_kMac, n, _pvkey!.d!, message);
     } else {
       kCalculator = _RandomKCalculator(n, _random!);
     }
@@ -163,8 +163,8 @@ class ECDSASigner implements Signer {
 
   Uint8List _hashMessageIfNeeded(Uint8List message) {
     if (_digest != null) {
-      _digest!.reset();
-      return _digest!.process(message);
+      _digest.reset();
+      return _digest.process(message);
     } else {
       return message;
     }

@@ -100,7 +100,7 @@ class CBCBlockCipherMac extends BaseMac {
 
   @override
   String get algorithmName {
-    var paddingName = _padding != null ? '/${_padding!.algorithmName}' : '';
+    var paddingName = _padding != null ? '/${_padding.algorithmName}' : '';
     return '${_cipher.algorithmName}_CMAC$paddingName';
   }
 
@@ -200,7 +200,7 @@ class CBCBlockCipherMac extends BaseMac {
         _bufOff = 0;
       }
 
-      _padding!.addPadding(_buf, _bufOff);
+      _padding.addPadding(_buf, _bufOff);
     }
 
     _cipher.processBlock(_buf, 0, _mac, 0);
