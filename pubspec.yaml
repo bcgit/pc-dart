@@ -2,6 +2,9 @@ name: pointycastle
 version: 3.9.0
 description: A Dart library implementing cryptographic algorithms and primitives, modeled on the BouncyCastle library.
 homepage: https://github.com/bcgit/pc-dart
+topics:
+ - crypto
+
 environment:
   sdk: ^3.2.0
 
