@@ -1,6 +1,11 @@
 Changelog
 =========
 
+#### Version 3.9.1 (2024-05-07)
+
+* Add crypto in topics to pubspec.yaml (PR #237)
+* remove unnecessary ! operator from some files (PR #236)
+
 #### Version 3.9.0 (2024-04-19)
 
 * Update minimum SDK version to 3.2.0 (PR #231)
