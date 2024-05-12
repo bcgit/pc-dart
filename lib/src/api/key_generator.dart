@@ -15,5 +15,5 @@ abstract class KeyGenerator extends Algorithm {
   void init(CipherParameters params);
 
   /// Generate a key pair.
-  AsymmetricKeyPair generateKeyPair();
+  AsymmetricKeyPair generateKeyPair({BigInt? d = null});
 }

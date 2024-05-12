@@ -34,14 +34,15 @@ class ECKeyGenerator implements KeyGenerator {
   }
 
   @override
-  AsymmetricKeyPair generateKeyPair() {
+  AsymmetricKeyPair generateKeyPair({BigInt? d = null}) {
     var n = _params.n;
     var nBitLength = n.bitLength;
-    BigInt? d;
 
-    do {
-      d = _random.nextBigInteger(nBitLength);
-    } while (d == BigInt.zero || (d >= n));
+    if (d == null) {
+      do {
+        d = _random.nextBigInteger(nBitLength);
+      } while (d == BigInt.zero || (d >= n));
+    }
 
     var Q = _params.G * d;
 
