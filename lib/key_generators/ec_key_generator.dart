@@ -34,7 +34,7 @@ class ECKeyGenerator implements KeyGenerator {
   }
 
   @override
-  AsymmetricKeyPair generateKeyPair() {
+  AsymmetricKeyPair<ECPublicKey, ECPrivateKey> generateKeyPair() {
     var n = _params.n;
     var nBitLength = n.bitLength;
     BigInt? d;
