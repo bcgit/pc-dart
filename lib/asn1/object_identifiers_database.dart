@@ -3,6 +3,12 @@
 ///
 const oi = [
   {
+    'identifierString': '1.2.860.3.15.1.1.2.1.1',
+    'readableName':
+        'UZDST 1092:2009 II signature parameters, UNICON.UZ paramset A',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 2, 1, 1]
+  },
+  {
     'identifierString': '1.2.840.113549.1.9.22.1',
     'readableName': 'x509Certificate',
     'identifier': [1, 2, 840, 113549, 1, 9, 22, 1]
