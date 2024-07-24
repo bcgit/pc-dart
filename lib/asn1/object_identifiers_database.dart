@@ -3,10 +3,102 @@
 ///
 const oi = [
   {
+    'identifierString': '1.2.860.3.15.1.1.1.1.4',
+    'readableName':
+        'UZDST 1092:2009 I digital signature parameters, UNICON.UZ paramset B',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 1, 1, 4]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.3.2.1.0',
+    'readableName': 'UZDST 1106:2009 II test digest parameters',
+    'identifier': [1, 2, 860, 3, 15, 1, 3, 2, 1, 0]
+  },
+  {
     'identifierString': '1.2.860.3.15.1.1.2.1.1',
     'readableName':
         'UZDST 1092:2009 II signature parameters, UNICON.UZ paramset A',
     'identifier': [1, 2, 860, 3, 15, 1, 1, 2, 1, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.2.1.2',
+    'readableName':
+        'UZDST 1092:2009 II signature parameters, UNICON.UZ paramset B',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 2, 1, 2]
+  },
+  {
+    'identifierString': '1.2.860.3.16.1.1',
+    'readableName': 'Identifikatsionniy Nomer Nalogoplatelshika',
+    'identifier': [1, 2, 860, 3, 16, 1, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.16.1.2',
+    'readableName': 'Personalniy Identifikatsionniy Nomer Fizicheskogo Litsa',
+    'identifier': [1, 2, 860, 3, 16, 1, 2]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.1.1',
+    'readableName': 'UZDST 1092:2009 I digital signature public key',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 1, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.2.1',
+    'readableName': 'UZDST 1092:2009 II digital signature public key',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 2, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.1.2.2.2',
+    'readableName':
+        'UZDST 1092:2009 I/1106:2009 digital signature algorithm with message digest',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 1, 2, 2, 2]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.2.2.2.2',
+    'readableName':
+        'UZDST 1092:2009 II/1106:2009 digital signature algorithm with message digest',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 2, 2, 2, 2]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.1.1.1',
+    'readableName':
+        'UZDST 1092:2009 I digital signature parameters, SICNT paramset A',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 1, 1, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.1.1.2',
+    'readableName':
+        'UZDST 1092:2009 I digital signature parameters, SICNT paramset B',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 1, 1, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.1.1.1.3',
+    'readableName':
+        'UZDST 1092:2009 I digital signature parameters, UNICON.UZ paramset A',
+    'identifier': [1, 2, 860, 3, 15, 1, 1, 1, 1, 3]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.3.2.1.1',
+    'readableName': 'UZDST 1106:2009 II default digest parameters',
+    'identifier': [1, 2, 860, 3, 15, 1, 3, 2, 1, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.2.1',
+    'readableName': 'UZDST 1105:2009 symmetric cipher',
+    'identifier': [1, 2, 860, 3, 15, 1, 2, 1]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.3.2',
+    'readableName': 'UZDST 1106:2009 II digest',
+    'identifier': [1, 2, 860, 3, 15, 1, 3, 2]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.4.2',
+    'readableName': 'UZDST 1106:2009 II digest based HMAC',
+    'identifier': [1, 2, 860, 3, 15, 1, 4, 2]
+  },
+  {
+    'identifierString': '1.2.860.3.15.1.12.2.1',
+    'readableName': 'PBE with UZDST 1106:2009 II and UZDST 1105:2009',
+    'identifier': [1, 2, 860, 3, 15, 1, 12, 2, 1]
   },
   {
     'identifierString': '1.2.840.113549.1.9.22.1',
