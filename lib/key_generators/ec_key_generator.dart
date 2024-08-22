@@ -9,8 +9,7 @@ import 'package:pointycastle/src/registry/registry.dart';
 
 /// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGenerator implements KeyGenerator {
-  static final FactoryConfig factoryConfig =
-      StaticFactoryConfig(KeyGenerator, 'EC', () => ECKeyGenerator());
+  static final FactoryConfig factoryConfig = StaticFactoryConfig(KeyGenerator, 'EC', () => ECKeyGenerator());
 
   late ECDomainParameters _params;
   late SecureRandom _random;
@@ -34,7 +33,7 @@ class ECKeyGenerator implements KeyGenerator {
   }
 
   @override
-  AsymmetricKeyPair generateKeyPair() {
+  AsymmetricKeyPair<ECPublicKey, ECPrivateKey> generateKeyPair() {
     var n = _params.n;
     var nBitLength = n.bitLength;
     BigInt? d;
