@@ -20,6 +20,9 @@ export 'package:pointycastle/block/aes_fast.dart';
 export 'package:pointycastle/block/aes.dart';
 export 'package:pointycastle/block/desede_engine.dart';
 export 'package:pointycastle/block/rc2_engine.dart';
+export 'package:pointycastle/block/blowfish.dart';
+export 'package:pointycastle/block/camellia.dart';
+export 'package:pointycastle/block/twofish.dart';
 
 // block/modes
 export 'package:pointycastle/block/modes/cbc.dart';
