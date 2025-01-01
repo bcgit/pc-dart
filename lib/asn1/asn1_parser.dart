@@ -63,7 +63,7 @@ class ASN1Parser {
     if (length == -1) {
       length = ASN1Utils.calculateIndefiniteLength(bytes!, _position) + 2;
       isIndefiniteLength = true;
-    } else if (_position < length + valueStartPosition) {
+    } else if (bytes!.length - _position > length + valueStartPosition) {
       length = length + valueStartPosition;
     } else {
       length = bytes!.length - _position;
