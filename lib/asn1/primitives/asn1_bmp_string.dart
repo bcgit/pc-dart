@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pointycastle/asn1/asn1_encoding_rule.dart';
@@ -45,13 +44,17 @@ class ASN1BMPString extends ASN1Object {
       }
       stringValue = sb.toString();
     } else {
-      var sb = StringBuffer();
-      for (var b in valueBytes!) {
-        if (b != 0) {
-          sb.write(ascii.decode([b]));
-        }
+      var utf16CodeUnits = <int>[];
+
+      for (var i = 0; i < valueBytes!.length; i += 2) {
+        // Combine High-Byte and Low-Byte to create a UTF-16 code unit
+        var highByte = valueBytes![i];
+        var lowByte = valueBytes![i + 1];
+        utf16CodeUnits.add((highByte << 8) | lowByte);
       }
-      stringValue = sb.toString();
+
+      // Decode UTF-16 code units into a Dart String
+      stringValue = String.fromCharCodes(utf16CodeUnits);
     }
   }
 
@@ -74,10 +77,11 @@ class ASN1BMPString extends ASN1Object {
     switch (encodingRule) {
       case ASN1EncodingRule.ENCODING_DER:
       case ASN1EncodingRule.ENCODING_BER_LONG_LENGTH_FORM:
+        // Kodierung in UTF-16-Big-Endian (UCS-2)
         var l = <int>[];
-        for (var c in stringValue!.codeUnits) {
-          l.add(0);
-          l.add(c);
+        for (var codeUnit in stringValue!.codeUnits) {
+          l.add((codeUnit >> 8) & 0xFF); // High-Byte
+          l.add(codeUnit & 0xFF); // Low-Byte
         }
         valueBytes = Uint8List.fromList(l);
         break;

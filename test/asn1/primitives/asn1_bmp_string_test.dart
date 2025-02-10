@@ -406,4 +406,16 @@ void main() {
     var asn1Object = ASN1BMPString.fromBytes(bytes);
     expect(asn1Object.dump(), expected);
   });
+
+  test('ASN1BMPString handles non ASCII', () {
+    var czechText = "Čech";
+
+    var bmpString = ASN1BMPString(stringValue: czechText);
+
+    Uint8List encodedBytes = bmpString.encode();
+
+    var decodedBmpString = ASN1BMPString.fromBytes(encodedBytes);
+
+    expect(decodedBmpString.stringValue, equals(czechText));
+  });
 }
