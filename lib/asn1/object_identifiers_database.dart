@@ -588,6 +588,11 @@ const oi = [
     'identifier': [1, 3, 132, 0, 34]
   },
   {
+    'identifierString': '1.2.840.10045.3.1.7',
+    'readableName': 'secp256r1',
+    'identifier': [1, 2, 840, 10045, 3, 1, 7]
+  },
+  {
     'identifierString': '1.3.132.0.10',
     'readableName': 'secp256k1',
     'identifier': [1, 3, 132, 0, 10]
