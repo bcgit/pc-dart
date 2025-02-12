@@ -49,11 +49,11 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   }
 
   @override
-  Uint8List process(Uint8List? data) {
-    var inputBlocks = (data!.length + blockSize - 1) ~/ blockSize;
+  Uint8List process(Uint8List data) {
+    var inputBlocks = (data.length + blockSize - 1) ~/ blockSize;
 
     int outputBlocks;
-    if (_encrypting!) {
+    if (_encrypting ?? false) {
       outputBlocks = (data.length + blockSize) ~/ blockSize;
     } else {
       if ((data.length % blockSize) != 0) {
@@ -83,7 +83,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   @override
   int doFinal(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    if (_encrypting!) {
+    if (_encrypting ?? false) {
       var lastInputBlock = Uint8List(blockSize)..setAll(0, inp.sublist(inpOff));
 
       var remainder = inp.length - inpOff;
