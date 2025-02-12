@@ -278,6 +278,26 @@ const oi = [
     'identifier': [1, 2, 840, 10045, 3, 1, 1]
   },
   {
+    'identifierString': '1.3.101.110',
+    'readableName': 'curveX25519',
+    'identifier': [1, 3, 101, 110]
+  },
+  {
+    'identifierString': '1.3.101.111',
+    'readableName': 'curveX448',
+    'identifier': [1, 3, 101, 111]
+  },
+  {
+    'identifierString': '1.3.101.112',
+    'readableName': 'curveEd25519',
+    'identifier': [1, 3, 101, 112]
+  },
+  {
+    'identifierString': '1.3.101.113',
+    'readableName': 'curveEd448',
+    'identifier': [1, 3, 101, 113]
+  },
+  {
     'identifierString': '1.3.132.0.1',
     'readableName': 'ansit163k1',
     'identifier': [1, 3, 132, 0, 1]
