@@ -19,7 +19,7 @@ Uint8List aesCbcEncrypt(
     Uint8List key, Uint8List iv, Uint8List paddedPlaintext) {
   assert([128, 192, 256].contains(key.length * 8));
   assert(128 == iv.length * 8);
-  assert(128 == paddedPlaintext.length * 8);
+  assert(0 == paddedPlaintext.length % 16);
 
   // Create a CBC block cipher with AES, and initialize with key and IV
 
@@ -42,7 +42,7 @@ Uint8List aesCbcEncrypt(
 Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {
   assert([128, 192, 256].contains(key.length * 8));
   assert(128 == iv.length * 8);
-  assert(128 == cipherText.length * 8);
+  assert(0 == cipherText.length % 16);
 
   // Create a CBC block cipher with AES, and initialize with key and IV
 
