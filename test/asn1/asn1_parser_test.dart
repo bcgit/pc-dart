@@ -176,6 +176,7 @@ void main() {
     expect(set1.elements!.elementAt(0) is ASN1Sequence, true);
 
     var seq1 = set1.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq1.encodedBytes!.length, seq1.totalEncodedByteLength);
     expect(seq1.elements!.length, 2);
     expect(seq1.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
     expect(seq1.elements!.elementAt(1) is ASN1PrintableString, true);
@@ -189,6 +190,7 @@ void main() {
     expect(set2.elements!.elementAt(0) is ASN1Sequence, true);
 
     var seq2 = set2.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq2.encodedBytes!.length, seq2.totalEncodedByteLength);
     expect(seq2.elements!.length, 2);
     expect(seq2.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
     expect(seq2.elements!.elementAt(1) is ASN1PrintableString, true);
@@ -202,6 +204,7 @@ void main() {
     expect(set3.elements!.elementAt(0) is ASN1Sequence, true);
 
     var seq3 = set3.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq3.encodedBytes!.length, seq3.totalEncodedByteLength);
     expect(seq3.elements!.length, 2);
     expect(seq3.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
     expect(seq3.elements!.elementAt(1) is ASN1PrintableString, true);
@@ -215,6 +218,7 @@ void main() {
     expect(set4.elements!.elementAt(0) is ASN1Sequence, true);
 
     var seq4 = set4.elements!.elementAt(0) as ASN1Sequence;
+    expect(seq4.encodedBytes!.length, seq4.totalEncodedByteLength);
     expect(seq4.elements!.length, 2);
     expect(seq4.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
     expect(seq4.elements!.elementAt(1) is ASN1PrintableString, true);
@@ -286,6 +290,7 @@ RVTxIJddHhpHfW5c2lX+ERf3Ni0fcJqcCZBPyGHUDSYqNrDwRLQ6dyVxz1Jl0oAc
 
     expect(e1.elements!.length, 8);
     expect(e1.totalEncodedByteLength, 1444);
+    expect(e1.encodedBytes!.length, 1444);
     expect(e1.valueByteLength, 1440);
     expect(e1.elements!.elementAt(1) is ASN1Integer, true);
     expect(e1.elements!.elementAt(2) is ASN1Sequence, true);
@@ -309,8 +314,15 @@ RVTxIJddHhpHfW5c2lX+ERf3Ni0fcJqcCZBPyGHUDSYqNrDwRLQ6dyVxz1Jl0oAc
     expect(
         integer2.integer.toString(), '49732821766751726239505489314635506967');
 
+    var seq1 = e1.elements!.elementAt(2) as ASN1Sequence;
+    expect(seq1.encodedBytes!.length, seq1.totalEncodedByteLength);
+
+    var seq2 = e1.elements!.elementAt(3) as ASN1Sequence;
+    expect(seq2.encodedBytes!.length, seq2.totalEncodedByteLength);
+
     expect(e2.elements!.length, 2);
     expect(e2.totalEncodedByteLength, 15);
+    expect(e2.encodedBytes!.length, 15);
     expect(e2.valueByteLength, 13);
     expect(e2.elements!.elementAt(0) is ASN1ObjectIdentifier, true);
     expect(e2.elements!.elementAt(1) is ASN1Null, true);
