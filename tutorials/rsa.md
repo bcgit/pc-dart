@@ -128,14 +128,13 @@ generate the key pair.
 ```dart
 final pair = keyGen.generateKeyPair();
 
-final myPublic = pair.publicKey as RSAPublicKey;
-final myPrivate = pair.privateKey as RSAPrivateKey;
+final myPublic = pair.publicKey;
+final myPrivate = pair.privateKey;
 ```
 
 It returns an `AsymmetricKeyPair<PublicKey,PrivateKey>`, so the type
 for the `publicKey` and `privateKey` members are the abstract classes
-`PublicKey` and `PrivateKey`.  The members will need to be cast into
-an `RSAPublicKey` and `RSAPrivateKey` to use them as RSA keys.
+`PublicKey` and `PrivateKey`.
 
 ## Signing and verifying
 
