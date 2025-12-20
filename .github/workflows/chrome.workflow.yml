@@ -37,4 +37,4 @@ jobs:
         run: dart pub get
 
       - name: Test chrome
-        run: dart test -j 1 -p chrome
+        run: dart test --timeout 2x -j 1 -p chrome

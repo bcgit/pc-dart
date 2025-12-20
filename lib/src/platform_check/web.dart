@@ -10,16 +10,9 @@ import 'platform_check.dart';
 
 class PlatformWeb extends Platform {
   static final PlatformWeb instance = PlatformWeb();
-  static bool useBuiltInRng = false;
+  static bool useBuiltInRng = !isNodeDart2JS;
 
-  PlatformWeb() {
-    try {
-      Random.secure();
-      useBuiltInRng = true;
-    } on UnsupportedError {
-      useBuiltInRng = false;
-    }
-  }
+  const PlatformWeb();
 
   @override
   bool get isNative => false;
@@ -28,17 +21,8 @@ class PlatformWeb extends Platform {
   String get platform => 'web';
 
   @override
-  EntropySource platformEntropySource() {
-    if (useBuiltInRng) {
-      return _JsBuiltInEntropySource();
-    } else {
-      //
-      // Assume that if we cannot get a built in Secure RNG then we are
-      // probably on NodeJS.
-      //
-      return _JsNodeEntropySource();
-    }
-  }
+  EntropySource platformEntropySource() =>
+      useBuiltInRng ? _JsBuiltInEntropySource() : _JsNodeEntropySource();
 }
 
 // Uses the built in entropy source
@@ -47,19 +31,18 @@ class _JsBuiltInEntropySource implements EntropySource {
 
   @override
   Uint8List getBytes(int len) {
-    return Uint8List.fromList(
-        List<int>.generate(len, (i) => _src.nextInt(256)));
+    final Uint8List bytes = Uint8List(len);
+    for (int i = 0; i < len; i++) {
+      bytes[i] = _src.nextInt(256);
+    }
+    return bytes;
   }
 }
 
 ///
 class _JsNodeEntropySource implements EntropySource {
   @override
-  Uint8List getBytes(int len) {
-    var list = Uint8List(len);
-    NodeCrypto.randomFillSync(list.buffer.toJS);
-    return list;
-  }
+  Uint8List getBytes(int len) => NodeCrypto.randomBytes(len).toDart;
 }
 
 Platform getPlatform() => PlatformWeb.instance;
