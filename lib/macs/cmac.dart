@@ -182,7 +182,7 @@ class CMac extends BaseMac {
 
   @override
   void init(covariant KeyParameter keyParams) {
-    final zeroIV = Uint8List(keyParams.key.length);
+    final zeroIV = Uint8List(_cipher.blockSize);
     _params = ParametersWithIV(keyParams, zeroIV);
 
     // Initialize before computing L, Lu, Lu2
