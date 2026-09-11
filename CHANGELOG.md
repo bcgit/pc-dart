@@ -1,5 +1,12 @@
 # Changelog
 
+
+## Version 4.0.1 (2026-09-11)
+
+* Migrate away from using `dart.library.js` in conditional import (the library
+  is going to be removed in the future, which will make the condition
+  evaluate to false)
+
 ## Version 4.0.0 (2025-02-12)
 
 * Add support for utf-16 in ans1_bmp_string.dart
