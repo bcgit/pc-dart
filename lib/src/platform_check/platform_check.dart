@@ -2,7 +2,7 @@ import 'package:pointycastle/src/impl/entropy.dart';
 
 import 'abstract.dart'
     if (dart.library.io) 'native.dart'
-    if (dart.library.js) 'web.dart';
+    if (dart.library.js_interop) 'web.dart';
 
 abstract class Platform {
   static Platform get instance => getPlatform();
